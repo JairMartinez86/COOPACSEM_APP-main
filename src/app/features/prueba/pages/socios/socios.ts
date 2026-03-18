@@ -8,7 +8,9 @@ import {
   NgZone,
   OnDestroy,
   PLATFORM_ID,
+  QueryList,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 
 @Component({
@@ -21,6 +23,8 @@ import {
 export class Socios implements AfterViewInit, OnDestroy {
   @ViewChild('wizardSlot') wizardSlotRef?: ElementRef<HTMLElement>;
   @ViewChild('wizardCard') wizardCardRef?: ElementRef<HTMLElement>;
+  @ViewChild('wizardSteps') wizardStepsRef?: ElementRef<HTMLElement>;
+  @ViewChildren('wizardStep') wizardStepRefs?: QueryList<ElementRef<HTMLElement>>;
 
   activeSection = 'datos-personales';
 
@@ -40,13 +44,17 @@ export class Socios implements AfterViewInit, OnDestroy {
   wizardZIndex = '';
 
   private readonly isBrowser: boolean;
-  private readonly affixTop = 96;
-  private readonly scrollOffset = 112;
+  private readonly desktopBreakpoint = 1200;
+  private readonly affixTopDesktop = 96;
+  private readonly affixTopMobile = 8;
+  private readonly scrollOffsetDesktop = 112;
+  private readonly scrollOffsetMobile = 120;
 
   private readonly onScrollBound = () => {
     this.zone.run(() => {
       this.updateActiveSectionByScroll();
       this.updateWizardAffix();
+      this.syncWizardHorizontalScroll();
       this.cdr.detectChanges();
     });
   };
@@ -55,6 +63,7 @@ export class Socios implements AfterViewInit, OnDestroy {
     this.zone.run(() => {
       this.updateActiveSectionByScroll();
       this.updateWizardAffix();
+      this.syncWizardHorizontalScroll();
       this.cdr.detectChanges();
     });
   };
@@ -62,6 +71,7 @@ export class Socios implements AfterViewInit, OnDestroy {
   private readonly onFocusInBound = (event: Event) => {
     this.zone.run(() => {
       this.updateActiveSectionFromEvent(event);
+      this.syncWizardHorizontalScroll();
       this.cdr.detectChanges();
     });
   };
@@ -69,6 +79,7 @@ export class Socios implements AfterViewInit, OnDestroy {
   private readonly onClickBound = (event: Event) => {
     this.zone.run(() => {
       this.updateActiveSectionFromEvent(event);
+      this.syncWizardHorizontalScroll();
       this.cdr.detectChanges();
     });
   };
@@ -92,6 +103,7 @@ export class Socios implements AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.updateActiveSectionByScroll();
       this.updateWizardAffix();
+      this.syncWizardHorizontalScroll();
       this.cdr.detectChanges();
     }, 0);
   }
@@ -109,12 +121,16 @@ export class Socios implements AfterViewInit, OnDestroy {
     if (!this.isBrowser) return;
 
     this.activeSection = sectionId;
+    this.syncWizardHorizontalScroll();
     this.cdr.detectChanges();
 
     const section = window.document.getElementById(sectionId);
     if (!section) return;
 
-    const top = section.getBoundingClientRect().top + window.scrollY - this.scrollOffset;
+    const isDesktop = window.innerWidth >= this.desktopBreakpoint;
+    const offset = isDesktop ? this.scrollOffsetDesktop : this.scrollOffsetMobile;
+
+    const top = section.getBoundingClientRect().top + window.scrollY - offset;
 
     window.scrollTo({
       top,
@@ -129,16 +145,28 @@ export class Socios implements AfterViewInit, OnDestroy {
   private updateActiveSectionByScroll(): void {
     if (!this.isBrowser) return;
 
+    const isDesktop = window.innerWidth >= this.desktopBreakpoint;
+    const offset = isDesktop ? this.scrollOffsetDesktop : this.scrollOffsetMobile;
+    const probeY = window.scrollY + offset;
+
     let current = this.sections[0];
 
-    for (const id of this.sections) {
-      const section = window.document.getElementById(id);
-      if (!section) continue;
+    for (let i = 0; i < this.sections.length; i++) {
+      const currentId = this.sections[i];
+      const nextId = this.sections[i + 1];
 
-      const rect = section.getBoundingClientRect();
+      const currentEl = window.document.getElementById(currentId);
+      if (!currentEl) continue;
 
-      if (rect.top <= this.scrollOffset) {
-        current = id;
+      const currentTop = currentEl.getBoundingClientRect().top + window.scrollY;
+      const nextEl = nextId ? window.document.getElementById(nextId) : null;
+      const nextTop = nextEl
+        ? nextEl.getBoundingClientRect().top + window.scrollY
+        : Number.POSITIVE_INFINITY;
+
+      if (probeY >= currentTop && probeY < nextTop) {
+        current = currentId;
+        break;
       }
     }
 
@@ -151,7 +179,7 @@ export class Socios implements AfterViewInit, OnDestroy {
     const target = event.target as HTMLElement | null;
     if (!target) return;
 
-    const field = target.closest('input, select, textarea, button');
+    const field = target.closest('input, select, textarea');
     if (!field) return;
 
     const section = target.closest('.socio-scroll-section') as HTMLElement | null;
@@ -168,16 +196,14 @@ export class Socios implements AfterViewInit, OnDestroy {
     const slot = this.wizardSlotRef.nativeElement;
     const card = this.wizardCardRef.nativeElement;
 
-    this.wizardPlaceholderHeight = card.offsetHeight;
+    const isDesktop = window.innerWidth >= this.desktopBreakpoint;
+    const affixTop = isDesktop ? this.affixTopDesktop : this.affixTopMobile;
 
-    if (window.innerWidth < 1200) {
-      this.resetWizardAffix();
-      return;
-    }
+    this.wizardPlaceholderHeight = card.offsetHeight;
 
     const slotRect = slot.getBoundingClientRect();
     const slotTopAbsolute = slotRect.top + window.scrollY;
-    const shouldAffix = window.scrollY + this.affixTop >= slotTopAbsolute;
+    const shouldAffix = window.scrollY + affixTop >= slotTopAbsolute;
 
     if (!shouldAffix) {
       this.resetWizardAffix();
@@ -186,7 +212,7 @@ export class Socios implements AfterViewInit, OnDestroy {
 
     this.wizardAffixed = true;
     this.wizardPosition = 'fixed';
-    this.wizardTop = `${this.affixTop}px`;
+    this.wizardTop = `${affixTop}px`;
     this.wizardLeft = `${slotRect.left}px`;
     this.wizardWidth = `${slotRect.width}px`;
     this.wizardZIndex = '30';
@@ -194,10 +220,27 @@ export class Socios implements AfterViewInit, OnDestroy {
 
   private resetWizardAffix(): void {
     this.wizardAffixed = false;
+    this.wizardPlaceholderHeight = 0;
     this.wizardPosition = '';
     this.wizardTop = '';
     this.wizardLeft = '';
     this.wizardWidth = '';
     this.wizardZIndex = '';
+  }
+
+  private syncWizardHorizontalScroll(): void {
+    if (!this.isBrowser) return;
+    if (window.innerWidth >= this.desktopBreakpoint) return;
+    if (!this.wizardStepsRef || !this.wizardStepRefs?.length) return;
+
+    const container = this.wizardStepsRef.nativeElement;
+    const activeStep = this.wizardStepRefs
+      .map(ref => ref.nativeElement)
+      .find(el => el.dataset['section'] === this.activeSection);
+
+    if (!activeStep) return;
+
+    const targetLeft = Math.max(0, activeStep.offsetLeft - 12);
+    container.scrollTo({ left: targetLeft, behavior: 'smooth' });
   }
 }

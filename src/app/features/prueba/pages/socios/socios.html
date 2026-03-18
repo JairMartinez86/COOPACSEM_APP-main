@@ -10,21 +10,14 @@
                   <i class="bi bi-person-vcard me-1"></i>
                   Nuevo socio
                 </span>
-                <span class="badge badge-outline-secondary rounded-pill px-3 py-2">
-                  4 secciones
-                </span>
-                <span class="badge badge-outline-success rounded-pill px-3 py-2">
-                  Hasta 3 beneficiarios
-                </span>
+                <span class="badge badge-outline-secondary rounded-pill px-3 py-2">4 secciones</span>
+                <span class="badge badge-outline-success rounded-pill px-3 py-2">Hasta 3 beneficiarios</span>
               </div>
-
               <h1 class="page-title mb-2">Registro de socio</h1>
               <p class="ue-shell-subtitle mb-0">
-                Captura organizada para información personal, laboral, del cónyuge y beneficiarios.
-                El menú de la izquierda cambia automáticamente según la sección visible.
+                En PC el wizard queda fijo a la izquierda. En móvil queda fijo arriba y se mueve horizontalmente según la sección activa.
               </p>
             </div>
-
             <div class="socio-topbar-actions d-flex flex-wrap gap-2">
               <button type="reset" form="socioForm" class="btn btn-light border">
                 <i class="bi bi-arrow-counterclockwise me-1"></i>
@@ -40,101 +33,101 @@
       </div>
 
       <div class="row g-4">
-        
         <div class="col-12 col-xl-3 socio-wizard-col">
-  <div #wizardSlot class="socio-wizard-slot" [style.height.px]="wizardAffixed ? wizardPlaceholderHeight : null">
-    <div
-      #wizardCard
-      class="card ue-shell-card socio-aside-card socio-wizard-card"
-      [ngStyle]="{
-        position: wizardPosition || null,
-        top: wizardTop || null,
-        left: wizardLeft || null,
-        width: wizardWidth || null,
-        zIndex: wizardZIndex || null
-      }"
-    >
-      <div class="card-header">
-        <div>
-          <h6 class="card-title mb-1">Secciones</h6>
-          <p class="card-subtitle mb-0">Haz click o baja y el paso activo cambia solo.</p>
+          <div #wizardSlot class="socio-wizard-slot" [style.height.px]="wizardAffixed ? wizardPlaceholderHeight : null">
+            <div
+              #wizardCard
+              class="card ue-shell-card socio-aside-card socio-wizard-card"
+              [style.position]="wizardPosition || null"
+              [style.top]="wizardTop || null"
+              [style.left]="wizardLeft || null"
+              [style.width]="wizardWidth || null"
+              [style.z-index]="wizardZIndex || null"
+            >
+              <div class="card-header">
+                <div>
+                  <h6 class="card-title mb-1">Secciones</h6>
+                  <p class="card-subtitle mb-0">Click o scroll para navegar.</p>
+                </div>
+              </div>
+              <div class="card-body p-4">
+                <div #wizardSteps class="wizard-steps-vertical socio-scroll-wizard">
+                  <button
+                    #wizardStep
+                    type="button"
+                    class="wizard-step-v"
+                    [attr.data-section]="'datos-personales'"
+                    [class.active]="activeSection === 'datos-personales'"
+                    [class.completed]="isCompleted('datos-personales')"
+                    (click)="scrollToSection('datos-personales')"
+                  >
+                    <div class="wizard-step-v-icon"><span>1</span></div>
+                    <div class="wizard-step-v-content">
+                      <div class="wizard-step-v-title">Datos personales</div>
+                      <div class="wizard-step-v-desc">Identidad y contacto</div>
+                    </div>
+                  </button>
+
+                  <button
+                    #wizardStep
+                    type="button"
+                    class="wizard-step-v"
+                    [attr.data-section]="'actividad-economica'"
+                    [class.active]="activeSection === 'actividad-economica'"
+                    [class.completed]="isCompleted('actividad-economica')"
+                    (click)="scrollToSection('actividad-economica')"
+                  >
+                    <div class="wizard-step-v-icon"><span>2</span></div>
+                    <div class="wizard-step-v-content">
+                      <div class="wizard-step-v-title">Actividad económica</div>
+                      <div class="wizard-step-v-desc">Empleo e ingresos</div>
+                    </div>
+                  </button>
+
+                  <button
+                    #wizardStep
+                    type="button"
+                    class="wizard-step-v"
+                    [attr.data-section]="'datos-conyuge'"
+                    [class.active]="activeSection === 'datos-conyuge'"
+                    [class.completed]="isCompleted('datos-conyuge')"
+                    (click)="scrollToSection('datos-conyuge')"
+                  >
+                    <div class="wizard-step-v-icon"><span>3</span></div>
+                    <div class="wizard-step-v-content">
+                      <div class="wizard-step-v-title">Datos del cónyuge</div>
+                      <div class="wizard-step-v-desc">Información opcional</div>
+                    </div>
+                  </button>
+
+                  <button
+                    #wizardStep
+                    type="button"
+                    class="wizard-step-v"
+                    [attr.data-section]="'beneficiarios'"
+                    [class.active]="activeSection === 'beneficiarios'"
+                    [class.completed]="isCompleted('beneficiarios')"
+                    (click)="scrollToSection('beneficiarios')"
+                  >
+                    <div class="wizard-step-v-icon"><span>4</span></div>
+                    <div class="wizard-step-v-content">
+                      <div class="wizard-step-v-title">Beneficiarios</div>
+                      <div class="wizard-step-v-desc">Control de porcentaje</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="card-body p-4">
-        <div class="wizard-steps-vertical socio-scroll-wizard">
-          <button
-            type="button"
-            class="wizard-step-v"
-            [class.active]="activeSection === 'datos-personales'"
-            [class.completed]="isCompleted('datos-personales')"
-            (click)="scrollToSection('datos-personales')">
-            <div class="wizard-step-v-icon"><span>1</span></div>
-            <div class="wizard-step-v-content">
-              <div class="wizard-step-v-title">Datos personales</div>
-              <div class="wizard-step-v-desc">Identidad y contacto</div>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            class="wizard-step-v"
-            [class.active]="activeSection === 'actividad-economica'"
-            [class.completed]="isCompleted('actividad-economica')"
-            (click)="scrollToSection('actividad-economica')">
-            <div class="wizard-step-v-icon"><span>2</span></div>
-            <div class="wizard-step-v-content">
-              <div class="wizard-step-v-title">Actividad económica</div>
-              <div class="wizard-step-v-desc">Empleo e ingresos</div>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            class="wizard-step-v"
-            [class.active]="activeSection === 'datos-conyuge'"
-            [class.completed]="isCompleted('datos-conyuge')"
-            (click)="scrollToSection('datos-conyuge')">
-            <div class="wizard-step-v-icon"><span>3</span></div>
-            <div class="wizard-step-v-content">
-              <div class="wizard-step-v-title">Datos del cónyuge</div>
-              <div class="wizard-step-v-desc">Información opcional</div>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            class="wizard-step-v"
-            [class.active]="activeSection === 'beneficiarios'"
-            [class.completed]="isCompleted('beneficiarios')"
-            (click)="scrollToSection('beneficiarios')">
-            <div class="wizard-step-v-icon"><span>4</span></div>
-            <div class="wizard-step-v-content">
-              <div class="wizard-step-v-title">Beneficiarios</div>
-              <div class="wizard-step-v-desc">Control de porcentaje</div>
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
         <div class="col-12 col-xl-9">
           <div class="d-flex flex-column gap-4">
             <div id="datos-personales" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
-                <div class="d-flex align-items-center gap-3">
-                  <div class="socio-card-icon">
-                    <i class="bi bi-person-lines-fill"></i>
-                  </div>
-                  <div>
-                    <h5 class="card-title mb-1">Datos personales</h5>
-                    <p class="card-subtitle mb-0">Información de identidad, nacimiento y medios de contacto.</p>
-                  </div>
-                </div>
+                <h5 class="card-title mb-1">Datos personales</h5>
+                <p class="card-subtitle mb-0">Información de identidad, nacimiento y medios de contacto.</p>
               </div>
-
               <div class="card-body p-4 d-flex flex-column gap-4">
                 <div class="socio-group">
                   <div class="socio-group-title">Identificación</div>
@@ -143,12 +136,10 @@
                       <label for="nombreCompleto" class="form-label required">Nombre completo</label>
                       <input type="text" class="form-control" id="nombreCompleto" name="nombreCompleto" required>
                     </div>
-
                     <div class="col-md-6">
                       <label for="nombrePublico" class="form-label">Conocido social y/o públicamente como</label>
                       <input type="text" class="form-control" id="nombrePublico" name="nombrePublico">
                     </div>
-
                     <div class="col-md-4">
                       <label for="tipoIdentificacion" class="form-label required">Tipo de identificación</label>
                       <select class="form-select" id="tipoIdentificacion" name="tipoIdentificacion" required>
@@ -159,39 +150,32 @@
                         <option value="otro">Otro</option>
                       </select>
                     </div>
-
                     <div class="col-md-4">
                       <label for="numeroIdentificacion" class="form-label required">No. de identificación</label>
                       <input type="text" class="form-control" id="numeroIdentificacion" name="numeroIdentificacion" required>
                     </div>
-
                     <div class="col-md-4">
                       <label for="paisEmisor" class="form-label">País emisor</label>
                       <input type="text" class="form-control" id="paisEmisor" name="paisEmisor">
                     </div>
-
                     <div class="col-md-3">
                       <label for="fechaEmision" class="form-label">Fecha de emisión</label>
                       <input type="date" class="form-control" id="fechaEmision" name="fechaEmision">
                     </div>
-
                     <div class="col-md-3">
                       <label for="fechaVencimiento" class="form-label">Fecha de vencimiento</label>
                       <input type="date" class="form-control" id="fechaVencimiento" name="fechaVencimiento">
                     </div>
-
                     <div class="col-md-3">
                       <label for="paisNacimiento" class="form-label">País de nacimiento</label>
                       <input type="text" class="form-control" id="paisNacimiento" name="paisNacimiento">
                     </div>
-
                     <div class="col-md-3">
                       <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
                       <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento">
                     </div>
                   </div>
                 </div>
-
                 <div class="socio-group">
                   <div class="socio-group-title">Ubicación y contacto</div>
                   <div class="row g-3">
@@ -199,32 +183,26 @@
                       <label for="nacionalidad" class="form-label">Nacionalidad</label>
                       <input type="text" class="form-control" id="nacionalidad" name="nacionalidad">
                     </div>
-
                     <div class="col-md-4">
                       <label for="departamento" class="form-label">Departamento</label>
                       <input type="text" class="form-control" id="departamento" name="departamento">
                     </div>
-
                     <div class="col-md-4">
                       <label for="municipio" class="form-label">Municipio</label>
                       <input type="text" class="form-control" id="municipio" name="municipio">
                     </div>
-
                     <div class="col-12">
                       <label for="direccionDomiciliar" class="form-label">Dirección domiciliar</label>
                       <textarea class="form-control" id="direccionDomiciliar" name="direccionDomiciliar" rows="3"></textarea>
                     </div>
-
                     <div class="col-md-4">
                       <label for="telefono" class="form-label">Teléfono</label>
                       <input type="text" class="form-control" id="telefono" name="telefono">
                     </div>
-
                     <div class="col-md-4">
                       <label for="celular" class="form-label">Celular</label>
                       <input type="text" class="form-control" id="celular" name="celular">
                     </div>
-
                     <div class="col-md-4">
                       <label for="correo" class="form-label">Correo</label>
                       <input type="email" class="form-control" id="correo" name="correo">
@@ -236,17 +214,9 @@
 
             <div id="actividad-economica" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
-                <div class="d-flex align-items-center gap-3">
-                  <div class="socio-card-icon success">
-                    <i class="bi bi-briefcase"></i>
-                  </div>
-                  <div>
-                    <h5 class="card-title mb-1">Actividad económica o empleo</h5>
-                    <p class="card-subtitle mb-0">Datos del entorno profesional e ingresos del socio.</p>
-                  </div>
-                </div>
+                <h5 class="card-title mb-1">Actividad económica o empleo</h5>
+                <p class="card-subtitle mb-0">Datos del entorno profesional e ingresos del socio.</p>
               </div>
-
               <div class="card-body p-4">
                 <div class="row g-3">
                   <div class="col-md-6">
@@ -258,37 +228,30 @@
                       <option value="gmg_zona_franca">GMG Zona Franca</option>
                     </select>
                   </div>
-
                   <div class="col-md-6">
                     <label for="area" class="form-label">Área</label>
                     <input type="text" class="form-control" id="area" name="area">
                   </div>
-
                   <div class="col-md-4">
                     <label for="cargo" class="form-label">Cargo</label>
                     <input type="text" class="form-control" id="cargo" name="cargo">
                   </div>
-
                   <div class="col-md-4">
                     <label for="fechaIngreso" class="form-label">Fecha de ingreso</label>
                     <input type="date" class="form-control" id="fechaIngreso" name="fechaIngreso">
                   </div>
-
                   <div class="col-md-4">
                     <label for="numeroIp" class="form-label">Número IP</label>
                     <input type="text" class="form-control" id="numeroIp" name="numeroIp">
                   </div>
-
                   <div class="col-md-6">
                     <label for="correoLaboral" class="form-label">Correo electrónico laboral</label>
                     <input type="email" class="form-control" id="correoLaboral" name="correoLaboral">
                   </div>
-
                   <div class="col-md-6">
                     <label for="jefeInmediato" class="form-label">Jefe inmediato</label>
                     <input type="text" class="form-control" id="jefeInmediato" name="jefeInmediato">
                   </div>
-
                   <div class="col-md-4">
                     <label for="ingresosMensuales" class="form-label">Ingresos mensuales</label>
                     <div class="input-group">
@@ -296,7 +259,6 @@
                       <input type="number" class="form-control" id="ingresosMensuales" name="ingresosMensuales" min="0" step="0.01">
                     </div>
                   </div>
-
                   <div class="col-md-4">
                     <label for="otrosIngresos" class="form-label">Otros ingresos</label>
                     <div class="input-group">
@@ -304,7 +266,6 @@
                       <input type="number" class="form-control" id="otrosIngresos" name="otrosIngresos" min="0" step="0.01">
                     </div>
                   </div>
-
                   <div class="col-md-4">
                     <label for="ingresosAnuales" class="form-label">Ingresos anuales totales</label>
                     <div class="input-group">
@@ -318,24 +279,15 @@
 
             <div id="datos-conyuge" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
-                <div class="d-flex align-items-center gap-3">
-                  <div class="socio-card-icon warning">
-                    <i class="bi bi-people"></i>
-                  </div>
-                  <div>
-                    <h5 class="card-title mb-1">Datos del cónyuge</h5>
-                    <p class="card-subtitle mb-0">Complete esta sección cuando aplique según el estado civil del socio.</p>
-                  </div>
-                </div>
+                <h5 class="card-title mb-1">Datos del cónyuge</h5>
+                <p class="card-subtitle mb-0">Complete esta sección cuando aplique según el estado civil del socio.</p>
               </div>
-
               <div class="card-body p-4">
                 <div class="row g-3">
                   <div class="col-md-6">
                     <label for="conyugeNombreCompleto" class="form-label">Nombre completo</label>
                     <input type="text" class="form-control" id="conyugeNombreCompleto" name="conyugeNombreCompleto">
                   </div>
-
                   <div class="col-md-6">
                     <label for="conyugeTipoIdentificacion" class="form-label">Tipo de identificación</label>
                     <select class="form-select" id="conyugeTipoIdentificacion" name="conyugeTipoIdentificacion">
@@ -346,17 +298,14 @@
                       <option value="otro">Otro</option>
                     </select>
                   </div>
-
                   <div class="col-md-4">
                     <label for="conyugeNumeroIdentificacion" class="form-label">No. de identificación</label>
                     <input type="text" class="form-control" id="conyugeNumeroIdentificacion" name="conyugeNumeroIdentificacion">
                   </div>
-
                   <div class="col-md-4">
                     <label for="conyugePaisNacimiento" class="form-label">País de nacimiento</label>
                     <input type="text" class="form-control" id="conyugePaisNacimiento" name="conyugePaisNacimiento">
                   </div>
-
                   <div class="col-md-4">
                     <label for="conyugeNacionalidad" class="form-label">Nacionalidad</label>
                     <input type="text" class="form-control" id="conyugeNacionalidad" name="conyugeNacionalidad">
@@ -367,17 +316,9 @@
 
             <div id="beneficiarios" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
-                <div class="d-flex align-items-center gap-3">
-                  <div class="socio-card-icon info">
-                    <i class="bi bi-person-hearts"></i>
-                  </div>
-                  <div>
-                    <h5 class="card-title mb-1">Beneficiarios</h5>
-                    <p class="card-subtitle mb-0">Distribuya el porcentaje entre los beneficiarios registrados.</p>
-                  </div>
-                </div>
+                <h5 class="card-title mb-1">Beneficiarios</h5>
+                <p class="card-subtitle mb-0">Distribuya el porcentaje entre los beneficiarios registrados.</p>
               </div>
-
               <div class="card-body p-4">
                 <div class="d-flex flex-column gap-3">
                   <div class="beneficiary-card principal">
@@ -388,13 +329,11 @@
                       </div>
                       <span class="badge badge-soft-primary">Principal</span>
                     </div>
-
                     <div class="row g-3">
                       <div class="col-md-4">
                         <label for="beneficiario1Nombre" class="form-label">Nombre completo</label>
                         <input type="text" class="form-control" id="beneficiario1Nombre" name="beneficiario1Nombre">
                       </div>
-
                       <div class="col-md-2">
                         <label for="beneficiario1Porcentaje" class="form-label">Porcentaje</label>
                         <div class="input-group">
@@ -402,19 +341,16 @@
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
-
                       <div class="col-md-3">
                         <label for="beneficiario1Parentesco" class="form-label">Parentesco</label>
                         <input type="text" class="form-control" id="beneficiario1Parentesco" name="beneficiario1Parentesco">
                       </div>
-
                       <div class="col-md-3">
                         <label for="beneficiario1Cedula" class="form-label">Cédula</label>
                         <input type="text" class="form-control" id="beneficiario1Cedula" name="beneficiario1Cedula">
                       </div>
                     </div>
                   </div>
-
                   <div class="beneficiary-card">
                     <div class="beneficiary-head">
                       <div>
@@ -423,13 +359,11 @@
                       </div>
                       <span class="badge badge-outline-secondary">Opcional</span>
                     </div>
-
                     <div class="row g-3">
                       <div class="col-md-4">
                         <label for="beneficiario2Nombre" class="form-label">Nombre completo</label>
                         <input type="text" class="form-control" id="beneficiario2Nombre" name="beneficiario2Nombre">
                       </div>
-
                       <div class="col-md-2">
                         <label for="beneficiario2Porcentaje" class="form-label">Porcentaje</label>
                         <div class="input-group">
@@ -437,19 +371,16 @@
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
-
                       <div class="col-md-3">
                         <label for="beneficiario2Parentesco" class="form-label">Parentesco</label>
                         <input type="text" class="form-control" id="beneficiario2Parentesco" name="beneficiario2Parentesco">
                       </div>
-
                       <div class="col-md-3">
                         <label for="beneficiario2Cedula" class="form-label">Cédula</label>
                         <input type="text" class="form-control" id="beneficiario2Cedula" name="beneficiario2Cedula">
                       </div>
                     </div>
                   </div>
-
                   <div class="beneficiary-card">
                     <div class="beneficiary-head">
                       <div>
@@ -458,13 +389,11 @@
                       </div>
                       <span class="badge badge-outline-secondary">Opcional</span>
                     </div>
-
                     <div class="row g-3">
                       <div class="col-md-4">
                         <label for="beneficiario3Nombre" class="form-label">Nombre completo</label>
                         <input type="text" class="form-control" id="beneficiario3Nombre" name="beneficiario3Nombre">
                       </div>
-
                       <div class="col-md-2">
                         <label for="beneficiario3Porcentaje" class="form-label">Porcentaje</label>
                         <div class="input-group">
@@ -472,12 +401,10 @@
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
-
                       <div class="col-md-3">
                         <label for="beneficiario3Parentesco" class="form-label">Parentesco</label>
                         <input type="text" class="form-control" id="beneficiario3Parentesco" name="beneficiario3Parentesco">
                       </div>
-
                       <div class="col-md-3">
                         <label for="beneficiario3Cedula" class="form-label">Cédula</label>
                         <input type="text" class="form-control" id="beneficiario3Cedula" name="beneficiario3Cedula">
