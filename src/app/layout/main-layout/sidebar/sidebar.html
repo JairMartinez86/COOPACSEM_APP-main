@@ -14,7 +14,9 @@
     <!-- Navigation -->
     <nav class="sidebar-nav">
       <ul class="nav-menu">
-        <ng-container *ngTemplateOutlet="renderMenu; context: { $implicit: menuItems, level: 0 }"></ng-container>
+        <ng-container
+          *ngTemplateOutlet="renderMenu; context: { $implicit: menuItems, level: 0 }">
+        </ng-container>
       </ul>
     </nav>
 
@@ -96,16 +98,8 @@
     <div class="sidebar-footer">
       <div class="sidebar-account">
         <a class="sidebar-account-main">
-          <!--
-           <img
-            [src]="'assets/img/' + (((user?.role || '').toLowerCase().includes('admin') || (user?.role || '').toLowerCase().includes('administrator') || (user?.role || '').toLowerCase().includes('administrador')) ? 'Administrador' : 'user') + '_' + user?.gender + '_512.webp'"
-            alt="User"
-            class="sidebar-account-avatar"
-          >
+          {{ user?.fullname?.charAt(0)?.toUpperCase() }}
 
-          -->
-           {{ user?.fullname?.charAt(0)?.toUpperCase() }}
-         
           <div class="sidebar-account-meta">
             <div class="sidebar-account-name">{{ user?.fullname }}</div>
             <div class="sidebar-account-role">

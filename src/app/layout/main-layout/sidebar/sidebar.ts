@@ -222,25 +222,30 @@ export class Sidebar implements OnInit, OnDestroy {
     }
   }
 
-  private prepareItems(items: SidebarItem[]): SidebarItem[] {
-    return items.map(item => {
-      const generatedId = item.router ? this.generateIdFromRoute(item.router) : undefined;
+  private prepareItems(items: SidebarItem[], parentKey = 'menu'): SidebarItem[] {
+    return items.map((item, index) => {
+      const rawKey = item.id || item.router || item.titleKey || `item-${index}`;
+      const safeKey = this.toSafeId(rawKey);
+      const uniqueId = `${parentKey}-${safeKey}-${index}`;
 
       return {
         ...item,
-        id: generatedId,
+        id: uniqueId,
         open: item.open ?? false,
-        children: item.children?.length ? this.prepareItems(item.children) : []
+        children: item.children?.length
+          ? this.prepareItems(item.children, uniqueId)
+          : []
       };
     });
   }
 
-  private generateIdFromRoute(route: string): string {
-    return route
+  private toSafeId(value: string): string {
+    return value
       .trim()
-      .replace(/^\//, '')
+      .toLowerCase()
+      .replace(/^\/+/, '')
       .replace(/\//g, '-')
-      .replace(/[^a-zA-Z0-9-_]/g, '')
-      .toLowerCase();
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9\-_]/g, '');
   }
 }
