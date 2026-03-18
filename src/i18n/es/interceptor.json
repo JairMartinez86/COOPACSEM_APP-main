@@ -1,0 +1,30 @@
+{
+  "interceptor": {
+    "errors": {
+      "unexpected": "Ocurrió un error inesperado.",
+      "noConnectionTitle": "Sin conexión",
+      "noConnectionMessage": "No se pudo conectar con el servidor. Verifica tu conexión a internet o que la API esté activa.",
+      "badRequestTitle": "Solicitud inválida",
+      "badRequestMessage": "La solicitud es incorrecta (400).",
+      "sessionExpiredTitle": "Sesión expirada",
+      "sessionExpiredMessage": "Tu sesión ha expirado. Inicia sesión nuevamente.",
+      "forbiddenTitle": "Acceso denegado",
+      "forbiddenMessage": "No tienes permisos para realizar esta acción.",
+      "blockedAccessMessage": "Tu acceso ha sido bloqueado. Contacta al administrador.",
+      "notFoundTitle": "No encontrado",
+      "notFoundMessage": "El recurso solicitado no existe (404).",
+      "serverTitle": "Servidor",
+      "serverMessage": "Error interno del servidor. Intenta más tarde.",
+      "serviceUnavailableMessage": "El servicio no está disponible actualmente (503).",
+      "badGatewayMessage": "Error de comunicación con el servidor (502).",
+      "conflictMessage": "La operación no se pudo completar porque genera un conflicto (409).",
+      "validationMessage": "Los datos enviados no cumplen las validaciones requeridas (422).",
+      "tooManyRequestsMessage": "Has realizado demasiadas solicitudes. Intenta nuevamente más tarde (429).",
+      "genericTitle": "Error",
+      "genericMessage": "Ocurrió un error ({{status}}).",
+      "refreshNoAccessToken": "El servidor no devolvió un token de acceso al intentar renovar la sesión.",
+      "refreshFailed": "No se pudo renovar la sesión. Por favor, inicia sesión nuevamente.",
+      "refreshRequestFailed": "Ocurrió un error al intentar renovar el token de sesión."
+    }
+  }
+}

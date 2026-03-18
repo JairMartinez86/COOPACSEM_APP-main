@@ -1,0 +1,152 @@
+import { Routes } from '@angular/router';
+import { JMartMassiveValidationService } from '@JairMartinez86/jmartinez-validator';
+import { guestGuard } from './core/guards/guest-guard';
+import { authChildGuard } from './core/guards/CanActivateChildFn';
+import { pendingChangesGuard } from './core/guards/pending-changes.guard';
+import { permissionGuard } from './core/guards/permission.guard';
+
+export const routes: Routes = [
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/auth/pages/login/login').then(m => m.Login),
+    canActivate: [guestGuard],
+    providers: [JMartMassiveValidationService],
+  },
+  {
+    path: 'two-factor',
+    loadComponent: () =>
+      import('./features/auth/pages/two-factor/two-factor').then(m => m.TwoFactor),
+    canActivate: [guestGuard],
+    providers: [JMartMassiveValidationService],
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./features/auth/pages/auth-forgot-password/auth-forgot-password')
+        .then(m => m.AuthForgotPassword),
+    canActivate: [guestGuard],
+    providers: [JMartMassiveValidationService],
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./features/auth/pages/auth-reset-password/auth-reset-password')
+        .then(m => m.AuthResetPassword),
+    providers: [JMartMassiveValidationService],
+  },
+
+  {
+    path: '',
+    loadComponent: () =>
+      import('./layout/main-layout/main-layout').then(m => m.MainLayout),
+    canActivateChild: [authChildGuard],
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard'
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard/dashboard').then(m => m.Dashboard),
+        canActivate: [permissionGuard],
+        data: { permission: '/dashboard' },
+        providers: [JMartMassiveValidationService],
+      },
+      {
+        path: 'company',
+        loadComponent: () =>
+          import('./features/setting/pages/company/company')
+            .then(m => m.CompanyComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/company' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+      {
+        path: 'roles-setting',
+        loadComponent: () =>
+          import('./features/setting/pages/roles-permissions/roles-permissions')
+            .then(m => m.RolesPermissionsComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/roles-setting' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+
+
+      {
+        path: 'user-list',
+        loadComponent: () =>
+          import('./features/setting/pages/user-list/user-list')
+            .then(m => m.UserList),
+        canActivate: [permissionGuard],
+        data: { permission: '/user-list' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+
+
+
+
+
+      {
+        path: 'user-setting',
+        loadComponent: () =>
+          import('./features/setting/pages/user-setting/user-setting')
+            .then(m => m.UserSettingComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/user-setting' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+
+
+      {
+        path: 'activity-history',
+        loadComponent: () =>
+          import('./features/setting/pages/activity-history/activity-history.component')
+            .then(m => m.ActivityHistoryComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/activity-history' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+      {
+        path: 'activity-history/:user',
+        loadComponent: () =>
+          import('./features/setting/pages/activity-history/activity-history.component')
+            .then(m => m.ActivityHistoryComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/activity-history' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+
+
+
+
+        {
+        path: 'socio',
+        loadComponent: () =>
+          import('./features/prueba/pages/socios/socios')
+            .then(m => m.Socios),
+        canActivate: [permissionGuard],
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+
+
+
+
+
+
+    ]
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
+  }
+];

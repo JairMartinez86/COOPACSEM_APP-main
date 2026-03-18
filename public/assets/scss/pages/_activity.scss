@@ -1,0 +1,203 @@
+/*--------------------------------------------------------------
+# Activity Log Page - NiceAdmin
+--------------------------------------------------------------*/
+
+.page-activity {
+  .al-head {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--surface-color), var(--background-color) 15%);
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+  }
+
+  .al-kpi {
+    border-radius: 4px;
+    overflow: hidden;
+
+    .card-body {
+      padding: 0.8rem 0.9rem;
+    }
+
+    small {
+      display: block;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted-color);
+      font-weight: 700;
+    }
+
+    strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 1rem;
+      color: var(--heading-color);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    span {
+      display: block;
+      margin-top: 2px;
+      font-size: 0.69rem;
+      color: var(--muted-color);
+      font-weight: 600;
+    }
+  }
+
+  .al-card {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .al-card .card-header {
+    border-bottom: 1px solid var(--border-color-light);
+    background: transparent;
+    padding: 0.8rem 0.95rem;
+  }
+
+  .al-link {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    text-decoration: none;
+  }
+
+  .al-risk-list,
+  .al-session-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .al-risk-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid var(--border-color-light);
+    border-radius: 4px;
+    background: var(--surface-color);
+    padding: 9px;
+
+    strong {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--heading-color);
+      font-weight: 700;
+    }
+
+    p {
+      margin: 1px 0 0;
+      font-size: 0.71rem;
+      color: var(--muted-color);
+    }
+  }
+
+  .al-session-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border-color-light);
+    border-radius: 4px;
+    background: var(--surface-color);
+    padding: 9px;
+  }
+
+  .al-session-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--background-color);
+    color: var(--muted-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .al-session-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--heading-color);
+  }
+
+  .al-session-meta {
+    margin-top: 1px;
+    font-size: 0.71rem;
+    color: var(--muted-color);
+  }
+
+  .al-stream-day {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 700;
+    color: var(--muted-color);
+    padding: 10px 14px;
+    background: var(--background-color);
+    border-bottom: 1px solid var(--border-color-light);
+  }
+
+  .al-stream-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 9px;
+    align-items: center;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border-color-light);
+
+    strong {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--heading-color);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 1px 0 0;
+      font-size: 0.74rem;
+      color: var(--muted-color);
+      line-height: 1.45;
+    }
+
+    small {
+      font-size: 0.71rem;
+      color: var(--muted-color);
+      white-space: nowrap;
+    }
+  }
+
+  .al-stream-item:last-child {
+    border-bottom: 0;
+  }
+
+  .al-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    flex-shrink: 0;
+
+    &.success { background: var(--success-color); }
+    &.accent { background: var(--accent-color); }
+    &.warning { background: var(--warning-color); }
+    &.info { background: var(--info-color); }
+    &.danger { background: var(--danger-color); }
+  }
+
+  @media (max-width: 575px) {
+    .al-stream-item {
+      grid-template-columns: auto 1fr;
+
+      small {
+        grid-column: 2;
+      }
+    }
+  }
+}

@@ -1,0 +1,142 @@
+/*--------------------------------------------------------------
+# Footer - FlexAdmin
+# Structured utility footer with status signal,
+# compact nav links, and right-aligned credits.
+--------------------------------------------------------------*/
+
+.footer {
+  margin-top: auto;
+  padding: 10px var(--spacing-lg);
+  background: color-mix(in srgb, var(--surface-color), var(--background-color) 18%);
+  border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+  min-height: var(--footer-height);
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.footer-meta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.footer-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  padding: 0 11px;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--success-color), transparent 88%);
+  color: color-mix(in srgb, var(--success-color), black 14%);
+  font-size: 0.71rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.footer-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--success-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--success-color), transparent 82%);
+}
+
+.footer-version {
+  font-size: 0.74rem;
+  color: var(--muted-color);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.footer-links {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.footer-links a {
+  position: relative;
+  color: var(--muted-color);
+  text-decoration: none;
+  font-size: 0.76rem;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--accent-color);
+  }
+
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -9px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 3px;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--muted-color), transparent 38%);
+  }
+}
+
+.footer-credits {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.footer-copyright {
+  font-size: 0.74rem;
+  color: var(--muted-color);
+  line-height: 1.4;
+
+  a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 991px) {
+  .footer {
+    padding: 12px var(--spacing-md);
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .footer-meta,
+  .footer-links,
+  .footer-credits {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 575px) {
+  .footer-links {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .footer-version {
+    display: none;
+  }
+}

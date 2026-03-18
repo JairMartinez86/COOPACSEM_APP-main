@@ -1,0 +1,21 @@
+<!-- users.component.html (tabla HTML) -->
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Rol</th>
+    </tr>
+  </thead>
+
+  <tbody>
+@for (r of rows; track r) {
+  <tr>
+    <td>{{ r.name }}</td>
+    <td>{{ r.email }}</td>
+    <td>{{ r.role }}</td>
+  </tr>
+}
+
+  </tbody>
+</table>

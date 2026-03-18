@@ -1,0 +1,143 @@
+{
+  "rolesPermissions": {
+    "title": "Roles and Permissions",
+    "common": {
+      "noDescription": "No description",
+      "noRoles": "No roles available"
+    },
+    "roles": {
+      "cardTitle": "Roles",
+      "usersCount": "users"
+    },
+    "details": {
+      "cardTitle": "Role details",
+      "name": "Name",
+      "key": "Key",
+      "description": "Description",
+      "created": "Created",
+      "lastModified": "Last modified",
+      "status": "Status"
+    },
+    "permissions": {
+      "cardTitle": "Permission matrix",
+      "subtitle": "Configure access for role {{role}}",
+      "module": "Module",
+      "view": "View",
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete",
+      "all": "All"
+    },
+    "users": {
+      "cardTitle": "Users with role {{role}}",
+      "empty": "There are no users assigned to this role",
+      "removeRole": "Remove role",
+      "confirmRemoveTitle": "Remove user from role",
+      "confirmRemoveMessage": "Do you want to remove {{user}} from role {{role}}?"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "addRole": "Add role",
+      "edit": "Edit",
+      "saveChanges": "Save changes",
+      "saving": "Saving...",
+      "creating": "Creating...",
+      "cancel": "Cancel",
+      "createRole": "Create role",
+      "updateRole": "Update role"
+    },
+    "modal": {
+      "title": "Add new role",
+      "editTitle": "Edit role",
+      "roleName": "Role name",
+      "roleNamePlaceholder": "Enter the role name",
+      "roleKey": "Role key",
+      "roleKeyPlaceholder": "Example: manager",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe what this role can do",
+      "copyPermissionsFrom": "Copy permissions from",
+      "startWithoutPermissions": "Start without permissions",
+      "copyHelp": "Optionally copy permissions from an existing role.",
+      "roleColor": "Role color",
+      "activeRole": "Active role"
+    },
+    "form": {
+      "fieldMeta": {
+        "name": {
+          "label": "Role",
+          "tooltip": "Required field"
+        },
+        "key": {
+          "label": "Login",
+          "tooltip": "Required field",
+          "tooltipIconClass": ""
+        },
+        "description": {
+          "label": "Login",
+          "tooltip": "Required field",
+          "tooltipIconClass": ""
+        },
+        "copyFromRoleKey": {
+          "label": "Login",
+          "tooltip": "Optional field",
+          "tooltipIconClass": ""
+        }
+      },
+      "validations": {
+        "name": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Role name is required"
+            }
+          }
+        },
+        "key": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Role key is required"
+            }
+          }
+        },
+        "description": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Enter a description"
+            }
+          }
+        },
+        "copyFromRoleKey": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        }
+      }
+    },
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/home"
+      },
+      {
+        "label": "Users",
+        "url": ""
+      },
+      {
+        "label": "Roles and Permissions",
+        "url": "/roles-setting"
+      }
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "modal": {
+    "title": "Validation errors",
+    "services": {
+      "defaultTitle": "Message",
+      "confirmTitle": "Confirm",
+      "serverError": "Error connecting to the server",
+      "badRequest": "The submitted request is invalid.",
+      "unauthorized": "You are not authenticated. Please sign in again.",
+      "forbidden": "You do not have permission to perform this action.",
+      "notFound": "The requested resource was not found.",
+      "conflict": "The record already exists or causes a conflict.",
+      "validation": "The submitted data does not meet the validations.",
+      "tooManyRequests": "Too many requests. Please try again later.",
+      "internalServerError": "An internal server error occurred.",
+      "badGateway": "Server communication error.",
+      "serviceUnavailable": "The service is temporarily unavailable."
+    },
+    "buttons": {
+      "continue": "Continue",
+      "cancel": "Cancel"
+    },
+    "types": {
+      "success": {
+        "title": "Operation successful",
+        "subtitle": "The action was completed successfully."
+      },
+      "error": {
+        "title": "An error occurred",
+        "subtitle": "The action could not be completed."
+      },
+      "warning": {
+        "title": "Warning",
+        "subtitle": "Review the information before continuing."
+      },
+      "delete": {
+        "title": "Delete record",
+        "subtitle": "This action cannot be undone."
+      },
+      "cancel": {
+        "title": "Cancel action",
+        "subtitle": "Do you want to continue with this operation?"
+      },
+      "info": {
+        "title": "Information",
+        "subtitle": "Review the details below."
+      }
+    }
+  }
+}

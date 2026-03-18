@@ -1,0 +1,16 @@
+
+<router-outlet></router-outlet>
+
+<app-loader></app-loader>
+
+@if (modal$ | async; as state) {
+  <app-modal
+    [open]="state.open"
+    [title]="state.title"
+    [message]="state.message"
+    [messageFormat]="state.messageFormat"
+    [type]="state.type ?? 'info'"
+    (result)="debugModalResult($event)">
+  </app-modal>
+}
+

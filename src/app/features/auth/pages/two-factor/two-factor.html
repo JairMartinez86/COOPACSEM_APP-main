@@ -1,0 +1,159 @@
+<div class="fauth">
+    <main class="fauth-main">
+        <div class="fauth-main-inner">
+
+            <a href="#" class="fauth-logo fauth-logo-center">
+                <img [src]="appState.logoUrl() || 'assets/img/logo.webp'" [alt]="appState.appName()"
+                    class="header-logo-img">
+                <span>{{ appState.appName() }}</span>
+            </a>
+
+            <div class="fauth-card fauth-card-sm">
+
+                <div class="fauth-card-head text-center">
+                    <span class="fauth-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </span>
+
+                    <h1 class="fauth-title">
+                        {{ 'twoFactor.title' | translate }}
+                    </h1>
+
+                    <p class="fauth-subtitle">
+                        {{ 'twoFactor.subtitle' | translate }}
+                    </p>
+                </div>
+
+                <form class="fauth-form" [formGroup]="form" (ngSubmit)="submit()" autocomplete="off" novalidate>
+
+                    <div class="fauth-field">
+
+                        <label class="form-label visually-hidden">
+                            {{ 'twoFactor.codeLabel' | translate }}
+                        </label>
+
+                        <div class="fauth-otp">
+
+                            <input id="otp-1" type="text" class="form-control fauth-otp-input" maxlength="1"
+                                pattern="[0-9]" inputmode="numeric" [disabled]="verifying || resending" (input)="onDigitInput($event, 0)"
+                                (paste)="onPaste($event)" (keydown)="onKeyDown($event, 0)">
+
+                            <input type="text" class="form-control fauth-otp-input" maxlength="1" pattern="[0-9]"
+                                inputmode="numeric" [disabled]="verifying || resending" (input)="onDigitInput($event, 1)" (paste)="onPaste($event)"
+                                (keydown)="onKeyDown($event, 1)">
+
+                            <input type="text" class="form-control fauth-otp-input" maxlength="1" pattern="[0-9]"
+                                inputmode="numeric" [disabled]="verifying || resending" (input)="onDigitInput($event, 2)" (paste)="onPaste($event)"
+                                (keydown)="onKeyDown($event, 2)">
+
+                            <span class="fauth-otp-gap">-</span>
+
+                            <input type="text" class="form-control fauth-otp-input" maxlength="1" pattern="[0-9]"
+                                inputmode="numeric" [disabled]="verifying || resending" (input)="onDigitInput($event, 3)" (paste)="onPaste($event)"
+                                (keydown)="onKeyDown($event, 3)">
+
+                            <input type="text" class="form-control fauth-otp-input" maxlength="1" pattern="[0-9]"
+                                inputmode="numeric" [disabled]="verifying || resending" (input)="onDigitInput($event, 4)" (paste)="onPaste($event)"
+                                (keydown)="onKeyDown($event, 4)">
+
+                            <input type="text" class="form-control fauth-otp-input" maxlength="1" pattern="[0-9]"
+                                inputmode="numeric" [disabled]="verifying || resending" (input)="onDigitInput($event, 5)" (paste)="onPaste($event)"
+                                (keydown)="onKeyDown($event, 5)">
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-check mt-3 mb-2 text-start">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="rememberDevice"
+                            [disabled]="verifying || resending" [checked]="rememberDevice"
+                            (change)="rememberDevice = $any($event.target).checked">
+                        <label class="form-check-label" for="rememberDevice">
+                            {{ 'twoFactor.rememberDevice' | translate }}
+                        </label>
+                        <div class="form-text">
+                            {{ 'twoFactor.rememberDeviceHint' | translate }}
+                        </div>
+                    </div>
+
+                    <div class="fauth-countdown text-center mt-3">
+                        <span class="fauth-countdown-label">
+                            {{ 'twoFactor.remainingTime' | translate }}
+                        </span>
+
+                        <span class="fauth-countdown-time fw-bold" [class.text-danger]="expired">
+
+                            {{ countdownText }}
+
+                        </span>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-3">
+                        @if(!expired)
+                        {
+                        <button type="submit" class="btn btn-primary w-100" [disabled]="verifying || resending">
+
+                            {{ 'twoFactor.verifyButton' | translate }}
+
+                        </button>
+                        }
+
+                        <button type="button" class="btn btn-outline-secondary w-100" (click)="resendCode()" [disabled]="resending || verifying">
+                            @if (resending) {
+                            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                            }
+                            {{ 'twoFactor.resendButton' | translate }}
+                        </button>
+
+                        @if(expired)
+                        {
+                        <button type="button" class="btn btn-danger w-100" (click)="backToLogin()">
+
+                            {{ 'twoFactor.backToLogin' | translate }}
+
+                        </button>
+                        }
+                    </div>
+
+
+                </form>
+
+                <!--
+                <p class="fauth-foot-text">
+                    {{ 'twoFactor.noAccess' | translate }}
+                    <a href="#" class="fauth-link">
+                        {{ 'twoFactor.backupCode' | translate }}
+                    </a>
+                </p>
+                -->
+
+
+            </div>
+
+            <footer class="footer-centered">
+                <div class="footer-copyright">
+                    &copy; {{ appState.appYear() }}
+                    <a href="#">{{ appState.appName() }}</a>.
+                    {{ 'twoFactor.rights' | translate }}
+                </div>
+
+                <div class="footer-links">
+                    <a href="#">{{ 'footer.privacy' | translate }}</a>
+                    <a href="#">{{ 'footer.terms' | translate }}</a>
+                    <a href="#">{{ 'footer.help' | translate }}</a>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+</div>
+
+@if(devCode)
+{
+<div class="alert alert-warning text-center mt-3">
+    <strong>DEV CODE:</strong> {{ devCode }}
+</div>
+}

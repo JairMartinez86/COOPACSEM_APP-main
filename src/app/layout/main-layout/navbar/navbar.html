@@ -1,0 +1,183 @@
+<!-- Header -->
+<header class="header">
+  <div class="header-left">
+
+    <button class="sidebar-toggle" title="Toggle Sidebar" aria-label="Toggle sidebar" type="button"
+      (click)="toggleMenu($event)">
+      <span class="menu-lines" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+
+    <a routerLink="/" class="header-brand" [attr.aria-label]="'navbar.home' | translate" (click)="onNavigate()">
+      <span class="header-logo">
+        <img [src]="headerLogoSrc()" [alt]="appState.appName()" (error)="onHeaderLogoError()">
+      </span>
+      <span class="header-context">
+        <strong class="header-context-title">{{ appState.appName() }}</strong>
+      </span>
+    </a>
+  </div>
+
+  <div class="header-search-wrap">
+    <form class="search-form" action="search-results.html" method="GET">
+      <i class="bi bi-search search-icon"></i>
+      <input type="search" name="q" [attr.placeholder]="'navbar.searchPlaceholder' | translate" autocomplete="off">
+      <kbd class="search-shortcut">/</kbd>
+    </form>
+  </div>
+
+  <div class="header-right">
+    <div class="header-actions-desktop">
+
+      <div class="header-action-wrap dropdown lang-dropdown">
+        <button class="header-action dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" type="button"
+          [attr.title]="'navbar.language' | translate">
+          <img [src]="currentLang?.icon" [alt]="currentLang?.code?.toUpperCase()" class="lang-flag">
+          <span class="lang-code">{{ currentLang?.code?.toUpperCase() }}</span>
+        </button>
+
+        <div class="dropdown-menu dropdown-menu-end lang-menu">
+          <div class="menu-title">{{ 'navbar.selectLanguage' | translate }}</div>
+
+          <a *ngFor="let lang of languages; trackBy: trackByLang" class="lang-item" href=""
+            [class.active]="lang.code === currentLangCode" (click)="changeLanguage(lang.code, $event)">
+            <img [src]="lang.icon" [alt]="lang.code.toUpperCase()" class="lang-flag">
+
+            <span class="lang-copy">
+              <span class="lang-name">{{ lang.language }}</span>
+              <span class="lang-meta">{{ lang.country }}</span>
+            </span>
+
+            <span>{{ lang.code === currentLangCode ? '✓' : '\u00A0' }}</span>
+          </a>
+        </div>
+      </div>
+
+      <button class="header-action theme-toggle" [attr.title]="'navbar.toggleTheme' | translate" type="button"
+        (click)="toggleTheme()">
+        <i class="ph-light ph-moon-stars theme-icon-dark"></i>
+        <i class="ph-light ph-sun theme-icon-light"></i>
+      </button>
+
+      <div class="header-action-wrap dropdown user-dropdown">
+        <button class="dropdown-toggle user-trigger" data-bs-toggle="dropdown" aria-expanded="false" type="button">
+
+          {{ user?.fullname?.charAt(0)?.toUpperCase() }}
+
+          <!--
+<img
+            [src]="'assets/img/' + (((user?.role || '').toLowerCase().includes('admin') || (user?.role || '').toLowerCase().includes('administrator') || (user?.role || '').toLowerCase().includes('administrador')) ? 'Administrador' : 'user') + '_' + user?.gender + '_512.webp'"
+            alt="User"
+            class="user-avatar"
+          >
+
+-->
+
+          <div class="user-brief">
+            <span class="user-name">{{ user?.fullname }}</span>
+            <span class="user-role">
+              <span [ngClass]="
+                  ((user?.role || '').toLowerCase().includes('admin') ||
+                   (user?.role || '').toLowerCase().includes('administrator') ||
+                   (user?.role || '').toLowerCase().includes('administrador'))
+                    ? 'badge-soft-success'
+                    : 'badge-soft-info'
+                ">
+                {{ user?.role }}
+              </span>
+            </span>
+          </div>
+        </button>
+
+        <div class="dropdown-menu dropdown-menu-end user-menu">
+          <div class="user-menu-header">
+
+            {{ user?.fullname?.charAt(0)?.toUpperCase() }}
+            <!--
+              <img
+              [src]="'assets/img/' + (((user?.role || '').toLowerCase().includes('admin') || (user?.role || '').toLowerCase().includes('administrator') || (user?.role || '').toLowerCase().includes('administrador')) ? 'Administrador' : 'user') + '_' + user?.gender + '_512.webp'"
+              alt="User"
+              class="user-menu-avatar"
+            >
+            -->
+
+            <div class="user-menu-info">
+              <div class="user-menu-name">{{ user?.fullname }}</div>
+              <div class="user-menu-email">{{ user?.email }}</div>
+            </div>
+          </div>
+
+          <div class="user-menu-body">
+            <a class="user-menu-item" routerLink="/profile" appPermission="view" (click)="onNavigate()">
+              <i class="bi bi-person"></i>
+              <span>{{ 'navbar.myProfile' | translate }}</span>
+            </a>
+
+            <a class="user-menu-item" routerLink="/user-setting" (click)="onNavigate()">
+              <i class="bi bi-sliders"></i>
+              <span>{{ 'navbar.preferences' | translate }}</span>
+            </a>
+
+            <a class="user-menu-item"
+              [routerLink]="user?.user ? ['/activity-history', user?.user] : ['/activity-history']"
+              (click)="onNavigate()">
+              <i class="bi bi-activity"></i>
+              <span>{{ 'navbar.activityLog' | translate }}</span>
+            </a>
+          </div>
+
+          <div class="user-menu-footer">
+            <a class="user-menu-logout" href="" (click)="logout($event)">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>{{ 'navbar.signOut' | translate }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions-mobile">
+      <button class="header-action search-toggle" [attr.title]="'navbar.search' | translate" type="button"
+        (click)="toggleSearch($event)">
+        <i class="bi bi-search"></i>
+      </button>
+
+      <button class="header-action mobile-menu-toggle" [attr.title]="'navbar.more' | translate" type="button"
+        (click)="toggleMobileMenu($event)">
+        <i class="bi bi-three-dots"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-search">
+  <form class="search-form" action="#" method="GET">
+    <input type="search" name="q" [attr.placeholder]="'navbar.searchShort' | translate" autocomplete="off">
+    <button type="submit"><i class="bi bi-search"></i></button>
+  </form>
+</div>
+
+<div class="mobile-header-menu">
+  <div class="mobile-header-menu-content">
+
+    <button class="mobile-menu-item theme-toggle" [attr.title]="'navbar.toggleTheme' | translate" type="button"
+      (click)="toggleTheme()">
+      <i class="ph-light ph-moon-stars theme-icon-dark"></i>
+      <i class="ph-light ph-sun theme-icon-light"></i>
+      <span class="mobile-menu-label">{{ 'navbar.theme' | translate }}</span>
+    </button>
+
+    <a routerLink="/user-setting" class="mobile-menu-item" (click)="onNavigate()">
+      <i class="bi bi-sliders"></i>
+      <span class="mobile-menu-label">{{ 'navbar.settings' | translate }}</span>
+    </a>
+
+    <a href="" class="mobile-menu-item mobile-menu-item-danger" (click)="logout($event)">
+      <i class="bi bi-box-arrow-right"></i>
+      <span class="mobile-menu-label">{{ 'navbar.signOut' | translate }}</span>
+    </a>
+  </div>
+</div>

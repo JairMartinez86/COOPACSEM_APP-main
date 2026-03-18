@@ -1,0 +1,294 @@
+/*--------------------------------------------------------------
+# Contact Page - NiceAdmin
+--------------------------------------------------------------*/
+
+.page-contact {
+  .contact-hero {
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--accent-color), transparent 95%), transparent 65%),
+      var(--card-bg);
+  }
+
+  .contact-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .contact-hero-kicker {
+    display: inline-flex;
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    background: color-mix(in srgb, var(--accent-color), transparent 90%);
+  }
+
+  .contact-hero-text {
+    margin: 0;
+    max-width: 760px;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    color: var(--muted-color);
+  }
+
+  .contact-hero-badges {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: var(--surface-color);
+      font-size: 0.74rem;
+      color: var(--default-color);
+
+      i {
+        color: var(--accent-color);
+      }
+    }
+  }
+
+  .contact-hero-note {
+    border: 1px dashed color-mix(in srgb, var(--accent-color), transparent 76%);
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--accent-color), transparent 96%);
+    padding: 12px;
+
+    h6 {
+      margin: 0 0 6px;
+      font-size: 0.84rem;
+      color: var(--heading-color);
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0 0 10px;
+      font-size: 0.76rem;
+      line-height: 1.5;
+      color: var(--muted-color);
+    }
+  }
+
+  .contact-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .contact-metric-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--card-bg);
+    padding: 10px;
+  }
+
+  .contact-metric-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-color);
+    background: color-mix(in srgb, var(--accent-color), transparent 88%);
+    flex-shrink: 0;
+  }
+
+  .contact-metric-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted-color);
+  }
+
+  .contact-metric-value {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.2;
+  }
+
+  .contact-request-card,
+  .contact-stack-card {
+    border-radius: 4px;
+  }
+
+  .contact-card-subtitle {
+    color: var(--muted-color);
+    font-size: 0.76rem;
+  }
+
+  .contact-form-modern {
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--heading-color);
+      margin-bottom: 6px;
+    }
+
+    .form-control,
+    .form-select {
+      height: 40px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+    }
+
+    textarea.form-control {
+      height: auto;
+      min-height: 150px;
+    }
+
+    .form-check-label {
+      font-size: 0.77rem;
+      color: var(--default-color);
+    }
+  }
+
+  .contact-channel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .contact-channel-item {
+    border: 1px solid var(--border-color-light);
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--surface-color);
+  }
+
+  .contact-channel-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--accent-color);
+    background: color-mix(in srgb, var(--accent-color), transparent 88%);
+
+    &.success {
+      color: var(--success-color);
+      background: var(--success-color-light);
+    }
+
+    &.info {
+      color: var(--info-color);
+      background: var(--info-color-light);
+    }
+  }
+
+  .contact-channel-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--heading-color);
+  }
+
+  .contact-channel-meta {
+    font-size: 0.72rem;
+    color: var(--muted-color);
+    margin-top: 1px;
+  }
+
+  .contact-office-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contact-office-item {
+    font-size: 0.78rem;
+    color: var(--default-color);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    i {
+      width: 15px;
+      text-align: center;
+      color: var(--accent-color);
+      flex-shrink: 0;
+    }
+  }
+
+  .contact-map {
+    width: 100%;
+    height: 220px;
+    border: 0;
+    border-radius: 4px;
+    display: block;
+  }
+
+  .contact-faq-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .contact-faq-item-modern {
+    border: 1px solid var(--border-color-light);
+    border-radius: 4px;
+    background: var(--surface-color);
+    padding: 10px;
+
+    h6 {
+      margin: 0;
+      font-size: 0.79rem;
+      color: var(--heading-color);
+      font-weight: 700;
+    }
+
+    p {
+      margin: 4px 0 0;
+      font-size: 0.73rem;
+      color: var(--muted-color);
+      line-height: 1.45;
+    }
+  }
+
+  @media (max-width: 1399px) {
+    .contact-hero-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 1199px) {
+    .contact-metrics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 575px) {
+    .contact-metrics {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-hero-badges {
+      span {
+        width: 100%;
+      }
+    }
+  }
+}

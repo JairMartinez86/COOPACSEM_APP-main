@@ -1,0 +1,84 @@
+{
+  "activity": {
+    "common": {
+      "loading": "Loading..."
+    },
+    "settings": {
+      "general": "General",
+      "generalDesc": "Profile and preferences",
+      "activity": "Activity log",
+      "activityhistory": "History and sessions",
+      "user": "User",
+      "userUnavailable": "No user information available."
+    },
+    "activity": {
+      "pageTitle": "Activity and sessions",
+      "pageSubtitle": "Monitor account actions, sign-ins, and workspace security events.",
+      "actions": {
+        "exportLog": "Export log",
+        "filters": "Filters"
+      },
+      "metrics": {
+        "logins": "Logins",
+        "lastDays": "Last {{days}} days",
+        "security": "Security",
+        "criticalNotices": "Critical notices",
+        "profileChanges": "Profile changes",
+        "thisMonth": "This month",
+        "failedAttempts": "Failed attempts",
+        "blocked": "Blocked"
+      },
+      "risk": {
+        "title": "Risk summary",
+        "levels": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High",
+          "critical": "Critical"
+        }
+      },
+      "sessions": {
+        "title": "Active sessions",
+        "manage": "Manage",
+        "current": "Current",
+        "trusted": "Trusted",
+        "close": "Close",
+        "confirmTitle": "Warning",
+        "confirmMessage": "Do you really want to close the session on device {{device}}?",
+        "unknownDevice": "Unknown device",
+        "logoutCurrent": "Sign out my current session",
+        "relativeTime": {
+          "justNow": "Just now",
+          "minutesAgo": "{{value}} min ago",
+          "hoursAgo": "{{value}} h ago",
+          "daysAgo": "{{value}} d ago"
+        }
+      },
+      "timeline": {
+        "title": "Recent timeline",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "thisWeek": "This week"
+      },
+      "filters": {
+        "all": "All",
+        "security": "Security",
+        "profile": "Profile"
+      },
+      "empty": {
+        "risk": "There are no risk items to display.",
+        "sessions": "There are no active sessions.",
+        "timeline": "There is no recent activity."
+      },
+      "trustedDevices": {
+        "title": "Trusted devices",
+        "empty": "There are no trusted devices registered.",
+        "remove": "Remove",
+        "close": "Close",
+        "expires": "Expires",
+        "confirmTitle": "Warning",
+        "confirmMessage": "Do you really want to remove the trusted device {{device}}?"
+      }
+    }
+  }
+}

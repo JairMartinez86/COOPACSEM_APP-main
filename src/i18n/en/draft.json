@@ -1,0 +1,8 @@
+{
+  "draft": {
+    "unsavedDataTitle": "Warning",
+    "unsavedDataRestored": "Unsaved data was found and restored. If you want to discard it, press Cancel.",
+    "leavePageTitle": "Warning",
+    "leavePageMessage": "There is unsaved data. If you leave this page, it will be lost. Do you want to continue?"
+  }
+}

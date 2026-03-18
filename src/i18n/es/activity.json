@@ -1,0 +1,84 @@
+{
+  "activity": {
+    "common": {
+      "loading": "Cargando..."
+    },
+    "settings": {
+      "general": "General",
+      "generalDesc": "Perfil y preferencias",
+      "activity": "Registro de actividad",
+      "activityhistory": "Historial y sesiones",
+      "user": "Usuario",
+      "userUnavailable": "No hay información del usuario disponible."
+    },
+    "activity": {
+      "pageTitle": "Actividad y sesiones",
+      "pageSubtitle": "Supervisa acciones de la cuenta, inicios de sesión y eventos de seguridad del espacio de trabajo.",
+      "actions": {
+        "exportLog": "Exportar registro",
+        "filters": "Filtros"
+      },
+      "metrics": {
+        "logins": "Inicios de sesión",
+        "lastDays": "Últimos {{days}} días",
+        "security": "Seguridad",
+        "criticalNotices": "Avisos críticos",
+        "profileChanges": "Cambios de perfil",
+        "thisMonth": "Este mes",
+        "failedAttempts": "Intentos fallidos",
+        "blocked": "Bloqueados"
+      },
+      "risk": {
+        "title": "Resumen de riesgo",
+        "levels": {
+          "low": "Bajo",
+          "medium": "Medio",
+          "high": "Alto",
+          "critical": "Crítico"
+        }
+      },
+      "sessions": {
+        "title": "Sesiones activas",
+        "manage": "Administrar",
+        "current": "Actual",
+        "trusted": "Confiable",
+        "close": "Cerrar",
+        "confirmTitle": "Advertencia",
+        "confirmMessage": "¿Realmente desea cerrar la sesión del dispositivo {{device}}?",
+        "unknownDevice": "Dispositivo desconocido",
+        "logoutCurrent": "Cerrar mi sesión actual",
+        "relativeTime": {
+          "justNow": "Justo ahora",
+          "minutesAgo": "Hace {{value}} min",
+          "hoursAgo": "Hace {{value}} h",
+          "daysAgo": "Hace {{value}} d"
+        }
+      },
+      "timeline": {
+        "title": "Línea de tiempo reciente",
+        "today": "Hoy",
+        "yesterday": "Ayer",
+        "thisWeek": "Esta semana"
+      },
+      "filters": {
+        "all": "Todos",
+        "security": "Seguridad",
+        "profile": "Perfil"
+      },
+      "empty": {
+        "risk": "No hay elementos de riesgo para mostrar.",
+        "sessions": "No hay sesiones activas.",
+        "timeline": "No hay actividad reciente."
+      },
+      "trustedDevices": {
+        "title": "Dispositivos de confianza",
+        "empty": "No hay dispositivos de confianza registrados.",
+        "remove": "Eliminar",
+        "close": "Cerrar",
+        "expires": "Vence",
+        "confirmTitle": "Advertencia",
+        "confirmMessage": "¿Realmente desea eliminar el dispositivo de confianza {{device}}?"
+      }
+    }
+  }
+}

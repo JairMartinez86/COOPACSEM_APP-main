@@ -1,0 +1,491 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<div class="main-content page-roles">
+  <div class="page-roles">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">{{ 'rolesPermissions.title' | translate }}</h1>
+      </div>
+
+      <div class="page-header-actions">
+        <button
+          class="btn btn-primary btn-sm"
+          data-bs-toggle="modal"
+          data-bs-target="#addRoleModal"
+          (click)="openCreateRoleModal()"
+          appPermission="create">
+          <i class="bi bi-plus-lg me-1"></i>
+          {{ 'rolesPermissions.actions.addRole' | translate }}
+        </button>
+      </div>
+    </div>
+
+    @if (selectedRole; as role) {
+    <div class="row g-4">
+      <div class="col-xl-4 col-lg-5">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title">{{ 'rolesPermissions.roles.cardTitle' | translate }}</h5>
+          </div>
+
+          <div class="card-body p-0">
+            <div class="roles-list">
+              @for (item of roles; track item.key) {
+              <div class="roles-item" [class.active]="role.key === item.key" (click)="selectRole(item)">
+                <div class="roles-item-icon" [style.background]="item.bgColor" [style.color]="item.color">
+                  <i [class]="item.icon"></i>
+                </div>
+
+                <div class="roles-item-info">
+                  <span class="roles-item-name">{{ item.name }}</span>
+                  <span class="roles-item-count">
+                    {{ item.usersCount }} {{ 'rolesPermissions.roles.usersCount' | translate }}
+                  </span>
+                </div>
+
+                <button
+                  class="roles-item-edit"
+                  [title]="'rolesPermissions.actions.edit' | translate"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addRoleModal"
+                  (click)="openEditRoleModal(item, $event)"
+                  appPermission="edit">
+                  <i class="bi bi-pencil"></i>
+                </button>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">{{ 'rolesPermissions.details.cardTitle' | translate }}</h5>
+          </div>
+
+          <div class="card-body">
+            <div class="roles-detail-list">
+              <div class="roles-detail">
+                <span class="roles-detail-label">{{ 'rolesPermissions.details.name' | translate }}</span>
+                <span class="roles-detail-value">{{ role.name }}</span>
+              </div>
+
+              <div class="roles-detail">
+                <span class="roles-detail-label">{{ 'rolesPermissions.details.key' | translate }}</span>
+                <span class="roles-detail-value">{{ role.key }}</span>
+              </div>
+
+              <div class="roles-detail">
+                <span class="roles-detail-label">{{ 'rolesPermissions.details.description' | translate }}</span>
+                <span class="roles-detail-value">
+                  {{ role.description || ('rolesPermissions.common.noDescription' | translate) }}
+                </span>
+              </div>
+
+              <div class="roles-detail">
+                <span class="roles-detail-label">{{ 'rolesPermissions.details.created' | translate }}</span>
+                <span class="roles-detail-value">{{ role.createdAtUtc | date:'mediumDate' }}</span>
+              </div>
+
+              <div class="roles-detail">
+                <span class="roles-detail-label">{{ 'rolesPermissions.details.lastModified' | translate }}</span>
+                <span class="roles-detail-value">
+                  {{ (role.updatedAtUtc || role.createdAtUtc) | date:'mediumDate' }}
+                </span>
+              </div>
+
+              <div class="roles-detail">
+                <span class="roles-detail-label">{{ 'rolesPermissions.details.status' | translate }}</span>
+                <span class="roles-detail-value">
+                  {{
+                    role.active
+                      ? ('rolesPermissions.status.active' | translate)
+                      : ('rolesPermissions.status.inactive' | translate)
+                  }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-8 col-lg-7">
+        <div class="card mb-4">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <div>
+              <h5 class="card-title mb-0">{{ 'rolesPermissions.permissions.cardTitle' | translate }}</h5>
+              <span class="roles-subtitle">
+                {{ 'rolesPermissions.permissions.subtitle' | translate:{ role: role.name } }}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              [disabled]="saving"
+              (click)="savePermissions()"
+              appPermission="edit">
+              <i class="bi bi-check-lg me-1"></i>
+              {{
+                saving
+                  ? ('rolesPermissions.actions.saving' | translate)
+                  : ('rolesPermissions.actions.saveChanges' | translate)
+              }}
+            </button>
+          </div>
+
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table roles-perm-table mb-0">
+                <thead>
+                  <tr>
+                    <th>{{ 'rolesPermissions.permissions.module' | translate }}</th>
+                    <th class="text-center">{{ 'rolesPermissions.permissions.view' | translate }}</th>
+                    <th class="text-center">{{ 'rolesPermissions.permissions.create' | translate }}</th>
+                    <th class="text-center">{{ 'rolesPermissions.permissions.edit' | translate }}</th>
+                    <th class="text-center">{{ 'rolesPermissions.permissions.delete' | translate }}</th>
+                    <th class="text-center">{{ 'rolesPermissions.permissions.all' | translate }}</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @for (group of permissionGroups; track group.titleKey) {
+                  <tr class="roles-perm-group">
+                    <td colspan="6">
+                      @if (group.iconclass) {
+                      <i [class]="group.iconclass + ' me-2'"></i>
+                      }
+                      {{ group.titleKey | translate }}
+                    </td>
+                  </tr>
+
+                  @for (row of group.rows; track row.router) {
+                  <tr>
+                    <td class="roles-perm-module">
+                      {{ row.titleKey | translate }}
+                    </td>
+
+                    <td class="text-center">
+                      @if (row.templatePermissions.view === null) {
+                      <span class="roles-perm-na">--</span>
+                      } @else {
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        [checked]="row.permissions.view"
+                        [disabled]="isMandatoryDashboardView(row, 'view')"
+                        (change)="setPermission(row, 'view', $any($event.target).checked)"
+                        appPermission="edit">
+                      }
+                    </td>
+
+                    <td class="text-center">
+                      @if (row.templatePermissions.create === null) {
+                      <span class="roles-perm-na">--</span>
+                      } @else {
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        [checked]="row.permissions.create"
+                        (change)="setPermission(row, 'create', $any($event.target).checked)"
+                        appPermission="edit">
+                      }
+                    </td>
+
+                    <td class="text-center">
+                      @if (row.templatePermissions.edit === null) {
+                      <span class="roles-perm-na">--</span>
+                      } @else {
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        [checked]="row.permissions.edit"
+                        (change)="setPermission(row, 'edit', $any($event.target).checked)"
+                        appPermission="edit">
+                      }
+                    </td>
+
+                    <td class="text-center">
+                      @if (row.templatePermissions.delete === null) {
+                      <span class="roles-perm-na">--</span>
+                      } @else {
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        [checked]="row.permissions.delete"
+                        (change)="setPermission(row, 'delete', $any($event.target).checked)"
+                        appPermission="edit">
+                      }
+                    </td>
+
+                    <td class="text-center">
+                      @if (!shouldShowToggleAll(row)) {
+                      <span class="roles-perm-na">--</span>
+                      } @else {
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        [checked]="isAllChecked(row)"
+                        (change)="toggleAll(row, $any($event.target).checked)"
+                        appPermission="edit">
+                      }
+                    </td>
+                  </tr>
+                  }
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="card-title mb-0">
+              {{ 'rolesPermissions.users.cardTitle' | translate:{ role: role.name } }}
+            </h5>
+            <span class="roles-user-count">
+              {{ role.users.length }} {{ 'rolesPermissions.roles.usersCount' | translate }}
+            </span>
+          </div>
+
+          <div class="card-body p-0">
+            <div class="roles-users-list">
+              @if (role.users.length === 0) {
+              <div class="p-4 text-center text-muted">
+                {{ 'rolesPermissions.users.empty' | translate }}
+              </div>
+              } @else {
+              @for (user of role.users; track user.email) {
+              <div class="roles-user">
+                <div class="roles-user-avatar d-flex align-items-center justify-content-center fw-bold">
+
+                   {{ user?.fullName!.charAt(0).toUpperCase() }}
+                   <!--
+                    <img [src]="getAvatarByGender(user)" [alt]="user.fullName" class="users-avatar">
+                   -->
+               
+                </div>
+
+                <div class="roles-user-info">
+                  <span class="roles-user-name">{{ user.fullName }}</span>
+                  <span class="roles-user-email">{{ user.email }}</span>
+                </div>
+
+                <span class="roles-user-status" [class.active]="user.active">
+                  {{
+                    user.active
+                      ? ('rolesPermissions.status.active' | translate)
+                      : ('rolesPermissions.status.inactive' | translate)
+                  }}
+                </span>
+
+                <span class="roles-user-date">{{ user.assignedAtUtc | date:'mediumDate' }}</span>
+
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm roles-user-remove"
+                  [title]="'rolesPermissions.users.removeRole' | translate"
+                  (click)="confirmRemoveUserFromRole(user)"
+                  appPermission="delete">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+              }
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @else {
+    <div class="card">
+      <div class="card-body py-5 text-center text-muted">
+        {{ 'rolesPermissions.common.noRoles' | translate }}
+      </div>
+    </div>
+    }
+
+    <div
+      class="modal fade"
+      id="addRoleModal"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      data-bs-focus="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              {{
+                modalMode === 'create'
+                  ? ('rolesPermissions.modal.title' | translate)
+                  : ('rolesPermissions.modal.editTitle' | translate)
+              }}
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body">
+            <form #roleForm="ngForm" autocomplete="off" novalidate>
+
+              <div class="mb-3" error-notify="name" error-display="inline">
+                <label class="form-label">
+                  {{ 'rolesPermissions.modal.roleName' | translate }}
+                  <span class="text-danger">*</span>
+                </label>
+                <input
+                  #roleNameInput
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="createForm.name"
+                  [placeholder]="'rolesPermissions.modal.roleNamePlaceholder' | translate"
+                  id="roleName"
+                  name="roleName"
+                  engineSync="name"
+                  autoFocusNext
+                  [next]="key"
+                  required>
+              </div>
+
+              <div class="mb-3" error-notify="key" error-display="inline">
+                <label class="form-label">
+                  {{ 'rolesPermissions.modal.roleKey' | translate }}
+                  <span class="text-danger">*</span>
+                </label>
+                <input
+                  #key
+                  type="text"
+                  class="form-control"
+                  [placeholder]="'rolesPermissions.modal.roleKeyPlaceholder' | translate"
+                  id="key"
+                  name="key"
+                  [(ngModel)]="createForm.key"
+                  engineSync="key"
+                  autoFocusNext
+                  [next]="desc"
+                  required>
+              </div>
+
+              <div class="mb-3" error-notify="description" error-display="inline">
+                <label class="form-label">{{ 'rolesPermissions.modal.description' | translate }}</label>
+                <textarea
+                  #desc
+                  class="form-control"
+                  rows="3"
+                  [placeholder]="'rolesPermissions.modal.descriptionPlaceholder' | translate"
+                  id="description"
+                  name="description"
+                  [(ngModel)]="createForm.description"
+                  engineSync="description"
+                  autoFocusNext
+                  [next]="copy"
+                  [next-isdisable]="[btnRol]"
+                  required></textarea>
+              </div>
+
+              <div class="mb-3" error-notify="copyFromRoleKey" error-display="inline">
+                <label class="form-label">{{ 'rolesPermissions.modal.copyPermissionsFrom' | translate }}</label>
+                <select
+                  #copy
+                  class="form-select"
+                  id="copyFromRoleKey"
+                  name="copyFromRoleKey"
+                  [(ngModel)]="createForm.copyFromRoleKey"
+                  engineSync="copyFromRoleKey"
+                  autoFocusNext
+                  [next]="btnRol"
+                  [disableClickButton]="true"
+                  [unlockOn]="notify.closed$"
+                  required
+                  [disabled]="modalMode !== 'create'">
+
+                  <option value="">{{ 'rolesPermissions.modal.startWithoutPermissions' | translate }}</option>
+                  @for (item of roles; track item.key) {
+                  <option [value]="item.key">{{ item.name }}</option>
+                  }
+                </select>
+                <div class="form-text">{{ 'rolesPermissions.modal.copyHelp' | translate }}</div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">{{ 'rolesPermissions.modal.roleColor' | translate }}</label>
+                <div class="roles-color-options">
+                  <label class="roles-color-option">
+                    <input type="radio" name="roleColor" value="danger" [(ngModel)]="createForm.colorKey">
+                    <span class="roles-color-swatch" style="background: var(--danger-color);"></span>
+                  </label>
+                  <label class="roles-color-option">
+                    <input type="radio" name="roleColor" value="warning" [(ngModel)]="createForm.colorKey">
+                    <span class="roles-color-swatch" style="background: var(--warning-color);"></span>
+                  </label>
+                  <label class="roles-color-option">
+                    <input type="radio" name="roleColor" value="primary" [(ngModel)]="createForm.colorKey">
+                    <span class="roles-color-swatch" style="background: var(--accent-color);"></span>
+                  </label>
+                  <label class="roles-color-option">
+                    <input type="radio" name="roleColor" value="info" [(ngModel)]="createForm.colorKey">
+                    <span class="roles-color-swatch" style="background: var(--info-color);"></span>
+                  </label>
+                  <label class="roles-color-option">
+                    <input type="radio" name="roleColor" value="success" [(ngModel)]="createForm.colorKey">
+                    <span class="roles-color-swatch" style="background: var(--success-color);"></span>
+                  </label>
+                  <label class="roles-color-option">
+                    <input type="radio" name="roleColor" value="secondary" [(ngModel)]="createForm.colorKey">
+                    <span class="roles-color-swatch" style="background: var(--muted-color);"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-check mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="roleActive"
+                  name="active"
+                  [(ngModel)]="createForm.active"
+                  appPermission="edit">
+                <label class="form-check-label" for="roleActive">
+                  {{ 'rolesPermissions.modal.activeRole' | translate }}
+                </label>
+              </div>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              {{ 'rolesPermissions.actions.cancel' | translate }}
+            </button>
+
+            <button
+              #btnRol
+              type="button"
+              class="btn btn-primary"
+              (click)="onSaveRoleModal()"
+              [disabled]="creating || saving"
+              autoFocusNext
+              [disableClickButton]="true"
+              [unlockOn]="notify.closed$">
+              {{
+                modalMode === 'create'
+                  ? (
+                      creating
+                        ? ('rolesPermissions.actions.creating' | translate)
+                        : ('rolesPermissions.actions.createRole' | translate)
+                    )
+                  : (
+                      saving
+                        ? ('rolesPermissions.actions.saving' | translate)
+                        : ('rolesPermissions.actions.updateRole' | translate)
+                    )
+              }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,606 @@
+{
+  "company": {
+    "title": "COMPANY",
+    "subtitle": "Define the corporate information that will be used in documents, reports, and system processes.",
+    "actions": {
+      "reset": "Reset",
+      "saveAll": "Save all"
+    },
+    "sections": {
+      "general": "General information",
+      "visualIdentity": "Visual identity",
+      "contact": "Contact information",
+      "regional": "Regional settings",
+      "smtp": "SMTP configuration",
+      "security": "System security"
+    },
+    "fields": {
+      "companyName": {
+        "label": "Company name",
+        "placeholder": "Enter the company name"
+      },
+      "tradeName": {
+        "label": "Trade name",
+        "placeholder": "Enter the trade name"
+      },
+      "ruc": {
+        "label": "RUC",
+        "placeholder": "Enter the RUC"
+      },
+      "businessType": {
+        "label": "Business type",
+        "placeholder": "Select an option",
+        "options": {
+          "corporation": "Corporation",
+          "individual": "Individual",
+          "soleProprietor": "Sole proprietor",
+          "other": "Other"
+        }
+      },
+      "status": {
+        "label": "Status",
+        "options": {
+          "active": "Active",
+          "inactive": "Inactive"
+        }
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Brief description of the company"
+      },
+      "logoFile": {
+        "label": "Company logo",
+        "help": "Recommended formats: PNG or JPG.",
+        "previewAlt": "Logo preview"
+      },
+      "phone": {
+        "label": "Phone",
+        "placeholder": "Enter the phone number"
+      },
+      "mobile": {
+        "label": "Mobile",
+        "placeholder": "Enter the mobile number"
+      },
+      "email": {
+        "label": "Email address",
+        "placeholder": "company@email.com"
+      },
+      "website": {
+        "label": "Website",
+        "placeholder": "https://www.company.com"
+      },
+      "address": {
+        "label": "Address",
+        "placeholder": "Enter the full address"
+      },
+      "country": {
+        "label": "Country",
+        "placeholder": "Select a country",
+        "options": {
+          "nicaragua": "Nicaragua",
+          "honduras": "Honduras",
+          "costaRica": "Costa Rica",
+          "elSalvador": "El Salvador",
+          "guatemala": "Guatemala"
+        }
+      },
+      "city": {
+        "label": "City",
+        "placeholder": "Enter the city"
+      },
+      "dateFormat": {
+        "label": "Date format",
+        "options": {
+          "dmy": "dd/MM/yyyy",
+          "mdy": "MM/dd/yyyy",
+          "ymd": "yyyy-MM-dd"
+        }
+      },
+      "currency": {
+        "label": "Currency"
+      },
+      "decimalSeparator": {
+        "label": "Decimal separator",
+        "options": {
+          "dot": "Dot (.)",
+          "comma": "Comma (,)"
+        }
+      },
+      "thousandSeparator": {
+        "label": "Thousands separator",
+        "options": {
+          "comma": "Comma (,)",
+          "dot": "Dot (.)",
+          "space": "Space"
+        }
+      },
+      "smtpHost": {
+        "label": "SMTP server",
+        "placeholder": "Example: smtp.gmail.com"
+      },
+      "smtpPort": {
+        "label": "Port",
+        "placeholder": "587"
+      },
+      "smtpFrom": {
+        "label": "Sender email",
+        "placeholder": "noreply@company.com"
+      },
+      "smtpUsername": {
+        "label": "SMTP username",
+        "placeholder": "Enter the SMTP username"
+      },
+      "smtpPassword": {
+        "label": "SMTP password",
+        "placeholder": "Enter the SMTP password"
+      },
+      "twoFactorCodeExpirationMinutes": {
+        "label": "2FA code expiration",
+        "placeholder": "5",
+        "suffix": "min"
+      },
+      "passwordResetExpirationMinutes": {
+        "label": "Password reset",
+        "placeholder": "30",
+        "suffix": "min"
+      },
+      "jwtExpiresMinutes": {
+        "label": "JWT expiration",
+        "placeholder": "60",
+        "suffix": "min"
+      },
+      "refreshExpiresMinutes": {
+        "label": "Refresh token",
+        "placeholder": "1440",
+        "suffix": "min"
+      },
+      "trustedDeviceExpirationDays": {
+        "label": "Trusted device expiration",
+        "placeholder": "30",
+        "suffix": "days"
+      },
+      "loginLockMinutes": {
+        "label": "Lock time after failed attempts",
+        "placeholder": "10",
+        "suffix": "min"
+      }
+    },
+    "form": {
+      "fieldMeta": {
+        "CompanyName": {
+          "label": "Company name",
+          "tooltip": "Required field"
+        },
+        "TradeName": {
+          "label": "Trade name",
+          "tooltip": "Required field"
+        },
+        "Ruc": {
+          "label": "RUC",
+          "tooltip": "Identification field"
+        },
+        "BusinessType": {
+          "label": "Business type",
+          "tooltip": "Select the business type"
+        },
+        "Status": {
+          "label": "Status",
+          "tooltip": "Current company status"
+        },
+        "Description": {
+          "label": "Description",
+          "tooltip": "General company description"
+        },
+        "Phone": {
+          "label": "Phone",
+          "tooltip": "Primary contact number"
+        },
+        "Mobile": {
+          "label": "Mobile",
+          "tooltip": "Secondary contact number"
+        },
+        "Email": {
+          "label": "Email address",
+          "tooltip": "Main company email"
+        },
+        "Website": {
+          "label": "Website",
+          "tooltip": "Public website"
+        },
+        "Address": {
+          "label": "Address",
+          "tooltip": "Physical address"
+        },
+        "Country": {
+          "label": "Country",
+          "tooltip": "Country of operation"
+        },
+        "City": {
+          "label": "City",
+          "tooltip": "City of operation"
+        },
+        "DateFormat": {
+          "label": "Date format",
+          "tooltip": "Regional date format"
+        },
+        "Currency": {
+          "label": "Currency",
+          "tooltip": "Default currency"
+        },
+        "DecimalSeparator": {
+          "label": "Decimal separator",
+          "tooltip": "Decimal symbol"
+        },
+        "ThousandSeparator": {
+          "label": "Thousands separator",
+          "tooltip": "Thousands symbol"
+        },
+        "SmtpHost": {
+          "label": "SMTP server",
+          "tooltip": "SMTP server host"
+        },
+        "SmtpPort": {
+          "label": "Port",
+          "tooltip": "SMTP port"
+        },
+        "SmtpFrom": {
+          "label": "Sender email",
+          "tooltip": "Sender email address"
+        },
+        "SmtpUsername": {
+          "label": "SMTP username",
+          "tooltip": "SMTP login username"
+        },
+        "SmtpPassword": {
+          "label": "SMTP password",
+          "tooltip": "SMTP login password"
+        },
+        "TwoFactorCodeExpirationMinutes": {
+          "label": "2FA code expiration",
+          "tooltip": "Expiration in minutes"
+        },
+        "PasswordResetExpirationMinutes": {
+          "label": "Password reset",
+          "tooltip": "Expiration in minutes"
+        },
+        "JwtExpiresMinutes": {
+          "label": "JWT expiration",
+          "tooltip": "Expiration in minutes"
+        },
+        "RefreshExpiresMinutes": {
+          "label": "Refresh token",
+          "tooltip": "Expiration in minutes"
+        },
+        "TrustedDeviceExpirationDays": {
+          "label": "Trusted device expiration",
+          "tooltip": "Number of days a trusted device remains valid"
+        },
+        "LoginLockMinutes": {
+          "label": "Lock time after failed attempts",
+          "tooltip": "Number of minutes the lock will last"
+        }
+      },
+      "validations": {
+        "CompanyName": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Company name is required"
+            }
+          }
+        },
+        "TradeName": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Trade name is required"
+            }
+          }
+        },
+        "Ruc": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "RUC is required"
+            }
+          }
+        },
+        "BusinessType": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "You must select a business type"
+            }
+          }
+        },
+        "Status": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "You must select a status"
+            }
+          }
+        },
+        "Description": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Description is required"
+            }
+          }
+        },
+        "Phone": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[1-9][0-9\\s\\-]{6,18}$",
+              "when": "{Phone}!=''",
+              "msj": "Enter a valid phone number"
+            }
+          }
+        },
+        "Mobile": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[0-9]{1,4}([ -]?[0-9]{2,4}){2,4}$",
+              "when": "{Mobile}!=''",
+              "msj": "Enter a valid mobile number"
+            }
+          }
+        },
+        "Email": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Email address is required"
+            },
+            "2": {
+              "rule": "EMAIL",
+              "when": "{Email}!=''",
+              "msj": "Enter a valid email address"
+            }
+          }
+        },
+        "Website": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Website is required"
+            }
+          }
+        },
+        "Address": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Address is required"
+            }
+          }
+        },
+        "Country": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "You must select a country"
+            }
+          }
+        },
+        "City": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "City is required"
+            }
+          }
+        },
+        "DateFormat": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "You must select a date format"
+            }
+          }
+        },
+        "Currency": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "You must select a currency"
+            }
+          }
+        },
+        "DecimalSeparator": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "You must select a decimal separator"
+            }
+          }
+        },
+        "ThousandSeparator": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "You must select a thousands separator"
+            }
+          }
+        },
+        "SmtpHost": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "SMTP server is required"
+            }
+          }
+        },
+        "SmtpPort": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "SMTP port is required"
+            },
+            "2": {
+              "rule": "NUM>=",
+              "value": "1",
+              "when": "{SmtpPort}!=''",
+              "msj": "SMTP port must be greater than or equal to {value}"
+            }
+          }
+        },
+        "SmtpFrom": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Sender email is required"
+            },
+            "2": {
+              "rule": "EMAIL",
+              "when": "{SmtpFrom}!=''",
+              "msj": "Enter a valid sender email"
+            }
+          }
+        },
+        "SmtpUsername": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "SMTP username is required"
+            }
+          }
+        },
+        "SmtpPassword": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "SMTP password is required"
+            }
+          }
+        },
+        "TwoFactorCodeExpirationMinutes": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "The 2FA code expiration time is required"
+            },
+            "2": {
+              "rule": "NUM>=",
+              "value": "1",
+              "when": "{TwoFactorCodeExpirationMinutes}!=''",
+              "msj": "The minimum allowed time is {value} minute"
+            }
+          }
+        },
+        "PasswordResetExpirationMinutes": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "The password reset time is required"
+            },
+            "2": {
+              "rule": "NUM>=",
+              "value": "1",
+              "when": "{PasswordResetExpirationMinutes}!=''",
+              "msj": "The minimum allowed time is {value} minute"
+            }
+          }
+        },
+        "JwtExpiresMinutes": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "The JWT expiration time is required"
+            },
+            "2": {
+              "rule": "NUM>=",
+              "value": "1",
+              "when": "{JwtExpiresMinutes}!=''",
+              "msj": "The minimum allowed time is {value} minute"
+            }
+          }
+        },
+        "RefreshExpiresMinutes": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "The refresh token time is required"
+            },
+            "2": {
+              "rule": "NUM>=",
+              "value": "1",
+              "when": "{RefreshExpiresMinutes}!=''",
+              "msj": "The minimum allowed time is {value} minute"
+            }
+          }
+        },
+        "TrustedDeviceExpirationDays": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "The trusted device expiration is required"
+            },
+            "2": {
+              "rule": "NUM>=",
+              "value": "1",
+              "when": "{TrustedDeviceExpirationDays}!=''",
+              "msj": "The minimum allowed time is {value} day"
+            }
+          }
+        },
+        "LoginLockMinutes": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "The lock time is required"
+            },
+            "2": {
+              "rule": "NUM>=",
+              "value": "1",
+              "when": "{LoginLockMinutes}!=''",
+              "msj": "The minimum allowed time is {value} minute"
+            }
+          }
+        }
+      }
+    },
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/home"
+      },
+      {
+        "label": "Settings",
+        "url": "/settings"
+      },
+      {
+        "label": "Company settings"
+      }
+    ]
+  }
+}

@@ -1,0 +1,160 @@
+<div class="fauth">
+    <main class="fauth-main">
+        <div class="fauth-main-inner">
+
+            <a href="#" class="fauth-logo fauth-logo-center">
+                <img [src]="appState.logoUrl() || 'assets/img/logo.webp'" [alt]="appState.appName()"
+                    class="header-logo-img">
+                <span>{{appState.appName()}}</span>
+            </a>
+
+            <div class="fauth-card">
+
+                <div class="fauth-card-head">
+                    <span class="fauth-kicker">
+                        <i class="bi bi-shield-check"></i>
+                        {{ 'login.secureAccess' | translate }}
+                    </span>
+
+                    <h1 class="fauth-title">
+                        {{ 'login.welcomeBack' | translate }}
+                    </h1>
+
+                    <p class="fauth-subtitle">
+                        {{ 'login.subtitle' | translate }}
+                    </p>
+                </div>
+
+                <form class="fauth-form" autocomplete="off" novalidate>
+
+                    <div error-notify="identifier" error-display="inline">
+                        <div class="fauth-field">
+                            <label class="form-label">
+                                <span>{{ 'login.emailAddress' | translate }}</span>
+
+                            </label>
+
+                            <input type="identifier" class="form-control"
+                                [placeholder]="'login.emailPlaceholder' | translate" id="identifier" name="identifier"
+                                [(ngModel)]="loginRequest.identifier" engineSync="identifier" autoFocusNext [next]="p"
+                                [disabled]="isSubmitting" required JmartAutoFocus>
+                        </div>
+                    </div>
+
+
+
+                    <div class="fauth-field" error-notify="password" error-display="inline">
+
+                        <div class="fauth-row-between">
+
+                            <label class="form-label">
+                                <span>{{ 'login.password' | translate }}</span>
+
+                            </label>
+
+                            <a routerLink="/forgot-password" class="fauth-link">
+                                {{ 'login.forgotPassword' | translate }}
+                            </a>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <input #p type="password" class="form-control" placeholder="••••••••" id="password"
+                                name="password" [(ngModel)]="loginRequest.password" engineSync="password" autoFocusNext
+                                [next]="btn" [disableClickButton]="true" [unlockOn]="notify.closed$" [disabled]="isSubmitting" required>
+
+
+
+                            <button class="btn btn-outline-secondary" type="button" [disabled]="isSubmitting"
+                                (click)="p.type = p.type === 'password' ? 'text' : 'password'">
+
+                                <i class="bi" [ngClass]="p.type === 'password' ? 'bi-eye' : 'bi-eye-slash'">
+                                </i>
+
+                            </button>
+
+
+
+                        </div>
+
+
+
+
+
+                    </div>
+
+
+
+
+
+                    <button #btn type="button" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2" id="blogin"
+                        (click)="iniciarSesion()" autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$" [disabled]="isSubmitting">
+                        @if (isSubmitting) {
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        }
+                        <span>{{ 'login.signIn' | translate }}</span>
+                    </button>
+
+
+
+                    <div class="fauth-divider"><span>{{ 'login.lang.caption' | translate }}</span></div>
+
+                    <div class="fauth-social">
+
+
+
+
+                        <button type="button" class="btn btn-outline-secondary" [disabled]="isSubmitting" (click)="changeLang('es')">
+
+                            <img src="https://flagcdn.com/w40/ni.png" alt="NI" class="lang-flag">
+                            <span class="lang-copy">
+                                <span class="lang-name">{{ 'login.lang.data.es.language' | translate }}</span>
+                                <span class="lang-meta">{{ 'login.lang.data.es.country' | translate }}</span>
+                            </span>
+                        </button>
+
+
+
+
+
+
+
+                        <button type="button" class="btn btn-outline-secondary" [disabled]="isSubmitting" (click)="changeLang('en')">
+                            <img src="https://flagcdn.com/w40/us.png" alt="EN" class="lang-flag">
+                            <span class="lang-copy">
+                                <span class="lang-name">{{ 'login.lang.data.en.language' | translate }}</span>
+                                <span class="lang-meta">{{ 'login.lang.data.en.country' | translate }}</span>
+                            </span></button>
+                    </div>
+
+
+
+
+
+
+                </form>
+
+
+
+            </div>
+
+            <footer class="footer-centered">
+
+                <div class="footer-copyright">
+                    © {{appState.appYear()}} {{appState.appName()}}.
+                    {{ 'login.rights' | translate }}
+                </div>
+
+                <div class="footer-links">
+                    <a>{{ 'footer.privacy' | translate }}</a>
+                    <a>{{ 'footer.terms' | translate }}</a>
+                    <a>{{ 'footer.help' | translate }}</a>
+                </div>
+
+            </footer>
+
+        </div>
+    </main>
+</div>

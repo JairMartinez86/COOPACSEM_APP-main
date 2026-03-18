@@ -1,0 +1,153 @@
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-shell">
+
+    <!-- Close button -->
+    <button
+      type="button"
+      title="Toggle Sidebar"
+      class="sidebar-close"
+      (click)="closeMenu($event)">
+      <i class="bi bi-x-lg"></i>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <ul class="nav-menu">
+        <ng-container *ngTemplateOutlet="renderMenu; context: { $implicit: menuItems, level: 0 }"></ng-container>
+      </ul>
+    </nav>
+
+    <ng-template #renderMenu let-items let-level="level">
+      @for (item of items; track item.id ?? $index) {
+        @switch (item.type) {
+          @case ('heading') {
+            <li class="nav-heading">
+              <span>{{ item.titleKey | translate }}</span>
+            </li>
+          }
+
+          @case ('link') {
+            <li [class.nav-item]="level === 0">
+              <a
+                class="nav-link"
+                [routerLink]="item.router"
+                [attr.id]="item.id || null"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="onNavigate()"
+              >
+                @if (level === 0 && item.iconclass) {
+                  <span class="nav-icon">
+                    <i [class]="item.iconclass"></i>
+                  </span>
+                }
+
+                @if (level > 0) {
+                  <span class="nav-dot"></span>
+                }
+
+                <span class="nav-text">{{ item.titleKey | translate }}</span>
+              </a>
+            </li>
+          }
+
+          @case ('submenu') {
+            <li
+              class="has-submenu"
+              [class.nav-item]="level === 0"
+              [class.open]="item.open"
+            >
+              <a
+                class="nav-link"
+                href=""
+                [attr.aria-expanded]="item.open"
+                (click)="toggleItem(item, $event)"
+              >
+                @if (level === 0 && item.iconclass) {
+                  <span class="nav-icon">
+                    <i [class]="item.iconclass"></i>
+                  </span>
+                }
+
+                @if (level > 0) {
+                  <span class="nav-dot"></span>
+                }
+
+                <span class="nav-text">{{ item.titleKey | translate }}</span>
+
+                <span class="nav-arrow">
+                  <i class="bi bi-chevron-right"></i>
+                </span>
+              </a>
+
+              <ul class="nav-submenu" [style.maxHeight]="item.open ? '1000px' : null">
+                <ng-container
+                  *ngTemplateOutlet="renderMenu; context: { $implicit: item.children, level: level + 1 }">
+                </ng-container>
+              </ul>
+            </li>
+          }
+        }
+      }
+    </ng-template>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-account">
+        <a class="sidebar-account-main">
+          <!--
+           <img
+            [src]="'assets/img/' + (((user?.role || '').toLowerCase().includes('admin') || (user?.role || '').toLowerCase().includes('administrator') || (user?.role || '').toLowerCase().includes('administrador')) ? 'Administrador' : 'user') + '_' + user?.gender + '_512.webp'"
+            alt="User"
+            class="sidebar-account-avatar"
+          >
+
+          -->
+           {{ user?.fullname?.charAt(0)?.toUpperCase() }}
+         
+          <div class="sidebar-account-meta">
+            <div class="sidebar-account-name">{{ user?.fullname }}</div>
+            <div class="sidebar-account-role">
+              <span
+                [ngClass]="
+                  ((user?.role || '').toLowerCase().includes('admin') ||
+                   (user?.role || '').toLowerCase().includes('administrator') ||
+                   (user?.role || '').toLowerCase().includes('administrador'))
+                    ? 'badge-soft-success'
+                    : 'badge-soft-info'
+                "
+              >
+                {{ user?.role }}
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <div class="sidebar-account-actions">
+          <a
+            class="sidebar-account-action"
+            [attr.title]="'sidebar.settings' | translate"
+            routerLink="/user-setting"
+            (click)="onNavigate()"
+          >
+            <i class="bi bi-gear"></i>
+          </a>
+
+          <a
+            class="sidebar-account-action sidebar-account-logout"
+            [attr.title]="'sidebar.logout' | translate"
+            href=""
+            (click)="logout($event)"
+          >
+            <i class="bi bi-box-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</aside>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" (click)="closeMenu($event)"></div>

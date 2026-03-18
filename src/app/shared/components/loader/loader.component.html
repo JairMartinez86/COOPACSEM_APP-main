@@ -1,0 +1,20 @@
+@if (loader.loading$ | async) {
+<div class="nd-loader-wrap">
+  <div class="nd-loader-card">
+    <div class="nd-loader-spinner"></div>
+
+    <div class="nd-loader-content">
+      <h3 class="nd-loader-title">{{ 'loader.title' | translate }}</h3>
+      
+      <p class="nd-loader-subtitle typing-test">{{ 'loader.subtitle' | translate }}</p>
+
+      <div class="nd-loader-bars">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+}

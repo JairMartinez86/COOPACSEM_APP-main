@@ -1,0 +1,21 @@
+{
+  "twoFactor": {
+    "title": "Two-factor authentication",
+    "subtitle": "Enter the 6-digit verification code sent to your email.",
+    "codeLabel": "Verification code",
+    "verifyButton": "Verify code",
+    "noAccess": "Can't access your app?",
+    "backupCode": "Use backup code",
+    "rights": "All rights reserved",
+    "invalidCode": "The entered code is invalid or has expired.",
+    "remainingTime": "Remaining time:",
+    "expired": "The verification code has expired.",
+    "backToLogin": "Back to login",
+    "validations": {
+      "codeLength": "The code must contain 6 digits."
+    },
+    "rememberDevice": "Trust this device",
+    "rememberDeviceHint": "Do not ask for two-factor authentication again in this browser during the configured period.",
+    "resendButton": "Resend code"
+  }
+}

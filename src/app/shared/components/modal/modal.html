@@ -1,0 +1,93 @@
+@if (open) {
+  <div class="modal fade show" style="display:block;" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body py-4">
+          <div class="mb-3 text-center">
+            @if (type === 'success') {
+              <span
+                class="bg-success-subtle text-success rounded-circle d-inline-flex align-items-center justify-content-center"
+                style="width:64px;height:64px;"
+              >
+                <i class="bi bi-check-lg fs-1"></i>
+              </span>
+            } @else if (type === 'error') {
+              <span
+                class="bg-danger-subtle text-danger rounded-circle d-inline-flex align-items-center justify-content-center"
+                style="width:64px;height:64px;"
+              >
+                <i class="bi bi-x-lg fs-1"></i>
+              </span>
+            } @else if (type === 'warning' || type === 'delete' || type === 'cancel') {
+              <span
+                class="bg-warning-subtle text-warning rounded-circle d-inline-flex align-items-center justify-content-center"
+                style="width:64px;height:64px;"
+              >
+                <i class="bi bi-exclamation-triangle fs-1"></i>
+              </span>
+            } @else {
+              <span
+                class="bg-info-subtle text-info rounded-circle d-inline-flex align-items-center justify-content-center"
+                style="width:64px;height:64px;"
+              >
+                <i class="bi bi-info-lg fs-1"></i>
+              </span>
+            }
+          </div>
+
+          <div class="text-center mb-3">
+            @if (messageFormat === 'html' && message.includes('validation-list')) {
+              <h4>{{ 'modal.title' | translate }}</h4>
+            } @else if (title) {
+              <h4>{{ title }}</h4>
+            } @else {
+              <h4>{{ ('modal.types.' + type + '.title') | translate }}</h4>
+              <p class="text-muted mb-0">
+                {{ ('modal.types.' + type + '.subtitle') | translate }}
+              </p>
+            }
+          </div>
+
+          @if (messageFormat === 'html') {
+            <div [innerHTML]="message"></div>
+          } @else {
+            <p class="text-muted text-center">{{ message }}</p>
+          }
+        </div>
+
+        <div class="modal-footer justify-content-center border-0 pt-0">
+          @if (type === 'delete' || type === 'cancel' || type === 'warning') {
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="onCancel()"
+              (keydown.enter)="onCancel()"
+            >
+              {{ 'modal.buttons.cancel' | translate }}
+            </button>
+
+            <button
+              #btnModalAceptar
+              type="button"
+              class="btn btn-danger"
+              (click)="onClose()"
+              (keydown.enter)="onClose()"
+            >
+              {{ 'modal.buttons.continue' | translate }}
+            </button>
+          } @else {
+            <button
+              #btnModalAceptar
+              type="button"
+              class="btn btn-primary"
+              (click)="onClose()"
+              (keydown.enter)="onClose()"
+            >
+              {{ 'modal.buttons.continue' | translate }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

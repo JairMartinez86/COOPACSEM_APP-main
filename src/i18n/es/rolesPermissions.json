@@ -1,0 +1,143 @@
+{
+  "rolesPermissions": {
+    "title": "Roles y Permisos",
+    "common": {
+      "noDescription": "Sin descripción",
+      "noRoles": "No hay roles disponibles"
+    },
+    "roles": {
+      "cardTitle": "Roles",
+      "usersCount": "usuarios"
+    },
+    "details": {
+      "cardTitle": "Detalles del rol",
+      "name": "Nombre",
+      "key": "Clave",
+      "description": "Descripción",
+      "created": "Creado",
+      "lastModified": "Última modificación",
+      "status": "Estado"
+    },
+    "permissions": {
+      "cardTitle": "Matriz de permisos",
+      "subtitle": "Configura el acceso para el rol {{role}}",
+      "module": "Módulo",
+      "view": "Ver",
+      "create": "Crear",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "all": "Todo"
+    },
+    "users": {
+      "cardTitle": "Usuarios con el rol {{role}}",
+      "empty": "No hay usuarios asignados a este rol",
+      "removeRole": "Quitar rol",
+      "confirmRemoveTitle": "Quitar usuario del rol",
+      "confirmRemoveMessage": "¿Deseas quitar a {{user}} del rol {{role}}?"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "actions": {
+      "addRole": "Agregar rol",
+      "edit": "Editar",
+      "saveChanges": "Guardar cambios",
+      "saving": "Guardando...",
+      "creating": "Creando...",
+      "cancel": "Cancelar",
+      "createRole": "Crear rol",
+      "updateRole": "Actualizar rol"
+    },
+    "modal": {
+      "title": "Agregar nuevo rol",
+      "editTitle": "Editar rol",
+      "roleName": "Nombre del rol",
+      "roleNamePlaceholder": "Ingrese el nombre del rol",
+      "roleKey": "Clave del rol",
+      "roleKeyPlaceholder": "Ejemplo: manager",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe lo que puede hacer este rol",
+      "copyPermissionsFrom": "Copiar permisos desde",
+      "startWithoutPermissions": "Comenzar sin permisos",
+      "copyHelp": "Opcionalmente, copia permisos desde un rol existente.",
+      "roleColor": "Color del rol",
+      "activeRole": "Rol activo"
+    },
+    "form": {
+      "fieldMeta": {
+        "name": {
+          "label": "Rol",
+          "tooltip": "Campo requerido"
+        },
+        "key": {
+          "label": "Login",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "description": {
+          "label": "Login",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "copyFromRoleKey": {
+          "label": "Login",
+          "tooltip": "Campo opcional",
+          "tooltipIconClass": ""
+        }
+      },
+      "validations": {
+        "name": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "El nombre del rol es requerido"
+            }
+          }
+        },
+        "key": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "La clave del rol es requerida"
+            }
+          }
+        },
+        "description": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Ingrese una descripción"
+            }
+          }
+        },
+        "copyFromRoleKey": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        }
+      }
+    },
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/home"
+      },
+      {
+        "label": "Usuarios",
+        "url": ""
+      },
+      {
+        "label": "Roles y Permisos",
+        "url": "/roles-setting"
+      }
+    ]
+  }
+}

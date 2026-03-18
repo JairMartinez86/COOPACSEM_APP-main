@@ -1,0 +1,43 @@
+.twofactor-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f8f9fa;
+}
+
+.twofactor-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.twofactor-header {
+  margin-bottom: 20px;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    color: #6c757d;
+  }
+}
+
+.invalid-text {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 6px;
+}
+
+.actions {
+  margin-top: 20px;
+}

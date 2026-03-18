@@ -1,0 +1,18 @@
+import interceptor from './es/interceptor.json';
+import draft from './es/draft.json';
+import twoFactor from './es/twoFactor.json';
+import sidebar from './es/sidebar.json';
+import navbar from './es/navbar.json';
+import modal from './es/modal.json';
+import loader from './es/loader.json';
+import auth from './es/auth.json';
+import login from './es/login.json';
+import forgotPassword from './es/forgotPassword.json';
+import resetPassword from './es/resetPassword.json';
+import company from './es/company.json';
+import userSettings from './es/userSettings.json';
+import rolesPermissions from './es/rolesPermissions.json';
+import activity from './es/activity.json';
+import userlist from './es/userlist.json';
+
+export const es = Object.assign({}, interceptor, draft, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist);

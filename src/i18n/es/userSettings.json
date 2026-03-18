@@ -1,0 +1,259 @@
+{
+  "userSettings": {
+    "workspaceSettings": "Configuración del espacio de trabajo",
+    "manageProfileSecurity": "Administra tu perfil y la seguridad de tu cuenta desde un solo lugar",
+    "general": "General",
+    "activity": "Registro de actividad",
+    "activityhistory": "Historial y sesiones",
+    "profilePreferences": "Perfil y preferencias",
+    "twoFactorStatus": "Estado de 2FA",
+    "protected": "Protegido",
+    "alert": "Peligro",
+    "activeSessions": "Sesiones activas",
+    "accountProfile": "Perfil de la cuenta",
+    "fullName": "Nombre completo",
+    "emailAddress": "Correo electrónico",
+    "mobile": "Celular",
+    "phoneNumber": "Teléfono",
+    "address": "Dirección",
+    "workspacePreferences": "Preferencias del espacio de trabajo",
+    "language": "Idioma",
+    "defaultLandingPage": "Página de inicio predeterminada",
+    "appearance": "Apariencia",
+    "themeMode": "Modo de tema",
+    "securityControls": "Controles de seguridad",
+    "password": "Contraseña",
+    "passwordLastChanged": "Último cambio hace {{part1}} {{part2}}",
+    "twoFactorAuthentication": "Autenticación de dos factores",
+    "requireVerificationCode": "Requerir código de verificación al iniciar sesión",
+    "empty": "Sin asignar",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "brightUI": "Interfaz brillante",
+    "lowLightUI": "Interfaz para poca luz",
+    "currentPassword": "Contraseña actual",
+    "currentPasswordPlaceholder": "Ingrese la contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "newPasswordPlaceholder": "Ingrese la nueva contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "confirmPasswordPlaceholder": "Confirme la contraseña",
+    "common": {
+      "reset": "Restablecer",
+      "saveAll": "Guardar todo",
+      "change": "Cambiar"
+    },
+    "form": {
+      "fieldMeta": {
+        "FullName": {
+          "label": "Configuración",
+          "tooltip": "Campo requerido"
+        },
+        "Email": {
+          "label": "Configuración",
+          "tooltip": "Campo opcional",
+          "tooltipIconClass": "ri-mail-fill"
+        },
+        "Mobile": {
+          "label": "Configuración",
+          "tooltip": "Campo opcional"
+        },
+        "PhoneNumber": {
+          "label": "Configuración",
+          "tooltip": "Campo opcional"
+        },
+        "Address": {
+          "label": "Configuración",
+          "tooltip": "Campo opcional"
+        },
+        "Theme": {
+          "label": "Configuración",
+          "tooltip": "Campo opcional"
+        },
+        "Language": {
+          "label": "Configuración",
+          "tooltip": "Campo opcional"
+        },
+        "DefaultLandingPage": {
+          "label": "Configuración",
+          "tooltip": "Campo opcional"
+        },
+        "EnableTwoFactorLogin": {
+          "label": "Configuración",
+          "tooltip": ""
+        },
+        "Password": {
+          "label": "Contraseña",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": "ri-key-2-line"
+        },
+        "NewPassword": {
+          "label": "Contraseña",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": "ri-key-2-line"
+        },
+        "ConfirmPassword": {
+          "label": "Contraseña",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": "ri-key-2-line"
+        }
+      },
+      "validations": {
+        "FullName": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "10",
+              "msj": "El nombre debe tener al menos {value} caracteres"
+            }
+          }
+        },
+        "Email": {
+          "data": {
+            "1": {
+              "rule": "EMAIL",
+              "when": "{EnableTwoFactorLogin}=true || {Email}!=''",
+              "msj": "Ingrese un correo válido"
+            }
+          }
+        },
+        "Mobile": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[0-9]{1,4}([ -]?[0-9]{2,4}){2,4}$",
+              "when": "{Mobile}!=''",
+              "msj": "Ingrese un número de celular válido"
+            }
+          }
+        },
+        "PhoneNumber": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[1-9][0-9\\s\\-]{6,18}$",
+              "when": "{PhoneNumber}!=''",
+              "msj": "Ingrese un número de teléfono válido"
+            }
+          }
+        },
+        "Address": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "Theme": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "Language": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "DefaultLandingPage": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "EnableTwoFactorLogin": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "Password": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "6",
+              "when": "{Password}!='' || {NewPassword}!='' || {ConfirmPassword}!=''",
+              "msj": "La contraseña debe tener al menos {value} caracteres",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        },
+        "NewPassword": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "6",
+              "when": "{NewPassword}!=''",
+              "msj": "La contraseña debe tener al menos {value} caracteres",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            },
+            "2": {
+              "rule": "IGUAL",
+              "value": "{ConfirmPassword}",
+              "when": "{NewPassword}!='' && {ConfirmPassword}!=''",
+              "msj": "Las contraseñas no coinciden",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        },
+        "ConfirmPassword": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "6",
+              "when": "{ConfirmPassword}!=''",
+              "msj": "La contraseña debe tener al menos {value} caracteres",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            },
+            "2": {
+              "rule": "IGUAL",
+              "value": "{NewPassword}",
+              "when": "{NewPassword}!='' && {ConfirmPassword}!=''",
+              "msj": "Las contraseñas no coinciden",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        }
+      }
+    },
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/home"
+      },
+      {
+        "label": "Usuarios",
+        "url": ""
+      },
+      {
+        "label": "Configuración",
+        "url": ""
+      },
+      {
+        "label": "Cuenta",
+        "url": "/user-setting"
+      }
+    ],
+    "auditEmailNotifications": "Alertas por correo de seguridad",
+    "auditEmailNotificationsDesc": "Enviar correos al tercer intento fallido, al bloqueo y en eventos críticos como nuevo dispositivo de confianza."
+  }
+}

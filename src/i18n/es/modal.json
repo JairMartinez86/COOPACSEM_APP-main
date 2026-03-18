@@ -1,0 +1,50 @@
+{
+  "modal": {
+    "title": "Errores de validación",
+    "services": {
+      "defaultTitle": "Mensaje",
+      "confirmTitle": "Confirmar",
+      "serverError": "Error al conectar con el servidor",
+      "badRequest": "La solicitud enviada es inválida.",
+      "unauthorized": "No está autenticado. Inicie sesión nuevamente.",
+      "forbidden": "No tiene permisos para realizar esta acción.",
+      "notFound": "El recurso solicitado no fue encontrado.",
+      "conflict": "El registro ya existe o genera conflicto.",
+      "validation": "Los datos enviados no cumplen las validaciones.",
+      "tooManyRequests": "Demasiadas solicitudes. Intente nuevamente más tarde.",
+      "internalServerError": "Ocurrió un error interno en el servidor.",
+      "badGateway": "Error de comunicación con el servidor.",
+      "serviceUnavailable": "El servicio no está disponible temporalmente."
+    },
+    "buttons": {
+      "continue": "Continuar",
+      "cancel": "Cancelar"
+    },
+    "types": {
+      "success": {
+        "title": "Operación exitosa",
+        "subtitle": "La acción se completó correctamente."
+      },
+      "error": {
+        "title": "Ocurrió un error",
+        "subtitle": "No fue posible completar la acción."
+      },
+      "warning": {
+        "title": "Advertencia",
+        "subtitle": "Revisa la información antes de continuar."
+      },
+      "delete": {
+        "title": "Eliminar registro",
+        "subtitle": "Esta acción no se puede deshacer."
+      },
+      "cancel": {
+        "title": "Anular acción",
+        "subtitle": "¿Desea continuar con esta operación?"
+      },
+      "info": {
+        "title": "Información",
+        "subtitle": "Revise los detalles a continuación."
+      }
+    }
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "userSettings": {
+    "workspaceSettings": "Workspace settings",
+    "manageProfileSecurity": "Manage your profile and account security from one place",
+    "general": "General",
+    "activity": "Activity log",
+    "activityhistory": "History and sessions",
+    "profilePreferences": "Profile and preferences",
+    "twoFactorStatus": "2FA status",
+    "protected": "Protected",
+    "alert": "Danger",
+    "activeSessions": "Active sessions",
+    "accountProfile": "Account profile",
+    "fullName": "Full name",
+    "emailAddress": "Email address",
+    "mobile": "Mobile",
+    "phoneNumber": "Phone",
+    "address": "Address",
+    "workspacePreferences": "Workspace preferences",
+    "language": "Language",
+    "defaultLandingPage": "Default landing page",
+    "appearance": "Appearance",
+    "themeMode": "Theme mode",
+    "securityControls": "Security controls",
+    "password": "Password",
+    "passwordLastChanged": "Last changed {{part1}} {{part2}} ago",
+    "twoFactorAuthentication": "Two-factor authentication",
+    "requireVerificationCode": "Require a verification code when signing in",
+    "empty": "Unassigned",
+    "light": "Light",
+    "dark": "Dark",
+    "brightUI": "Bright interface",
+    "lowLightUI": "Low-light interface",
+    "currentPassword": "Current password",
+    "currentPasswordPlaceholder": "Enter the current password",
+    "newPassword": "New password",
+    "newPasswordPlaceholder": "Enter the new password",
+    "confirmPassword": "Confirm password",
+    "confirmPasswordPlaceholder": "Confirm the password",
+    "common": {
+      "reset": "Reset",
+      "saveAll": "Save all",
+      "change": "Change"
+    },
+    "form": {
+      "fieldMeta": {
+        "FullName": {
+          "label": "Settings",
+          "tooltip": "Required field"
+        },
+        "Email": {
+          "label": "Settings",
+          "tooltip": "Optional field",
+          "tooltipIconClass": "ri-mail-fill"
+        },
+        "Mobile": {
+          "label": "Settings",
+          "tooltip": "Optional field"
+        },
+        "PhoneNumber": {
+          "label": "Settings",
+          "tooltip": "Optional field"
+        },
+        "Address": {
+          "label": "Settings",
+          "tooltip": "Optional field"
+        },
+        "Theme": {
+          "label": "Settings",
+          "tooltip": "Optional field"
+        },
+        "Language": {
+          "label": "Settings",
+          "tooltip": "Optional field"
+        },
+        "DefaultLandingPage": {
+          "label": "Settings",
+          "tooltip": "Optional field"
+        },
+        "EnableTwoFactorLogin": {
+          "label": "Settings",
+          "tooltip": ""
+        },
+        "Password": {
+          "label": "Password",
+          "tooltip": "Required field",
+          "tooltipIconClass": "ri-key-2-line"
+        },
+        "NewPassword": {
+          "label": "Password",
+          "tooltip": "Required field",
+          "tooltipIconClass": "ri-key-2-line"
+        },
+        "ConfirmPassword": {
+          "label": "Password",
+          "tooltip": "Required field",
+          "tooltipIconClass": "ri-key-2-line"
+        }
+      },
+      "validations": {
+        "FullName": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "10",
+              "msj": "The name must have at least {value} characters"
+            }
+          }
+        },
+        "Email": {
+          "data": {
+            "1": {
+              "rule": "EMAIL",
+              "when": "{EnableTwoFactorLogin}=true || {Email}!=''",
+              "msj": "Enter a valid email"
+            }
+          }
+        },
+        "Mobile": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[0-9]{1,4}([ -]?[0-9]{2,4}){2,4}$",
+              "when": "{Mobile}!=''",
+              "msj": "Enter a valid mobile number"
+            }
+          }
+        },
+        "PhoneNumber": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[1-9][0-9\\s\\-]{6,18}$",
+              "when": "{PhoneNumber}!=''",
+              "msj": "Enter a valid phone number"
+            }
+          }
+        },
+        "Address": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "Theme": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "Language": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "DefaultLandingPage": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "EnableTwoFactorLogin": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": ""
+            }
+          }
+        },
+        "Password": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "6",
+              "when": "{Password}!='' || {NewPassword}!='' || {ConfirmPassword}!=''",
+              "msj": "The password must have at least {value} characters",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        },
+        "NewPassword": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "6",
+              "when": "{NewPassword}!=''",
+              "msj": "The password must have at least {value} characters",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            },
+            "2": {
+              "rule": "IGUAL",
+              "value": "{ConfirmPassword}",
+              "when": "{NewPassword}!='' && {ConfirmPassword}!=''",
+              "msj": "Passwords do not match",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        },
+        "ConfirmPassword": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "6",
+              "when": "{ConfirmPassword}!=''",
+              "msj": "The password must have at least {value} characters",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            },
+            "2": {
+              "rule": "IGUAL",
+              "value": "{NewPassword}",
+              "when": "{NewPassword}!='' && {ConfirmPassword}!=''",
+              "msj": "Passwords do not match",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        }
+      }
+    },
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/home"
+      },
+      {
+        "label": "Users",
+        "url": ""
+      },
+      {
+        "label": "Settings",
+        "url": ""
+      },
+      {
+        "label": "Account",
+        "url": "/user-setting"
+      }
+    ],
+    "auditEmailNotifications": "Security email alerts",
+    "auditEmailNotificationsDesc": "Send emails on the third failed attempt, when the account is locked, and on critical events such as a new trusted device."
+  }
+}

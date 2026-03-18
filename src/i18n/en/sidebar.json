@@ -1,0 +1,22 @@
+{
+  "sidebar": {
+    "closeSidebar": "Close sidebar",
+    "settings": "Settings",
+    "logout": "Log out",
+    "supportDesk": "Support desk",
+    "alerts": "Alerts",
+    "items": {
+      "dashboard": "Dashboard",
+      "adminPanel": "Admin Panel",
+      "company": "Company",
+      "userlist": "User List",
+      "users": "Users",
+      "settings": "Settings",
+      "account": "Account",
+      "activity": "Activity",
+      "rolesPermissions": "Roles and Permissions",
+      "emptyPanel": "Empty",
+      "empty": "Empty"
+    }
+  }
+}

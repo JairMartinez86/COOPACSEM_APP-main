@@ -1,0 +1,29 @@
+<app-navbar (sidebarToggle)="onToggleSidebar()"></app-navbar>
+<app-sidebar
+  (requestToggle)="onToggleSidebar()"
+  (requestClose)="onCloseSidebar()">
+</app-sidebar>
+
+<main class="main">
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#">Docs</a>
+        <a href="#">Privacy</a>
+        <a href="#">Security</a>
+        <a href="#">Support</a>
+      </div>
+
+      <div class="footer-credits">
+        <div class="footer-copyright">
+          &copy; {{ appState.appYear() }} <a href="#">{{ appState.appName() }}</a>
+        </div>
+        <div class="footer-copyright"></div>
+      </div>
+    </div>
+  </footer>
+</main>

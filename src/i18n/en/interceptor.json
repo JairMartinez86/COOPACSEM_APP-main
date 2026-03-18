@@ -1,0 +1,30 @@
+{
+  "interceptor": {
+    "errors": {
+      "unexpected": "An unexpected error occurred.",
+      "noConnectionTitle": "No connection",
+      "noConnectionMessage": "Could not connect to the server. Check your internet connection or make sure the API is running.",
+      "badRequestTitle": "Invalid request",
+      "badRequestMessage": "The request is invalid (400).",
+      "sessionExpiredTitle": "Session expired",
+      "sessionExpiredMessage": "Your session has expired. Please sign in again.",
+      "forbiddenTitle": "Access denied",
+      "forbiddenMessage": "You do not have permission to perform this action.",
+      "blockedAccessMessage": "Your access has been blocked. Contact the administrator.",
+      "notFoundTitle": "Not found",
+      "notFoundMessage": "The requested resource does not exist (404).",
+      "serverTitle": "Server",
+      "serverMessage": "Internal server error. Please try again later.",
+      "serviceUnavailableMessage": "The service is currently unavailable (503).",
+      "badGatewayMessage": "Server communication error (502).",
+      "conflictMessage": "The operation could not be completed because it causes a conflict (409).",
+      "validationMessage": "The submitted data does not meet the required validations (422).",
+      "tooManyRequestsMessage": "You have made too many requests. Please try again later (429).",
+      "genericTitle": "Error",
+      "genericMessage": "An error occurred ({{status}}).",
+      "refreshNoAccessToken": "The server did not return an access token when attempting to renew the session.",
+      "refreshFailed": "Could not renew the session. Please sign in again.",
+      "refreshRequestFailed": "An error occurred while attempting to refresh the session token."
+    }
+  }
+}

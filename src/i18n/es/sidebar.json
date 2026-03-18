@@ -1,0 +1,22 @@
+{
+  "sidebar": {
+    "closeSidebar": "Cerrar barra lateral",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión",
+    "supportDesk": "Mesa de soporte",
+    "alerts": "Alertas",
+    "items": {
+      "dashboard": "Dashboard",
+      "adminPanel": "Panel de Administración",
+      "company": "Compañía",
+      "userlist": "Lista de Usuarios",
+      "users": "Usuarios",
+      "settings": "Configuración",
+      "account": "Cuenta",
+      "activity": "Actividad",
+      "rolesPermissions": "Roles y Permisos",
+       "emptyPanel": "Vacío",
+      "empty": "Vacío"
+    }
+  }
+}

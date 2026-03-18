@@ -1,0 +1,383 @@
+<div class="page-activity">
+  <div class="al-head mb-3">
+    <div>
+      <h1 class="page-title mb-1">{{ 'activity.activity.pageTitle' | translate }}</h1>
+      <p class="settings-page-subtitle">
+        {{ 'activity.activity.pageSubtitle' | translate }}
+      </p>
+    </div>
+
+    <div class="page-header-actions">
+      <div class="btn-group me-2">
+        @for (days of availableRanges; track days) {
+          <button
+            type="button"
+            class="btn btn-sm"
+            [ngClass]="isDaysActive(days) ? 'btn-primary' : 'btn-outline-secondary'"
+            (click)="changeDays(days)">
+            {{ days }}d
+          </button>
+        }
+      </div>
+
+      <button type="button" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-download me-1"></i>
+        {{ 'activity.activity.actions.exportLog' | translate }}
+      </button>
+
+      <button type="button" class="btn btn-primary btn-sm">
+        <i class="bi bi-funnel me-1"></i>
+        {{ 'activity.activity.actions.filters' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-xl-3 col-sm-6">
+      <div class="card al-kpi">
+        <div class="card-body">
+          <small>{{ 'activity.activity.metrics.logins' | translate }}</small>
+          <strong>{{ metrics().logins }}</strong>
+          <span>{{ 'activity.activity.metrics.lastDays' | translate:{ days: selectedDays() } }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6">
+      <div class="card al-kpi">
+        <div class="card-body">
+          <small>{{ 'activity.activity.metrics.security' | translate }}</small>
+          <strong>{{ metrics().security }}</strong>
+          <span>{{ 'activity.activity.metrics.criticalNotices' | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6">
+      <div class="card al-kpi">
+        <div class="card-body">
+          <small>{{ 'activity.activity.metrics.profileChanges' | translate }}</small>
+          <strong>{{ metrics().profileChanges }}</strong>
+          <span>{{ 'activity.activity.metrics.thisMonth' | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6">
+      <div class="card al-kpi">
+        <div class="card-body">
+          <small>{{ 'activity.activity.metrics.failedAttempts' | translate }}</small>
+          <strong>{{ metrics().failedAttempts }}</strong>
+          <span>{{ 'activity.activity.metrics.blocked' | translate }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="card al-card">
+      <div class="card-body py-4 text-center">
+        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+        {{ 'activity.common.loading' | translate }}
+      </div>
+    </div>
+  } @else {
+    <div class="row g-3">
+      <div class="col-xl-4">
+        <div class="card al-card mb-3">
+          <div class="card-body p-2">
+            <nav class="settings-nav">
+              <a class="settings-nav-item" [routerLink]="['/user-setting']" [queryParams]="username() ? { user: username() } : null">
+                <i class="bi bi-sliders"></i>
+                <div class="settings-nav-text">
+                  <span class="settings-nav-label">{{ 'activity.settings.general' | translate }}</span>
+                  <span class="settings-nav-desc">{{ 'activity.settings.generalDesc' | translate }}</span>
+                </div>
+              </a>
+
+              <a class="settings-nav-item active" [routerLink]="['/activity-history', username()]">
+                <i class="bi bi-clock-history"></i>
+                <div class="settings-nav-text">
+                  <span class="settings-nav-label">{{ 'activity.settings.activity' | translate }}</span>
+                  <span class="settings-nav-desc">{{ 'activity.settings.activityhistory' | translate }}</span>
+                </div>
+              </a>
+            </nav>
+          </div>
+        </div>
+
+        <div class="card al-card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">{{ 'activity.settings.user' | translate }}</h5>
+          </div>
+
+          <div class="card-body">
+            @if (userInfo(); as user) {
+              <div class="mb-2">
+                <strong>{{ user.fullName }}</strong>
+              </div>
+
+              <div class="text-muted mb-1">
+                {{ user.username }}
+              </div>
+
+              <div class="text-muted">
+                {{ user.email }}
+              </div>
+            } @else {
+              <div class="text-muted">
+                {{ 'activity.settings.userUnavailable' | translate }}
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="card al-card mb-3">
+          <div class="card-header">
+            <h5 class="card-title mb-0">{{ 'activity.activity.risk.title' | translate }}</h5>
+          </div>
+
+          <div class="card-body">
+            @if (riskSnapshot().length) {
+              <div class="al-risk-list">
+                @for (item of riskSnapshot(); track item.id) {
+                  <div class="al-risk-item">
+                    <div>
+                      <strong>{{ item.title }}</strong>
+                      <p>{{ item.description }}</p>
+                    </div>
+
+                    <span class="badge" [ngClass]="getRiskBadgeClass(item.level)">
+                      {{ getRiskLevelLabel(item.level) | translate }}
+                    </span>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="text-muted">
+                {{ 'activity.activity.empty.risk' | translate }}
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="card al-card">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="card-title mb-0">{{ 'activity.activity.sessions.title' | translate }}</h5>
+
+            <button
+              type="button"
+              class="btn btn-link al-link p-0"
+              (click)="openTrustedDevicesModal()">
+              {{ 'activity.activity.sessions.manage' | translate }}
+            </button>
+           
+          </div>
+
+          <div class="card-body">
+            @if (activeSessions().length) {
+              <div class="al-session-list">
+                @for (session of activeSessions(); track session.sessionId) {
+                  <div class="al-session-item border rounded-4 p-3 d-flex flex-column gap-3">
+                    <div class="d-flex align-items-start gap-3">
+                      <span class="al-session-icon mt-1">
+                        <i class="bi" [ngClass]="getSessionIcon(session)"></i>
+                      </span>
+
+                      <div class="flex-grow-1 min-w-0">
+                        <div class="al-session-name d-flex align-items-center gap-2 flex-wrap mb-1">
+                          <span class="fw-semibold">{{ getSessionName(session) }}</span>
+
+                          @if (session.isCurrent) {
+                            <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis">
+                              {{ 'activity.activity.sessions.current' | translate }}
+                            </span>
+                          }
+
+                          @if (session.isTrusted) {
+                            <span class="badge rounded-pill bg-success-subtle text-success-emphasis">
+                              {{ 'activity.activity.sessions.trusted' | translate }}
+                            </span>
+                          }
+                        </div>
+
+                        <div class="al-session-meta small text-muted">
+                          {{ getSessionMeta(session) }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="w-100 d-grid d-sm-flex justify-content-sm-end">
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 d-inline-flex align-items-center justify-content-center gap-2"
+                        (click)="confirmRevokeSession(session)"
+                        [disabled]="revokingSessionId() === session.sessionId">
+
+                        @if (revokingSessionId() === session.sessionId) {
+                          <span class="spinner-border spinner-border-sm"></span>
+                        } @else {
+                          <i class="bi bi-shield-x"></i>
+                        }
+
+                        <span>
+                          {{
+                            session.isCurrent
+                              ? ('activity.activity.sessions.logoutCurrent' | translate)
+                              : ('activity.activity.sessions.close' | translate)
+                          }}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="text-muted">
+                {{ 'activity.activity.empty.sessions' | translate }}
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-8">
+        <div class="card al-card">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="card-title mb-0">{{ 'activity.activity.timeline.title' | translate }}</h5>
+
+            <div class="d-flex gap-2 flex-wrap">
+              <button
+                type="button"
+                class="btn btn-sm"
+                [ngClass]="isFilterActive('all') ? 'btn-primary' : 'btn-outline-secondary'"
+                (click)="setFilter('all')">
+                {{ 'activity.activity.filters.all' | translate }}
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-sm"
+                [ngClass]="isFilterActive('security') ? 'btn-primary' : 'btn-outline-secondary'"
+                (click)="setFilter('security')">
+                {{ 'activity.activity.filters.security' | translate }}
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-sm"
+                [ngClass]="isFilterActive('profile') ? 'btn-primary' : 'btn-outline-secondary'"
+                (click)="setFilter('profile')">
+                {{ 'activity.activity.filters.profile' | translate }}
+              </button>
+            </div>
+          </div>
+
+          @if (groupedActivities().length) {
+            <div class="card-body p-0">
+              @for (group of groupedActivities(); track group.labelKey ?? group.labelText ?? $index) {
+                <div class="al-stream-day">
+                  @if (group.labelKey) {
+                    {{ group.labelKey | translate }}
+                  } @else {
+                    {{ group.labelText }}
+                  }
+                </div>
+
+                @for (item of group.items; track item.id) {
+                  <div class="al-stream-item">
+                    <span class="al-dot" [ngClass]="getTimelineDotClass(item)"></span>
+
+                    <div>
+                      <strong>{{ item.title }}</strong>
+                      <p>{{ getTimelineMeta(item) || item.description }}</p>
+                    </div>
+
+                    <small>{{ item.occurredAtUtc | date:'shortTime' }}</small>
+                  </div>
+                }
+              }
+            </div>
+          } @else {
+            <div class="card-body text-muted">
+              {{ 'activity.activity.empty.timeline' | translate }}
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+@if (trustedDevicesModalOpen()) {
+  <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,.35);">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'activity.activity.trustedDevices.title' | translate }}</h5>
+          <button type="button" class="btn-close" (click)="closeTrustedDevicesModal()"></button>
+        </div>
+
+        <div class="modal-body">
+          @if (trustedDevicesLoading()) {
+            <div class="text-center py-4">
+              <div class="spinner-border spinner-border-sm me-2"></div>
+              {{ 'activity.common.loading' | translate }}
+            </div>
+          } @else if (trustedDevices().length) {
+            <div class="list-group">
+              @for (device of trustedDevices(); track device.id) {
+                <div class="list-group-item d-flex align-items-start justify-content-between gap-3">
+                  <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                      <strong>{{ getTrustedDeviceName(device) }}</strong>
+
+                      @if (device.isCurrent) {
+                        <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis">
+                          {{ 'activity.activity.sessions.current' | translate }}
+                        </span>
+                      }
+
+                      <span class="badge rounded-pill bg-success-subtle text-success-emphasis">
+                        {{ 'activity.activity.sessions.trusted' | translate }}
+                      </span>
+                    </div>
+
+                    <div class="text-muted small mb-1">
+                      {{ getTrustedDeviceMeta(device) }}
+                    </div>
+
+                    <div class="text-muted small">
+                      {{ 'activity.activity.trustedDevices.expires' | translate }}:
+                      {{ device.expiresAtUtc | date:'medium' }}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="confirmRemoveTrustedDevice(device)"
+                    [disabled]="revokingTrustedDeviceId() === device.id">
+                    @if (revokingTrustedDeviceId() === device.id) {
+                      <span class="spinner-border spinner-border-sm me-1"></span>
+                    }
+                    <i class="bi bi-trash3 me-1"></i>
+                    {{ 'activity.activity.trustedDevices.remove' | translate }}
+                  </button>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="text-muted">{{ 'activity.activity.trustedDevices.empty' | translate }}</div>
+          }
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="closeTrustedDevicesModal()">
+            {{ 'activity.activity.trustedDevices.close' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,407 @@
+{
+  "userlist": {
+    "pageTitle": "Directorio de usuarios",
+    "pageSubtitle": "Administra accesos, estados de ciclo de vida y distribución por equipos desde una sola vista.",
+    "buttons": {
+      "export": "Exportar",
+      "addUser": "Agregar usuario",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "close": "Cerrar"
+    },
+    "filters": {
+      "all": "Todos",
+      "active": "Activos",
+      "inactive": "Inactivos",
+      "role": "Rol",
+      "allRoles": "Todos los roles",
+      "searchPlaceholder": "Buscar usuarios, correo, rol..."
+    },
+    "table": {
+      "user": "Usuario",
+      "role": "Rol",
+      "status": "Estado",
+      "lastActive": "Última actividad",
+      "joined": "Ingreso",
+      "actions": "Acciones",
+      "empty": "No hay usuarios registrados",
+      "confirmRemoveTitle": "Quitar usuario",
+      "confirmRemoveMessage": "¿Deseas quitar a {{user}}?",
+      "confirmResetPassTitle": "Enviar correo",
+      "confirmResetMessage": "¿Está seguro de enviar la solicitud de cambio de contraseña a {{user}}?"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "presence": {
+      "online": "En línea",
+      "away": "Ausente",
+      "offline": "Desconectado",
+      "never": "Nunca",
+      "justNow": "Justo ahora",
+      "minutesAgo": "hace {{value}} min",
+      "hoursAgo": "hace {{value}} h",
+      "daysAgo": "hace {{value}} días",
+      "today": "Hoy",
+      "yesterday": "Ayer"
+    },
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "sendEmail": "Enviar correo",
+      "resetPassword": "Restablecer contraseña"
+    },
+    "pagination": {
+      "showing": "Mostrando",
+      "of": "de",
+      "users": "usuarios"
+    },
+    "cards": {
+      "directorySnapshot": "Resumen del directorio",
+      "roleDistribution": "Distribución por rol",
+      "recentlyAdded": "Agregados recientemente",
+      "viewAll": "Ver todos",
+      "total": "Total",
+      "active": "Activos",
+      "inactive": "Inactivos",
+      "thisMonth": "+{{value}} este mes",
+      "engagement": "{{value}}% de actividad",
+      "needsOnboarding": "Requieren incorporación",
+      "followUpRequired": "Requieren seguimiento"
+    },
+    "modal": {
+      "titleCreate": "Agregar nuevo usuario",
+      "titleEdit": "Editar usuario",
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Ingrese el nombre",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "Ingrese el apellido",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Ingrese el correo electrónico",
+      "role": "Rol",
+      "rolePlaceholder": "Seleccione un rol...",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Ingrese la contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Confirme la contraseña",
+      "sendInvite": "Enviar correo de bienvenida con los datos de acceso",
+      "gender": {
+        "label": "Género",
+        "male": "Hombre",
+        "female": "Mujer"
+      },
+      "genderPlaceholder": "Ingrese género",
+      "mobile": "Móvil",
+      "mobilePlaceholder": "Ingrese móvil",
+      "phoneNumber": "Teléfono",
+      "phoneNumberPlaceholder": "Ingrese teléfono",
+      "address": "Dirección",
+      "addressPlaceholder": "Ingrese dirección",
+      "language": "Idioma",
+      "theme": "Tema",
+      "defaultLandingPage": "Página de inicio predeterminada",
+      "defaultLandingPagePlaceholder": "Ingrese la página de inicio predeterminada",
+      "maxSessions": "Máximo de sesiones: 0 es ilimitado",
+      "active": "Activo",
+      "enableTwoFactor": "Habilitar autenticación de dos factores",
+      "languages": {
+        "es": "Español",
+        "en": "Inglés"
+      },
+      "themes": {
+        "dark": "Oscuro",
+        "light": "Claro"
+      },
+      "enableAuditEmailNotifications": "Activar notificaciones por correo"
+    },
+    "form": {
+      "fieldMeta": {
+        "firstName": {
+          "label": "Usuario",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "lastName": {
+          "label": "Usuario",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "email": {
+          "label": "Usuario",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "role": {
+          "label": "Usuario",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "password": {
+          "label": "Usuario",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "confirmPassword": {
+          "label": "Usuario",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "gender": {
+          "label": "Usuario",
+          "tooltip": "Campo opcional",
+          "tooltipIconClass": ""
+        },
+        "mobile": {
+          "label": "Usuario",
+          "tooltip": "Campo opcional",
+          "tooltipIconClass": ""
+        },
+        "phoneNumber": {
+          "label": "Usuario",
+          "tooltip": "Campo opcional",
+          "tooltipIconClass": ""
+        },
+        "language": {
+          "label": "Usuario",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "address": {
+          "label": "Usuario",
+          "tooltip": "Campo opcional",
+          "tooltipIconClass": ""
+        },
+        "theme": {
+          "label": "Usuario",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "maxSessions": {
+          "label": "Usuario",
+          "tooltip": "Campo requerido",
+          "tooltipIconClass": ""
+        },
+        "defaultLandingPage": {
+          "label": "Usuario",
+          "tooltip": "Campo opcional",
+          "tooltipIconClass": ""
+        },
+        "active": {
+          "label": "Usuario",
+          "tooltip": "Campo opcional",
+          "tooltipIconClass": ""
+        },
+        "enableTwoFactorLogin": {
+          "label": "Usuario",
+          "tooltip": "Campo opcional",
+          "tooltipIconClass": ""
+        },
+        "enableAuditEmailNotifications": {
+          "label": "Activar notificaciones por correo",
+          "tooltip": ""
+        }
+      },
+      "validations": {
+        "firstName": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Campo requerido",
+              "classIconSuccess": "",
+              "classIconError": ""
+            }
+          }
+        },
+        "lastName": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Campo requerido",
+              "classIconSuccess": "",
+              "classIconError": ""
+            }
+          }
+        },
+        "email": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{enableTwoFactorLogin}=true",
+              "msj": "El correo electrónico es requerido",
+              "classIconSuccess": "",
+              "classIconError": ""
+            },
+            "2": {
+              "rule": "EMAIL",
+              "when": "{enableTwoFactorLogin}=true || {enableAuditEmailNotifications}=true  || {email}!=''",
+              "msj": "Ingrese un correo válido",
+              "classIconSuccess": "",
+              "classIconError": ""
+            }
+          }
+        },
+        "role": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Seleccione un rol",
+              "classIconSuccess": "",
+              "classIconError": ""
+            }
+          }
+        },
+        "password": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "6",
+              "when": "{password}!=''",
+              "msj": "La contraseña debe tener al menos {value} caracteres",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            },
+            "2": {
+              "rule": "LEN<=",
+              "value": "100",
+              "when": "{password}!=''",
+              "msj": "La contraseña solo permite un máximo de {value} caracteres",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        },
+        "confirmPassword": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "6",
+              "when": "{confirmPassword}!=''",
+              "msj": "La contraseña debe tener al menos {value} caracteres",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            },
+            "2": {
+              "rule": "IGUAL",
+              "value": "{password}",
+              "when": "{password}!='' && {confirmPassword}!=''",
+              "msj": "Las contraseñas no coinciden",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        },
+        "gender": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Seleccione un sexo",
+              "classIconSuccess": "",
+              "classIconError": ""
+            }
+          }
+        },
+        "mobile": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[0-9]{1,4}([ -]?[0-9]{2,4}){2,4}$",
+              "when": "{mobile}!=''",
+              "msj": "Ingrese un número de celular válido"
+            }
+          }
+        },
+        "phoneNumber": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[1-9][0-9\\s\\-]{6,18}$",
+              "when": "{phoneNumber}!=''",
+              "msj": "Ingrese un número de teléfono válido"
+            }
+          }
+        },
+        "language": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Seleccione un idioma",
+              "classIconSuccess": "",
+              "classIconError": ""
+            }
+          }
+        },
+        "address": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": "La dirección es requerida"
+            }
+          }
+        },
+        "theme": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Seleccione un estilo visual",
+              "classIconSuccess": "",
+              "classIconError": ""
+            }
+          }
+        },
+        "enableTwoFactorLogin": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "msj": "",
+              "classIconSuccess": "",
+              "classIconError": ""
+            }
+          }
+        },
+        "maxSessions": {
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "msj": "Solo se permiten números positivos",
+              "classIconSuccess": "",
+              "classIconError": ""
+            },
+            "2": {
+              "rule": "NUM<=",
+              "value": "5",
+              "msj": "No se permiten más de {value} sesiones activas",
+              "classIconSuccess": "",
+              "classIconError": ""
+            }
+          }
+        }
+      }
+    },
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/home"
+      },
+      {
+        "label": "Usuarios",
+        "url": ""
+      },
+      {
+        "label": "Lista de Usuarios",
+        "url": "/user-list"
+      }
+    ]
+  }
+}

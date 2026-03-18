@@ -1,0 +1,186 @@
+@use '@jairmartinez86/jmartinez-validator/styles/massive-forms' as *;
+
+
+.header-logo-img {
+  width: 42px;
+  height: 52px;
+  object-fit: contain;
+}
+
+
+
+.header-logo img {
+  display: block !important;
+  max-width: 42px !important;
+  max-height: 52px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  background: transparent !important;
+  transform: none !important;
+}
+
+
+
+
+.main-content{
+  padding: 5px;
+}
+
+
+
+
+
+/* =====================================================
+   FIX: LISTAS HTML DENTRO DEL MODAL
+   ===================================================== */
+
+.mf-error-group-title {
+  color: #ffffff;
+}
+
+.mf-modal-list,
+.mf-modal-list li {
+  color: #d7deed;
+  line-height: 1.4;
+}
+
+
+/*
+.validation-list,
+.validation-list * {
+  text-align: left !important;
+  box-sizing: border-box;
+}
+
+.validation-list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.validation-list > li {
+  list-style: none !important;
+  margin: 0 0 10px 0 !important;
+  padding: 0 !important;
+}
+
+.validation-list > li > .validation-label {
+  display: block;
+  margin: 0 0 6px 0 !important;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.validation-list > li > ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.validation-list > li > ul > li {
+  position: relative;
+  list-style: none !important;
+  margin: 0 0 6px 0 !important;
+  padding: 0 0 0 18px !important;
+  color: #d7deed;
+  line-height: 1.4;
+}
+
+.validation-list > li > ul > li::before {
+  content: "✕";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #ff5c74;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}*/
+/* =========================================================
+   NGX MASSIVE FORMS – TOOLTIP THEME OVERRIDE
+   ---------------------------------------------------------
+   Este bloque personaliza la apariencia de los tooltips
+   generados por la directiva de validación.
+
+   Se manejan dos tipos de tooltip:
+   • .mf-helpbox   → tooltip informativo del label
+   • .mf-tipbox    → tooltip de validación del campo
+
+   Modo normal (tema claro):
+   - Fondo azul corporativo (#012970)
+   - Texto blanco para mejor contraste
+
+   Modo oscuro ([data-theme="dark"]):
+   - Fondo claro (#eaf2ff)
+   - Texto negro para mantener legibilidad
+
+   También se ajustan las flechas (::before / ::after)
+   para que coincidan con el color del tooltip.
+
+   El uso de !important es necesario para sobrescribir
+   los estilos base de la librería ngx-massive-forms.
+   ========================================================= */
+
+.mf-helpbox {
+  background: #012970 !important;
+  color: #fff !important;
+  font-family: var(--bs-font-sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.mf-helpbox::after {
+  background: #012970 !important;
+}
+
+.mf-tooltip-on .mf-tooltip .mf-tipbox {
+  background: #012970 !important;
+  color: #fff !important;
+  font-family: var(--bs-font-sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.mf-tooltip-on .mf-tooltip::before {
+  border-bottom-color: #012970 !important;
+}
+
+
+/* =========================================================
+   DARK THEME OVERRIDES
+   ---------------------------------------------------------
+   Cuando la aplicación usa [data-theme="dark"], se invierte
+   el esquema de colores del tooltip para mantener contraste
+   y consistencia con el tema oscuro de la aplicación.
+   ========================================================= */
+
+[data-theme="dark"] {
+
+  .mf-helpbox {
+    background: #eaf2ff !important;
+    color: black !important;
+  }
+
+  .mf-helpbox::after {
+    background: #eaf2ff !important;
+  }
+
+  .mf-tooltip-on .mf-tooltip .mf-tipbox {
+    background: #eaf2ff !important;
+    color: black !important;
+  }
+
+  .mf-tooltip-on .mf-tooltip::before {
+    border-bottom-color: #eaf2ff !important;
+  }
+
+
+}

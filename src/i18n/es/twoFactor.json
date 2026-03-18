@@ -1,0 +1,21 @@
+{
+  "twoFactor": {
+    "title": "Segundo factor de autenticación",
+    "subtitle": "Ingresa el código de verificación de 6 dígitos enviado a tu correo.",
+    "codeLabel": "Código de verificación",
+    "verifyButton": "Verificar código",
+    "noAccess": "¿No puedes acceder a tu aplicación?",
+    "backupCode": "Usar código de respaldo",
+    "rights": "Todos los derechos reservados",
+    "invalidCode": "El código ingresado es inválido o ha expirado.",
+    "remainingTime": "Tiempo restante:",
+    "expired": "El código de verificación ha expirado.",
+    "backToLogin": "Regresar al login",
+    "validations": {
+      "codeLength": "El código debe contener 6 dígitos."
+    },
+    "rememberDevice": "Confiar en este dispositivo",
+    "rememberDeviceHint": "No volver a solicitar el segundo factor en este navegador durante el tiempo configurado.",
+    "resendButton": "Reenviar código"
+  }
+}

@@ -1,0 +1,327 @@
+/*--------------------------------------------------------------
+# Error Pages - NiceAdmin
+--------------------------------------------------------------*/
+
+.na-error-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(14px, 3vw, 30px);
+  background:
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--accent-color), transparent 94%), transparent 34%),
+    radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--success-color), transparent 95%), transparent 32%),
+    var(--background-color);
+}
+
+.na-error-shell {
+  width: min(980px, 100%);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--card-bg);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--heading-color), transparent 92%);
+  padding: clamp(14px, 2.5vw, 22px);
+}
+
+.na-error-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.na-error-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--heading-color);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 700;
+
+  img {
+    height: 24px;
+    width: auto;
+  }
+}
+
+.na-error-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color), transparent 90%);
+}
+
+.na-error-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.na-error-main {
+  border: 1px solid var(--border-color-light);
+  border-radius: 4px;
+  background: var(--surface-color);
+  padding: clamp(14px, 2.5vw, 22px);
+}
+
+.na-error-code {
+  margin: 0;
+  font-size: clamp(3.8rem, 10vw, 6.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--heading-color);
+}
+
+.na-error-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  color: var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color), transparent 88%);
+
+  &.danger {
+    color: var(--danger-color);
+    background: var(--danger-color-light);
+  }
+
+  &.warning {
+    color: var(--warning-color);
+    background: var(--warning-color-light);
+  }
+}
+
+.na-error-title {
+  margin: 10px 0 0;
+  font-size: clamp(1.3rem, 2.1vw, 1.8rem);
+  color: var(--heading-color);
+}
+
+.na-error-text {
+  margin: 8px 0 0;
+  max-width: 64ch;
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: var(--muted-color);
+}
+
+.na-error-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.na-error-meta {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border-color-light);
+    border-radius: 4px;
+    background: var(--card-bg);
+    color: var(--muted-color);
+    font-size: 0.72rem;
+    padding: 4px 8px;
+  }
+}
+
+.na-error-side {
+  border: 1px solid var(--border-color-light);
+  border-radius: 4px;
+  background: var(--surface-color);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h6 {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-color);
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    text-decoration: none;
+    border: 1px solid var(--border-color-light);
+    border-radius: 4px;
+    background: var(--card-bg);
+    color: var(--default-color);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 7px 8px;
+
+    i {
+      color: var(--accent-color);
+    }
+
+    &:hover {
+      color: var(--accent-color);
+      border-color: color-mix(in srgb, var(--accent-color), transparent 60%);
+      background: color-mix(in srgb, var(--accent-color), transparent 95%);
+    }
+  }
+}
+
+.na-error-step {
+  border: 1px solid var(--border-color-light);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--default-color);
+  font-size: 0.74rem;
+  padding: 7px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    color: var(--success-color);
+  }
+
+  &.active {
+    border-color: color-mix(in srgb, var(--accent-color), transparent 58%);
+    background: color-mix(in srgb, var(--accent-color), transparent 95%);
+
+    i {
+      color: var(--accent-color);
+    }
+  }
+}
+
+.na-error-social {
+  display: inline-flex;
+  gap: 6px;
+
+  a {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+
+.na-countdown {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.na-count-item {
+  border: 1px solid var(--border-color-light);
+  border-radius: 4px;
+  background: var(--card-bg);
+  padding: 8px 6px;
+  text-align: center;
+
+  strong {
+    display: block;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--heading-color);
+  }
+
+  span {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.64rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-color);
+  }
+}
+
+.na-newsletter-form {
+  margin-top: 10px;
+  display: flex;
+  gap: 7px;
+
+  .form-control {
+    height: 40px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    height: 40px;
+    white-space: nowrap;
+    border-radius: 4px;
+  }
+}
+
+.na-error-500 {
+  .na-error-status {
+    color: var(--danger-color);
+    background: var(--danger-color-light);
+  }
+}
+
+.na-error-403 {
+  .na-error-status {
+    color: var(--warning-color);
+    background: var(--warning-color-light);
+  }
+}
+
+.na-error-maintenance,
+.na-error-coming-soon {
+  .na-error-status {
+    color: var(--info-color);
+    background: var(--info-color-light);
+  }
+}
+
+@media (max-width: 991px) {
+  .na-error-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575px) {
+  .na-error-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .na-error-actions {
+    .btn {
+      width: 100%;
+    }
+  }
+
+  .na-countdown {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .na-newsletter-form {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}

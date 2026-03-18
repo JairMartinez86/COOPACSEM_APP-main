@@ -1,0 +1,826 @@
+/*--------------------------------------------------------------
+# Invoice Pages - NiceAdmin
+--------------------------------------------------------------*/
+
+.page-invoice-list,
+.page-invoice {
+  .inv-status {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.69rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 4px;
+
+    &.paid {
+      color: var(--success-color);
+      background: var(--success-color-light);
+    }
+
+    &.pending {
+      color: var(--warning-color);
+      background: var(--warning-color-light);
+    }
+
+    &.overdue {
+      color: var(--danger-color);
+      background: var(--danger-color-light);
+    }
+
+    &.draft {
+      color: var(--muted-color);
+      background: color-mix(in srgb, var(--muted-color), transparent 86%);
+    }
+  }
+
+  .inv-client-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.69rem;
+    font-weight: 700;
+
+    &.accent {
+      color: var(--accent-color);
+      background: color-mix(in srgb, var(--accent-color), transparent 86%);
+    }
+
+    &.success {
+      color: var(--success-color);
+      background: var(--success-color-light);
+    }
+
+    &.warning {
+      color: var(--warning-color);
+      background: var(--warning-color-light);
+    }
+
+    &.info {
+      color: var(--info-color);
+      background: var(--info-color-light);
+    }
+
+    &.danger {
+      color: var(--danger-color);
+      background: var(--danger-color-light);
+    }
+  }
+
+  .inv-client {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    span:last-child {
+      font-size: 0.79rem;
+      color: var(--heading-color);
+      font-weight: 700;
+    }
+  }
+
+  .inv-id {
+    font-size: 0.79rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    text-decoration: none;
+  }
+
+  .inv-date,
+  .inv-owner {
+    font-size: 0.75rem;
+    color: var(--muted-color);
+    white-space: nowrap;
+  }
+
+  .inv-amount {
+    font-size: 0.8rem;
+    color: var(--heading-color);
+    font-weight: 700;
+  }
+
+  .inv-actions {
+    display: inline-flex;
+    gap: 4px;
+  }
+
+  .inv-action-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color-light);
+    background: var(--surface-color);
+    color: var(--muted-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+
+    &:hover {
+      color: var(--accent-color);
+      border-color: color-mix(in srgb, var(--accent-color), transparent 62%);
+      background: color-mix(in srgb, var(--accent-color), transparent 95%);
+    }
+  }
+}
+
+.page-invoice-list {
+  .invl-hero,
+  .invl-table-card,
+  .invl-side-card {
+    border-radius: 4px;
+  }
+
+  .invl-hero {
+    border: 1px solid var(--border-color);
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--accent-color), transparent 95%), transparent 65%),
+      var(--card-bg);
+  }
+
+  .invl-hero-grid {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .invl-kicker {
+    display: inline-flex;
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    background: color-mix(in srgb, var(--accent-color), transparent 90%);
+  }
+
+  .invl-subtitle {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--muted-color);
+  }
+
+  .invl-meta-inline {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--surface-color);
+      font-size: 0.73rem;
+      color: var(--default-color);
+
+      i {
+        color: var(--accent-color);
+      }
+    }
+  }
+
+  .invl-hero-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .invl-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .invl-metric-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--card-bg);
+    padding: 10px;
+  }
+
+  .invl-metric-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-color);
+    background: color-mix(in srgb, var(--accent-color), transparent 88%);
+
+    &.success {
+      color: var(--success-color);
+      background: var(--success-color-light);
+    }
+
+    &.warning {
+      color: var(--warning-color);
+      background: var(--warning-color-light);
+    }
+
+    &.danger {
+      color: var(--danger-color);
+      background: var(--danger-color-light);
+    }
+  }
+
+  .invl-metric-label {
+    font-size: 0.67rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted-color);
+  }
+
+  .invl-metric-value {
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1.2;
+  }
+
+  .invl-table-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .invl-card-caption {
+    font-size: 0.74rem;
+    color: var(--muted-color);
+  }
+
+  .invl-table-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .invl-search {
+    position: relative;
+
+    i {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted-color);
+      font-size: 0.78rem;
+    }
+
+    input {
+      width: 240px;
+      height: 34px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: var(--surface-color);
+      padding: 0 10px 0 28px;
+      font-size: 0.76rem;
+
+      &:focus {
+        outline: none;
+        border-color: var(--input-focus-border);
+      }
+    }
+  }
+
+  .invl-filter {
+    height: 34px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--default-color);
+    padding: 0 9px;
+    font-size: 0.76rem;
+
+    &:focus {
+      outline: none;
+      border-color: var(--input-focus-border);
+    }
+  }
+
+  .invl-table {
+    thead th {
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted-color);
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-color);
+      background: color-mix(in srgb, var(--background-color), var(--surface-color) 28%);
+      padding: 10px;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 10px;
+      border-bottom: 1px solid var(--border-color-light);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  .invl-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 10px;
+    border-top: 1px solid var(--border-color-light);
+  }
+
+  .invl-page-note {
+    font-size: 0.74rem;
+    color: var(--muted-color);
+  }
+
+  .invl-health-list {
+    .invl-health-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+      font-size: 0.76rem;
+      color: var(--muted-color);
+
+      strong {
+        color: var(--heading-color);
+        font-weight: 700;
+      }
+    }
+
+    .progress {
+      height: 8px;
+      border-radius: 4px;
+      background: var(--background-color);
+    }
+  }
+
+  .invl-due-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .invl-due-item {
+    border: 1px solid var(--border-color-light);
+    border-radius: 4px;
+    padding: 8px;
+    background: var(--surface-color);
+
+    strong {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--heading-color);
+      font-weight: 700;
+    }
+
+    span {
+      display: block;
+      margin-top: 2px;
+      font-size: 0.72rem;
+      color: var(--muted-color);
+    }
+  }
+
+  .invl-quick-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--border-color-light);
+      border-radius: 4px;
+      background: var(--surface-color);
+      color: var(--default-color);
+      text-decoration: none;
+      font-size: 0.76rem;
+      padding: 8px;
+
+      i {
+        color: var(--accent-color);
+      }
+
+      &:hover {
+        color: var(--accent-color);
+        border-color: color-mix(in srgb, var(--accent-color), transparent 60%);
+        background: color-mix(in srgb, var(--accent-color), transparent 95%);
+      }
+    }
+  }
+}
+
+.page-invoice {
+  .invv-top,
+  .invv-sheet-card,
+  .invv-side-card {
+    border-radius: 4px;
+  }
+
+  .invv-top {
+    border: 1px solid var(--border-color);
+    background:
+      linear-gradient(145deg, color-mix(in srgb, var(--accent-color), transparent 95%), transparent 62%),
+      var(--card-bg);
+  }
+
+  .invv-kicker {
+    display: inline-flex;
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    background: color-mix(in srgb, var(--accent-color), transparent 90%);
+  }
+
+  .invv-top-grid {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .invv-subtitle {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--muted-color);
+  }
+
+  .invv-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .invv-summary-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .invv-summary-card {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--surface-color);
+    padding: 9px;
+
+    span {
+      display: block;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted-color);
+      font-weight: 700;
+    }
+
+    strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 0.9rem;
+      color: var(--heading-color);
+      font-weight: 700;
+    }
+  }
+
+  .invv-sheet-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-color-light);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+  }
+
+  .inv-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    img {
+      height: 26px;
+      width: auto;
+    }
+  }
+
+  .inv-brand-name {
+    font-size: 0.9rem;
+    color: var(--heading-color);
+    font-weight: 700;
+  }
+
+  .inv-brand-meta {
+    font-size: 0.73rem;
+    color: var(--muted-color);
+  }
+
+  .invv-doc-meta {
+    text-align: right;
+  }
+
+  .invv-doc-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    letter-spacing: 0.05em;
+  }
+
+  .invv-doc-number {
+    font-size: 0.74rem;
+    color: var(--muted-color);
+  }
+
+  .invv-address-card {
+    border: 1px solid var(--border-color-light);
+    border-radius: 4px;
+    background: var(--surface-color);
+    padding: 10px;
+
+    p {
+      margin: 4px 0 0;
+      font-size: 0.74rem;
+      line-height: 1.5;
+      color: var(--muted-color);
+    }
+  }
+
+  .invv-address-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-color);
+    font-weight: 700;
+  }
+
+  .invv-address-name {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.82rem;
+    color: var(--heading-color);
+    font-weight: 700;
+  }
+
+  .invv-line-wrap {
+    border: 1px solid var(--border-color-light);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .invv-line-table {
+    thead th {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted-color);
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-color);
+      background: color-mix(in srgb, var(--background-color), var(--surface-color) 26%);
+      padding: 10px;
+    }
+
+    tbody td {
+      font-size: 0.76rem;
+      color: var(--default-color);
+      border-bottom: 1px solid var(--border-color-light);
+      padding: 10px;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  .inv-line-name {
+    font-size: 0.79rem;
+    color: var(--heading-color);
+    font-weight: 700;
+  }
+
+  .inv-line-desc {
+    font-size: 0.72rem;
+    color: var(--muted-color);
+    margin-top: 1px;
+  }
+
+  .invv-total-table {
+    td {
+      font-size: 0.76rem;
+      color: var(--muted-color);
+      padding: 4px 0;
+    }
+
+    .invv-total td {
+      border-top: 1px solid var(--border-color-light);
+      padding-top: 8px;
+      font-size: 0.88rem;
+      color: var(--heading-color);
+      font-weight: 700;
+    }
+
+    .invv-balance td {
+      border-top: 1px solid var(--border-color-light);
+      padding-top: 7px;
+      font-size: 0.8rem;
+      color: var(--heading-color);
+      font-weight: 700;
+    }
+  }
+
+  .invv-note-block {
+    margin-top: 12px;
+    border-top: 1px solid var(--border-color-light);
+    padding-top: 10px;
+
+    p {
+      margin: 4px 0 0;
+      font-size: 0.74rem;
+      color: var(--muted-color);
+      line-height: 1.5;
+    }
+  }
+
+  .invv-side-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .invv-side-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color-light);
+    padding: 9px 11px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    span {
+      font-size: 0.74rem;
+      color: var(--muted-color);
+    }
+
+    strong {
+      font-size: 0.77rem;
+      color: var(--heading-color);
+      font-weight: 700;
+    }
+  }
+
+  .inv-client-name {
+    font-size: 0.82rem;
+    color: var(--heading-color);
+    font-weight: 700;
+  }
+
+  .inv-client-email {
+    font-size: 0.73rem;
+    color: var(--muted-color);
+    margin-top: 1px;
+  }
+
+  .invv-client-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .invv-activity {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .invv-activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .invv-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+
+    &.success {
+      background: var(--success-color);
+    }
+
+    &.accent {
+      background: var(--accent-color);
+    }
+
+    &.muted {
+      background: var(--muted-color);
+    }
+  }
+
+  .invv-activity-text {
+    font-size: 0.78rem;
+    color: var(--heading-color);
+    font-weight: 700;
+  }
+
+  .invv-activity-time {
+    font-size: 0.72rem;
+    color: var(--muted-color);
+    margin-top: 1px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .page-invoice-list {
+    .invl-metrics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .page-invoice {
+    .invv-summary-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .page-invoice-list {
+    .invl-hero-grid {
+      flex-direction: column;
+    }
+
+    .invl-hero-actions {
+      justify-content: flex-start;
+      width: 100%;
+    }
+
+    .invl-metrics {
+      grid-template-columns: 1fr;
+    }
+
+    .invl-table-controls {
+      width: 100%;
+    }
+
+    .invl-search {
+      width: 100%;
+
+      input {
+        width: 100%;
+      }
+    }
+
+    .invl-filter {
+      width: 100%;
+    }
+  }
+
+  .page-invoice {
+    .invv-top-grid,
+    .invv-sheet-head {
+      flex-direction: column;
+    }
+
+    .invv-actions {
+      justify-content: flex-start;
+      width: 100%;
+    }
+
+    .invv-doc-meta {
+      text-align: left;
+    }
+
+    .invv-summary-row {
+      grid-template-columns: 1fr;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "draft": {
+    "unsavedDataTitle": "Advertencia",
+    "unsavedDataRestored": "Se encontraron datos sin guardar y fueron restaurados. Si deseas descartarlos, presiona Cancelar.",
+    "leavePageTitle": "Advertencia",
+    "leavePageMessage": "Hay datos sin guardar. Si sales de esta página, se perderán. ¿Deseas continuar?"
+  }
+}

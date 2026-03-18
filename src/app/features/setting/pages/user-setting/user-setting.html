@@ -1,0 +1,593 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<div class="main-content page-settings">
+  <form #userSettingForm="ngForm" autocomplete="off" novalidate>
+    <div class="page-settings">
+
+      <div class="ss-top mb-3">
+        <div>
+          <h1 class="page-title mb-1">
+            {{ 'userSettings.workspaceSettings' | translate }}
+          </h1>
+
+          <p class="settings-page-subtitle">
+            {{ 'userSettings.manageProfileSecurity' | translate }}
+          </p>
+        </div>
+
+        <div class="page-header-actions">
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            (click)="onCancel()"
+            appPermission="edit">
+            <i class="bi bi-arrow-counterclockwise me-1"></i>
+            {{ 'userSettings.common.reset' | translate }}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            #btn
+            autoFocusNext
+            [disableClickButton]="true"
+            [unlockOn]="notify.closed$"
+            (click)="onSave()"
+            appPermission="edit">
+            <i class="bi bi-check-lg me-1"></i>
+            {{ 'userSettings.common.saveAll' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-3">
+
+        <div class="col-xl-3 col-lg-4">
+          <div class="card ss-side-card">
+            <div class="card-body p-2">
+              <nav class="settings-nav">
+
+                <a routerLink="/user-setting" [queryParams]="setting.identifier ? { user: setting.identifier } : null" class="settings-nav-item active">
+                  <i class="bi bi-sliders"></i>
+
+                  <div class="settings-nav-text">
+                    <span class="settings-nav-label">
+                      {{ 'userSettings.general' | translate }}
+                    </span>
+
+                    <span class="settings-nav-desc">
+                      {{ 'userSettings.profilePreferences' | translate }}
+                    </span>
+                  </div>
+                </a>
+
+                <a [routerLink]="setting.identifier ? ['/activity-history', setting.identifier] : ['/activity-history']" class="settings-nav-item">
+                  <i class="bi bi-clock-history"></i>
+                  <div class="settings-nav-text">
+                    <span class="settings-nav-label">{{ 'userSettings.activity' | translate }}</span>
+                    <span class="settings-nav-desc">{{ 'userSettings.activityhistory' | translate }}</span>
+                  </div>
+                </a>
+
+                <a href="javascript:void(0)" class="settings-nav-item">
+                  <i class="bi bi-shield-check"></i>
+
+                  <div class="settings-nav-text">
+                    <span class="settings-nav-label">
+                      {{ 'userSettings.twoFactorStatus' | translate }}
+                    </span>
+
+                    <span class="settings-nav-desc">
+                      @if (setting.EnableTwoFactorLogin === true) {
+                        <span class="badge rounded-pill bg-success badge-sm">
+                          {{ 'userSettings.protected' | translate }}
+                        </span>
+                      } @else {
+                        <span class="badge rounded-pill bg-danger badge-sm">
+                          {{ 'userSettings.alert' | translate }}
+                        </span>
+                      }
+                    </span>
+                  </div>
+                </a>
+
+                <a href="javascript:void(0)" class="settings-nav-item">
+                  <i class="lucide-icon-activity"></i>
+
+                  <div class="settings-nav-text">
+                    <span class="settings-nav-label">
+                      {{ 'userSettings.activeSessions' | translate }}
+                    </span>
+
+                    <span class="settings-nav-desc">
+                      @if (setting.MaxSessions === 0 || setting.SessionActive === 1) {
+                        <span class="badge bg-success rounded-pill">
+                          {{ setting.SessionActive | number:'1.0-0' }}
+                        </span>
+                      } @else {
+                        <span class="badge bg-danger rounded-pill">
+                          {{ setting.SessionActive | number:'1.0-0' }}
+                        </span>
+                      }
+                    </span>
+                  </div>
+                </a>
+
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-9 col-lg-8">
+
+          <div class="card ss-card mb-3">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                {{ 'userSettings.accountProfile' | translate }}
+              </h5>
+            </div>
+
+            <div class="card-body">
+              <div class="row g-3">
+
+                <div class="col-md-6">
+                  <div error-notify="FullName" error-display="inline">
+                    <label class="form-label">
+                      <span class="mf-label-text">
+                        {{ 'userSettings.fullName' | translate }}
+                      </span>
+                    </label>
+
+                    <input
+                      #fullname
+                      type="text"
+                      class="form-control"
+                      id="FullName"
+                      name="FullName"
+                      [(ngModel)]="setting.FullName"
+                      engineSync="FullName"
+                      autoFocusNext
+                      [next]="email"
+                      required
+                      JmartAutoFocus>
+                  </div>
+                </div>
+
+                <div class="col-md-6" error-notify="Email" error-display="inline">
+                  <label class="form-label">
+                    {{ 'userSettings.emailAddress' | translate }}
+                  </label>
+
+                  <input
+                    #email
+                    type="email"
+                    class="form-control"
+                    id="Email"
+                    name="Email"
+                    [(ngModel)]="setting.Email"
+                    engineSync="Email"
+                    autoFocusNext
+                    [next]="mobile"
+                    required>
+                </div>
+
+                <div class="col-md-6" error-notify="Mobile" error-display="inline">
+                  <label class="form-label">
+                    {{ 'userSettings.mobile' | translate }}
+                  </label>
+
+                  <input
+                    #mobile
+                    type="tel"
+                    class="form-control"
+                    id="Mobile"
+                    name="Mobile"
+                    [(ngModel)]="setting.Mobile"
+                    engineSync="Mobile"
+                    autoFocusNext
+                    [next]="phoneNumber"
+                    required>
+                </div>
+
+                <div class="col-md-6" error-notify="PhoneNumber" error-display="inline">
+                  <label class="form-label">
+                    {{ 'userSettings.phoneNumber' | translate }}
+                  </label>
+
+                  <input
+                    #phoneNumber
+                    type="tel"
+                    class="form-control"
+                    id="PhoneNumber"
+                    name="PhoneNumber"
+                    [(ngModel)]="setting.PhoneNumber"
+                    engineSync="PhoneNumber"
+                    autoFocusNext
+                    [next]="address"
+                    required>
+                </div>
+
+                <div class="col-12" error-notify="Address" error-display="inline">
+                  <label class="form-label">
+                    {{ 'userSettings.address' | translate }}
+                  </label>
+
+                  <textarea
+                    #address
+                    class="form-control"
+                    rows="3"
+                    id="Address"
+                    name="Address"
+                    [(ngModel)]="setting.Address"
+                    engineSync="Address"
+                    autoFocusNext
+                    [next]="language"
+                    required></textarea>
+                </div>
+
+                <div class="settings-security-item">
+                  <div class="settings-security-info">
+                    <h6 class="settings-security-title">
+                      {{ 'userSettings.auditEmailNotifications' | translate }}
+                    </h6>
+
+                    <p class="settings-security-desc">
+                      {{ 'userSettings.auditEmailNotificationsDesc' | translate }}
+                    </p>
+                  </div>
+
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="EnableAuditEmailNotifications"
+                      name="EnableAuditEmailNotifications"
+                      [(ngModel)]="setting.EnableAuditEmailNotifications"
+                      engineSync="EnableAuditEmailNotifications"
+                      autoFocusNext>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="card ss-card mb-3">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                {{ 'userSettings.workspacePreferences' | translate }}
+              </h5>
+            </div>
+
+            <div class="card-body">
+              <div class="row g-3">
+
+                <div class="col-md-6" error-notify="Language" error-display="inline">
+                  <label class="form-label">
+                    {{ 'userSettings.language' | translate }}
+                  </label>
+
+                  <select
+                    #language
+                    class="form-select"
+                    id="Language"
+                    name="Language"
+                    [(ngModel)]="setting.Language"
+                    (change)="changeLanguage(setting.Language, $event)"
+                    engineSync="Language"
+                    autoFocusNext
+                    [next]="defaultLandingPage"
+                    required>
+                    <option *ngFor="let lang of languages" [value]="lang.code">
+                      {{ lang.language }} ({{ lang.country }})
+                    </option>
+                  </select>
+                </div>
+
+                <div class="col-md-6" error-notify="DefaultLandingPage" error-display="inline">
+                  <label class="form-label">
+                    {{ 'userSettings.defaultLandingPage' | translate }}
+                  </label>
+
+                  <select
+                    #defaultLandingPage
+                    class="form-select"
+                    id="DefaultLandingPage"
+                    name="DefaultLandingPage"
+                    [(ngModel)]="setting.DefaultLandingPage"
+                    engineSync="DefaultLandingPage"
+                    autoFocusNext
+                    [next]="btn"
+                    [disableClickButton]="true"
+                    [unlockOn]="notify.closed$"
+                    required>
+                    <option value="Dashboard">Dashboard</option>
+                    <option value="">{{ 'userSettings.empty' | translate }}</option>
+                  </select>
+                </div>
+
+                <div class="settings-security-item">
+                  <div class="settings-security-info">
+                    <h6 class="settings-security-title">
+                      {{ 'userSettings.auditEmailNotifications' | translate }}
+                    </h6>
+
+                    <p class="settings-security-desc">
+                      {{ 'userSettings.auditEmailNotificationsDesc' | translate }}
+                    </p>
+                  </div>
+
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="EnableAuditEmailNotifications"
+                      name="EnableAuditEmailNotifications"
+                      [(ngModel)]="setting.EnableAuditEmailNotifications"
+                      engineSync="EnableAuditEmailNotifications"
+                      autoFocusNext>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="card ss-card mb-3">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                {{ 'userSettings.appearance' | translate }}
+              </h5>
+            </div>
+
+            <div class="card-body">
+              <label class="form-label mb-2">
+                {{ 'userSettings.themeMode' | translate }}
+              </label>
+
+              <div class="settings-theme-options">
+
+                <label class="settings-theme-card" [class.active]="setting.Theme === 'light'"
+                  (click)="changeTheme('light')">
+
+                  <input type="radio" name="themeMode" [checked]="setting.Theme === 'light'">
+
+                  <div class="settings-theme-preview settings-theme-light">
+                    <div class="settings-theme-sidebar"></div>
+                    <div class="settings-theme-main-preview">
+                      <div class="settings-theme-header"></div>
+                      <div class="settings-theme-content">
+                        <div class="settings-theme-block"></div>
+                        <div class="settings-theme-block"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <span class="settings-theme-label">
+                    <span class="settings-theme-label-icon"><i class="bi bi-sun"></i></span>
+                    <span class="settings-theme-label-copy">
+                      <strong>{{ 'userSettings.light' | translate }}</strong>
+                      <small>{{ 'userSettings.brightUI' | translate }}</small>
+                    </span>
+                  </span>
+                </label>
+
+                <label class="settings-theme-card" [class.active]="setting.Theme === 'dark'"
+                  (click)="changeTheme('dark')">
+
+                  <input type="radio" name="themeMode" [checked]="setting.Theme === 'dark'">
+
+                  <div class="settings-theme-preview settings-theme-dark">
+                    <div class="settings-theme-sidebar"></div>
+                    <div class="settings-theme-main-preview">
+                      <div class="settings-theme-header"></div>
+                      <div class="settings-theme-content">
+                        <div class="settings-theme-block"></div>
+                        <div class="settings-theme-block"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <span class="settings-theme-label">
+                    <span class="settings-theme-label-icon"><i class="bi bi-moon"></i></span>
+                    <span class="settings-theme-label-copy">
+                      <strong>{{ 'userSettings.dark' | translate }}</strong>
+                      <small>{{ 'userSettings.lowLightUI' | translate }}</small>
+                    </span>
+                  </span>
+                </label>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="card ss-card mb-3">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                {{ 'userSettings.securityControls' | translate }}
+              </h5>
+            </div>
+
+            <div class="card-body">
+              <div class="settings-security-stack">
+
+                <div class="settings-security-item">
+                  <div class="settings-security-info">
+                    <h6 class="settings-security-title">
+                      {{ 'userSettings.password' | translate }}
+                    </h6>
+
+                    <p class="settings-security-desc">
+                      @if (passwordTime.anios == 0 && passwordTime.meses < 3) {
+                        <a href="javascript:void(0)" class="badge badge-soft-success text-decoration-none">
+                          <i class="bi bi-tag me-1"></i>
+                          {{ 'userSettings.passwordLastChanged' | translate:passwordTime }}
+                        </a>
+                      } @else {
+                        @if (passwordTime.anios == 0 && passwordTime.meses > 3 && passwordTime.meses <= 5) {
+                          <a href="javascript:void(0)" class="badge badge-soft-warning text-decoration-none">
+                            <i class="bi bi-tag me-1"></i>
+                            {{ 'userSettings.passwordLastChanged' | translate:passwordTime }}
+                          </a>
+                        } @else {
+                          <a href="javascript:void(0)" class="badge badge-soft-danger text-decoration-none">
+                            <i class="bi bi-tag me-1"></i>
+                            {{ 'userSettings.passwordLastChanged' | translate:passwordTime }}
+                          </a>
+                        }
+                      }
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#changePassword"
+                    appPermission="edit">
+                    {{ 'userSettings.common.change' | translate }}
+                  </button>
+                </div>
+
+                <div class="collapse" id="changePassword">
+                  <div class="settings-password-form">
+                    <div class="row g-3" style="max-width: 560px;">
+
+                      <div class="col-12" error-notify="Password" error-display="inline">
+                        <label class="form-label">
+                          {{ 'userSettings.currentPassword' | translate }}
+                        </label>
+
+                        <input
+                          type="password"
+                          class="form-control"
+                          [placeholder]="'userSettings.currentPasswordPlaceholder' | translate"
+                          id="Password"
+                          name="Password"
+                          [(ngModel)]="setting.Password"
+                          engineSync="Password"
+                          autoFocusNext
+                          [next]="newPassword"
+                          required>
+                      </div>
+
+                      <div class="col-md-6" error-notify="NewPassword" error-display="inline">
+                        <label class="form-label">
+                          {{ 'userSettings.newPassword' | translate }}
+                        </label>
+
+                        <input
+                          #newPassword
+                          type="password"
+                          class="form-control"
+                          [placeholder]="'userSettings.newPasswordPlaceholder' | translate"
+                          id="NewPassword"
+                          name="NewPassword"
+                          [(ngModel)]="setting.NewPassword"
+                          engineSync="NewPassword"
+                          autoFocusNext
+                          [next]="confirmPassword"
+                          required>
+                      </div>
+
+                      <div class="col-md-6" error-notify="ConfirmPassword" error-display="inline">
+                        <label class="form-label">
+                          {{ 'userSettings.confirmPassword' | translate }}
+                        </label>
+
+                        <input
+                          #confirmPassword
+                          type="password"
+                          class="form-control"
+                          [placeholder]="'userSettings.confirmPasswordPlaceholder' | translate"
+                          id="ConfirmPassword"
+                          name="ConfirmPassword"
+                          [(ngModel)]="setting.ConfirmPassword"
+                          engineSync="ConfirmPassword"
+                          required>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="settings-security-item">
+                  <div class="settings-security-info">
+                    <h6 class="settings-security-title">
+                      {{ 'userSettings.twoFactorAuthentication' | translate }}
+                    </h6>
+
+                    <p class="settings-security-desc">
+                      {{ 'userSettings.requireVerificationCode' | translate }}
+                    </p>
+                  </div>
+
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="EnableTwoFactorLogin"
+                      name="EnableTwoFactorLogin"
+                      [(ngModel)]="setting.EnableTwoFactorLogin"
+                      engineSync="EnableTwoFactorLogin"
+                      autoFocusNext
+                      (change)="engine.requestValidation('EnableTwoFactorLogin')">
+                  </div>
+                </div>
+
+                <div class="settings-security-item">
+                  <div class="settings-security-info">
+                    <h6 class="settings-security-title">
+                      {{ 'userSettings.auditEmailNotifications' | translate }}
+                    </h6>
+
+                    <p class="settings-security-desc">
+                      {{ 'userSettings.auditEmailNotificationsDesc' | translate }}
+                    </p>
+                  </div>
+
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="EnableAuditEmailNotifications"
+                      name="EnableAuditEmailNotifications"
+                      [(ngModel)]="setting.EnableAuditEmailNotifications"
+                      engineSync="EnableAuditEmailNotifications"
+                      autoFocusNext
+                      (change)="engine.requestValidation('EnableAuditEmailNotifications')">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="d-flex justify-content-end gap-2 pt-2">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="onCancel()"
+              appPermission="edit">
+              {{ 'userSettings.common.reset' | translate }}
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="onSave()"
+              appPermission="edit">
+              {{ 'userSettings.common.saveAll' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>

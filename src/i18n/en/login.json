@@ -1,0 +1,72 @@
+{
+  "login": {
+    "secureAccess": "Secure access",
+    "welcomeBack": "Welcome back",
+    "subtitle": "Sign in to continue to your workspace.",
+    "emailAddress": "Username or email",
+    "emailPlaceholder": "email@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot your password?",
+    "signIn": "Sign in",
+    "rights": "All rights reserved",
+    "lang": {
+      "caption": "Language",
+      "data": {
+        "es": {
+          "language": "Spanish",
+          "country": "Nicaragua"
+        },
+        "en": {
+          "language": "English",
+          "country": "United States"
+        }
+      }
+    },
+    "form": {
+      "fieldMeta": {
+        "identifier": {
+          "label": "Login",
+          "tooltip": "Required field"
+        },
+        "password": {
+          "label": "Login",
+          "tooltip": "Required field",
+          "tooltipIconClass": "ri-key-2-line"
+        }
+      },
+      "validations": {
+        "identifier": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "5",
+              "msj": "The username or email must have at least {value} characters.",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        },
+        "password": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "6",
+              "msj": "The password must have at least {value} characters",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            },
+            "2": {
+              "rule": "LEN<=",
+              "value": "100",
+              "msj": "The password allows a maximum of {value} characters only",
+              "classIconSuccess": "ri-lock-star-fill",
+              "classIconError": "ri-key-2-line"
+            }
+          }
+        }
+      }
+    },
+    "forcePasswordChangeRequired": "You must change your password before continuing."
+  }
+}
