@@ -128,15 +128,36 @@ export const routes: Routes = [
 
 
 
-        {
-        path: 'socio',
+      // SOCIOS
+      {
+        path: 'socios',
+        loadComponent: () =>
+          import('./features/prueba/pages/socios/socios-list/socios-list')
+            .then(m => m.SociosListComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/socios',  tableFilterKey: 'socios' },
+        providers: [JMartMassiveValidationService],
+      },
+      {
+        path: 'socios/new',
         loadComponent: () =>
           import('./features/prueba/pages/socios/socios')
-            .then(m => m.Socios),
+            .then(m => m.SociosComponent ),
         canActivate: [permissionGuard],
+        data: { permission: '/socios/new' },
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },
+      {
+        path: 'socios/:id',
+        loadComponent: () =>
+          import('./features/prueba/pages/socios/socios')
+            .then(m => m.SociosComponent ),
+        canActivate: [permissionGuard],
+        data: { permission: '/socios' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      }
 
 
 

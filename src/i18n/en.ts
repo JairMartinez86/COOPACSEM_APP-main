@@ -14,5 +14,6 @@ import userSettings from './en/userSettings.json';
 import rolesPermissions from './en/rolesPermissions.json';
 import activity from './en/activity.json';
 import userlist from './en/userlist.json';
+import socios from './en/socios.json';
 
-export const en = Object.assign({}, interceptor, draft, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist);
+export const en = Object.assign({}, interceptor, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios,  draft);

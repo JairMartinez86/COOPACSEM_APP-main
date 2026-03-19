@@ -1,0 +1,443 @@
+{
+  "common": {
+    "actions": {
+      "clear": "Clear"
+    },
+    "selectOption": "Select...",
+    "options": {
+      "tipoIdentificacion": {
+        "cedula": "ID card",
+        "pasaporte": "Passport",
+        "residencia": "Residence permit",
+        "otro": "Other"
+      },
+      "conyugeTipoIdentificacion": {
+        "cedula": "ID card",
+        "pasaporte": "Passport",
+        "residencia": "Residence permit",
+        "otro": "Other"
+      },
+      "sociedadLabora": {
+        "gmg_comercial": "GMG Commercial",
+        "gmg_servicios": "GMG Services",
+        "gmg_zona_franca": "GMG Free Zone"
+      }
+    }
+  },
+  "draft": {
+    "leavePageTitle": "Warning",
+    "leavePageMessage": "You have unsaved changes. If you leave this page, they will be lost. Do you want to continue?"
+  },
+  "socios": {
+    "title": "Member Registration",
+    "subtitle": "On desktop, the wizard stays fixed on the left. On mobile, it stays fixed at the top and moves horizontally according to the active section.",
+    "actions": {
+      "save": "Save member"
+    },
+    "badges": {
+      "newMember": "New member",
+      "sections": "4 sections",
+      "beneficiaries": "Up to 3 beneficiaries"
+    },
+    "wizard": {
+      "title": "Sections",
+      "subtitle": "Click or scroll to navigate.",
+      "steps": {
+        "datosPersonales": {
+          "title": "Personal information",
+          "desc": "Identity and contact"
+        },
+        "actividadEconomica": {
+          "title": "Economic activity",
+          "desc": "Employment and income"
+        },
+        "datosConyuge": {
+          "title": "Spouse information",
+          "desc": "Optional information"
+        },
+        "beneficiarios": {
+          "title": "Beneficiaries",
+          "desc": "Percentage control"
+        }
+      }
+    },
+    "groups": {
+      "identificacion": "Identification",
+      "ubicacionContacto": "Location and contact"
+    },
+    "sections": {
+      "datosPersonales": {
+        "title": "Personal information",
+        "subtitle": "Identity, birth, and contact information."
+      },
+      "actividadEconomica": {
+        "title": "Economic activity or employment",
+        "subtitle": "Professional environment and income details of the member."
+      },
+      "datosConyuge": {
+        "title": "Spouse information",
+        "subtitle": "Complete this section when applicable according to the member's marital status."
+      },
+      "beneficiarios": {
+        "title": "Beneficiaries",
+        "subtitle": "Distribute the percentage among the registered beneficiaries."
+      }
+    },
+    "beneficiarios": {
+      "1": {
+        "title": "Beneficiary 1",
+        "subtitle": "Primary record",
+        "badge": "Primary"
+      },
+      "2": {
+        "title": "Beneficiary 2",
+        "subtitle": "Optional record",
+        "badge": "Optional"
+      },
+      "3": {
+        "title": "Beneficiary 3",
+        "subtitle": "Optional record",
+        "badge": "Optional"
+      }
+    },
+    "fields": {
+      "nombreCompleto": {
+        "label": "Full name",
+        "placeholder": "Full name"
+      },
+      "nombrePublico": {
+        "label": "Socially and/or publicly known as",
+        "placeholder": "Socially and/or publicly known as"
+      },
+      "tipoIdentificacion": {
+        "label": "Identification type",
+        "placeholder": "Identification type"
+      },
+      "numeroIdentificacion": {
+        "label": "Identification no.",
+        "placeholder": "Identification no."
+      },
+      "paisEmisor": {
+        "label": "Issuing country",
+        "placeholder": "Issuing country"
+      },
+      "fechaEmision": {
+        "label": "Issue date",
+        "placeholder": "Issue date"
+      },
+      "fechaVencimiento": {
+        "label": "Expiration date",
+        "placeholder": "Expiration date"
+      },
+      "paisNacimiento": {
+        "label": "Country of birth",
+        "placeholder": "Country of birth"
+      },
+      "fechaNacimiento": {
+        "label": "Date of birth",
+        "placeholder": "Date of birth"
+      },
+      "nacionalidad": {
+        "label": "Nationality",
+        "placeholder": "Nationality"
+      },
+      "departamento": {
+        "label": "Department",
+        "placeholder": "Department"
+      },
+      "municipio": {
+        "label": "Municipality",
+        "placeholder": "Municipality"
+      },
+      "direccionDomiciliar": {
+        "label": "Home address",
+        "placeholder": "Home address"
+      },
+      "telefono": {
+        "label": "Phone",
+        "placeholder": "Phone"
+      },
+      "celular": {
+        "label": "Mobile",
+        "placeholder": "Mobile"
+      },
+      "correo": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
+      "sociedadLabora": {
+        "label": "Company where employed",
+        "placeholder": "Company where employed"
+      },
+      "area": {
+        "label": "Area",
+        "placeholder": "Area"
+      },
+      "cargo": {
+        "label": "Position",
+        "placeholder": "Position"
+      },
+      "fechaIngreso": {
+        "label": "Start date",
+        "placeholder": "Start date"
+      },
+      "numeroIp": {
+        "label": "IP number",
+        "placeholder": "IP number"
+      },
+      "correoLaboral": {
+        "label": "Work email",
+        "placeholder": "Work email"
+      },
+      "jefeInmediato": {
+        "label": "Immediate supervisor",
+        "placeholder": "Immediate supervisor"
+      },
+      "ingresosMensuales": {
+        "label": "Monthly income",
+        "placeholder": "Monthly income"
+      },
+      "otrosIngresos": {
+        "label": "Other income",
+        "placeholder": "Other income"
+      },
+      "ingresosAnuales": {
+        "label": "Total annual income",
+        "placeholder": "Total annual income"
+      },
+      "conyugeNombreCompleto": {
+        "label": "Full name",
+        "placeholder": "Full name"
+      },
+      "conyugeTipoIdentificacion": {
+        "label": "Identification type",
+        "placeholder": "Identification type"
+      },
+      "conyugeNumeroIdentificacion": {
+        "label": "Identification no.",
+        "placeholder": "Identification no."
+      },
+      "conyugePaisNacimiento": {
+        "label": "Country of birth",
+        "placeholder": "Country of birth"
+      },
+      "conyugeNacionalidad": {
+        "label": "Nationality",
+        "placeholder": "Nationality"
+      },
+      "beneficiario1Nombre": {
+        "label": "Full name",
+        "placeholder": "Full name"
+      },
+      "beneficiario1Porcentaje": {
+        "label": "Percentage",
+        "placeholder": "Percentage"
+      },
+      "beneficiario1Parentesco": {
+        "label": "Relationship",
+        "placeholder": "Relationship"
+      },
+      "beneficiario1Cedula": {
+        "label": "ID card",
+        "placeholder": "ID card"
+      },
+      "beneficiario2Nombre": {
+        "label": "Full name",
+        "placeholder": "Full name"
+      },
+      "beneficiario2Porcentaje": {
+        "label": "Percentage",
+        "placeholder": "Percentage"
+      },
+      "beneficiario2Parentesco": {
+        "label": "Relationship",
+        "placeholder": "Relationship"
+      },
+      "beneficiario2Cedula": {
+        "label": "ID card",
+        "placeholder": "ID card"
+      },
+      "beneficiario3Nombre": {
+        "label": "Full name",
+        "placeholder": "Full name"
+      },
+      "beneficiario3Porcentaje": {
+        "label": "Percentage",
+        "placeholder": "Percentage"
+      },
+      "beneficiario3Parentesco": {
+        "label": "Relationship",
+        "placeholder": "Relationship"
+      },
+      "beneficiario3Cedula": {
+        "label": "ID card",
+        "placeholder": "ID card"
+      }
+    },
+    "form": {
+      "fieldMeta": {
+        "nombreCompleto": {
+          "label": "Full name"
+        },
+        "nombrePublico": {
+          "label": "Socially and/or publicly known as"
+        },
+        "tipoIdentificacion": {
+          "label": "Identification type"
+        },
+        "numeroIdentificacion": {
+          "label": "Identification no."
+        },
+        "paisEmisor": {
+          "label": "Issuing country"
+        },
+        "fechaEmision": {
+          "label": "Issue date"
+        },
+        "fechaVencimiento": {
+          "label": "Expiration date"
+        },
+        "paisNacimiento": {
+          "label": "Country of birth"
+        },
+        "fechaNacimiento": {
+          "label": "Date of birth"
+        },
+        "nacionalidad": {
+          "label": "Nationality"
+        },
+        "departamento": {
+          "label": "Department"
+        },
+        "municipio": {
+          "label": "Municipality"
+        },
+        "direccionDomiciliar": {
+          "label": "Home address"
+        },
+        "telefono": {
+          "label": "Phone"
+        },
+        "celular": {
+          "label": "Mobile"
+        },
+        "correo": {
+          "label": "Email"
+        },
+        "sociedadLabora": {
+          "label": "Company where employed"
+        },
+        "area": {
+          "label": "Area"
+        },
+        "cargo": {
+          "label": "Position"
+        },
+        "fechaIngreso": {
+          "label": "Start date"
+        },
+        "numeroIp": {
+          "label": "IP number"
+        },
+        "correoLaboral": {
+          "label": "Work email"
+        },
+        "jefeInmediato": {
+          "label": "Immediate supervisor"
+        },
+        "ingresosMensuales": {
+          "label": "Monthly income"
+        },
+        "otrosIngresos": {
+          "label": "Other income"
+        },
+        "ingresosAnuales": {
+          "label": "Total annual income"
+        },
+        "conyugeNombreCompleto": {
+          "label": "Full name"
+        },
+        "conyugeTipoIdentificacion": {
+          "label": "Identification type"
+        },
+        "conyugeNumeroIdentificacion": {
+          "label": "Identification no."
+        },
+        "conyugePaisNacimiento": {
+          "label": "Country of birth"
+        },
+        "conyugeNacionalidad": {
+          "label": "Nationality"
+        },
+        "beneficiario1Nombre": {
+          "label": "Full name"
+        },
+        "beneficiario1Porcentaje": {
+          "label": "Percentage"
+        },
+        "beneficiario1Parentesco": {
+          "label": "Relationship"
+        },
+        "beneficiario1Cedula": {
+          "label": "ID card"
+        },
+        "beneficiario2Nombre": {
+          "label": "Full name"
+        },
+        "beneficiario2Porcentaje": {
+          "label": "Percentage"
+        },
+        "beneficiario2Parentesco": {
+          "label": "Relationship"
+        },
+        "beneficiario2Cedula": {
+          "label": "ID card"
+        },
+        "beneficiario3Nombre": {
+          "label": "Full name"
+        },
+        "beneficiario3Porcentaje": {
+          "label": "Percentage"
+        },
+        "beneficiario3Parentesco": {
+          "label": "Relationship"
+        },
+        "beneficiario3Cedula": {
+          "label": "ID card"
+        }
+      },
+      "validations": {
+        "nombreCompleto": {
+          "data": {
+            "r1": {
+              "rule": "LEN>=",
+              "when": "ALWAYS",
+              "value": 1,
+              "msj": "Full name is required"
+            }
+          }
+        },
+        "tipoIdentificacion": {
+          "data": {
+            "r1": {
+              "rule": "LEN>=",
+              "when": "ALWAYS",
+              "value": 1,
+              "msj": "Identification type is required"
+            }
+          }
+        },
+        "numeroIdentificacion": {
+          "data": {
+            "r1": {
+              "rule": "LEN>=",
+              "when": "ALWAYS",
+              "value": 1,
+              "msj": "Identification number is required"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -97,7 +97,7 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
 
     this.langChangeSub = this.translate.onLangChange.subscribe(() => {
       this.languages = this.langService.getAvailableLanguages();
-      this.reloadLoginConfig(false);
+      this.reloadLoginConfig();
     });
   }
 
@@ -168,10 +168,10 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.engine.patchValues(this.setting);
   }
 
-  private reloadLoginConfig(resetData: boolean = false): void {
+  private reloadLoginConfig(): void {
     this.engine.resetRules();
     this.engine.clearErrors();
-    this.loadLoginConfig(resetData);
+    this.loadLoginConfig();
 
     this.patchEngineFromSetting();
 

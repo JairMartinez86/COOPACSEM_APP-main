@@ -1,0 +1,187 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+  <div class="row g-4">
+    <div class="col-xl-8">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <h5 class="card-title">Socios</h5>
+            <p class="card-subtitle">Administra los socios con estado, contacto y acciones</p>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="onCreate()">
+            <i class="bi bi-plus-lg me-1"></i>
+            Nuevo socio
+          </button>
+        </div>
+
+        <div class="card-body">
+          @if (loading) {
+            <div class="py-4 text-center text-muted">
+              Cargando socios...
+            </div>
+          } @else {
+            @if (socios.length > 0) {
+              <table
+                #sociosTable
+                id="sociosDataTable"
+                class="table">
+                <thead>
+                  <tr>
+                    <th>Socio</th>
+                    <th>Identificación</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th>Teléfono</th>
+                    <th data-sortable="false">Acciones</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @for (item of socios; track item.id) {
+                    <tr>
+                      <td [attr.data-sort]="item.nombreCompleto">
+                        <div class="table-user">
+                          <div class="table-user-avatar table-user-avatar-text">
+                            {{ getInitials(item.nombreCompleto) }}
+                          </div>
+                          <div>
+                            <div class="table-user-name">
+                              {{ item.nombreCompleto || '-' }}
+                            </div>
+                            <div class="table-user-email">
+                              {{ item.nombrePublico || 'Sin nombre público' }}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>{{ item.numeroIdentificacion || '-' }}</td>
+                      <td>{{ item.correo || '-' }}</td>
+
+                      <td>
+                        <span
+                          class="badge"
+                          [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                          {{ item.activo ? 'Activo' : 'Inactivo' }}
+                        </span>
+                      </td>
+
+                      <td>{{ item.telefono || item.celular || '-' }}</td>
+
+                      <td>
+                        <div class="table-actions">
+                          <button
+                            type="button"
+                            class="btn btn-icon btn-sm btn-light"
+                            title="Editar"
+                            (click)="onEdit(item.id)">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+
+                          <button
+                            type="button"
+                            class="btn btn-icon btn-sm btn-light"
+                            title="Eliminar"
+                            (click)="onDelete(item)">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            } @else {
+              <div class="py-4 text-center text-muted">
+                No se encontraron socios.
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4">
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Estado de socios</h5>
+        </div>
+
+        <div class="card-body">
+          <div class="d-flex flex-column gap-3">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="stats-dot bg-success"></span>
+                  <span>Activos</span>
+                </div>
+                <strong>{{ activePercent }}%</strong>
+              </div>
+
+              <div class="stats-progress">
+                <div class="stats-progress-bar bg-success" [style.width.%]="activePercent"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="stats-dot bg-danger"></span>
+                  <span>Inactivos</span>
+                </div>
+                <strong>{{ inactivePercent }}%</strong>
+              </div>
+
+              <div class="stats-progress">
+                <div class="stats-progress-bar bg-danger" [style.width.%]="inactivePercent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Actividad reciente</h5>
+        </div>
+
+        <div class="card-body p-0">
+          @if (latestActivity.length === 0) {
+            <div class="px-3 py-3 text-muted small">
+              No hay actividad reciente.
+            </div>
+          } @else {
+            @for (item of latestActivity; track item.id + '-' + item.tipo + '-' + item.fecha) {
+              <div class="d-flex align-items-center gap-3 px-3 py-3 border-top recent-list-item">
+                <div class="letter-avatar">
+                  {{ getInitials(item.nombreCompleto) }}
+                </div>
+
+                <div class="d-flex flex-column min-w-0 flex-grow-1">
+                  <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
+                    <strong class="text-truncate">{{ item.nombreCompleto }}</strong>
+
+                    <span
+                      class="badge"
+                      [ngClass]="item.tipo === 'new' ? 'badge-soft-success' : 'badge-soft-info'">
+                      {{ item.tipo === 'new' ? 'Nuevo' : 'Modificado' }}
+                    </span>
+                  </div>
+
+                  <span class="small text-muted">
+                    {{ formatActivityLabel(item.fecha) }}
+                  </span>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

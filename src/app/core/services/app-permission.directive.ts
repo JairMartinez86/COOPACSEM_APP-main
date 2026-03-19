@@ -3,19 +3,23 @@ import {
   ElementRef,
   Inject,
   Input,
+  OnChanges,
   OnInit,
   PLATFORM_ID,
-  Renderer2
+  Renderer2,
+  SimpleChanges
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { PermissionAction, PermissionService } from './permission.service';
+
+type PermissionInput = PermissionAction | 'new' | Array<PermissionAction | 'new'>;
 
 @Directive({
   selector: '[appPermission]',
   standalone: true
 })
-export class AppPermissionDirective implements OnInit {
-  @Input('appPermission') action!: PermissionAction;
+export class AppPermissionDirective implements OnInit, OnChanges {
+  @Input('appPermission') actions!: PermissionInput;
   @Input() permissionRoute?: string;
   @Input() permissionMode: 'hide' | 'disable' = 'hide';
 
@@ -34,9 +38,19 @@ export class AppPermissionDirective implements OnInit {
     this.applyPermission();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    if (changes['actions'] || changes['permissionRoute'] || changes['permissionMode']) {
+      this.applyPermission();
+    }
+  }
+
   private applyPermission(): void {
     const route = this.permissionRoute || window.location.pathname;
-    const allowed = this.permissionService.has(this.action, route);
+    const allowed = this.hasAnyPermission(route);
     const element = this.el.nativeElement;
 
     if (this.permissionMode === 'hide') {
@@ -55,5 +69,17 @@ export class AppPermissionDirective implements OnInit {
       this.renderer.removeStyle(element, 'pointer-events');
       this.renderer.removeStyle(element, 'opacity');
     }
+  }
+
+  private hasAnyPermission(route: string): boolean {
+    const actions = Array.isArray(this.actions) ? this.actions : [this.actions];
+
+    return actions
+      .map(action => this.normalizeAction(action))
+      .some(action => this.permissionService.has(action, route));
+  }
+
+  private normalizeAction(action: PermissionAction | 'new'): PermissionAction {
+    return action === 'new' ? 'create' : action;
   }
 }

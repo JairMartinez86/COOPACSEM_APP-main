@@ -110,6 +110,19 @@ export const SIDEBAR_DATA: SidebarItem[] = [
 
   {
     type: 'link',
+    titleKey: 'sidebar.items.temp',
+    iconclass: 'ph ph-money',
+    router: '/socios',
+    permissions: {
+      view: true,
+      create: true,
+      edit: null,
+      delete: null
+    }
+  },
+
+  {
+    type: 'link',
     titleKey: 'sidebar.items.empty',
     iconclass: 'ph ph-money',
     router: '/dashboard',

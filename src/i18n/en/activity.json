@@ -79,6 +79,24 @@
         "confirmTitle": "Warning",
         "confirmMessage": "Do you really want to remove the trusted device {{device}}?"
       }
-    }
+    },
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/home"
+      },
+      {
+        "label": "Users",
+        "url": ""
+      },
+      {
+        "label": "Settings",
+        "url": ""
+      },
+      {
+        "label": "Activity and sessions",
+        "url": "/activity-history"
+      }
+    ]
   }
 }

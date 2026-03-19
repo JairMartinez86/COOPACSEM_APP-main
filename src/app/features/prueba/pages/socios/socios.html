@@ -1,6 +1,6 @@
 <div class="page-users-edit page-socios">
   <div class="container-fluid px-0">
-    <form id="socioForm" class="d-flex flex-column gap-4">
+    <form #socioFormRef="ngForm" id="socioForm" class="d-flex flex-column gap-4" novalidate>
       <div class="card ue-shell-card socio-topbar">
         <div class="card-body p-4">
           <div class="d-flex flex-column flex-xl-row align-items-xl-start justify-content-between gap-4">
@@ -8,24 +8,25 @@
               <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                 <span class="badge badge-soft-primary rounded-pill px-3 py-2">
                   <i class="bi bi-person-vcard me-1"></i>
-                  Nuevo socio
+                  {{ 'socios.badges.newMember' | translate }}
                 </span>
-                <span class="badge badge-outline-secondary rounded-pill px-3 py-2">4 secciones</span>
-                <span class="badge badge-outline-success rounded-pill px-3 py-2">Hasta 3 beneficiarios</span>
+                <span class="badge badge-outline-secondary rounded-pill px-3 py-2">{{ 'socios.badges.sections' |
+                  translate }}</span>
+                <span class="badge badge-outline-success rounded-pill px-3 py-2">{{ 'socios.badges.beneficiaries' |
+                  translate }}</span>
               </div>
-              <h1 class="page-title mb-2">Registro de socio</h1>
-              <p class="ue-shell-subtitle mb-0">
-                En PC el wizard queda fijo a la izquierda. En móvil queda fijo arriba y se mueve horizontalmente según la sección activa.
-              </p>
+              <h1 class="page-title mb-2">{{ 'socios.title' | translate }}</h1>
+              <p class="ue-shell-subtitle mb-0">{{ 'socios.subtitle' | translate }}</p>
             </div>
             <div class="socio-topbar-actions d-flex flex-wrap gap-2">
-              <button type="reset" form="socioForm" class="btn btn-light border">
+              <button type="button" class="btn btn-light border" (click)="onCancel()">
                 <i class="bi bi-arrow-counterclockwise me-1"></i>
-                Limpiar
+                {{ 'common.actions.clear' | translate }}
               </button>
-              <button type="submit" form="socioForm" class="btn btn-primary">
+              <button type="button" class="btn btn-primary" (click)="onSave()" [appPermission]="['new', 'edit']" autoFocusNext
+                [disableClickButton]="true" [unlockOn]="notify.closed$">
                 <i class="bi bi-save me-1"></i>
-                Guardar socio
+                {{ 'socios.actions.save' | translate }}
               </button>
             </div>
           </div>
@@ -35,84 +36,56 @@
       <div class="row g-4">
         <div class="col-12 col-xl-3 socio-wizard-col">
           <div #wizardSlot class="socio-wizard-slot" [style.height.px]="wizardAffixed ? wizardPlaceholderHeight : null">
-            <div
-              #wizardCard
-              class="card ue-shell-card socio-aside-card socio-wizard-card"
-              [style.position]="wizardPosition || null"
-              [style.top]="wizardTop || null"
-              [style.left]="wizardLeft || null"
-              [style.width]="wizardWidth || null"
-              [style.z-index]="wizardZIndex || null"
-            >
+            <div #wizardCard class="card ue-shell-card socio-aside-card socio-wizard-card"
+              [style.position]="wizardPosition || null" [style.top]="wizardTop || null"
+              [style.left]="wizardLeft || null" [style.width]="wizardWidth || null"
+              [style.z-index]="wizardZIndex || null">
               <div class="card-header">
                 <div>
-                  <h6 class="card-title mb-1">Secciones</h6>
-                  <p class="card-subtitle mb-0">Click o scroll para navegar.</p>
+                  <h6 class="card-title mb-1">{{ 'socios.wizard.title' | translate }}</h6>
+                  <p class="card-subtitle mb-0">{{ 'socios.wizard.subtitle' | translate }}</p>
                 </div>
               </div>
               <div class="card-body p-4">
                 <div #wizardSteps class="wizard-steps-vertical socio-scroll-wizard">
-                  <button
-                    #wizardStep
-                    type="button"
-                    class="wizard-step-v"
-                    [attr.data-section]="'datos-personales'"
+                  <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'datos-personales'"
                     [class.active]="activeSection === 'datos-personales'"
-                    [class.completed]="isCompleted('datos-personales')"
-                    (click)="scrollToSection('datos-personales')"
-                  >
+                    [class.completed]="isCompleted('datos-personales')" (click)="scrollToSection('datos-personales')">
                     <div class="wizard-step-v-icon"><span>1</span></div>
                     <div class="wizard-step-v-content">
-                      <div class="wizard-step-v-title">Datos personales</div>
-                      <div class="wizard-step-v-desc">Identidad y contacto</div>
+                      <div class="wizard-step-v-title">{{ 'socios.wizard.steps.datosPersonales.title' | translate }}
+                      </div>
+                      <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.datosPersonales.desc' | translate }}</div>
                     </div>
                   </button>
-
-                  <button
-                    #wizardStep
-                    type="button"
-                    class="wizard-step-v"
-                    [attr.data-section]="'actividad-economica'"
+                  <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'actividad-economica'"
                     [class.active]="activeSection === 'actividad-economica'"
                     [class.completed]="isCompleted('actividad-economica')"
-                    (click)="scrollToSection('actividad-economica')"
-                  >
+                    (click)="scrollToSection('actividad-economica')">
                     <div class="wizard-step-v-icon"><span>2</span></div>
                     <div class="wizard-step-v-content">
-                      <div class="wizard-step-v-title">Actividad económica</div>
-                      <div class="wizard-step-v-desc">Empleo e ingresos</div>
+                      <div class="wizard-step-v-title">{{ 'socios.wizard.steps.actividadEconomica.title' | translate }}
+                      </div>
+                      <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.actividadEconomica.desc' | translate }}
+                      </div>
                     </div>
                   </button>
-
-                  <button
-                    #wizardStep
-                    type="button"
-                    class="wizard-step-v"
-                    [attr.data-section]="'datos-conyuge'"
-                    [class.active]="activeSection === 'datos-conyuge'"
-                    [class.completed]="isCompleted('datos-conyuge')"
-                    (click)="scrollToSection('datos-conyuge')"
-                  >
+                  <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'datos-conyuge'"
+                    [class.active]="activeSection === 'datos-conyuge'" [class.completed]="isCompleted('datos-conyuge')"
+                    (click)="scrollToSection('datos-conyuge')">
                     <div class="wizard-step-v-icon"><span>3</span></div>
                     <div class="wizard-step-v-content">
-                      <div class="wizard-step-v-title">Datos del cónyuge</div>
-                      <div class="wizard-step-v-desc">Información opcional</div>
+                      <div class="wizard-step-v-title">{{ 'socios.wizard.steps.datosConyuge.title' | translate }}</div>
+                      <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.datosConyuge.desc' | translate }}</div>
                     </div>
                   </button>
-
-                  <button
-                    #wizardStep
-                    type="button"
-                    class="wizard-step-v"
-                    [attr.data-section]="'beneficiarios'"
-                    [class.active]="activeSection === 'beneficiarios'"
-                    [class.completed]="isCompleted('beneficiarios')"
-                    (click)="scrollToSection('beneficiarios')"
-                  >
+                  <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'beneficiarios'"
+                    [class.active]="activeSection === 'beneficiarios'" [class.completed]="isCompleted('beneficiarios')"
+                    (click)="scrollToSection('beneficiarios')">
                     <div class="wizard-step-v-icon"><span>4</span></div>
                     <div class="wizard-step-v-content">
-                      <div class="wizard-step-v-title">Beneficiarios</div>
-                      <div class="wizard-step-v-desc">Control de porcentaje</div>
+                      <div class="wizard-step-v-title">{{ 'socios.wizard.steps.beneficiarios.title' | translate }}</div>
+                      <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.beneficiarios.desc' | translate }}</div>
                     </div>
                   </button>
                 </div>
@@ -125,289 +98,445 @@
           <div class="d-flex flex-column gap-4">
             <div id="datos-personales" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
-                <h5 class="card-title mb-1">Datos personales</h5>
-                <p class="card-subtitle mb-0">Información de identidad, nacimiento y medios de contacto.</p>
+                <h5 class="card-title mb-1">{{ 'socios.sections.datosPersonales.title' | translate }}</h5>
+                <p class="card-subtitle mb-0">{{ 'socios.sections.datosPersonales.subtitle' | translate }}</p>
               </div>
               <div class="card-body p-4 d-flex flex-column gap-4">
                 <div class="socio-group">
-                  <div class="socio-group-title">Identificación</div>
+                  <div class="socio-group-title">{{ 'socios.groups.identificacion' | translate }}</div>
                   <div class="row g-3">
-                    <div class="col-md-6">
-                      <label for="nombreCompleto" class="form-label required">Nombre completo</label>
-                      <input type="text" class="form-control" id="nombreCompleto" name="nombreCompleto" required>
+                    <div class="col-md-6" error-notify="nombreCompleto" error-display="inline">
+                      <label for="nombreCompleto" class="form-label required">{{ 'socios.fields.nombreCompleto.label' |
+                        translate }}</label>
+                      <input #nombreCompleto id="nombreCompleto" name="nombreCompleto"
+                        [(ngModel)]="socio.nombreCompleto" engineSync="nombreCompleto" autoFocusNext
+                        [next]="nombrePublico" type="text" class="form-control"
+                        [placeholder]="'socios.fields.nombreCompleto.placeholder' | translate" JmartAutoFocus required>
                     </div>
-                    <div class="col-md-6">
-                      <label for="nombrePublico" class="form-label">Conocido social y/o públicamente como</label>
-                      <input type="text" class="form-control" id="nombrePublico" name="nombrePublico">
+                    <div class="col-md-6" error-notify="nombrePublico" error-display="inline">
+                      <label for="nombrePublico" class="form-label">{{ 'socios.fields.nombrePublico.label' | translate
+                        }}</label>
+                      <input #nombrePublico id="nombrePublico" name="nombrePublico" [(ngModel)]="socio.nombrePublico"
+                        engineSync="nombrePublico" autoFocusNext [next]="tipoIdentificacion" type="text"
+                        class="form-control" [placeholder]="'socios.fields.nombrePublico.placeholder' | translate">
                     </div>
-                    <div class="col-md-4">
-                      <label for="tipoIdentificacion" class="form-label required">Tipo de identificación</label>
-                      <select class="form-select" id="tipoIdentificacion" name="tipoIdentificacion" required>
-                        <option value="">Seleccione...</option>
-                        <option value="cedula">Cédula</option>
-                        <option value="pasaporte">Pasaporte</option>
-                        <option value="residencia">Residencia</option>
-                        <option value="otro">Otro</option>
+                    <div class="col-md-4" error-notify="tipoIdentificacion" error-display="inline">
+                      <label for="tipoIdentificacion" class="form-label required">{{
+                        'socios.fields.tipoIdentificacion.label' | translate }}</label>
+                      <select #tipoIdentificacion id="tipoIdentificacion" name="tipoIdentificacion"
+                        [(ngModel)]="socio.tipoIdentificacion" engineSync="tipoIdentificacion" autoFocusNext
+                        [next]="numeroIdentificacion" class="form-select" required>
+                        <option value="">{{ 'common.selectOption' | translate }}</option>
+                        <option value="cedula">{{ 'common.options.tipoIdentificacion.cedula' | translate }}</option>
+                        <option value="pasaporte">{{ 'common.options.tipoIdentificacion.pasaporte' | translate }}
+                        </option>
+                        <option value="residencia">{{ 'common.options.tipoIdentificacion.residencia' | translate }}
+                        </option>
+                        <option value="otro">{{ 'common.options.tipoIdentificacion.otro' | translate }}</option>
                       </select>
                     </div>
-                    <div class="col-md-4">
-                      <label for="numeroIdentificacion" class="form-label required">No. de identificación</label>
-                      <input type="text" class="form-control" id="numeroIdentificacion" name="numeroIdentificacion" required>
+                    <div class="col-md-4" error-notify="numeroIdentificacion" error-display="inline">
+                      <label for="numeroIdentificacion" class="form-label required">{{
+                        'socios.fields.numeroIdentificacion.label' | translate }}</label>
+                      <input #numeroIdentificacion id="numeroIdentificacion" name="numeroIdentificacion"
+                        [(ngModel)]="socio.numeroIdentificacion" engineSync="numeroIdentificacion" autoFocusNext
+                        [next]="paisEmisor" type="text" class="form-control"
+                        [placeholder]="'socios.fields.numeroIdentificacion.placeholder' | translate" required>
                     </div>
-                    <div class="col-md-4">
-                      <label for="paisEmisor" class="form-label">País emisor</label>
-                      <input type="text" class="form-control" id="paisEmisor" name="paisEmisor">
+                    <div class="col-md-4" error-notify="paisEmisor" error-display="inline">
+                      <label for="paisEmisor" class="form-label">{{ 'socios.fields.paisEmisor.label' | translate
+                        }}</label>
+                      <input #paisEmisor id="paisEmisor" name="paisEmisor" [(ngModel)]="socio.paisEmisor"
+                        engineSync="paisEmisor" autoFocusNext [next]="fechaEmision" type="text" class="form-control"
+                        [placeholder]="'socios.fields.paisEmisor.placeholder' | translate">
                     </div>
-                    <div class="col-md-3">
-                      <label for="fechaEmision" class="form-label">Fecha de emisión</label>
-                      <input type="date" class="form-control" id="fechaEmision" name="fechaEmision">
+                    <div class="col-md-3" error-notify="fechaEmision" error-display="inline">
+                      <label for="fechaEmision" class="form-label">{{ 'socios.fields.fechaEmision.label' | translate
+                        }}</label>
+                      <input #fechaEmision id="fechaEmision" name="fechaEmision" [(ngModel)]="socio.fechaEmision"
+                        engineSync="fechaEmision" autoFocusNext [next]="fechaVencimiento" type="date"
+                        class="form-control" [placeholder]="'socios.fields.fechaEmision.placeholder' | translate">
                     </div>
-                    <div class="col-md-3">
-                      <label for="fechaVencimiento" class="form-label">Fecha de vencimiento</label>
-                      <input type="date" class="form-control" id="fechaVencimiento" name="fechaVencimiento">
+                    <div class="col-md-3" error-notify="fechaVencimiento" error-display="inline">
+                      <label for="fechaVencimiento" class="form-label">{{ 'socios.fields.fechaVencimiento.label' |
+                        translate }}</label>
+                      <input #fechaVencimiento id="fechaVencimiento" name="fechaVencimiento"
+                        [(ngModel)]="socio.fechaVencimiento" engineSync="fechaVencimiento" autoFocusNext
+                        [next]="paisNacimiento" type="date" class="form-control"
+                        [placeholder]="'socios.fields.fechaVencimiento.placeholder' | translate">
                     </div>
-                    <div class="col-md-3">
-                      <label for="paisNacimiento" class="form-label">País de nacimiento</label>
-                      <input type="text" class="form-control" id="paisNacimiento" name="paisNacimiento">
+                    <div class="col-md-3" error-notify="paisNacimiento" error-display="inline">
+                      <label for="paisNacimiento" class="form-label">{{ 'socios.fields.paisNacimiento.label' | translate
+                        }}</label>
+                      <input #paisNacimiento id="paisNacimiento" name="paisNacimiento"
+                        [(ngModel)]="socio.paisNacimiento" engineSync="paisNacimiento" autoFocusNext
+                        [next]="fechaNacimiento" type="text" class="form-control"
+                        [placeholder]="'socios.fields.paisNacimiento.placeholder' | translate">
                     </div>
-                    <div class="col-md-3">
-                      <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
-                      <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento">
+                    <div class="col-md-3" error-notify="fechaNacimiento" error-display="inline">
+                      <label for="fechaNacimiento" class="form-label">{{ 'socios.fields.fechaNacimiento.label' |
+                        translate }}</label>
+                      <input #fechaNacimiento id="fechaNacimiento" name="fechaNacimiento"
+                        [(ngModel)]="socio.fechaNacimiento" engineSync="fechaNacimiento" autoFocusNext
+                        [next]="nacionalidad" type="date" class="form-control"
+                        [placeholder]="'socios.fields.fechaNacimiento.placeholder' | translate">
                     </div>
                   </div>
                 </div>
                 <div class="socio-group">
-                  <div class="socio-group-title">Ubicación y contacto</div>
+                  <div class="socio-group-title">{{ 'socios.groups.ubicacionContacto' | translate }}</div>
                   <div class="row g-3">
-                    <div class="col-md-4">
-                      <label for="nacionalidad" class="form-label">Nacionalidad</label>
-                      <input type="text" class="form-control" id="nacionalidad" name="nacionalidad">
+                    <div class="col-md-4" error-notify="nacionalidad" error-display="inline">
+                      <label for="nacionalidad" class="form-label">{{ 'socios.fields.nacionalidad.label' | translate
+                        }}</label>
+                      <input #nacionalidad id="nacionalidad" name="nacionalidad" [(ngModel)]="socio.nacionalidad"
+                        engineSync="nacionalidad" autoFocusNext [next]="departamento" type="text" class="form-control"
+                        [placeholder]="'socios.fields.nacionalidad.placeholder' | translate">
                     </div>
-                    <div class="col-md-4">
-                      <label for="departamento" class="form-label">Departamento</label>
-                      <input type="text" class="form-control" id="departamento" name="departamento">
+                    <div class="col-md-4" error-notify="departamento" error-display="inline">
+                      <label for="departamento" class="form-label">{{ 'socios.fields.departamento.label' | translate
+                        }}</label>
+                      <input #departamento id="departamento" name="departamento" [(ngModel)]="socio.departamento"
+                        engineSync="departamento" autoFocusNext [next]="municipio" type="text" class="form-control"
+                        [placeholder]="'socios.fields.departamento.placeholder' | translate">
                     </div>
-                    <div class="col-md-4">
-                      <label for="municipio" class="form-label">Municipio</label>
-                      <input type="text" class="form-control" id="municipio" name="municipio">
+                    <div class="col-md-4" error-notify="municipio" error-display="inline">
+                      <label for="municipio" class="form-label">{{ 'socios.fields.municipio.label' | translate
+                        }}</label>
+                      <input #municipio id="municipio" name="municipio" [(ngModel)]="socio.municipio"
+                        engineSync="municipio" autoFocusNext [next]="direccionDomiciliar" type="text"
+                        class="form-control" [placeholder]="'socios.fields.municipio.placeholder' | translate">
                     </div>
-                    <div class="col-12">
-                      <label for="direccionDomiciliar" class="form-label">Dirección domiciliar</label>
-                      <textarea class="form-control" id="direccionDomiciliar" name="direccionDomiciliar" rows="3"></textarea>
+                    <div class="col-12" error-notify="direccionDomiciliar" error-display="inline">
+                      <label for="direccionDomiciliar" class="form-label">{{ 'socios.fields.direccionDomiciliar.label' |
+                        translate }}</label>
+                      <textarea #direccionDomiciliar id="direccionDomiciliar" name="direccionDomiciliar"
+                        [(ngModel)]="socio.direccionDomiciliar" engineSync="direccionDomiciliar" autoFocusNext
+                        [next]="telefono" class="form-control" rows="3"
+                        [placeholder]="'socios.fields.direccionDomiciliar.placeholder' | translate"></textarea>
                     </div>
-                    <div class="col-md-4">
-                      <label for="telefono" class="form-label">Teléfono</label>
-                      <input type="text" class="form-control" id="telefono" name="telefono">
+                    <div class="col-md-4" error-notify="telefono" error-display="inline">
+                      <label for="telefono" class="form-label">{{ 'socios.fields.telefono.label' | translate }}</label>
+                      <input #telefono id="telefono" name="telefono" [(ngModel)]="socio.telefono" engineSync="telefono"
+                        autoFocusNext [next]="celular" type="text" class="form-control"
+                        [placeholder]="'socios.fields.telefono.placeholder' | translate">
                     </div>
-                    <div class="col-md-4">
-                      <label for="celular" class="form-label">Celular</label>
-                      <input type="text" class="form-control" id="celular" name="celular">
+                    <div class="col-md-4" error-notify="celular" error-display="inline">
+                      <label for="celular" class="form-label">{{ 'socios.fields.celular.label' | translate }}</label>
+                      <input #celular id="celular" name="celular" [(ngModel)]="socio.celular" engineSync="celular"
+                        autoFocusNext [next]="correo" type="text" class="form-control"
+                        [placeholder]="'socios.fields.celular.placeholder' | translate">
                     </div>
-                    <div class="col-md-4">
-                      <label for="correo" class="form-label">Correo</label>
-                      <input type="email" class="form-control" id="correo" name="correo">
+                    <div class="col-md-4" error-notify="correo" error-display="inline">
+                      <label for="correo" class="form-label">{{ 'socios.fields.correo.label' | translate }}</label>
+                      <input #correo id="correo" name="correo" [(ngModel)]="socio.correo" engineSync="correo"
+                        autoFocusNext [next]="sociedadLabora" type="email" class="form-control"
+                        [placeholder]="'socios.fields.correo.placeholder' | translate">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
             <div id="actividad-economica" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
-                <h5 class="card-title mb-1">Actividad económica o empleo</h5>
-                <p class="card-subtitle mb-0">Datos del entorno profesional e ingresos del socio.</p>
+                <h5 class="card-title mb-1">{{ 'socios.sections.actividadEconomica.title' | translate }}</h5>
+                <p class="card-subtitle mb-0">{{ 'socios.sections.actividadEconomica.subtitle' | translate }}</p>
               </div>
               <div class="card-body p-4">
                 <div class="row g-3">
-                  <div class="col-md-6">
-                    <label for="sociedadLabora" class="form-label">Sociedad en la que labora</label>
-                    <select class="form-select" id="sociedadLabora" name="sociedadLabora">
-                      <option value="">Seleccione...</option>
-                      <option value="gmg_comercial">GMG Comercial</option>
-                      <option value="gmg_servicios">GMG Servicios</option>
-                      <option value="gmg_zona_franca">GMG Zona Franca</option>
+                  <div class="col-md-6" error-notify="sociedadLabora" error-display="inline">
+                    <label for="sociedadLabora" class="form-label">{{ 'socios.fields.sociedadLabora.label' | translate
+                      }}</label>
+                    <select #sociedadLabora id="sociedadLabora" name="sociedadLabora" [(ngModel)]="socio.sociedadLabora"
+                      engineSync="sociedadLabora" autoFocusNext [next]="area" class="form-select">
+                      <option value="">{{ 'common.selectOption' | translate }}</option>
+                      <option value="gmg_comercial">{{ 'common.options.sociedadLabora.gmg_comercial' | translate }}
+                      </option>
+                      <option value="gmg_servicios">{{ 'common.options.sociedadLabora.gmg_servicios' | translate }}
+                      </option>
+                      <option value="gmg_zona_franca">{{ 'common.options.sociedadLabora.gmg_zona_franca' | translate }}
+                      </option>
                     </select>
                   </div>
-                  <div class="col-md-6">
-                    <label for="area" class="form-label">Área</label>
-                    <input type="text" class="form-control" id="area" name="area">
+                  <div class="col-md-6" error-notify="area" error-display="inline">
+                    <label for="area" class="form-label">{{ 'socios.fields.area.label' | translate }}</label>
+                    <input #area id="area" name="area" [(ngModel)]="socio.area" engineSync="area" autoFocusNext
+                      [next]="cargo" type="text" class="form-control"
+                      [placeholder]="'socios.fields.area.placeholder' | translate">
                   </div>
-                  <div class="col-md-4">
-                    <label for="cargo" class="form-label">Cargo</label>
-                    <input type="text" class="form-control" id="cargo" name="cargo">
+                  <div class="col-md-4" error-notify="cargo" error-display="inline">
+                    <label for="cargo" class="form-label">{{ 'socios.fields.cargo.label' | translate }}</label>
+                    <input #cargo id="cargo" name="cargo" [(ngModel)]="socio.cargo" engineSync="cargo" autoFocusNext
+                      [next]="fechaIngreso" type="text" class="form-control"
+                      [placeholder]="'socios.fields.cargo.placeholder' | translate">
                   </div>
-                  <div class="col-md-4">
-                    <label for="fechaIngreso" class="form-label">Fecha de ingreso</label>
-                    <input type="date" class="form-control" id="fechaIngreso" name="fechaIngreso">
+                  <div class="col-md-4" error-notify="fechaIngreso" error-display="inline">
+                    <label for="fechaIngreso" class="form-label">{{ 'socios.fields.fechaIngreso.label' | translate
+                      }}</label>
+                    <input #fechaIngreso id="fechaIngreso" name="fechaIngreso" [(ngModel)]="socio.fechaIngreso"
+                      engineSync="fechaIngreso" autoFocusNext [next]="numeroIp" type="date" class="form-control"
+                      [placeholder]="'socios.fields.fechaIngreso.placeholder' | translate">
                   </div>
-                  <div class="col-md-4">
-                    <label for="numeroIp" class="form-label">Número IP</label>
-                    <input type="text" class="form-control" id="numeroIp" name="numeroIp">
+                  <div class="col-md-4" error-notify="numeroIp" error-display="inline">
+                    <label for="numeroIp" class="form-label">{{ 'socios.fields.numeroIp.label' | translate }}</label>
+                    <input #numeroIp id="numeroIp" name="numeroIp" [(ngModel)]="socio.numeroIp" engineSync="numeroIp"
+                      autoFocusNext [next]="correoLaboral" type="text" class="form-control"
+                      [placeholder]="'socios.fields.numeroIp.placeholder' | translate">
                   </div>
-                  <div class="col-md-6">
-                    <label for="correoLaboral" class="form-label">Correo electrónico laboral</label>
-                    <input type="email" class="form-control" id="correoLaboral" name="correoLaboral">
+                  <div class="col-md-6" error-notify="correoLaboral" error-display="inline">
+                    <label for="correoLaboral" class="form-label">{{ 'socios.fields.correoLaboral.label' | translate
+                      }}</label>
+                    <input #correoLaboral id="correoLaboral" name="correoLaboral" [(ngModel)]="socio.correoLaboral"
+                      engineSync="correoLaboral" autoFocusNext [next]="jefeInmediato" type="email" class="form-control"
+                      [placeholder]="'socios.fields.correoLaboral.placeholder' | translate">
                   </div>
-                  <div class="col-md-6">
-                    <label for="jefeInmediato" class="form-label">Jefe inmediato</label>
-                    <input type="text" class="form-control" id="jefeInmediato" name="jefeInmediato">
+                  <div class="col-md-6" error-notify="jefeInmediato" error-display="inline">
+                    <label for="jefeInmediato" class="form-label">{{ 'socios.fields.jefeInmediato.label' | translate
+                      }}</label>
+                    <input #jefeInmediato id="jefeInmediato" name="jefeInmediato" [(ngModel)]="socio.jefeInmediato"
+                      engineSync="jefeInmediato" autoFocusNext [next]="ingresosMensuales" type="text"
+                      class="form-control" [placeholder]="'socios.fields.jefeInmediato.placeholder' | translate">
                   </div>
-                  <div class="col-md-4">
-                    <label for="ingresosMensuales" class="form-label">Ingresos mensuales</label>
+                  <div class="col-md-4" error-notify="ingresosMensuales" error-display="inline">
+                    <label for="ingresosMensuales" class="form-label">{{ 'socios.fields.ingresosMensuales.label' |
+                      translate }}</label>
                     <div class="input-group">
+                      <input #ingresosMensuales id="ingresosMensuales" name="ingresosMensuales"
+                        [(ngModel)]="socio.ingresosMensuales" engineSync="ingresosMensuales" autoFocusNext
+                        [next]="otrosIngresos" type="number" class="form-control" min="0" step="0.01"
+                        [placeholder]="'socios.fields.ingresosMensuales.placeholder' | translate">
                       <span class="input-group-text">C$</span>
-                      <input type="number" class="form-control" id="ingresosMensuales" name="ingresosMensuales" min="0" step="0.01">
                     </div>
                   </div>
-                  <div class="col-md-4">
-                    <label for="otrosIngresos" class="form-label">Otros ingresos</label>
+                  <div class="col-md-4" error-notify="otrosIngresos" error-display="inline">
+                    <label for="otrosIngresos" class="form-label">{{ 'socios.fields.otrosIngresos.label' | translate
+                      }}</label>
                     <div class="input-group">
+                      <input #otrosIngresos id="otrosIngresos" name="otrosIngresos" [(ngModel)]="socio.otrosIngresos"
+                        engineSync="otrosIngresos" autoFocusNext [next]="ingresosAnuales" type="number"
+                        class="form-control" min="0" step="0.01"
+                        [placeholder]="'socios.fields.otrosIngresos.placeholder' | translate">
                       <span class="input-group-text">C$</span>
-                      <input type="number" class="form-control" id="otrosIngresos" name="otrosIngresos" min="0" step="0.01">
                     </div>
                   </div>
-                  <div class="col-md-4">
-                    <label for="ingresosAnuales" class="form-label">Ingresos anuales totales</label>
+                  <div class="col-md-4" error-notify="ingresosAnuales" error-display="inline">
+                    <label for="ingresosAnuales" class="form-label">{{ 'socios.fields.ingresosAnuales.label' | translate
+                      }}</label>
                     <div class="input-group">
+                      <input #ingresosAnuales id="ingresosAnuales" name="ingresosAnuales"
+                        [(ngModel)]="socio.ingresosAnuales" engineSync="ingresosAnuales" autoFocusNext
+                        [next]="conyugeNombreCompleto" type="number" class="form-control" min="0" step="0.01"
+                        [placeholder]="'socios.fields.ingresosAnuales.placeholder' | translate">
                       <span class="input-group-text">C$</span>
-                      <input type="number" class="form-control" id="ingresosAnuales" name="ingresosAnuales" min="0" step="0.01">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
             <div id="datos-conyuge" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
-                <h5 class="card-title mb-1">Datos del cónyuge</h5>
-                <p class="card-subtitle mb-0">Complete esta sección cuando aplique según el estado civil del socio.</p>
+                <h5 class="card-title mb-1">{{ 'socios.sections.datosConyuge.title' | translate }}</h5>
+                <p class="card-subtitle mb-0">{{ 'socios.sections.datosConyuge.subtitle' | translate }}</p>
               </div>
               <div class="card-body p-4">
                 <div class="row g-3">
-                  <div class="col-md-6">
-                    <label for="conyugeNombreCompleto" class="form-label">Nombre completo</label>
-                    <input type="text" class="form-control" id="conyugeNombreCompleto" name="conyugeNombreCompleto">
+                  <div class="col-md-6" error-notify="conyugeNombreCompleto" error-display="inline">
+                    <label for="conyugeNombreCompleto" class="form-label">{{ 'socios.fields.conyugeNombreCompleto.label'
+                      | translate }}</label>
+                    <input #conyugeNombreCompleto id="conyugeNombreCompleto" name="conyugeNombreCompleto"
+                      [(ngModel)]="socio.conyugeNombreCompleto" engineSync="conyugeNombreCompleto" autoFocusNext
+                      [next]="conyugeTipoIdentificacion" type="text" class="form-control"
+                      [placeholder]="'socios.fields.conyugeNombreCompleto.placeholder' | translate">
                   </div>
-                  <div class="col-md-6">
-                    <label for="conyugeTipoIdentificacion" class="form-label">Tipo de identificación</label>
-                    <select class="form-select" id="conyugeTipoIdentificacion" name="conyugeTipoIdentificacion">
-                      <option value="">Seleccione...</option>
-                      <option value="cedula">Cédula</option>
-                      <option value="pasaporte">Pasaporte</option>
-                      <option value="residencia">Residencia</option>
-                      <option value="otro">Otro</option>
+                  <div class="col-md-6" error-notify="conyugeTipoIdentificacion" error-display="inline">
+                    <label for="conyugeTipoIdentificacion" class="form-label">{{
+                      'socios.fields.conyugeTipoIdentificacion.label' | translate }}</label>
+                    <select #conyugeTipoIdentificacion id="conyugeTipoIdentificacion" name="conyugeTipoIdentificacion"
+                      [(ngModel)]="socio.conyugeTipoIdentificacion" engineSync="conyugeTipoIdentificacion" autoFocusNext
+                      [next]="conyugeNumeroIdentificacion" class="form-select">
+                      <option value="">{{ 'common.selectOption' | translate }}</option>
+                      <option value="cedula">{{ 'common.options.conyugeTipoIdentificacion.cedula' | translate }}
+                      </option>
+                      <option value="pasaporte">{{ 'common.options.conyugeTipoIdentificacion.pasaporte' | translate }}
+                      </option>
+                      <option value="residencia">{{ 'common.options.conyugeTipoIdentificacion.residencia' | translate }}
+                      </option>
+                      <option value="otro">{{ 'common.options.conyugeTipoIdentificacion.otro' | translate }}</option>
                     </select>
                   </div>
-                  <div class="col-md-4">
-                    <label for="conyugeNumeroIdentificacion" class="form-label">No. de identificación</label>
-                    <input type="text" class="form-control" id="conyugeNumeroIdentificacion" name="conyugeNumeroIdentificacion">
+                  <div class="col-md-4" error-notify="conyugeNumeroIdentificacion" error-display="inline">
+                    <label for="conyugeNumeroIdentificacion" class="form-label">{{
+                      'socios.fields.conyugeNumeroIdentificacion.label' | translate }}</label>
+                    <input #conyugeNumeroIdentificacion id="conyugeNumeroIdentificacion"
+                      name="conyugeNumeroIdentificacion" [(ngModel)]="socio.conyugeNumeroIdentificacion"
+                      engineSync="conyugeNumeroIdentificacion" autoFocusNext [next]="conyugePaisNacimiento" type="text"
+                      class="form-control"
+                      [placeholder]="'socios.fields.conyugeNumeroIdentificacion.placeholder' | translate">
                   </div>
-                  <div class="col-md-4">
-                    <label for="conyugePaisNacimiento" class="form-label">País de nacimiento</label>
-                    <input type="text" class="form-control" id="conyugePaisNacimiento" name="conyugePaisNacimiento">
+                  <div class="col-md-4" error-notify="conyugePaisNacimiento" error-display="inline">
+                    <label for="conyugePaisNacimiento" class="form-label">{{ 'socios.fields.conyugePaisNacimiento.label'
+                      | translate }}</label>
+                    <input #conyugePaisNacimiento id="conyugePaisNacimiento" name="conyugePaisNacimiento"
+                      [(ngModel)]="socio.conyugePaisNacimiento" engineSync="conyugePaisNacimiento" autoFocusNext
+                      [next]="conyugeNacionalidad" type="text" class="form-control"
+                      [placeholder]="'socios.fields.conyugePaisNacimiento.placeholder' | translate">
                   </div>
-                  <div class="col-md-4">
-                    <label for="conyugeNacionalidad" class="form-label">Nacionalidad</label>
-                    <input type="text" class="form-control" id="conyugeNacionalidad" name="conyugeNacionalidad">
+                  <div class="col-md-4" error-notify="conyugeNacionalidad" error-display="inline">
+                    <label for="conyugeNacionalidad" class="form-label">{{ 'socios.fields.conyugeNacionalidad.label' |
+                      translate }}</label>
+                    <input #conyugeNacionalidad id="conyugeNacionalidad" name="conyugeNacionalidad"
+                      [(ngModel)]="socio.conyugeNacionalidad" engineSync="conyugeNacionalidad" autoFocusNext
+                      [next]="beneficiario1Nombre" type="text" class="form-control"
+                      [placeholder]="'socios.fields.conyugeNacionalidad.placeholder' | translate">
                   </div>
                 </div>
               </div>
             </div>
-
             <div id="beneficiarios" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
-                <h5 class="card-title mb-1">Beneficiarios</h5>
-                <p class="card-subtitle mb-0">Distribuya el porcentaje entre los beneficiarios registrados.</p>
+                <h5 class="card-title mb-1">{{ 'socios.sections.beneficiarios.title' | translate }}</h5>
+                <p class="card-subtitle mb-0">{{ 'socios.sections.beneficiarios.subtitle' | translate }}</p>
               </div>
               <div class="card-body p-4">
                 <div class="d-flex flex-column gap-3">
                   <div class="beneficiary-card principal">
                     <div class="beneficiary-head">
                       <div>
-                        <h6 class="mb-1">Beneficiario 1</h6>
-                        <small>Registro principal</small>
+                        <h6 class="mb-1">{{ 'socios.beneficiarios.1.title' | translate }}</h6>
+                        <small>{{ 'socios.beneficiarios.1.subtitle' | translate }}</small>
                       </div>
-                      <span class="badge badge-soft-primary">Principal</span>
+                      <span class="badge badge-soft-primary">{{ 'socios.beneficiarios.1.badge' | translate }}</span>
                     </div>
                     <div class="row g-3">
-                      <div class="col-md-4">
-                        <label for="beneficiario1Nombre" class="form-label">Nombre completo</label>
-                        <input type="text" class="form-control" id="beneficiario1Nombre" name="beneficiario1Nombre">
+                      <div class="col-md-4" error-notify="beneficiario1Nombre" error-display="inline">
+                        <label for="beneficiario1Nombre" class="form-label">{{ 'socios.fields.beneficiario1Nombre.label'
+                          | translate }}</label>
+                        <input #beneficiario1Nombre id="beneficiario1Nombre" name="beneficiario1Nombre"
+                          [(ngModel)]="socio.beneficiario1Nombre" engineSync="beneficiario1Nombre" autoFocusNext
+                          [next]="beneficiario1Porcentaje" type="text" class="form-control"
+                          [placeholder]="'socios.fields.beneficiario1Nombre.placeholder' | translate">
                       </div>
-                      <div class="col-md-2">
-                        <label for="beneficiario1Porcentaje" class="form-label">Porcentaje</label>
+                      <div class="col-md-2" error-notify="beneficiario1Porcentaje" error-display="inline">
+                        <label for="beneficiario1Porcentaje" class="form-label">{{
+                          'socios.fields.beneficiario1Porcentaje.label' | translate }}</label>
                         <div class="input-group">
-                          <input type="number" class="form-control" id="beneficiario1Porcentaje" name="beneficiario1Porcentaje" min="0" max="100">
+                          <input #beneficiario1Porcentaje id="beneficiario1Porcentaje" name="beneficiario1Porcentaje"
+                            [(ngModel)]="socio.beneficiario1Porcentaje" engineSync="beneficiario1Porcentaje"
+                            autoFocusNext [next]="beneficiario1Parentesco" type="number" class="form-control" min="0"
+                            max="100" [placeholder]="'socios.fields.beneficiario1Porcentaje.placeholder' | translate">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
-                      <div class="col-md-3">
-                        <label for="beneficiario1Parentesco" class="form-label">Parentesco</label>
-                        <input type="text" class="form-control" id="beneficiario1Parentesco" name="beneficiario1Parentesco">
+                      <div class="col-md-3" error-notify="beneficiario1Parentesco" error-display="inline">
+                        <label for="beneficiario1Parentesco" class="form-label">{{
+                          'socios.fields.beneficiario1Parentesco.label' | translate }}</label>
+                        <input #beneficiario1Parentesco id="beneficiario1Parentesco" name="beneficiario1Parentesco"
+                          [(ngModel)]="socio.beneficiario1Parentesco" engineSync="beneficiario1Parentesco" autoFocusNext
+                          [next]="beneficiario1Cedula" type="text" class="form-control"
+                          [placeholder]="'socios.fields.beneficiario1Parentesco.placeholder' | translate">
                       </div>
-                      <div class="col-md-3">
-                        <label for="beneficiario1Cedula" class="form-label">Cédula</label>
-                        <input type="text" class="form-control" id="beneficiario1Cedula" name="beneficiario1Cedula">
+                      <div class="col-md-3" error-notify="beneficiario1Cedula" error-display="inline">
+                        <label for="beneficiario1Cedula" class="form-label">{{ 'socios.fields.beneficiario1Cedula.label'
+                          | translate }}</label>
+                        <input #beneficiario1Cedula id="beneficiario1Cedula" name="beneficiario1Cedula"
+                          [(ngModel)]="socio.beneficiario1Cedula" engineSync="beneficiario1Cedula" autoFocusNext
+                          [next]="beneficiario2Nombre" type="text" class="form-control"
+                          [placeholder]="'socios.fields.beneficiario1Cedula.placeholder' | translate">
                       </div>
                     </div>
                   </div>
                   <div class="beneficiary-card">
                     <div class="beneficiary-head">
                       <div>
-                        <h6 class="mb-1">Beneficiario 2</h6>
-                        <small>Registro opcional</small>
+                        <h6 class="mb-1">{{ 'socios.beneficiarios.2.title' | translate }}</h6>
+                        <small>{{ 'socios.beneficiarios.2.subtitle' | translate }}</small>
                       </div>
-                      <span class="badge badge-outline-secondary">Opcional</span>
+                      <span class="badge badge-outline-secondary">{{ 'socios.beneficiarios.2.badge' | translate
+                        }}</span>
                     </div>
                     <div class="row g-3">
-                      <div class="col-md-4">
-                        <label for="beneficiario2Nombre" class="form-label">Nombre completo</label>
-                        <input type="text" class="form-control" id="beneficiario2Nombre" name="beneficiario2Nombre">
+                      <div class="col-md-4" error-notify="beneficiario2Nombre" error-display="inline">
+                        <label for="beneficiario2Nombre" class="form-label">{{ 'socios.fields.beneficiario2Nombre.label'
+                          | translate }}</label>
+                        <input #beneficiario2Nombre id="beneficiario2Nombre" name="beneficiario2Nombre"
+                          [(ngModel)]="socio.beneficiario2Nombre" engineSync="beneficiario2Nombre" autoFocusNext
+                          [next]="beneficiario2Porcentaje" type="text" class="form-control"
+                          [placeholder]="'socios.fields.beneficiario2Nombre.placeholder' | translate">
                       </div>
-                      <div class="col-md-2">
-                        <label for="beneficiario2Porcentaje" class="form-label">Porcentaje</label>
+                      <div class="col-md-2" error-notify="beneficiario2Porcentaje" error-display="inline">
+                        <label for="beneficiario2Porcentaje" class="form-label">{{
+                          'socios.fields.beneficiario2Porcentaje.label' | translate }}</label>
                         <div class="input-group">
-                          <input type="number" class="form-control" id="beneficiario2Porcentaje" name="beneficiario2Porcentaje" min="0" max="100">
+                          <input #beneficiario2Porcentaje id="beneficiario2Porcentaje" name="beneficiario2Porcentaje"
+                            [(ngModel)]="socio.beneficiario2Porcentaje" engineSync="beneficiario2Porcentaje"
+                            autoFocusNext [next]="beneficiario2Parentesco" type="number" class="form-control" min="0"
+                            max="100" [placeholder]="'socios.fields.beneficiario2Porcentaje.placeholder' | translate">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
-                      <div class="col-md-3">
-                        <label for="beneficiario2Parentesco" class="form-label">Parentesco</label>
-                        <input type="text" class="form-control" id="beneficiario2Parentesco" name="beneficiario2Parentesco">
+                      <div class="col-md-3" error-notify="beneficiario2Parentesco" error-display="inline">
+                        <label for="beneficiario2Parentesco" class="form-label">{{
+                          'socios.fields.beneficiario2Parentesco.label' | translate }}</label>
+                        <input #beneficiario2Parentesco id="beneficiario2Parentesco" name="beneficiario2Parentesco"
+                          [(ngModel)]="socio.beneficiario2Parentesco" engineSync="beneficiario2Parentesco" autoFocusNext
+                          [next]="beneficiario2Cedula" type="text" class="form-control"
+                          [placeholder]="'socios.fields.beneficiario2Parentesco.placeholder' | translate">
                       </div>
-                      <div class="col-md-3">
-                        <label for="beneficiario2Cedula" class="form-label">Cédula</label>
-                        <input type="text" class="form-control" id="beneficiario2Cedula" name="beneficiario2Cedula">
+                      <div class="col-md-3" error-notify="beneficiario2Cedula" error-display="inline">
+                        <label for="beneficiario2Cedula" class="form-label">{{ 'socios.fields.beneficiario2Cedula.label'
+                          | translate }}</label>
+                        <input #beneficiario2Cedula id="beneficiario2Cedula" name="beneficiario2Cedula"
+                          [(ngModel)]="socio.beneficiario2Cedula" engineSync="beneficiario2Cedula" autoFocusNext
+                          [next]="beneficiario3Nombre" type="text" class="form-control"
+                          [placeholder]="'socios.fields.beneficiario2Cedula.placeholder' | translate">
                       </div>
                     </div>
                   </div>
                   <div class="beneficiary-card">
                     <div class="beneficiary-head">
                       <div>
-                        <h6 class="mb-1">Beneficiario 3</h6>
-                        <small>Registro opcional</small>
+                        <h6 class="mb-1">{{ 'socios.beneficiarios.3.title' | translate }}</h6>
+                        <small>{{ 'socios.beneficiarios.3.subtitle' | translate }}</small>
                       </div>
-                      <span class="badge badge-outline-secondary">Opcional</span>
+                      <span class="badge badge-outline-secondary">{{ 'socios.beneficiarios.3.badge' | translate
+                        }}</span>
                     </div>
                     <div class="row g-3">
-                      <div class="col-md-4">
-                        <label for="beneficiario3Nombre" class="form-label">Nombre completo</label>
-                        <input type="text" class="form-control" id="beneficiario3Nombre" name="beneficiario3Nombre">
+                      <div class="col-md-4" error-notify="beneficiario3Nombre" error-display="inline">
+                        <label for="beneficiario3Nombre" class="form-label">{{ 'socios.fields.beneficiario3Nombre.label'
+                          | translate }}</label>
+                        <input #beneficiario3Nombre id="beneficiario3Nombre" name="beneficiario3Nombre"
+                          [(ngModel)]="socio.beneficiario3Nombre" engineSync="beneficiario3Nombre" autoFocusNext
+                          [next]="beneficiario3Porcentaje" type="text" class="form-control"
+                          [placeholder]="'socios.fields.beneficiario3Nombre.placeholder' | translate">
                       </div>
-                      <div class="col-md-2">
-                        <label for="beneficiario3Porcentaje" class="form-label">Porcentaje</label>
+                      <div class="col-md-2" error-notify="beneficiario3Porcentaje" error-display="inline">
+                        <label for="beneficiario3Porcentaje" class="form-label">{{
+                          'socios.fields.beneficiario3Porcentaje.label' | translate }}</label>
                         <div class="input-group">
-                          <input type="number" class="form-control" id="beneficiario3Porcentaje" name="beneficiario3Porcentaje" min="0" max="100">
+                          <input #beneficiario3Porcentaje id="beneficiario3Porcentaje" name="beneficiario3Porcentaje"
+                            [(ngModel)]="socio.beneficiario3Porcentaje" engineSync="beneficiario3Porcentaje"
+                            autoFocusNext [next]="beneficiario3Parentesco" type="number" class="form-control" min="0"
+                            max="100" [placeholder]="'socios.fields.beneficiario3Porcentaje.placeholder' | translate">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
-                      <div class="col-md-3">
-                        <label for="beneficiario3Parentesco" class="form-label">Parentesco</label>
-                        <input type="text" class="form-control" id="beneficiario3Parentesco" name="beneficiario3Parentesco">
+                      <div class="col-md-3" error-notify="beneficiario3Parentesco" error-display="inline">
+                        <label for="beneficiario3Parentesco" class="form-label">{{
+                          'socios.fields.beneficiario3Parentesco.label' | translate }}</label>
+                        <input #beneficiario3Parentesco id="beneficiario3Parentesco" name="beneficiario3Parentesco"
+                          [(ngModel)]="socio.beneficiario3Parentesco" engineSync="beneficiario3Parentesco" autoFocusNext
+                          [next]="beneficiario3Cedula" type="text" class="form-control"
+                          [placeholder]="'socios.fields.beneficiario3Parentesco.placeholder' | translate">
                       </div>
-                      <div class="col-md-3">
-                        <label for="beneficiario3Cedula" class="form-label">Cédula</label>
-                        <input type="text" class="form-control" id="beneficiario3Cedula" name="beneficiario3Cedula">
+                      <div class="col-md-3" error-notify="beneficiario3Cedula" error-display="inline">
+                        <label for="beneficiario3Cedula" class="form-label">{{ 'socios.fields.beneficiario3Cedula.label'
+                          | translate }}</label>
+                        <input #beneficiario3Cedula id="beneficiario3Cedula" name="beneficiario3Cedula"
+                          [(ngModel)]="socio.beneficiario3Cedula" engineSync="beneficiario3Cedula" autoFocusNext
+                          [next]="saveButton" [disableClickButton]="true" [unlockOn]="notify.closed$" type="text"
+                          class="form-control"
+                          [placeholder]="'socios.fields.beneficiario3Cedula.placeholder' | translate">
                       </div>
                     </div>
                   </div>
@@ -416,16 +545,27 @@
             </div>
           </div>
         </div>
-          <div class="socio-topbar-actions d-flex flex-wrap gap-2">
-              <button type="reset" form="socioForm" class="btn btn-light border">
-                <i class="bi bi-arrow-counterclockwise me-1"></i>
-                Limpiar
-              </button>
-              <button type="submit" form="socioForm" class="btn btn-primary">
-                <i class="bi bi-save me-1"></i>
-                Guardar socio
-              </button>
-            </div>
+
+         <div class="row">
+        <div class="col-12">
+          <div class="d-flex justify-content-end gap-2 pt-2">
+            <button type="button" class="btn btn-light border" (click)="onCancel()">
+            <i class="bi bi-arrow-counterclockwise me-1"></i>
+            {{ 'common.actions.clear' | translate }}
+          </button>
+
+            
+          <button #saveButton type="button" class="btn btn-primary" (click)="onSave()" [appPermission]="['new', 'edit']"
+            autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
+            <i class="bi bi-save me-1"></i>
+            {{ 'socios.actions.save' | translate }}
+          </button>
+          </div>
+        </div>
+      </div>
+
+
+        
       </div>
     </form>
   </div>

@@ -15,6 +15,7 @@ import { ActivityFilter, ActivityTimelineItem, TrustedDeviceItem } from '../../i
 import { ActivityHistoryService } from '../../services/activity-history.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { TokenStorageService } from '../../../../core/auth/services/token-storage.service';
+import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
 
 type TimelineGroup = {
   labelKey?: string;
@@ -57,7 +58,7 @@ type ActiveSessionItem = {
 @Component({
   selector: 'app-activity-history',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule, DatePipe],
+  imports: [CommonModule, RouterModule, TranslateModule, DatePipe, Breadcrumb],
   templateUrl: './activity-history.component.html'
 })
 export class ActivityHistoryComponent implements OnInit {
@@ -92,6 +93,12 @@ export class ActivityHistoryComponent implements OnInit {
   readonly trustedDevices = signal<TrustedDeviceItem[]>([]);
   readonly revokingTrustedDeviceId = signal<string | null>(null);
 
+    breadcrumbs = [
+    { label: '', url: '' },
+    { label: '', url: '/' },
+    { label: '' }
+  ];
+
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit(): void {
@@ -118,6 +125,8 @@ export class ActivityHistoryComponent implements OnInit {
 
   private getUserFromLocalStorage(): string {
     if (!isPlatformBrowser(this.platformId)) return '';
+
+    this.breadcrumbs = this.translate.instant('activity.breadcrumbs') || [];
 
     try {
       const raw = localStorage.getItem('user');

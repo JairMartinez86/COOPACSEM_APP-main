@@ -21,6 +21,7 @@ import { AppStateService } from '../../../core/services/app-state.service';
 import { LanguageService } from '../../../core/services/languageService';
 import { ThemeService } from '../../../core/services/theme.service';
 import { AppPermissionDirective } from '../../../core/services/app-permission.directive';
+import { TableFilterService } from '../../../core/services/table-filter.service';
 
 type AppLang = 'es' | 'en';
 
@@ -45,10 +46,12 @@ export class Navbar implements OnInit, OnDestroy {
   private translate = inject(TranslateService);
   private langService = inject(LanguageService);
   private themeService = inject(ThemeService);
+  private filterSvc = inject(TableFilterService);
 
   private subs = new Subscription();
 
   public user: any = null;
+  searchValue = '';
 
   @Output() sidebarToggle = new EventEmitter<void>();
   @Output() requestCloseSidebar = new EventEmitter<void>();
@@ -84,6 +87,12 @@ export class Navbar implements OnInit, OnDestroy {
     this.subs.add(
       this.translate.onLangChange.subscribe(() => {
         this.loadLanguages();
+      })
+    );
+
+    this.subs.add(
+      this.filterSvc.activeQuery$().subscribe(value => {
+        this.searchValue = value;
       })
     );
   }
@@ -223,6 +232,20 @@ export class Navbar implements OnInit, OnDestroy {
   onNavigate(): void {
     this.closeFloatingPanels();
     this.requestCloseSidebar.emit();
+  }
+
+  onSearchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value ?? '';
+    this.searchValue = value;
+    this.filterSvc.setQueryForActiveRoute(value);
+  }
+
+  clearSearch(event?: Event): void {
+    this.safePreventDefault(event);
+    event?.stopPropagation();
+
+    this.searchValue = '';
+    this.filterSvc.setQueryForActiveRoute('');
   }
 
   logout(event?: Event): void {

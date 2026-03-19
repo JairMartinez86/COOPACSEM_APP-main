@@ -79,6 +79,25 @@
         "confirmTitle": "Advertencia",
         "confirmMessage": "¿Realmente desea eliminar el dispositivo de confianza {{device}}?"
       }
-    }
+    },
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/home"
+      },
+      {
+        "label": "Usuarios",
+        "url": ""
+      },
+      {
+        "label": "Configuración",
+        "url": ""
+      },
+      {
+        "label": "Actividad y sesiones",
+        "url": "/activity-history"
+      }
+    ]
   }
+   
 }

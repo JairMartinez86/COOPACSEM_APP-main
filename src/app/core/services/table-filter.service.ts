@@ -1,50 +1,47 @@
-// table-filter.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class TableFilterService {
-  private activeKey$ = new BehaviorSubject<string | null>(null);
+  private readonly activeKey$ = new BehaviorSubject<string | null>(null);
+  private readonly filters = new Map<string, BehaviorSubject<string>>();
 
-  // Mapa de filtros por key (users, orders, etc.)
-  private filters = new Map<string, BehaviorSubject<string>>();
-
-  setActiveKey(key: string | null) {
+  setActiveKey(key: string | null): void {
     this.activeKey$.next(key);
   }
 
-  setQueryForActiveRoute(query: string) {
+  setQueryForActiveRoute(query: string): void {
     const key = this.activeKey$.value;
-    if (!key) return; // ruta sin tabla
-    this.getOrCreate(key).next(query);
+    if (!key) return;
+
+    this.getOrCreate(key).next(query ?? '');
   }
 
-  // Observable que un componente con tabla consume según su key
   query$(key: string): Observable<string> {
     return this.getOrCreate(key).pipe(
-      map(v => v ?? ''),
+      map((value) => value ?? ''),
       distinctUntilChanged()
     );
   }
 
-  // Para que el sidebar muestre el valor actual cuando cambias de ruta
   activeQuery$(): Observable<string> {
     return this.activeKey$.pipe(
-      map(key => (key ? this.getOrCreate(key).value : '')),
+      map((key) => (key ? this.getOrCreate(key).value : '')),
       distinctUntilChanged()
     );
   }
 
-  clear(key: string) {
+  clear(key: string): void {
     this.getOrCreate(key).next('');
   }
 
-  private getOrCreate(key: string) {
+  private getOrCreate(key: string): BehaviorSubject<string> {
     const existing = this.filters.get(key);
     if (existing) return existing;
-    const bs = new BehaviorSubject<string>('');
-    this.filters.set(key, bs);
-    return bs;
+
+    const subject = new BehaviorSubject<string>('');
+    this.filters.set(key, subject);
+    return subject;
   }
 }

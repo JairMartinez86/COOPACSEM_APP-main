@@ -1,0 +1,443 @@
+{
+  "common": {
+    "actions": {
+      "clear": "Limpiar"
+    },
+    "selectOption": "Seleccione...",
+    "options": {
+      "tipoIdentificacion": {
+        "cedula": "Cédula",
+        "pasaporte": "Pasaporte",
+        "residencia": "Residencia",
+        "otro": "Otro"
+      },
+      "conyugeTipoIdentificacion": {
+        "cedula": "Cédula",
+        "pasaporte": "Pasaporte",
+        "residencia": "Residencia",
+        "otro": "Otro"
+      },
+      "sociedadLabora": {
+        "gmg_comercial": "GMG Comercial",
+        "gmg_servicios": "GMG Servicios",
+        "gmg_zona_franca": "GMG Zona Franca"
+      }
+    }
+  },
+  "draft": {
+    "leavePageTitle": "Advertencia",
+    "leavePageMessage": "Tienes cambios sin guardar. Si sales de esta página se perderán. ¿Deseas continuar?"
+  },
+  "socios": {
+    "title": "Registro de socio",
+    "subtitle": "En PC el wizard queda fijo a la izquierda. En móvil queda fijo arriba y se mueve horizontalmente según la sección activa.",
+    "actions": {
+      "save": "Guardar socio"
+    },
+    "badges": {
+      "newMember": "Nuevo socio",
+      "sections": "4 secciones",
+      "beneficiaries": "Hasta 3 beneficiarios"
+    },
+    "wizard": {
+      "title": "Secciones",
+      "subtitle": "Click o scroll para navegar.",
+      "steps": {
+        "datosPersonales": {
+          "title": "Datos personales",
+          "desc": "Identidad y contacto"
+        },
+        "actividadEconomica": {
+          "title": "Actividad económica",
+          "desc": "Empleo e ingresos"
+        },
+        "datosConyuge": {
+          "title": "Datos del cónyuge",
+          "desc": "Información opcional"
+        },
+        "beneficiarios": {
+          "title": "Beneficiarios",
+          "desc": "Control de porcentaje"
+        }
+      }
+    },
+    "groups": {
+      "identificacion": "Identificación",
+      "ubicacionContacto": "Ubicación y contacto"
+    },
+    "sections": {
+      "datosPersonales": {
+        "title": "Datos personales",
+        "subtitle": "Información de identidad, nacimiento y medios de contacto."
+      },
+      "actividadEconomica": {
+        "title": "Actividad económica o empleo",
+        "subtitle": "Datos del entorno profesional e ingresos del socio."
+      },
+      "datosConyuge": {
+        "title": "Datos del cónyuge",
+        "subtitle": "Complete esta sección cuando aplique según el estado civil del socio."
+      },
+      "beneficiarios": {
+        "title": "Beneficiarios",
+        "subtitle": "Distribuya el porcentaje entre los beneficiarios registrados."
+      }
+    },
+    "beneficiarios": {
+      "1": {
+        "title": "Beneficiario 1",
+        "subtitle": "Registro principal",
+        "badge": "Principal"
+      },
+      "2": {
+        "title": "Beneficiario 2",
+        "subtitle": "Registro opcional",
+        "badge": "Opcional"
+      },
+      "3": {
+        "title": "Beneficiario 3",
+        "subtitle": "Registro opcional",
+        "badge": "Opcional"
+      }
+    },
+    "fields": {
+      "nombreCompleto": {
+        "label": "Nombre completo",
+        "placeholder": "Nombre completo"
+      },
+      "nombrePublico": {
+        "label": "Conocido social y/o públicamente como",
+        "placeholder": "Conocido social y/o públicamente como"
+      },
+      "tipoIdentificacion": {
+        "label": "Tipo de identificación",
+        "placeholder": "Tipo de identificación"
+      },
+      "numeroIdentificacion": {
+        "label": "No. de identificación",
+        "placeholder": "No. de identificación"
+      },
+      "paisEmisor": {
+        "label": "País emisor",
+        "placeholder": "País emisor"
+      },
+      "fechaEmision": {
+        "label": "Fecha de emisión",
+        "placeholder": "Fecha de emisión"
+      },
+      "fechaVencimiento": {
+        "label": "Fecha de vencimiento",
+        "placeholder": "Fecha de vencimiento"
+      },
+      "paisNacimiento": {
+        "label": "País de nacimiento",
+        "placeholder": "País de nacimiento"
+      },
+      "fechaNacimiento": {
+        "label": "Fecha de nacimiento",
+        "placeholder": "Fecha de nacimiento"
+      },
+      "nacionalidad": {
+        "label": "Nacionalidad",
+        "placeholder": "Nacionalidad"
+      },
+      "departamento": {
+        "label": "Departamento",
+        "placeholder": "Departamento"
+      },
+      "municipio": {
+        "label": "Municipio",
+        "placeholder": "Municipio"
+      },
+      "direccionDomiciliar": {
+        "label": "Dirección domiciliar",
+        "placeholder": "Dirección domiciliar"
+      },
+      "telefono": {
+        "label": "Teléfono",
+        "placeholder": "Teléfono"
+      },
+      "celular": {
+        "label": "Celular",
+        "placeholder": "Celular"
+      },
+      "correo": {
+        "label": "Correo",
+        "placeholder": "Correo"
+      },
+      "sociedadLabora": {
+        "label": "Sociedad en la que labora",
+        "placeholder": "Sociedad en la que labora"
+      },
+      "area": {
+        "label": "Área",
+        "placeholder": "Área"
+      },
+      "cargo": {
+        "label": "Cargo",
+        "placeholder": "Cargo"
+      },
+      "fechaIngreso": {
+        "label": "Fecha de ingreso",
+        "placeholder": "Fecha de ingreso"
+      },
+      "numeroIp": {
+        "label": "Número IP",
+        "placeholder": "Número IP"
+      },
+      "correoLaboral": {
+        "label": "Correo electrónico laboral",
+        "placeholder": "Correo electrónico laboral"
+      },
+      "jefeInmediato": {
+        "label": "Jefe inmediato",
+        "placeholder": "Jefe inmediato"
+      },
+      "ingresosMensuales": {
+        "label": "Ingresos mensuales",
+        "placeholder": "Ingresos mensuales"
+      },
+      "otrosIngresos": {
+        "label": "Otros ingresos",
+        "placeholder": "Otros ingresos"
+      },
+      "ingresosAnuales": {
+        "label": "Ingresos anuales totales",
+        "placeholder": "Ingresos anuales totales"
+      },
+      "conyugeNombreCompleto": {
+        "label": "Nombre completo",
+        "placeholder": "Nombre completo"
+      },
+      "conyugeTipoIdentificacion": {
+        "label": "Tipo de identificación",
+        "placeholder": "Tipo de identificación"
+      },
+      "conyugeNumeroIdentificacion": {
+        "label": "No. de identificación",
+        "placeholder": "No. de identificación"
+      },
+      "conyugePaisNacimiento": {
+        "label": "País de nacimiento",
+        "placeholder": "País de nacimiento"
+      },
+      "conyugeNacionalidad": {
+        "label": "Nacionalidad",
+        "placeholder": "Nacionalidad"
+      },
+      "beneficiario1Nombre": {
+        "label": "Nombre completo",
+        "placeholder": "Nombre completo"
+      },
+      "beneficiario1Porcentaje": {
+        "label": "Porcentaje",
+        "placeholder": "Porcentaje"
+      },
+      "beneficiario1Parentesco": {
+        "label": "Parentesco",
+        "placeholder": "Parentesco"
+      },
+      "beneficiario1Cedula": {
+        "label": "Cédula",
+        "placeholder": "Cédula"
+      },
+      "beneficiario2Nombre": {
+        "label": "Nombre completo",
+        "placeholder": "Nombre completo"
+      },
+      "beneficiario2Porcentaje": {
+        "label": "Porcentaje",
+        "placeholder": "Porcentaje"
+      },
+      "beneficiario2Parentesco": {
+        "label": "Parentesco",
+        "placeholder": "Parentesco"
+      },
+      "beneficiario2Cedula": {
+        "label": "Cédula",
+        "placeholder": "Cédula"
+      },
+      "beneficiario3Nombre": {
+        "label": "Nombre completo",
+        "placeholder": "Nombre completo"
+      },
+      "beneficiario3Porcentaje": {
+        "label": "Porcentaje",
+        "placeholder": "Porcentaje"
+      },
+      "beneficiario3Parentesco": {
+        "label": "Parentesco",
+        "placeholder": "Parentesco"
+      },
+      "beneficiario3Cedula": {
+        "label": "Cédula",
+        "placeholder": "Cédula"
+      }
+    },
+    "form": {
+      "fieldMeta": {
+        "nombreCompleto": {
+          "label": "Nombre completo"
+        },
+        "nombrePublico": {
+          "label": "Conocido social y/o públicamente como"
+        },
+        "tipoIdentificacion": {
+          "label": "Tipo de identificación"
+        },
+        "numeroIdentificacion": {
+          "label": "No. de identificación"
+        },
+        "paisEmisor": {
+          "label": "País emisor"
+        },
+        "fechaEmision": {
+          "label": "Fecha de emisión"
+        },
+        "fechaVencimiento": {
+          "label": "Fecha de vencimiento"
+        },
+        "paisNacimiento": {
+          "label": "País de nacimiento"
+        },
+        "fechaNacimiento": {
+          "label": "Fecha de nacimiento"
+        },
+        "nacionalidad": {
+          "label": "Nacionalidad"
+        },
+        "departamento": {
+          "label": "Departamento"
+        },
+        "municipio": {
+          "label": "Municipio"
+        },
+        "direccionDomiciliar": {
+          "label": "Dirección domiciliar"
+        },
+        "telefono": {
+          "label": "Teléfono"
+        },
+        "celular": {
+          "label": "Celular"
+        },
+        "correo": {
+          "label": "Correo"
+        },
+        "sociedadLabora": {
+          "label": "Sociedad en la que labora"
+        },
+        "area": {
+          "label": "Área"
+        },
+        "cargo": {
+          "label": "Cargo"
+        },
+        "fechaIngreso": {
+          "label": "Fecha de ingreso"
+        },
+        "numeroIp": {
+          "label": "Número IP"
+        },
+        "correoLaboral": {
+          "label": "Correo electrónico laboral"
+        },
+        "jefeInmediato": {
+          "label": "Jefe inmediato"
+        },
+        "ingresosMensuales": {
+          "label": "Ingresos mensuales"
+        },
+        "otrosIngresos": {
+          "label": "Otros ingresos"
+        },
+        "ingresosAnuales": {
+          "label": "Ingresos anuales totales"
+        },
+        "conyugeNombreCompleto": {
+          "label": "Nombre completo"
+        },
+        "conyugeTipoIdentificacion": {
+          "label": "Tipo de identificación"
+        },
+        "conyugeNumeroIdentificacion": {
+          "label": "No. de identificación"
+        },
+        "conyugePaisNacimiento": {
+          "label": "País de nacimiento"
+        },
+        "conyugeNacionalidad": {
+          "label": "Nacionalidad"
+        },
+        "beneficiario1Nombre": {
+          "label": "Nombre completo"
+        },
+        "beneficiario1Porcentaje": {
+          "label": "Porcentaje"
+        },
+        "beneficiario1Parentesco": {
+          "label": "Parentesco"
+        },
+        "beneficiario1Cedula": {
+          "label": "Cédula"
+        },
+        "beneficiario2Nombre": {
+          "label": "Nombre completo"
+        },
+        "beneficiario2Porcentaje": {
+          "label": "Porcentaje"
+        },
+        "beneficiario2Parentesco": {
+          "label": "Parentesco"
+        },
+        "beneficiario2Cedula": {
+          "label": "Cédula"
+        },
+        "beneficiario3Nombre": {
+          "label": "Nombre completo"
+        },
+        "beneficiario3Porcentaje": {
+          "label": "Porcentaje"
+        },
+        "beneficiario3Parentesco": {
+          "label": "Parentesco"
+        },
+        "beneficiario3Cedula": {
+          "label": "Cédula"
+        }
+      },
+      "validations": {
+        "nombreCompleto": {
+          "data": {
+            "r1": {
+              "rule": "LEN>=",
+              "when": "ALWAYS",
+              "value": 1,
+              "msj": "El nombre completo es requerido"
+            }
+          }
+        },
+        "tipoIdentificacion": {
+          "data": {
+            "r1": {
+              "rule": "LEN>=",
+              "when": "ALWAYS",
+              "value": 1,
+              "msj": "El tipo de identificación es requerido"
+            }
+          }
+        },
+        "numeroIdentificacion": {
+          "data": {
+            "r1": {
+              "rule": "LEN>=",
+              "when": "ALWAYS",
+              "value": 1,
+              "msj": "El número de identificación es requerido"
+            }
+          }
+        }
+      }
+    }
+  }
+}

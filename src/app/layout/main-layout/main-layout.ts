@@ -3,6 +3,7 @@ import {
   Component,
   HostListener,
   Inject,
+  OnInit,
   PLATFORM_ID,
   inject
 } from '@angular/core';
@@ -12,6 +13,7 @@ import { RouterOutlet } from '@angular/router';
 import { Navbar } from './navbar/navbar';
 import { Sidebar } from './sidebar/sidebar';
 import { AppStateService } from '../../core/services/app-state.service';
+import { RouteFilterContext } from '../../core/services/route-filter-context';
 
 @Component({
   standalone: true,
@@ -23,13 +25,20 @@ import { AppStateService } from '../../core/services/app-state.service';
   ],
   templateUrl: './main-layout.html',
 })
-export class MainLayout implements AfterViewInit {
+export class MainLayout implements OnInit, AfterViewInit {
   public appState = inject(AppStateService);
 
   isMobile = false;
   sidebarOpen = true;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: object,
+    private routeFilterContext: RouteFilterContext
+  ) {}
+
+  ngOnInit(): void {
+    this.routeFilterContext.init();
+  }
 
   ngAfterViewInit(): void {
     this.updateViewportMode();
