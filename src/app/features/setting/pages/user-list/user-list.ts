@@ -22,6 +22,7 @@ import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb'
 import { RouterLink } from '@angular/router';
 import { DraftFormService, DraftManagerRef } from '../../../../core/services/draft-manager-options.service';
 import { CanComponentDeactivate } from '../../../../core/guards/pending-changes.guard';
+import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 
 declare const bootstrap: any;
 
@@ -61,7 +62,8 @@ interface UserDraftMeta {
     JMartEngineSyncDirective,
     JMartNumberFormatDirective,
     Breadcrumb,
-    RouterLink
+    RouterLink,
+    AppPermissionDirective
   ],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss'

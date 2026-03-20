@@ -14,7 +14,7 @@
           {{ 'userlist.buttons.export' | translate }}
         </button>
 
-        <button class="btn btn-primary btn-sm" type="button" (click)="openCreateModal()">
+        <button class="btn btn-primary btn-sm" type="button" (click)="openCreateModal()" appPermission="new">
           <i class="bi bi-plus-lg me-1"></i>
           {{ 'userlist.buttons.addUser' | translate }}
         </button>
@@ -174,7 +174,7 @@
 
                           <a class="users-action-btn"
                             [title]="'userlist.actions.edit' | translate"
-                            (click)="openEditModal(item)">
+                            (click)="openEditModal(item)" appPermission="edit">
                             <i class="bi bi-pencil"></i>
                           </a>
 
@@ -196,7 +196,7 @@
                               </li>
 
                               <li>
-                                <a class="dropdown-item text-danger" (click)="deleteUser(item)">
+                                <a class="dropdown-item text-danger" (click)="deleteUser(item)" appPermission="delete">
                                   <i class="bi bi-trash me-2"></i>
                                   {{ 'userlist.actions.delete' | translate }}
                                 </a>

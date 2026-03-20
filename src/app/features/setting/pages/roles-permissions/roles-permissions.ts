@@ -111,7 +111,7 @@ export class RolesPermissionsComponent implements OnInit {
 
   copy: HTMLElement | undefined;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   async ngOnInit(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) {
@@ -176,7 +176,6 @@ export class RolesPermissionsComponent implements OnInit {
             return;
           }
 
-        
           this.roles = (res.data?.roles ?? []).map((role: RoleSummaryDto) => {
             const cloned = this.cloneRole(role);
             cloned.permissionsByRoute = this.enforceMandatoryPermissionsMap(cloned.permissionsByRoute);
@@ -184,7 +183,7 @@ export class RolesPermissionsComponent implements OnInit {
           });
 
           this.usersWithRoles = res.data?.usersWithRoles ?? [];
- 
+
           this.selectedRole = this.roles.length > 0 ? this.cloneRole(this.roles[0]) : null;
           this.enforceMandatoryPermissionsOnSelectedRole();
           this.rebuildPermissionGroups();
@@ -568,52 +567,63 @@ export class RolesPermissionsComponent implements OnInit {
     this.selectedRole.permissionsByRoute[row.router] = this.toRolePermissionDto(row.permissions);
   }
 
-  toggleAll(row: PermissionRowView, checked: boolean): void {
-    if (!this.selectedRole) {
-      return;
+ toggleAll(row: PermissionRowView, checked: boolean): void {
+  if (!this.selectedRole) {
+    return;
+  }
+
+  const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
+
+  for (const key of keys) {
+    if (!this.isEditablePermission(row, key)) {
+      continue;
     }
 
-    const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
-
-    for (const key of keys) {
-      if (row.templatePermissions[key] === null) {
-        continue;
-      }
-
-      if (this.isMandatoryDashboardView(row, key)) {
-        row.permissions.view = true;
-        continue;
-      }
-
-      row.permissions[key] = checked;
-    }
-
-    this.selectedRole.permissionsByRoute[row.router] = this.toRolePermissionDto(row.permissions);
+    row.permissions[key] = checked;
   }
 
-  isAllChecked(row: PermissionRowView): boolean {
-    const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
+  this.selectedRole.permissionsByRoute[row.router] = this.toRolePermissionDto(row.permissions);
+}
 
-    const visibleValues = keys
-      .filter(key => row.templatePermissions[key] !== null)
-      .map(key => row.permissions[key])
-      .filter((value): value is boolean => value !== null);
+ isAllChecked(row: PermissionRowView): boolean {
+  const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
 
-    return visibleValues.length > 0 && visibleValues.every(value => value === true);
-  }
+  const visibleValues = keys
+    .filter(key => row.templatePermissions[key] !== null)
+    .map(key => row.permissions[key])
+    .filter((value): value is boolean => value !== null);
 
-  shouldShowToggleAll(row: PermissionRowView): boolean {
-    return this.countVisiblePermissions(row) > 0;
-  }
+  return visibleValues.length > 0 && visibleValues.every(value => value === true);
+}
+
+shouldShowToggleAll(row: PermissionRowView): boolean {
+  return this.countVisiblePermissions(row) > 0;
+}
+  countEditablePermissions(row: PermissionRowView): number {
+  const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
+  return keys.filter(key => this.isEditablePermission(row, key)).length;
+}
 
   isMandatoryDashboardView(row: PermissionRowView, key: PermissionKey): boolean {
     return this.normalizeRoute(row.router) === this.DASHBOARD_ROUTE && key === 'view';
   }
 
-  private countVisiblePermissions(row: PermissionRowView): number {
-    const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
-    return keys.filter(key => row.templatePermissions[key] !== null).length;
+private isEditablePermission(row: PermissionRowView, key: PermissionKey): boolean {
+  if (row.templatePermissions[key] === null) {
+    return false;
   }
+
+  if (this.isMandatoryDashboardView(row, key)) {
+    return false;
+  }
+
+  return true;
+}
+
+private countVisiblePermissions(row: PermissionRowView): number {
+  const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
+  return keys.filter(key => row.templatePermissions[key] !== null).length;
+}
 
   private enforceMandatoryPermissionsOnSelectedRole(): void {
     if (!this.selectedRole) {
@@ -625,28 +635,28 @@ export class RolesPermissionsComponent implements OnInit {
     );
   }
 
-  private enforceMandatoryPermissionsMap(
-    map: Record<string, RolePermissionDto>
-  ): Record<string, RolePermissionDto> {
-    const result = this.clonePermissionsMap(map ?? {});
-    const dashboardRoute = this.normalizeRoute(this.DASHBOARD_ROUTE);
+private enforceMandatoryPermissionsMap(
+  map: Record<string, RolePermissionDto>
+): Record<string, RolePermissionDto> {
+  const result = this.clonePermissionsMap(map ?? {});
+  const dashboardRoute = this.normalizeRoute(this.DASHBOARD_ROUTE);
 
-    if (!result[dashboardRoute]) {
-      result[dashboardRoute] = {
-        view: true,
-        create: null,
-        edit: null,
-        delete: null
-      };
-    } else {
-      result[dashboardRoute] = {
-        ...result[dashboardRoute],
-        view: true
-      };
-    }
-
-    return result;
+  if (!result[dashboardRoute]) {
+    result[dashboardRoute] = {
+      view: true,
+      create: null,
+      edit: null,
+      delete: null
+    };
+  } else {
+    result[dashboardRoute] = {
+      ...result[dashboardRoute],
+      view: true
+    };
   }
+
+  return result;
+}
 
   private rebuildPermissionGroups(): void {
     if (!this.selectedRole) {
@@ -960,33 +970,33 @@ export class RolesPermissionsComponent implements OnInit {
     };
   }
 
-   getAvatarByGender(item: RoleUserDto): string {
-  const gender = (item.gender || '').trim().toLowerCase();
-  const role = (item.roleName || '').trim().toLowerCase();
+  getAvatarByGender(item: RoleUserDto): string {
+    const gender = (item.gender || '').trim().toLowerCase();
+    const role = (item.roleName || '').trim().toLowerCase();
 
-  const isFemale =
-    gender === 'female' ||
-    gender === 'femenino' ||
-    gender === 'mujer' ||
-    gender === 'f';
+    const isFemale =
+      gender === 'female' ||
+      gender === 'femenino' ||
+      gender === 'mujer' ||
+      gender === 'f';
 
-  const isAdmin =
-    role === 'admin' ||
-    role === 'administrator' ||
-    role === 'administrador';
+    const isAdmin =
+      role === 'admin' ||
+      role === 'administrator' ||
+      role === 'administrador';
 
-  if (isAdmin && isFemale) {
-    return 'assets/img/avatars/avatar-admin-female.webp';
+    if (isAdmin && isFemale) {
+      return 'assets/img/avatars/avatar-admin-female.webp';
+    }
+
+    if (isAdmin && !isFemale) {
+      return 'assets/img/avatars/avatar-admin-male.webp';
+    }
+
+    if (!isAdmin && isFemale) {
+      return 'assets/img/avatars/avatar-default-female.webp';
+    }
+
+    return 'assets/img/avatars/avatar-default-male.webp';
   }
-
-  if (isAdmin && !isFemale) {
-    return 'assets/img/avatars/avatar-admin-male.webp';
-  }
-
-  if (!isAdmin && isFemale) {
-    return 'assets/img/avatars/avatar-default-female.webp';
-  }
-
-  return 'assets/img/avatars/avatar-default-male.webp';
-}
 }

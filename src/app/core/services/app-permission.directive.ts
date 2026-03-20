@@ -7,9 +7,11 @@ import {
   OnInit,
   PLATFORM_ID,
   Renderer2,
-  SimpleChanges
+  SimpleChanges,
+  inject
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PermissionAction, PermissionService } from './permission.service';
 
 type PermissionInput = PermissionAction | 'new' | Array<PermissionAction | 'new'>;
@@ -22,6 +24,9 @@ export class AppPermissionDirective implements OnInit, OnChanges {
   @Input('appPermission') actions!: PermissionInput;
   @Input() permissionRoute?: string;
   @Input() permissionMode: 'hide' | 'disable' = 'hide';
+
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
 
   constructor(
     private el: ElementRef<HTMLElement>,
@@ -49,7 +54,7 @@ export class AppPermissionDirective implements OnInit, OnChanges {
   }
 
   private applyPermission(): void {
-    const route = this.normalizeRoute(this.permissionRoute || window.location.pathname);
+    const route = this.getPermissionRoute();
     const allowed = this.hasAnyPermission(route);
     const element = this.el.nativeElement;
 
@@ -71,6 +76,35 @@ export class AppPermissionDirective implements OnInit, OnChanges {
     }
   }
 
+  private getPermissionRoute(): string {
+    if (this.permissionRoute?.trim()) {
+      return this.normalizeRoute(this.permissionRoute);
+    }
+
+    const routeFromData = this.getDeepestPermissionFromRoute(this.activatedRoute);
+    if (routeFromData) {
+      return this.normalizeRoute(routeFromData);
+    }
+
+    return this.normalizeRoute(this.router.url.split('?')[0].split('#')[0]);
+  }
+
+  private getDeepestPermissionFromRoute(route: ActivatedRoute): string | null {
+    let current: ActivatedRoute | null = route;
+    let permission: string | null = null;
+
+    while (current) {
+      const currentPermission = current.snapshot.data?.['permission'];
+      if (typeof currentPermission === 'string' && currentPermission.trim()) {
+        permission = currentPermission;
+      }
+
+      current = current.firstChild;
+    }
+
+    return permission;
+  }
+
   private hasAnyPermission(route: string): boolean {
     const actions = Array.isArray(this.actions) ? this.actions : [this.actions];
 
@@ -84,14 +118,8 @@ export class AppPermissionDirective implements OnInit, OnChanges {
   }
 
   private normalizeRoute(route: string): string {
-    const clean = ('/' + (route || '').trim().replace(/^\/+/, ''))
+    return ('/' + (route || '').trim().replace(/^\/+/, ''))
       .replace(/\/+$/, '')
       .toLowerCase();
-
-    if (clean === '/socios/new') return '/socios';
-    if (/^\/socios\/[^/]+\/edit$/.test(clean)) return '/socios';
-    if (/^\/socios\/[^/]+$/.test(clean)) return '/socios';
-
-    return clean;
   }
 }

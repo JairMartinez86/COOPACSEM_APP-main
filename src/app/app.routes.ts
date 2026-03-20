@@ -98,7 +98,7 @@ export const routes: Routes = [
           import('./features/setting/pages/user-setting/user-setting')
             .then(m => m.UserSettingComponent),
         canActivate: [permissionGuard],
-        data: { permission: '/user-setting' },
+        data: { permission: '/user-setting'},
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },

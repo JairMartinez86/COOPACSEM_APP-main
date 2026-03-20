@@ -13,7 +13,7 @@
           data-bs-toggle="modal"
           data-bs-target="#addRoleModal"
           (click)="openCreateRoleModal()"
-          appPermission="create">
+          [appPermission]="'create'">
           <i class="bi bi-plus-lg me-1"></i>
           {{ 'rolesPermissions.actions.addRole' | translate }}
         </button>
@@ -50,7 +50,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#addRoleModal"
                   (click)="openEditRoleModal(item, $event)"
-                  appPermission="edit">
+                  [appPermission]="'edit'">
                   <i class="bi bi-pencil"></i>
                 </button>
               </div>
@@ -125,7 +125,7 @@
               class="btn btn-primary btn-sm"
               [disabled]="saving"
               (click)="savePermissions()"
-              appPermission="edit">
+              [appPermission]="'edit'">
               <i class="bi bi-check-lg me-1"></i>
               {{
                 saving
@@ -176,7 +176,7 @@
                         [checked]="row.permissions.view"
                         [disabled]="isMandatoryDashboardView(row, 'view')"
                         (change)="setPermission(row, 'view', $any($event.target).checked)"
-                        appPermission="edit">
+                        [appPermission]="'edit'">
                       }
                     </td>
 
@@ -189,7 +189,7 @@
                         class="form-check-input"
                         [checked]="row.permissions.create"
                         (change)="setPermission(row, 'create', $any($event.target).checked)"
-                        appPermission="edit">
+                        [appPermission]="'edit'">
                       }
                     </td>
 
@@ -202,7 +202,7 @@
                         class="form-check-input"
                         [checked]="row.permissions.edit"
                         (change)="setPermission(row, 'edit', $any($event.target).checked)"
-                        appPermission="edit">
+                        [appPermission]="'edit'">
                       }
                     </td>
 
@@ -215,7 +215,7 @@
                         class="form-check-input"
                         [checked]="row.permissions.delete"
                         (change)="setPermission(row, 'delete', $any($event.target).checked)"
-                        appPermission="edit">
+                        [appPermission]="'edit'">
                       }
                     </td>
 
@@ -227,8 +227,9 @@
                         type="checkbox"
                         class="form-check-input"
                         [checked]="isAllChecked(row)"
+                        [disabled]="countEditablePermissions(row) === 0"
                         (change)="toggleAll(row, $any($event.target).checked)"
-                        appPermission="edit">
+                        [appPermission]="'edit'">
                       }
                     </td>
                   </tr>
@@ -260,12 +261,7 @@
               @for (user of role.users; track user.email) {
               <div class="roles-user">
                 <div class="roles-user-avatar d-flex align-items-center justify-content-center fw-bold">
-
-                   {{ user?.fullName!.charAt(0).toUpperCase() }}
-                   <!--
-                    <img [src]="getAvatarByGender(user)" [alt]="user.fullName" class="users-avatar">
-                   -->
-               
+                  {{ user?.fullName!.charAt(0).toUpperCase() }}
                 </div>
 
                 <div class="roles-user-info">
@@ -288,7 +284,7 @@
                   class="btn btn-outline-danger btn-sm roles-user-remove"
                   [title]="'rolesPermissions.users.removeRole' | translate"
                   (click)="confirmRemoveUserFromRole(user)"
-                  appPermission="delete">
+                  [appPermission]="'delete'">
                   <i class="bi bi-x-lg"></i>
                 </button>
               </div>
@@ -446,7 +442,7 @@
                   id="roleActive"
                   name="active"
                   [(ngModel)]="createForm.active"
-                  appPermission="edit">
+                  [appPermission]="'edit'">
                 <label class="form-check-label" for="roleActive">
                   {{ 'rolesPermissions.modal.activeRole' | translate }}
                 </label>
