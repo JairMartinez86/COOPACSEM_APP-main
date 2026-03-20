@@ -8,12 +8,13 @@ import {
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SociosService } from '../../../services/socios.service';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import { Breadcrumb } from '../../../../../shared/components/breadcrumb/breadcrumb';
 import { TableFilterService } from '../../../../../core/services/table-filter.service';
+import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
 
 interface SocioRow {
   id: string;
@@ -26,6 +27,8 @@ interface SocioRow {
   activo: boolean;
   createdAtUtc?: string | null;
   updatedAtUtc?: string | null;
+  createdBy?: string | null;
+  updatedBy?: string | null;
 }
 
 interface SocioActivityRow {
@@ -33,6 +36,7 @@ interface SocioActivityRow {
   nombreCompleto: string;
   tipo: 'new' | 'updated';
   fecha: string | null;
+  usuario?: string | null;
 }
 
 @Component({
@@ -41,7 +45,8 @@ interface SocioActivityRow {
   imports: [
     CommonModule,
     TranslateModule,
-    Breadcrumb
+    Breadcrumb,
+    AppPermissionDirective
   ],
   templateUrl: './socios-list.html',
   styleUrl: './socios-list.scss'
@@ -51,6 +56,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
   private readonly notify = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly filterSvc = inject(TableFilterService);
+  private readonly translate = inject(TranslateService);
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'socios';
@@ -61,8 +67,9 @@ export class SociosListComponent implements OnInit, OnDestroy {
   currentTerm = '';
 
   breadcrumbs = [
-    { label: 'Inicio', url: '/' },
-    { label: 'Socios', url: '' }
+    { label: '', url: '' },
+    { label: '', url: '/' },
+    { label: '' }
   ];
 
   ngOnInit(): void {
@@ -73,6 +80,18 @@ export class SociosListComponent implements OnInit, OnDestroy {
       })
     );
 
+
+    this.subs.add(
+      this.translate.onLangChange.subscribe(() => {
+        this.breadcrumbs = this.translate.instant('socios.breadcrumbs.list') || [];
+
+
+      })
+    );
+
+    this.breadcrumbs = this.translate.instant('socios.breadcrumbs.list') || [];
+
+
     this.loadData();
   }
 
@@ -81,6 +100,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   loadData(): void {
+
+
     this.loading = true;
 
     this.sociosService.getAll()
@@ -102,23 +123,27 @@ export class SociosListComponent implements OnInit, OnDestroy {
     this.socios = !term
       ? [...this.sociosAll]
       : this.sociosAll.filter((socio) =>
-          [
-            socio.nombreCompleto ?? '',
-            socio.nombrePublico ?? '',
-            socio.numeroIdentificacion ?? '',
-            socio.correo ?? '',
-            socio.telefono ?? '',
-            socio.celular ?? '',
-            socio.activo ? 'activo' : 'inactivo'
-          ]
-            .join(' ')
-            .toLowerCase()
-            .includes(term)
-        );
+        [
+          socio.nombreCompleto ?? '',
+          socio.nombrePublico ?? '',
+          socio.numeroIdentificacion ?? '',
+          socio.correo ?? '',
+          socio.telefono ?? '',
+          socio.celular ?? '',
+          socio.activo ? 'activo' : 'inactivo'
+        ]
+          .join(' ')
+          .toLowerCase()
+          .includes(term)
+      );
   }
 
   onCreate(): void {
     this.router.navigate(['/socios/new']);
+  }
+
+  onView(id: string): void {
+    this.router.navigate(['/socios', id]);
   }
 
   onEdit(id: string): void {
@@ -126,15 +151,23 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(item: SocioRow): void {
+    const message = this.translate.instant('socios.delete.message', {
+      nombre: item.nombreCompleto || '',
+      identificacion: item.numeroIdentificacion || ''
+    });
+
+    const warning = this.translate.instant('socios.delete.warning');
+    const title = this.translate.instant('socios.delete.title');
+
     const ref = this.notify.confirm?.(
-      `¿Deseas eliminar a ${item.nombreCompleto}?`,
-      'Eliminar socio',
+      `${message}\n\n${warning}`,
+      title,
       'warning'
     );
 
     if (!ref) return;
 
-    ref.subscribe((result: number) => {
+    const deleteSub = ref.subscribe((result: number) => {
       if (result !== 1) return;
 
       this.sociosService.delete(item.id).subscribe({
@@ -147,6 +180,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
         }
       });
     });
+
+    this.subs.add(deleteSub);
   }
 
   getInitials(value: string): string {
@@ -166,11 +201,11 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   get activeCount(): number {
-    return this.sociosAll.filter((x) => x.activo).length;
+    return this.sociosAll.filter(x => x.activo).length;
   }
 
   get inactiveCount(): number {
-    return this.sociosAll.filter((x) => !x.activo).length;
+    return this.sociosAll.filter(x => !x.activo).length;
   }
 
   get activePercent(): number {
@@ -185,21 +220,23 @@ export class SociosListComponent implements OnInit, OnDestroy {
 
   get latestActivity(): SocioActivityRow[] {
     const added: SocioActivityRow[] = this.sociosAll
-      .filter((x) => !!x.createdAtUtc)
-      .map((x) => ({
+      .filter(x => !!x.createdAtUtc)
+      .map(x => ({
         id: x.id,
         nombreCompleto: x.nombreCompleto,
         tipo: 'new' as const,
-        fecha: x.createdAtUtc ?? null
+        fecha: x.createdAtUtc ?? null,
+        usuario: x.createdBy ?? null
       }));
 
     const updated: SocioActivityRow[] = this.sociosAll
-      .filter((x) => !!x.updatedAtUtc)
-      .map((x) => ({
+      .filter(x => !!x.updatedAtUtc)
+      .map(x => ({
         id: x.id,
         nombreCompleto: x.nombreCompleto,
         tipo: 'updated' as const,
-        fecha: x.updatedAtUtc ?? null
+        fecha: x.updatedAtUtc ?? null,
+        usuario: x.updatedBy ?? null
       }));
 
     return [...added, ...updated]
@@ -208,15 +245,94 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   formatActivityLabel(value?: string | null): string {
-    if (!value) return 'Fecha no disponible';
+    if (!value) {
+      return this.translate.instant('common.noDate');
+    }
 
     const date = new Date(value);
-    if (isNaN(date.getTime())) return 'Fecha no disponible';
+    if (isNaN(date.getTime())) {
+      return this.translate.instant('common.noDate');
+    }
 
     return date.toLocaleDateString('es-NI', {
       year: 'numeric',
       month: 'short',
       day: '2-digit'
     });
+  }
+
+  trackBySocioId(_: number, item: SocioRow): string {
+    return item.id;
+  }
+
+  trackByActivityId(_: number, item: SocioActivityRow): string {
+    return `${item.tipo}-${item.id}-${item.fecha ?? ''}`;
+  }
+
+
+  isDarkTheme(): boolean {
+    return document.documentElement.getAttribute('data-theme') === 'dark';
+  }
+
+  getAvatarStyle(): Record<string, string> {
+    if (this.isDarkTheme()) {
+      return {};
+    }
+
+    return {
+      background: '#1e3a8a',
+      color: '#ffffff',
+      border: '1px solid #1d4ed8'
+    };
+  }
+
+  onToggleStatus(item: SocioRow): void {
+    const nextStatus = !item.activo;
+
+    const message = this.translate.instant(
+      nextStatus
+        ? 'socios.statusActions.activateMessage'
+        : 'socios.statusActions.deactivateMessage',
+      {
+        nombre: item.nombreCompleto || '',
+        identificacion: item.numeroIdentificacion || ''
+      }
+    );
+
+    const warning = this.translate.instant(
+      nextStatus
+        ? 'socios.statusActions.activateWarning'
+        : 'socios.statusActions.deactivateWarning'
+    );
+
+    const title = this.translate.instant(
+      nextStatus
+        ? 'socios.statusActions.activateTitle'
+        : 'socios.statusActions.deactivateTitle'
+    );
+
+    const ref = this.notify.confirm?.(
+      `${message}\n\n${warning}`,
+      title,
+      'warning'
+    );
+
+    if (!ref) return;
+
+    const sub = ref.subscribe((result: number) => {
+      if (result !== 1) return;
+
+      this.sociosService.changeStatus(item.id, nextStatus).subscribe({
+        next: (res: any) => {
+          this.notify.showFromApiResponse?.(res, 'warning');
+          this.loadData();
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        }
+      });
+    });
+
+    this.subs.add(sub);
   }
 }

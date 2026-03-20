@@ -15,18 +15,24 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SociosService } from '../../services/socios.service';
-import { JMartAutoFocusDirective, JMartAutoFocusNextDirective, JMartEngineSyncDirective, JMartErrorNotifyDirective, JMartMassiveValidationService } from '@JairMartinez86/jmartinez-validator';
+import {
+  JMartAutoFocusDirective,
+  JMartAutoFocusNextDirective,
+  JMartEngineSyncDirective,
+  JMartErrorNotifyDirective,
+  JMartMassiveValidationService
+} from '@JairMartinez86/jmartinez-validator';
 import { DraftFormService } from '../../../../core/services/draft-manager-options.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { EMPTY_SOCIO, SocioForm } from '../../interface/socio.model';
-import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 import { LanguageService } from '../../../../core/services/languageService';
-
+import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
 
 type DraftRef<T> = {
   saveNow(): void;
@@ -37,18 +43,21 @@ type DraftRef<T> = {
 @Component({
   selector: 'app-socios',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     FormsModule,
     TranslateModule,
     JMartAutoFocusNextDirective,
     JMartErrorNotifyDirective,
     JMartEngineSyncDirective,
     JMartAutoFocusDirective,
-    AppPermissionDirective],
+    AppPermissionDirective,
+    Breadcrumb
+  ],
   templateUrl: './socios.html',
   styleUrl: './socios.scss',
 })
-export class SociosComponent  implements AfterViewInit, OnDestroy {
+export class SociosComponent implements AfterViewInit, OnDestroy {
   @ViewChild('socioFormRef') formRef?: NgForm;
   @ViewChild('wizardSlot') wizardSlotRef?: ElementRef<HTMLElement>;
   @ViewChild('wizardCard') wizardCardRef?: ElementRef<HTMLElement>;
@@ -61,6 +70,8 @@ export class SociosComponent  implements AfterViewInit, OnDestroy {
   private engine = inject(JMartMassiveValidationService);
   public notify = inject(NotificationService);
   private langService = inject(LanguageService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   activeSection = 'datos-personales';
 
@@ -71,12 +82,26 @@ export class SociosComponent  implements AfterViewInit, OnDestroy {
     'beneficiarios',
   ];
 
+
+
   socio: SocioForm = { ...EMPTY_SOCIO };
   copy: SocioForm = { ...EMPTY_SOCIO };
 
-  breadcrumbs: any[] = [];
+   breadcrumbs = [
+    { label: '', url: '' },
+    { label: '', url: '/' },
+    { label: '' }
+  ];
+
+
+
   formReady = false;
   dataReady = false;
+  loading = false;
+
+  mode: 'create' | 'view' | 'edit' = 'create';
+  socioId: string | null = null;
+
   draftRef?: DraftRef<SocioForm>;
 
   wizardAffixed = false;
@@ -89,13 +114,13 @@ export class SociosComponent  implements AfterViewInit, OnDestroy {
   private langChangeSub?: Subscription;
   languages: any[] = [];
 
-
   private readonly isBrowser: boolean;
   private readonly desktopBreakpoint = 1200;
   private readonly affixTopDesktop = 96;
   private readonly affixTopMobile = 8;
   private readonly scrollOffsetDesktop = 112;
   private readonly scrollOffsetMobile = 120;
+  private readonly subs = new Subscription();
 
   private readonly onScrollBound = () => {
     this.zone.run(() => {
@@ -140,6 +165,33 @@ export class SociosComponent  implements AfterViewInit, OnDestroy {
   }
 
 
+ngOnInit(): void {
+  this.loadBreadcrumbs();
+
+  this.subs.add(
+    this.translate.onLangChange.subscribe(() => {
+      this.loadBreadcrumbs();
+      this.loadSocioConfig();
+      this.cdr.detectChanges();
+    })
+  );
+}
+  
+  private loadBreadcrumbs(): void {
+  const url = this.router.url.toLowerCase();
+
+  if (url.endsWith('/new')) {
+    this.breadcrumbs = this.translate.instant('socios.breadcrumbs.new') || [];
+    return;
+  }
+
+  if (url.endsWith('/edit')) {
+    this.breadcrumbs = this.translate.instant('socios.breadcrumbs.edit') || [];
+    return;
+  }
+
+  this.breadcrumbs = this.translate.instant('socios.breadcrumbs.list') || [];
+}
 
 
   ngAfterViewInit(): void {
@@ -153,16 +205,12 @@ export class SociosComponent  implements AfterViewInit, OnDestroy {
     window.document.addEventListener('click', this.onClickBound);
 
     this.loadSocioConfig();
-    this.patchEngineFromSocio();
+    this.initRouteModeAndLoad();
 
-    this.dataReady = true;
-    this.tryInitDraftManager();
-
-     this.langChangeSub = this.translate.onLangChange.subscribe(() => {
+    this.langChangeSub = this.translate.onLangChange.subscribe(() => {
       this.languages = this.langService.getAvailableLanguages();
       this.loadSocioConfig();
     });
-
 
     setTimeout(() => {
       this.updateActiveSectionByScroll();
@@ -180,49 +228,120 @@ export class SociosComponent  implements AfterViewInit, OnDestroy {
     window.document.removeEventListener('focusin', this.onFocusInBound);
     window.document.removeEventListener('click', this.onClickBound);
 
+    this.langChangeSub?.unsubscribe();
     this.draftRef?.cancel();
   }
-  loadSocioConfig(): void {
-    this.engine.resetRules?.();
-    this.engine.clearFieldsMeta?.();
-
-    const fieldMeta = this.translate.instant('socios.form.fieldMeta') || {};
-    const validations = this.translate.instant('socios.form.validations') || {};
-    this.breadcrumbs = this.translate.instant('socios.breadcrumbs') || [];
 
 
+  private initRouteModeAndLoad(): void {
+  const id = this.route.snapshot.paramMap.get('id');
+  const url = this.router.url.toLowerCase();
 
-    for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
-      this.engine.addFieldMeta?.({
+  this.socioId = id;
+  this.loadBreadcrumbs();
+
+  if (url.endsWith('/new')) {
+    this.mode = 'create';
+    this.socio = { ...EMPTY_SOCIO };
+    this.copy = { ...EMPTY_SOCIO };
+    this.patchEngineFromSocio();
+    this.dataReady = true;
+    this.tryInitDraftManager();
+    return;
+  }
+
+  if (url.endsWith('/edit')) {
+    this.mode = 'edit';
+  } else {
+    this.mode = 'view';
+  }
+
+  if (!id) {
+    this.notify.show?.(
+      this.translate.instant('socios.messages.missingId'),
+      '',
+      'warning'
+    );
+    this.router.navigate(['/socios']);
+    return;
+  }
+
+  this.loadSocioById(id);
+}
+
+  private loadSocioById(id: string): void {
+    this.loading = true;
+
+    this.sociosService
+      .getById(id)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (res: any) => {
+          const socioApi = res?.data?.socio ?? null;
+
+          if (!socioApi) {
+           this.notify.show?.(this.translate.instant('socios.messages.notFound'), '', 'warning');
+            this.router.navigate(['/socios']);
+            return;
+          }
+
+          const socioMapped = this.toSocioForm(socioApi);
+
+          this.socio = { ...socioMapped };
+          this.copy = { ...socioMapped };
+
+          this.patchEngineFromSocio();
+          this.engine.clearErrors?.();
+
+          this.dataReady = true;
+          this.tryInitDraftManager();
+
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+          this.router.navigate(['/socios']);
+        }
+      });
+  }
+
+loadSocioConfig(): void {
+  this.engine.resetRules?.();
+  this.engine.clearFieldsMeta?.();
+
+  const fieldMeta = this.translate.instant('socios.form.fieldMeta') || {};
+  const validations = this.translate.instant('socios.form.validations') || {};
+
+  for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
+    this.engine.addFieldMeta?.({
+      id: fieldId,
+      label: meta?.label ?? '',
+      tooltip: meta?.tooltip ?? '',
+      tooltipIconClass: meta?.tooltipIconClass ?? '',
+    });
+  }
+
+  for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
+    const rules = fieldConfig?.data || {};
+
+    for (const rule of Object.values(rules) as any[]) {
+      const value = rule?.value ?? '';
+
+      this.engine.addRule?.({
         id: fieldId,
-        label: meta?.label ?? '',
-        tooltip: meta?.tooltip ?? '',
-        tooltipIconClass: meta?.tooltipIconClass ?? '',
+        condition: String(rule?.rule ?? '').trim(),
+        when: String(rule?.when ?? '').trim(),
+        value,
+        message: String(rule?.msj ?? '').replace('{value}', String(value ?? '')),
+        classIconSuccess: rule?.classIconSuccess ?? '',
+        classIconError: rule?.classIconError ?? '',
       });
     }
-
-    for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
-      const rules = fieldConfig?.data || {};
-
-      for (const rule of Object.values(rules) as any[]) {
-        const value = rule?.value ?? '';
-
-        this.engine.addRule?.({
-          id: fieldId,
-          condition: String(rule?.rule ?? '').trim(),
-          when: String(rule?.when ?? '').trim(),
-          value,
-          message: String(rule?.msj ?? '').replace('{value}', String(value ?? '')),
-          classIconSuccess: rule?.classIconSuccess ?? '',
-          classIconError: rule?.classIconError ?? '',
-        });
-      }
-    }
   }
+}
 
 
   private tryInitDraftManager(): void {
-
     if (!this.formReady || !this.dataReady || !this.formRef || this.draftRef) {
       return;
     }
@@ -258,6 +377,7 @@ export class SociosComponent  implements AfterViewInit, OnDestroy {
       });
     });
   }
+
   private normalize(
     data: Partial<SocioForm> | null | undefined
   ): Partial<SocioForm> {
@@ -298,6 +418,10 @@ export class SociosComponent  implements AfterViewInit, OnDestroy {
   }
 
   onSave(): void {
+    if (this.mode === 'view') {
+      return;
+    }
+
     const ok = this.engine.validateAll?.();
 
     if (!ok) {
@@ -325,6 +449,10 @@ export class SociosComponent  implements AfterViewInit, OnDestroy {
           this.draftRef?.clear();
 
           this.notify.showFromApiResponse?.(res, 'success');
+
+          if (this.mode === 'create' && savedSocio.id) {
+            this.router.navigate(['/socios', savedSocio.id, 'edit']);
+          }
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');

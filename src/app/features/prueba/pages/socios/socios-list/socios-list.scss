@@ -1,3 +1,4 @@
+
 .table-user-avatar-text,
 .letter-avatar {
   width: 40px;
@@ -41,4 +42,25 @@
 
 .recent-list-item:first-child {
   border-top: 0 !important;
+}
+
+/* actividad más compacta */
+.activity-card-body {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.recent-list-item {
+  padding-top: 0.45rem !important;
+  padding-bottom: 0.45rem !important;
+}
+
+.xs-text {
+  font-size: 0.72rem;
+  line-height: 1.15;
+}
+
+.badge-xs {
+  font-size: 0.65rem;
+  padding: 2px 6px;
 }

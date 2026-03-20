@@ -1,8 +1,15 @@
 {
   "common": {
     "actions": {
-      "clear": "Clear"
+      "clear": "Clear",
+      "edit": "Edit",
+      "delete": "Delete"
     },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "noDate": "Date not available",
     "selectOption": "Select...",
     "options": {
       "tipoIdentificacion": {
@@ -29,8 +36,8 @@
     "leavePageMessage": "You have unsaved changes. If you leave this page, they will be lost. Do you want to continue?"
   },
   "socios": {
-    "title": "Member Registration",
-    "subtitle": "On desktop, the wizard stays fixed on the left. On mobile, it stays fixed at the top and moves horizontally according to the active section.",
+    "title": "Member registration",
+    "subtitle": "On desktop, the wizard stays fixed on the left. On mobile, it stays fixed on top and moves horizontally according to the active section.",
     "actions": {
       "save": "Save member"
     },
@@ -38,6 +45,19 @@
       "newMember": "New member",
       "sections": "4 sections",
       "beneficiaries": "Up to 3 beneficiaries"
+    },
+    "messages": {
+      "notFound": "No member data found."
+    },
+    "statusActions": {
+      "deactivateTitle": "Deactivate member",
+      "deactivateMessage": "Are you sure you want to deactivate {{nombre}} ({{identificacion}})?",
+      "deactivateWarning": "The member will remain inactive until reactivated.",
+      "activateTitle": "Activate member",
+      "activateMessage": "Are you sure you want to activate {{nombre}} ({{identificacion}})?",
+      "activateWarning": "The member will be available in the system again.",
+      "activateButton": "Activate",
+      "deactivateButton": "Deactivate"
     },
     "wizard": {
       "title": "Sections",
@@ -68,11 +88,11 @@
     "sections": {
       "datosPersonales": {
         "title": "Personal information",
-        "subtitle": "Identity, birth, and contact information."
+        "subtitle": "Identity, birth and contact information."
       },
       "actividadEconomica": {
         "title": "Economic activity or employment",
-        "subtitle": "Professional environment and income details of the member."
+        "subtitle": "Professional environment and member income details."
       },
       "datosConyuge": {
         "title": "Spouse information",
@@ -114,8 +134,8 @@
         "placeholder": "Identification type"
       },
       "numeroIdentificacion": {
-        "label": "Identification no.",
-        "placeholder": "Identification no."
+        "label": "Identification number",
+        "placeholder": "Identification number"
       },
       "paisEmisor": {
         "label": "Issuing country",
@@ -214,8 +234,8 @@
         "placeholder": "Identification type"
       },
       "conyugeNumeroIdentificacion": {
-        "label": "Identification no.",
-        "placeholder": "Identification no."
+        "label": "Identification number",
+        "placeholder": "Identification number"
       },
       "conyugePaisNacimiento": {
         "label": "Country of birth",
@@ -286,7 +306,7 @@
           "label": "Identification type"
         },
         "numeroIdentificacion": {
-          "label": "Identification no."
+          "label": "Identification number"
         },
         "paisEmisor": {
           "label": "Issuing country"
@@ -361,7 +381,7 @@
           "label": "Identification type"
         },
         "conyugeNumeroIdentificacion": {
-          "label": "Identification no."
+          "label": "Identification number"
         },
         "conyugePaisNacimiento": {
           "label": "Country of birth"
@@ -438,6 +458,84 @@
           }
         }
       }
+    },
+    "list": {
+      "title": "Members",
+      "subtitle": "Manage members with status, contact details and actions",
+      "newButton": "New member",
+      "loading": "Loading members...",
+      "empty": "No members found.",
+      "noPublicName": "No public name",
+      "columns": {
+        "member": "Member",
+        "identification": "Identification",
+        "email": "Email",
+        "status": "Status",
+        "phone": "Phone",
+        "actions": "Actions"
+      }
+    },
+    "stats": {
+      "title": "Member status",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "activity": {
+      "title": "Recent activity",
+      "empty": "There is no recent activity.",
+      "new": "New",
+      "updated": "Updated",
+      "byUser": "By: {{usuario}}",
+      "unknownUser": "User not available"
+    },
+    "delete": {
+      "title": "Delete member",
+      "message": "Are you sure you want to delete the record of {{nombre}} ({{identificacion}})?",
+      "warning": "This action cannot be undone."
+    },
+    "breadcrumbs": {
+      "list": [
+        {
+          "label": "Home",
+          "url": "/home"
+        },
+        {
+          "label": "Test",
+          "url": ""
+        },
+        {
+          "label": "Members",
+          "url": "/socios"
+        }
+      ],
+      "new": [
+        {
+          "label": "Home",
+          "url": "/home"
+        },
+        {
+          "label": "Members",
+          "url": "/socios"
+        },
+        {
+          "label": "New",
+          "url": "/socios/new"
+        }
+      ],
+      "edit": [
+        {
+          "label": "Home",
+          "url": "/home"
+        },
+        {
+          "label": "Members",
+          "url": "/socios"
+        },
+        {
+          "label": "Edit",
+          "url": "/socios/id"
+        }
+      ]
     }
   }
 }

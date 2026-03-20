@@ -135,16 +135,26 @@ export const routes: Routes = [
           import('./features/prueba/pages/socios/socios-list/socios-list')
             .then(m => m.SociosListComponent),
         canActivate: [permissionGuard],
-        data: { permission: '/socios',  tableFilterKey: 'socios' },
+        data: { permission: '/socios', action: 'view', tableFilterKey: 'socios' },
         providers: [JMartMassiveValidationService],
       },
       {
         path: 'socios/new',
         loadComponent: () =>
           import('./features/prueba/pages/socios/socios')
-            .then(m => m.SociosComponent ),
+            .then(m => m.SociosComponent),
         canActivate: [permissionGuard],
-        data: { permission: '/socios/new' },
+        data: { permission: '/socios', action: 'create' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+      {
+        path: 'socios/:id/edit',
+        loadComponent: () =>
+          import('./features/prueba/pages/socios/socios')
+            .then(m => m.SociosComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/socios', action: 'edit' },
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },
@@ -152,14 +162,12 @@ export const routes: Routes = [
         path: 'socios/:id',
         loadComponent: () =>
           import('./features/prueba/pages/socios/socios')
-            .then(m => m.SociosComponent ),
+            .then(m => m.SociosComponent),
         canActivate: [permissionGuard],
-        data: { permission: '/socios' },
+        data: { permission: '/socios', action: 'view' },
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       }
-
-
 
 
 

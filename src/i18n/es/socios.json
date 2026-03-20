@@ -1,8 +1,15 @@
 {
   "common": {
     "actions": {
-      "clear": "Limpiar"
+      "clear": "Limpiar",
+      "edit": "Editar",
+      "delete": "Eliminar"
     },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "noDate": "Fecha no disponible",
     "selectOption": "Seleccione...",
     "options": {
       "tipoIdentificacion": {
@@ -39,6 +46,19 @@
       "sections": "4 secciones",
       "beneficiaries": "Hasta 3 beneficiarios"
     },
+     "messages": {
+    "notFound": "No se encontraron datos del socio."
+  },
+  "statusActions": {
+  "deactivateTitle": "Dar de baja socio",
+  "deactivateMessage": "¿Está seguro de dar de baja al socio {{nombre}} ({{identificacion}})?",
+  "deactivateWarning": "El socio quedará inactivo hasta que vuelva a activarse.",
+  "activateTitle": "Activar socio",
+  "activateMessage": "¿Está seguro de activar al socio {{nombre}} ({{identificacion}})?",
+  "activateWarning": "El socio volverá a estar disponible en el sistema.",
+  "activateButton": "Activar",
+  "deactivateButton": "Dar de baja"
+},
     "wizard": {
       "title": "Secciones",
       "subtitle": "Click o scroll para navegar.",
@@ -438,6 +458,84 @@
           }
         }
       }
+    },
+    "list": {
+      "title": "Socios",
+      "subtitle": "Administra los socios con estado, contacto y acciones",
+      "newButton": "Nuevo socio",
+      "loading": "Cargando socios...",
+      "empty": "No se encontraron socios.",
+      "noPublicName": "Sin nombre público",
+      "columns": {
+        "member": "Socio",
+        "identification": "Identificación",
+        "email": "Correo",
+        "status": "Estado",
+        "phone": "Teléfono",
+        "actions": "Acciones"
+      }
+    },
+    "stats": {
+      "title": "Estado de socios",
+      "active": "Activos",
+      "inactive": "Inactivos"
+    },
+    "activity": {
+      "title": "Actividad reciente",
+      "empty": "No hay actividad reciente.",
+      "new": "Nuevo",
+      "updated": "Modificado",
+      "byUser": "Por: {{usuario}}",
+      "unknownUser": "Usuario no disponible"
+    },
+    "delete": {
+      "title": "Eliminar socio",
+      "message": "¿Está seguro de eliminar el registro de {{nombre}} ({{identificacion}})?",
+      "warning": "Esta acción no se puede deshacer."
+    },
+    "breadcrumbs": {
+      "list": [
+        {
+          "label": "Home",
+          "url": "/home"
+        },
+        {
+          "label": "Prueba",
+          "url": ""
+        },
+        {
+          "label": "Socios",
+          "url": "/socios"
+        }
+      ],
+      "new": [
+        {
+          "label": "Home",
+          "url": "/home"
+        },
+        {
+          "label": "Socios",
+          "url": "/socios"
+        },
+        {
+          "label": "Nuevo",
+          "url": "/socios/new"
+        }
+      ],
+      "edit": [
+        {
+          "label": "Home",
+          "url": "/home"
+        },
+        {
+          "label": "Socios",
+          "url": "/socios"
+        },
+        {
+          "label": "Editar",
+          "url": "/socios/id"
+        }
+      ]
     }
   }
 }

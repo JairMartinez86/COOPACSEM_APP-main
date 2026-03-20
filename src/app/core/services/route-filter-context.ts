@@ -30,7 +30,6 @@ export class RouteFilterContext {
 
     this.filterSvc.setActiveKey(key);
 
-    console.log('ACTIVE KEY:', key, 'URL:', this.router.url);
   }
 
   private getDeepestSnapshot(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {

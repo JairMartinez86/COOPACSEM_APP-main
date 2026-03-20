@@ -9,6 +9,8 @@ type RoutePermission = {
   delete: boolean | null;
 };
 
+type PermissionAction = 'view' | 'create' | 'edit' | 'delete';
+
 function normalizeRoute(route: string): string {
   return ('/' + (route || '').trim().replace(/^\/+/, ''))
     .replace(/\/+$/, '')
@@ -20,6 +22,7 @@ export const permissionGuard: CanActivateFn = (route) => {
   const platformId = inject(PLATFORM_ID);
 
   const permissionKey = route.data?.['permission'] as string | undefined;
+  const action = (route.data?.['action'] as PermissionAction | undefined) ?? 'view';
 
   if (!permissionKey) {
     return true;
@@ -42,11 +45,10 @@ export const permissionGuard: CanActivateFn = (route) => {
     const normalizedKey = normalizeRoute(permissionKey);
     const permission: RoutePermission | undefined = permissionsByRoute[normalizedKey];
 
-    if (permission?.view === true) {
+    if (permission?.[action] === true) {
       return true;
     }
 
-    // NO redirigir a dashboard aquí; eso provoca loops.
     return false;
   } catch {
     localStorage.removeItem('user');

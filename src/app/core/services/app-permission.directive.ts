@@ -49,7 +49,7 @@ export class AppPermissionDirective implements OnInit, OnChanges {
   }
 
   private applyPermission(): void {
-    const route = this.permissionRoute || window.location.pathname;
+    const route = this.normalizeRoute(this.permissionRoute || window.location.pathname);
     const allowed = this.hasAnyPermission(route);
     const element = this.el.nativeElement;
 
@@ -81,5 +81,17 @@ export class AppPermissionDirective implements OnInit, OnChanges {
 
   private normalizeAction(action: PermissionAction | 'new'): PermissionAction {
     return action === 'new' ? 'create' : action;
+  }
+
+  private normalizeRoute(route: string): string {
+    const clean = ('/' + (route || '').trim().replace(/^\/+/, ''))
+      .replace(/\/+$/, '')
+      .toLowerCase();
+
+    if (clean === '/socios/new') return '/socios';
+    if (/^\/socios\/[^/]+\/edit$/.test(clean)) return '/socios';
+    if (/^\/socios\/[^/]+$/.test(clean)) return '/socios';
+
+    return clean;
   }
 }

@@ -114,10 +114,10 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     iconclass: 'ph ph-money',
     router: '/socios',
     permissions: {
-      view: true,
-      create: true,
-      edit: null,
-      delete: null
+      view: false,
+      create: false,
+      edit: false,
+      delete: false
     }
   },
 

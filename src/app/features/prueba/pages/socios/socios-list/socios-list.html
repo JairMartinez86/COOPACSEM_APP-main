@@ -6,38 +6,37 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
           <div>
-            <h5 class="card-title">Socios</h5>
-            <p class="card-subtitle">Administra los socios con estado, contacto y acciones</p>
+            <h5 class="card-title">{{ 'socios.list.title' | translate }}</h5>
+            <p class="card-subtitle">{{ 'socios.list.subtitle' | translate }}</p>
           </div>
 
           <button
             type="button"
             class="btn btn-primary btn-sm"
+            [appPermission]="['new']"
+            permissionRoute="/socios"
             (click)="onCreate()">
             <i class="bi bi-plus-lg me-1"></i>
-            Nuevo socio
+            {{ 'socios.list.newButton' | translate }}
           </button>
         </div>
 
         <div class="card-body">
           @if (loading) {
             <div class="py-4 text-center text-muted">
-              Cargando socios...
+              {{ 'socios.list.loading' | translate }}
             </div>
           } @else {
             @if (socios.length > 0) {
-              <table
-                #sociosTable
-                id="sociosDataTable"
-                class="table">
+              <table class="table">
                 <thead>
                   <tr>
-                    <th>Socio</th>
-                    <th>Identificación</th>
-                    <th>Correo</th>
-                    <th>Estado</th>
-                    <th>Teléfono</th>
-                    <th data-sortable="false">Acciones</th>
+                    <th>{{ 'socios.list.columns.member' | translate }}</th>
+                    <th>{{ 'socios.list.columns.identification' | translate }}</th>
+                    <th>{{ 'socios.list.columns.email' | translate }}</th>
+                    <th>{{ 'socios.list.columns.status' | translate }}</th>
+                    <th>{{ 'socios.list.columns.phone' | translate }}</th>
+                    <th>{{ 'socios.list.columns.actions' | translate }}</th>
                   </tr>
                 </thead>
 
@@ -46,15 +45,18 @@
                     <tr>
                       <td [attr.data-sort]="item.nombreCompleto">
                         <div class="table-user">
-                          <div class="table-user-avatar table-user-avatar-text">
+                          <div
+                            class="table-user-avatar table-user-avatar-text"
+                            [ngStyle]="getAvatarStyle()">
                             {{ getInitials(item.nombreCompleto) }}
                           </div>
+
                           <div>
                             <div class="table-user-name">
                               {{ item.nombreCompleto || '-' }}
                             </div>
                             <div class="table-user-email">
-                              {{ item.nombrePublico || 'Sin nombre público' }}
+                              {{ item.nombrePublico || ('socios.list.noPublicName' | translate) }}
                             </div>
                           </div>
                         </div>
@@ -67,7 +69,7 @@
                         <span
                           class="badge"
                           [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
-                          {{ item.activo ? 'Activo' : 'Inactivo' }}
+                          {{ item.activo ? ('common.status.active' | translate) : ('common.status.inactive' | translate) }}
                         </span>
                       </td>
 
@@ -78,15 +80,34 @@
                           <button
                             type="button"
                             class="btn btn-icon btn-sm btn-light"
-                            title="Editar"
+                            [appPermission]="['edit']"
+                            permissionRoute="/socios"
+                            [title]="'common.actions.edit' | translate"
                             (click)="onEdit(item.id)">
                             <i class="bi bi-pencil"></i>
                           </button>
 
                           <button
+  type="button"
+  class="btn btn-icon btn-sm btn-light"
+  [appPermission]="['edit']"
+  permissionRoute="/socios"
+  [title]="item.activo
+    ? ('socios.statusActions.deactivateButton' | translate)
+    : ('socios.statusActions.activateButton' | translate)"
+  (click)="onToggleStatus(item)">
+  <i
+    class="bi"
+    [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'">
+  </i>
+</button>
+
+                          <button
                             type="button"
                             class="btn btn-icon btn-sm btn-light"
-                            title="Eliminar"
+                            [appPermission]="['delete']"
+                            permissionRoute="/socios"
+                            [title]="'common.actions.delete' | translate"
                             (click)="onDelete(item)">
                             <i class="bi bi-trash"></i>
                           </button>
@@ -98,7 +119,7 @@
               </table>
             } @else {
               <div class="py-4 text-center text-muted">
-                No se encontraron socios.
+                {{ 'socios.list.empty' | translate }}
               </div>
             }
           }
@@ -109,7 +130,7 @@
     <div class="col-xl-4">
       <div class="card mb-3">
         <div class="card-header">
-          <h5 class="card-title mb-0">Estado de socios</h5>
+          <h5 class="card-title mb-0">{{ 'socios.stats.title' | translate }}</h5>
         </div>
 
         <div class="card-body">
@@ -118,7 +139,7 @@
               <div class="d-flex align-items-center justify-content-between mb-2">
                 <div class="d-flex align-items-center gap-2">
                   <span class="stats-dot bg-success"></span>
-                  <span>Activos</span>
+                  <span>{{ 'socios.stats.active' | translate }}</span>
                 </div>
                 <strong>{{ activePercent }}%</strong>
               </div>
@@ -132,7 +153,7 @@
               <div class="d-flex align-items-center justify-content-between mb-2">
                 <div class="d-flex align-items-center gap-2">
                   <span class="stats-dot bg-danger"></span>
-                  <span>Inactivos</span>
+                  <span>{{ 'socios.stats.inactive' | translate }}</span>
                 </div>
                 <strong>{{ inactivePercent }}%</strong>
               </div>
@@ -147,35 +168,49 @@
 
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title mb-0">Actividad reciente</h5>
+          <h5 class="card-title mb-0">{{ 'socios.activity.title' | translate }}</h5>
         </div>
 
-        <div class="card-body p-0">
+        <div class="card-body p-0 activity-card-body">
           @if (latestActivity.length === 0) {
-            <div class="px-3 py-3 text-muted small">
-              No hay actividad reciente.
+            <div class="px-3 py-2 text-muted small">
+              {{ 'socios.activity.empty' | translate }}
             </div>
           } @else {
             @for (item of latestActivity; track item.id + '-' + item.tipo + '-' + item.fecha) {
-              <div class="d-flex align-items-center gap-3 px-3 py-3 border-top recent-list-item">
-                <div class="letter-avatar">
+              <div class="recent-list-item d-flex align-items-center gap-2 px-2 py-2 border-top">
+                <div
+                  class="letter-avatar"
+                  [ngStyle]="getAvatarStyle()">
                   {{ getInitials(item.nombreCompleto) }}
                 </div>
 
-                <div class="d-flex flex-column min-w-0 flex-grow-1">
-                  <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
-                    <strong class="text-truncate">{{ item.nombreCompleto }}</strong>
+                <div class="flex-grow-1 min-w-0">
+                  <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                    <strong class="text-truncate small mb-0">
+                      {{ item.nombreCompleto }}
+                    </strong>
 
                     <span
-                      class="badge"
+                      class="badge badge-xs"
                       [ngClass]="item.tipo === 'new' ? 'badge-soft-success' : 'badge-soft-info'">
-                      {{ item.tipo === 'new' ? 'Nuevo' : 'Modificado' }}
+                      {{ item.tipo === 'new'
+                        ? ('socios.activity.new' | translate)
+                        : ('socios.activity.updated' | translate) }}
                     </span>
                   </div>
 
-                  <span class="small text-muted">
+                  <div class="text-muted xs-text">
                     {{ formatActivityLabel(item.fecha) }}
-                  </span>
+                  </div>
+
+                  <div class="text-muted xs-text">
+                    {{
+                      'socios.activity.byUser' | translate:{
+                        usuario: item.usuario || ('socios.activity.unknownUser' | translate)
+                      }
+                    }}
+                  </div>
                 </div>
               </div>
             }

@@ -19,13 +19,13 @@ export class SociosService extends BrowserApiService {
 
   getAll(): Observable<any> {
     return this.browserOnly(() =>
-      this.http.get<any>(`${this.api.baseUrl}/socios`)
+      this.http.get<any>(`${this.api.baseUrl}/socios`, { withCredentials: true })
     );
   }
 
   getById(id: string): Observable<any> {
     return this.browserOnly(() =>
-      this.http.get<any>(`${this.api.baseUrl}/socios/${id}`)
+      this.http.get<any>(`${this.api.baseUrl}/socios/${id}`, { withCredentials: true })
     );
   }
 
@@ -55,4 +55,12 @@ export class SociosService extends BrowserApiService {
   save(body: SocioForm): Observable<ApiResponse> {
     return body.id ? this.put(body.id, body) : this.post(body);
   }
+
+  changeStatus(id: string, activo: boolean): Observable<ApiResponse> {
+  return this.http.patch<ApiResponse>(
+    `${this.api.baseUrl}/socios/${id}/status`,
+    { activo },
+    { withCredentials: true }
+  );
+}
 }
