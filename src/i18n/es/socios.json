@@ -46,19 +46,19 @@
       "sections": "4 secciones",
       "beneficiaries": "Hasta 3 beneficiarios"
     },
-     "messages": {
-    "notFound": "No se encontraron datos del socio."
-  },
-  "statusActions": {
-  "deactivateTitle": "Dar de baja socio",
-  "deactivateMessage": "¿Está seguro de dar de baja al socio {{nombre}} ({{identificacion}})?",
-  "deactivateWarning": "El socio quedará inactivo hasta que vuelva a activarse.",
-  "activateTitle": "Activar socio",
-  "activateMessage": "¿Está seguro de activar al socio {{nombre}} ({{identificacion}})?",
-  "activateWarning": "El socio volverá a estar disponible en el sistema.",
-  "activateButton": "Activar",
-  "deactivateButton": "Dar de baja"
-},
+    "messages": {
+      "notFound": "No se encontraron datos del socio."
+    },
+    "statusActions": {
+      "deactivateTitle": "Dar de baja socio",
+      "deactivateMessage": "¿Está seguro de dar de baja al socio {{nombre}} ({{identificacion}})?",
+      "deactivateWarning": "El socio quedará inactivo hasta que vuelva a activarse.",
+      "activateTitle": "Activar socio",
+      "activateMessage": "¿Está seguro de activar al socio {{nombre}} ({{identificacion}})?",
+      "activateWarning": "El socio volverá a estar disponible en el sistema.",
+      "activateButton": "Activar",
+      "deactivateButton": "Dar de baja"
+    },
     "wizard": {
       "title": "Secciones",
       "subtitle": "Click o scroll para navegar.",
@@ -297,163 +297,592 @@
     "form": {
       "fieldMeta": {
         "nombreCompleto": {
-          "label": "Nombre completo"
+          "label": "IDENTIFICACIÓN",
+          "tooltip": "Campo requerido"
         },
         "nombrePublico": {
-          "label": "Conocido social y/o públicamente como"
+          "label": "IDENTIFICACIÓN",
+          "tooltip": "Campo requerido"
         },
         "tipoIdentificacion": {
-          "label": "Tipo de identificación"
+          "label": "Identificación",
+          "tooltip": "Campo requerido"
         },
         "numeroIdentificacion": {
-          "label": "No. de identificación"
+          "label": "Identificación",
+          "tooltip": "Campo requerido"
         },
         "paisEmisor": {
-          "label": "País emisor"
+          "label": "Identificación",
+          "tooltip": "Campo requerido"
         },
         "fechaEmision": {
-          "label": "Fecha de emisión"
+          "label": "Identificación",
+          "tooltip": "Campo requerido"
         },
         "fechaVencimiento": {
-          "label": "Fecha de vencimiento"
+          "label": "Identificación",
+          "tooltip": "Campo requerido"
         },
         "paisNacimiento": {
-          "label": "País de nacimiento"
+          "label": "Identificación",
+          "tooltip": "Campo requerido"
         },
         "fechaNacimiento": {
-          "label": "Fecha de nacimiento"
+          "label": "Identificación",
+          "tooltip": "Campo requerido"
         },
         "nacionalidad": {
-          "label": "Nacionalidad"
+          "label": "Nacionalidad",
+          "tooltip": "Campo requerido"
         },
         "departamento": {
-          "label": "Departamento"
+          "label": "Nacionalidad",
+          "tooltip": "Campo requerido"
         },
         "municipio": {
-          "label": "Municipio"
+          "label": "Nacionalidad",
+          "tooltip": "Campo requerido"
         },
         "direccionDomiciliar": {
-          "label": "Dirección domiciliar"
+          "label": "Nacionalidad",
+          "tooltip": "Campo requerido"
         },
         "telefono": {
-          "label": "Teléfono"
+          "label": "Nacionalidad",
+          "tooltip": "Campo requerido si el celular esta vacío"
         },
         "celular": {
-          "label": "Celular"
+          "label": "Nacionalidad",
+          "tooltip": "Campo requerido si el télefono esta vacío"
         },
         "correo": {
-          "label": "Correo"
+          "label": "Nacionalidad",
+          "tooltip": "Campo opcional"
         },
         "sociedadLabora": {
-          "label": "Sociedad en la que labora"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo requerido"
         },
         "area": {
-          "label": "Área"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo requerido"
         },
         "cargo": {
-          "label": "Cargo"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo requerido"
         },
         "fechaIngreso": {
-          "label": "Fecha de ingreso"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo requerido"
         },
         "numeroIp": {
-          "label": "Número IP"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo opcional"
         },
         "correoLaboral": {
-          "label": "Correo electrónico laboral"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo opcional"
         },
         "jefeInmediato": {
-          "label": "Jefe inmediato"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo requerido"
         },
         "ingresosMensuales": {
-          "label": "Ingresos mensuales"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo requerido"
         },
         "otrosIngresos": {
-          "label": "Otros ingresos"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo opcional"
         },
         "ingresosAnuales": {
-          "label": "Ingresos anuales totales"
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo requerido"
         },
         "conyugeNombreCompleto": {
-          "label": "Nombre completo"
+          "label": "Datos del cónyuge",
+          "tooltip": "Campo opcional"
         },
         "conyugeTipoIdentificacion": {
-          "label": "Tipo de identificación"
+          "label": "Datos del cónyuge",
+          "tooltip": "Campo opcional"
         },
         "conyugeNumeroIdentificacion": {
-          "label": "No. de identificación"
+          "label": "Datos del cónyuge",
+          "tooltip": "Campo opcional"
         },
         "conyugePaisNacimiento": {
-          "label": "País de nacimiento"
+          "label": "Datos del cónyuge",
+          "tooltip": "Campo opcional"
         },
         "conyugeNacionalidad": {
-          "label": "Nacionalidad"
+          "label": "Datos del cónyuge",
+          "tooltip": "Campo opcional"
         },
         "beneficiario1Nombre": {
-          "label": "Nombre completo"
+          "label": "Beneficiarios",
+          "tooltip": "Campo requerido"
         },
         "beneficiario1Porcentaje": {
-          "label": "Porcentaje"
+          "label": "Beneficiarios",
+          "tooltip": "Campo requerido"
         },
         "beneficiario1Parentesco": {
-          "label": "Parentesco"
+          "label": "Beneficiarios",
+          "tooltip": "Campo requerido"
         },
         "beneficiario1Cedula": {
-          "label": "Cédula"
+          "label": "Beneficiarios",
+          "tooltip": "Campo requerido"
         },
         "beneficiario2Nombre": {
-          "label": "Nombre completo"
+          "label": "Beneficiarios",
+          "tooltip": "Campo opcional"
         },
         "beneficiario2Porcentaje": {
-          "label": "Porcentaje"
+          "label": "Beneficiarios",
+          "tooltip": "Campo opcional"
         },
         "beneficiario2Parentesco": {
-          "label": "Parentesco"
+          "label": "Beneficiarios",
+          "tooltip": "Campo opcional"
         },
         "beneficiario2Cedula": {
-          "label": "Cédula"
+          "label": "Beneficiarios",
+          "tooltip": "Campo opcional"
         },
         "beneficiario3Nombre": {
-          "label": "Nombre completo"
+          "label": "Beneficiarios",
+          "tooltip": "Campo opcional"
         },
         "beneficiario3Porcentaje": {
-          "label": "Porcentaje"
+          "label": "Beneficiarios",
+          "tooltip": "Campo opcional"
         },
         "beneficiario3Parentesco": {
-          "label": "Parentesco"
+          "label": "Beneficiarios",
+          "tooltip": "Campo opcional"
         },
         "beneficiario3Cedula": {
-          "label": "Cédula"
+          "label": "Beneficiarios",
+          "tooltip": "Campo opcional"
         }
       },
       "validations": {
         "nombreCompleto": {
           "data": {
-            "r1": {
-              "rule": "LEN>=",
-              "when": "ALWAYS",
-              "value": 1,
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "1",
               "msj": "El nombre completo es requerido"
+            }
+          }
+        },
+        "nombrePublico": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "Conocido social y/o públicamente como, es requerido"
             }
           }
         },
         "tipoIdentificacion": {
           "data": {
-            "r1": {
-              "rule": "LEN>=",
-              "when": "ALWAYS",
-              "value": 1,
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
               "msj": "El tipo de identificación es requerido"
             }
           }
         },
         "numeroIdentificacion": {
           "data": {
-            "r1": {
-              "rule": "LEN>=",
-              "when": "ALWAYS",
-              "value": 1,
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
               "msj": "El número de identificación es requerido"
+            }
+          }
+        },
+        "paisEmisor": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "País emiso es requerido"
+            }
+          }
+        },
+        "fechaEmision": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": "Ingrese una fecha de emisión valida"
+            }
+          }
+        },
+        "fechaVencimiento": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": "Ingrese una fecha de vencimiento valida"
+            }
+          }
+        },
+        "paisNacimiento": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "El pais de nacimiento es requerido"
+            }
+          }
+        },
+        "fechaNacimiento": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": "Ingrese una fecha de vencimiento valida"
+            }
+          }
+        },
+        "nacionalidad": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "Ingrese una nacionalidad"
+            }
+          }
+        },
+        "departamento": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "Seleccion un departamento"
+            }
+          }
+        },
+        "municipio": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "Seleccion un municipio"
+            }
+          }
+        },
+        "direccionDomiciliar": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "Ingrese una dirección"
+            }
+          }
+        },
+        "celular": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "when": "{telefono}=''",
+              "value": "^\\+?[0-9]{1,4}([ -]?[0-9]{2,4}){2,4}$",
+              "msj": "Ingrese un número de celular válido"
+            }
+          }
+        },
+        "telefono": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[1-9][0-9\\s\\-]{6,18}$",
+              "when": "{celular}=''",
+              "msj": "Ingrese un número de teléfono válido"
+            }
+          }
+        },
+        "correo": {
+          "data": {
+            "1": {
+              "rule": "EMAIL",
+              "value": "",
+              "when": "{correo}!=''",
+              "msj": "Ingrese un correo válido"
+            }
+          }
+        },
+        "sociedadLabora": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione una sociedad"
+            }
+          }
+        },
+        "area": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el area"
+            }
+          }
+        },
+        "cargo": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el cargo"
+            }
+          }
+        },
+        "fechaIngreso": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": "Ingrese el cargo"
+            }
+          }
+        },
+        "numeroIp": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        "correoLaboral": {
+          "data": {
+            "1": {
+              "rule": "EMAIL",
+              "value": "",
+              "when": "{correoLaboral}!=''",
+              "msj": "Ingrese un correo válido"
+            }
+          }
+        },
+        "jefeInmediato": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el nombre del jefe inmediato"
+            }
+          }
+        },
+        "ingresosMensuales": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese un valor positivo (Ingresos mensuales)"
+            }
+          }
+        },
+        "otrosIngresos": {
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese un valor positivo (Otros ingresos)"
+            }
+          }
+        },
+        "ingresosAnuales": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese un valor positivo (Ingresos anuales totales)"
+            }
+          }
+        },
+        "beneficiario1Nombre": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el nombre del Beneficiario"
+            }
+          }
+        },
+        "beneficiario1Porcentaje": {
+          "data": {
+            "1": {
+              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
+              "value": "100",
+              "when": "",
+              "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
+            },
+            "2": {
+              "rule": "NUM<=",
+              "value": "100",
+              "when": "",
+              "msj": "El procentanje del beneficiario no debe de superar el {value} %"
+            },
+            "3": {
+              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})<=",
+              "value": "100",
+              "when": "",
+              "msj": "La suma de los porcentajes de los beneficiarios no debe superar el {value}%"
+            }
+          }
+        },
+        "beneficiario1Parentesco": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el parentesco"
+            }
+          }
+        },
+        "beneficiario1Cedula": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el número de cédula"
+            }
+          }
+        },
+        "beneficiario2Nombre": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        "beneficiario2Porcentaje": {
+          "data": {
+            "1": {
+              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
+              "value": "0",
+              "when": "{beneficiario2Nombre}!=''",
+             "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
+            },
+            "2": {
+              "rule": "NUM<=",
+              "value": "100",
+              "when": "",
+              "msj": "El procentanje del segundo beneficiario no debe de superar el {value} %"
+            },
+            "3": {
+              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})<=",
+              "value": "100",
+              "when": "{beneficiario2Nombre}!=''",
+              "msj": "La suma de los porcentajes de los beneficiarios no debe superar el {value}%"
+            }
+          }
+        },
+        "beneficiario2Parentesco": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{beneficiario2Nombre}!=''",
+              "msj": "Ingrese el parentesco del segundo beneficiario"
+            }
+          }
+        },
+        "beneficiario2Cedula": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{beneficiario2Nombre}!=''",
+              "msj": "Ingrese el número de cédula del segundo beneficiario"
+            }
+          }
+        },
+        "beneficiario3Nombre": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        "beneficiario3Porcentaje": {
+          "data": {
+            "1": {
+              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
+              "value": "0",
+              "when": "{beneficiario3Nombre}!=''",
+              "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
+            },
+            "2": {
+              "rule": "NUM<=",
+              "value": "100",
+              "when": "",
+              "msj": "El procentanje del tercer beneficiario no debe de superar el {value} %"
+            },
+            "3": {
+              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})<=",
+              "value": "100",
+              "when": "{beneficiario3Nombre}!=''",
+              "msj": "La suma de los porcentajes de los beneficiarios no debe superar el {value}%"
+            }
+          }
+        },
+        "beneficiario3Parentesco": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{beneficiario3Nombre}!=''",
+              "msj": "Ingrese el parentesco del tercer beneficiario"
+            }
+          }
+        },
+        "beneficiario3Cedula": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{beneficiario3Nombre}!=''",
+              "msj": "Ingrese el número de cédula del tercer beneficiario"
             }
           }
         }

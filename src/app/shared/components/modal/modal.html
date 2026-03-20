@@ -1,35 +1,25 @@
 @if (open) {
-  <div class="modal fade show" style="display:block;" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-body py-4">
+  <div class="modal fade show custom-modal-overlay" style="display:block;" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered custom-modal-dialog">
+      <div class="modal-content custom-modal-content">
+
+        <!-- HEADER FIJO -->
+        <div class="custom-modal-header text-center">
           <div class="mb-3 text-center">
             @if (type === 'success') {
-              <span
-                class="bg-success-subtle text-success rounded-circle d-inline-flex align-items-center justify-content-center"
-                style="width:64px;height:64px;"
-              >
+              <span class="icon-circle success">
                 <i class="bi bi-check-lg fs-1"></i>
               </span>
             } @else if (type === 'error') {
-              <span
-                class="bg-danger-subtle text-danger rounded-circle d-inline-flex align-items-center justify-content-center"
-                style="width:64px;height:64px;"
-              >
+              <span class="icon-circle danger">
                 <i class="bi bi-x-lg fs-1"></i>
               </span>
             } @else if (type === 'warning' || type === 'delete' || type === 'cancel') {
-              <span
-                class="bg-warning-subtle text-warning rounded-circle d-inline-flex align-items-center justify-content-center"
-                style="width:64px;height:64px;"
-              >
+              <span class="icon-circle warning">
                 <i class="bi bi-exclamation-triangle fs-1"></i>
               </span>
             } @else {
-              <span
-                class="bg-info-subtle text-info rounded-circle d-inline-flex align-items-center justify-content-center"
-                style="width:64px;height:64px;"
-              >
+              <span class="icon-circle info">
                 <i class="bi bi-info-lg fs-1"></i>
               </span>
             }
@@ -47,15 +37,19 @@
               </p>
             }
           </div>
+        </div>
 
+        <!-- BODY CON SCROLL -->
+        <div class="modal-body custom-modal-body">
           @if (messageFormat === 'html') {
             <div [innerHTML]="message"></div>
           } @else {
-            <p class="text-muted text-center">{{ message }}</p>
+            <p class="text-muted text-center mb-0">{{ message }}</p>
           }
         </div>
 
-        <div class="modal-footer justify-content-center border-0 pt-0">
+        <!-- FOOTER -->
+        <div class="modal-footer justify-content-center border-0 pt-0 custom-modal-footer">
           @if (type === 'delete' || type === 'cancel' || type === 'warning') {
             <button
               type="button"
@@ -87,6 +81,7 @@
             </button>
           }
         </div>
+
       </div>
     </div>
   </div>
