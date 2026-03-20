@@ -1,109 +1,113 @@
 export interface SocioForm {
   id: string | null;
 
-  nombreCompleto: string;
-  nombrePublico: string;
-  tipoIdentificacion: string;
-  numeroIdentificacion: string;
-  paisEmisor: string;
+  nombreCompleto: string | null;
+  nombrePublico: string | null;
+  tipoIdentificacion: string | null;
+  numeroIdentificacion: string | null;
+  paisEmisor: string | null;
   fechaEmision: string | null;
   fechaVencimiento: string | null;
-  paisNacimiento: string;
+  paisNacimiento: string | null;
   fechaNacimiento: string | null;
 
-  nacionalidad: string;
-  departamento: string;
-  municipio: string;
-  direccionDomiciliar: string;
-  telefono: string;
-  celular: string;
-  correo: string;
+  nacionalidadId: string | null;
+  departamentoId: string | null;
+  municipioId: string | null;
 
-  sociedadLabora: string;
-  area: string;
-  cargo: string;
+  direccionDomiciliar: string | null;
+  telefono: string | null;
+  celular: string | null;
+  correo: string | null;
+
+  sociedadLabora: string | null;
+  area: string | null;
+  cargo: string | null;
   fechaIngreso: string | null;
-  numeroIp: string;
-  correoLaboral: string;
-  jefeInmediato: string;
+  numeroIp: string | null;
+  correoLaboral: string | null;
+  jefeInmediato: string | null;
   ingresosMensuales: number | null;
   otrosIngresos: number | null;
   ingresosAnuales: number | null;
 
-  conyugeNombreCompleto: string;
-  conyugeTipoIdentificacion: string;
-  conyugeNumeroIdentificacion: string;
-  conyugePaisNacimiento: string;
-  conyugeNacionalidad: string;
+  conyugeNombreCompleto: string | null;
+  conyugeTipoIdentificacion: string | null;
+  conyugeNumeroIdentificacion: string | null;
+  conyugePaisNacimiento: string | null;
+  conyugeNacionalidadId: string | null;
 
-  beneficiario1Nombre: string;
+  beneficiario1Nombre: string | null;
   beneficiario1Porcentaje: number | null;
-  beneficiario1Parentesco: string;
-  beneficiario1Cedula: string;
+  beneficiario1Parentesco: string | null;
+  beneficiario1Cedula: string | null;
 
-  beneficiario2Nombre: string;
+  beneficiario2Nombre: string | null;
   beneficiario2Porcentaje: number | null;
-  beneficiario2Parentesco: string;
-  beneficiario2Cedula: string;
+  beneficiario2Parentesco: string | null;
+  beneficiario2Cedula: string | null;
 
-  beneficiario3Nombre: string;
+  beneficiario3Nombre: string | null;
   beneficiario3Porcentaje: number | null;
-  beneficiario3Parentesco: string;
-  beneficiario3Cedula: string;
-   activo: boolean;
+  beneficiario3Parentesco: string | null;
+  beneficiario3Cedula: string | null;
+
+  activo: boolean;
 }
 
 export const EMPTY_SOCIO: SocioForm = {
   id: null,
 
-  nombreCompleto: '',
-  nombrePublico: '',
-  tipoIdentificacion: '',
-  numeroIdentificacion: '',
-  paisEmisor: '',
+  nombreCompleto: null,
+  nombrePublico: null,
+  tipoIdentificacion: null,
+  numeroIdentificacion: null,
+  paisEmisor: null,
   fechaEmision: null,
   fechaVencimiento: null,
-  paisNacimiento: '',
+  paisNacimiento: null,
   fechaNacimiento: null,
 
-  nacionalidad: '',
-  departamento: '',
-  municipio: '',
-  direccionDomiciliar: '',
-  telefono: '',
-  celular: '',
-  correo: '',
+  nacionalidadId: null,
+  departamentoId: null,
+  municipioId: null,
 
-  sociedadLabora: '',
-  area: '',
-  cargo: '',
+  direccionDomiciliar: null,
+  telefono: null,
+  celular: null,
+  correo: null,
+
+  sociedadLabora: null,
+  area: null,
+  cargo: null,
   fechaIngreso: null,
-  numeroIp: '',
-  correoLaboral: '',
-  jefeInmediato: '',
+  numeroIp: null,
+  correoLaboral: null,
+  jefeInmediato: null,
   ingresosMensuales: null,
   otrosIngresos: null,
   ingresosAnuales: null,
 
-  conyugeNombreCompleto: '',
-  conyugeTipoIdentificacion: '',
-  conyugeNumeroIdentificacion: '',
-  conyugePaisNacimiento: '',
-  conyugeNacionalidad: '',
+  conyugeNombreCompleto: null,
+  conyugeTipoIdentificacion: null,
+  conyugeNumeroIdentificacion: null,
+  conyugePaisNacimiento: null,
+  conyugeNacionalidadId: null,
 
-  beneficiario1Nombre: '',
+  beneficiario1Nombre: null,
   beneficiario1Porcentaje: null,
-  beneficiario1Parentesco: '',
-  beneficiario1Cedula: '',
+  beneficiario1Parentesco: null,
+  beneficiario1Cedula: null,
 
-  beneficiario2Nombre: '',
+  beneficiario2Nombre: null,
   beneficiario2Porcentaje: null,
-  beneficiario2Parentesco: '',
-  beneficiario2Cedula: '',
+  beneficiario2Parentesco: null,
+  beneficiario2Cedula: null,
 
-  beneficiario3Nombre: '',
+  beneficiario3Nombre: null,
   beneficiario3Porcentaje: null,
-  beneficiario3Parentesco: '',
-  beneficiario3Cedula: '',
-   activo:  true,
+  beneficiario3Parentesco: null,
+  beneficiario3Cedula: null,
+
+  activo: true
 };

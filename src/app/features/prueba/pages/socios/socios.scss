@@ -168,3 +168,31 @@
     }
   }
 }
+
+
+.socio-card,
+.ue-shell-card,
+.card,
+.card-body,
+.socio-scroll-section {
+  overflow: visible !important;
+}
+
+.choices {
+  position: relative;
+  z-index: 40;
+}
+
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+  position: absolute !important;
+  z-index: 99999 !important;
+  overflow: visible !important;
+  max-height: 280px !important;
+}
+
+.choices__list--dropdown .choices__list,
+.choices__list[aria-expanded] .choices__list {
+  max-height: 220px !important;
+  overflow-y: auto !important;
+}

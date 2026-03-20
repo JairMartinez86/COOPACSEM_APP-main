@@ -59,6 +59,7 @@
                       <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.datosPersonales.desc' | translate }}</div>
                     </div>
                   </button>
+
                   <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'actividad-economica'"
                     [class.active]="activeSection === 'actividad-economica'"
                     [class.completed]="isCompleted('actividad-economica')"
@@ -71,6 +72,7 @@
                       </div>
                     </div>
                   </button>
+
                   <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'datos-conyuge'"
                     [class.active]="activeSection === 'datos-conyuge'" [class.completed]="isCompleted('datos-conyuge')"
                     (click)="scrollToSection('datos-conyuge')">
@@ -80,6 +82,7 @@
                       <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.datosConyuge.desc' | translate }}</div>
                     </div>
                   </button>
+
                   <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'beneficiarios'"
                     [class.active]="activeSection === 'beneficiarios'" [class.completed]="isCompleted('beneficiarios')"
                     (click)="scrollToSection('beneficiarios')">
@@ -102,9 +105,11 @@
                 <h5 class="card-title mb-1">{{ 'socios.sections.datosPersonales.title' | translate }}</h5>
                 <p class="card-subtitle mb-0">{{ 'socios.sections.datosPersonales.subtitle' | translate }}</p>
               </div>
+
               <div class="card-body p-4 d-flex flex-column gap-4">
                 <div class="socio-group">
                   <div class="socio-group-title">{{ 'socios.groups.identificacion' | translate }}</div>
+
                   <div class="row g-3">
                     <div class="col-md-6" error-notify="nombreCompleto" error-display="inline">
                       <label for="nombreCompleto" class="form-label required">{{ 'socios.fields.nombreCompleto.label' |
@@ -114,14 +119,15 @@
                         [next]="nombrePublico" type="text" class="form-control"
                         [placeholder]="'socios.fields.nombreCompleto.placeholder' | translate" JmartAutoFocus required>
                     </div>
+
                     <div class="col-md-6" error-notify="nombrePublico" error-display="inline">
                       <label for="nombrePublico" class="form-label required">{{ 'socios.fields.nombrePublico.label' |
-                        translate
-                        }}</label>
+                        translate }}</label>
                       <input #nombrePublico id="nombrePublico" name="nombrePublico" [(ngModel)]="socio.nombrePublico"
                         engineSync="nombrePublico" autoFocusNext [next]="tipoIdentificacion" type="text"
                         class="form-control" [placeholder]="'socios.fields.nombrePublico.placeholder' | translate">
                     </div>
+
                     <div class="col-md-4" error-notify="tipoIdentificacion" error-display="inline">
                       <label for="tipoIdentificacion" class="form-label required">{{
                         'socios.fields.tipoIdentificacion.label' | translate }}</label>
@@ -137,6 +143,7 @@
                         <option value="otro">{{ 'common.options.tipoIdentificacion.otro' | translate }}</option>
                       </select>
                     </div>
+
                     <div class="col-md-4" error-notify="numeroIdentificacion" error-display="inline">
                       <label for="numeroIdentificacion" class="form-label required">{{
                         'socios.fields.numeroIdentificacion.label' | translate }}</label>
@@ -145,87 +152,122 @@
                         [next]="paisEmisor" type="text" class="form-control"
                         [placeholder]="'socios.fields.numeroIdentificacion.placeholder' | translate" required>
                     </div>
+
                     <div class="col-md-4" error-notify="paisEmisor" error-display="inline">
-                      <label for="paisEmisor" class="form-label required">{{ 'socios.fields.paisEmisor.label' |
-                        translate
-                        }}</label>
-                      <input #paisEmisor id="paisEmisor" name="paisEmisor" [(ngModel)]="socio.paisEmisor"
-                        engineSync="paisEmisor" autoFocusNext [next]="fechaEmision" type="text" class="form-control"
-                        [placeholder]="'socios.fields.paisEmisor.placeholder' | translate">
+                      <label for="paisEmisor" class="form-label required">
+                        {{ 'socios.fields.paisEmisor.label' | translate }}
+                      </label>
+
+                      <select #paisEmisor id="paisEmisor" name="paisEmisor" [(ngModel)]="socio.paisEmisor"
+                        engineSync="paisEmisor" autoFocusNext [next]="fechaEmision" class="form-select">
+                        <option value="">{{ 'common.selectOption' | translate }}</option>
+                        @for (p of paisesEmisor; track p.id) {
+                        <option [value]="p.id">{{ p.nombre }}</option>
+                        }
+                      </select>
                     </div>
+
                     <div class="col-md-3" error-notify="fechaEmision" error-display="inline">
                       <label for="fechaEmision" class="form-label required">{{ 'socios.fields.fechaEmision.label' |
-                        translate
-                        }}</label>
+                        translate }}</label>
                       <input #fechaEmision id="fechaEmision" name="fechaEmision" [(ngModel)]="socio.fechaEmision"
                         engineSync="fechaEmision" autoFocusNext [next]="fechaVencimiento" type="text"
                         class="form-control" dateFormat
                         [dateFormat]="appConfigService.getCurrentSettings().dateFormat" />
                     </div>
+
                     <div class="col-md-3" error-notify="fechaVencimiento" error-display="inline">
                       <label for="fechaVencimiento" class="form-label required">{{
-                        'socios.fields.fechaVencimiento.label' |
-                        translate }}</label>
+                        'socios.fields.fechaVencimiento.label' | translate }}</label>
                       <input #fechaVencimiento id="fechaVencimiento" name="fechaVencimiento"
                         [(ngModel)]="socio.fechaVencimiento" engineSync="fechaVencimiento" autoFocusNext
                         [next]="paisNacimiento" type="text" class="form-control" dateFormat
                         [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
                     </div>
+
                     <div class="col-md-3" error-notify="paisNacimiento" error-display="inline">
                       <label for="paisNacimiento" class="form-label required">{{ 'socios.fields.paisNacimiento.label' |
-                        translate
-                        }}</label>
-                      <input #paisNacimiento id="paisNacimiento" name="paisNacimiento"
+                        translate }}</label>
+
+                      <select #paisNacimiento class="form-select" id="paisNacimiento" name="paisNacimiento"
                         [(ngModel)]="socio.paisNacimiento" engineSync="paisNacimiento" autoFocusNext
-                        [next]="fechaNacimiento" type="text" class="form-control"
-                        [placeholder]="'socios.fields.paisNacimiento.placeholder' | translate">
+                        [next]="fechaNacimiento" required>
+                        <option value="">{{ 'common.selectOption' | translate }}</option>
+                        @for (item of paisesEmisor; track item.id) {
+                        <option [value]="item.id">{{ item.nombre }}</option>
+                        }
+                      </select>
                     </div>
+
                     <div class="col-md-3" error-notify="fechaNacimiento" error-display="inline">
                       <label for="fechaNacimiento" class="form-label required">{{ 'socios.fields.fechaNacimiento.label'
-                        |
-                        translate }}</label>
+                        | translate }}</label>
                       <input #fechaNacimiento id="fechaNacimiento" name="fechaNacimiento"
                         [(ngModel)]="socio.fechaNacimiento" engineSync="fechaNacimiento" autoFocusNext
-                        [next]="nacionalidad" class="form-control" type="text" class="form-control" dateFormat
+                        [next]="nacionalidad" class="form-control" type="text" dateFormat
                         [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
                     </div>
                   </div>
                 </div>
+
                 <div class="socio-group">
                   <div class="socio-group-title">{{ 'socios.groups.ubicacionContacto' | translate }}</div>
+
                   <div class="row g-3">
-                    <div class="col-md-4" error-notify="nacionalidad" error-display="inline">
-                      <label for="nacionalidad" class="form-label required">{{ 'socios.fields.nacionalidad.label' |
-                        translate
-                        }}</label>
-                      <input #nacionalidad id="nacionalidad" name="nacionalidad" [(ngModel)]="socio.nacionalidad"
-                        engineSync="nacionalidad" autoFocusNext [next]="departamento" type="text" class="form-control"
-                        [placeholder]="'socios.fields.nacionalidad.placeholder' | translate">
+                    <div class="col-md-4" error-notify="nacionalidadId" error-display="inline">
+                      <label for="nacionalidadId" class="form-label required">
+                        {{ 'socios.fields.nacionalidad.label' | translate }}
+                      </label>
+
+                      <select #nacionalidad class="form-select" id="nacionalidadId" name="nacionalidadId"
+                        [(ngModel)]="socio.nacionalidadId" engineSync="nacionalidadId" autoFocusNext
+                        [next]="departamento" required>
+                        <option value="">{{ 'common.selectOption' | translate }}</option>
+                        @for (item of nacionalidades; track item.id) {
+                        <option [value]="item.id">{{ item.nombre }}</option>
+                        }
+                      </select>
                     </div>
-                    <div class="col-md-4" error-notify="departamento" error-display="inline">
-                      <label for="departamento" class="form-label required">{{ 'socios.fields.departamento.label' |
-                        translate
-                        }}</label>
-                      <input #departamento id="departamento" name="departamento" [(ngModel)]="socio.departamento"
-                        engineSync="departamento" autoFocusNext [next]="municipio" type="text" class="form-control"
-                        [placeholder]="'socios.fields.departamento.placeholder' | translate">
+
+                    <div class="col-md-4" error-notify="departamentoId" error-display="inline">
+                      <label for="departamentoId" class="form-label required">
+                        {{ 'socios.fields.departamento.label' | translate }}
+                      </label>
+
+                      <select #departamento class="form-select" id="departamentoId" name="departamentoId"
+                        [(ngModel)]="socio.departamentoId" engineSync="departamentoId" autoFocusNext [next]="municipio"
+                        (ngModelChange)="onDepartamentoChange($event)" required>
+                        <option value="">{{ 'common.selectOption' | translate }}</option>
+                        @for (item of departamentos; track item.id) {
+                        <option [value]="item.id">{{ item.nombre }}</option>
+                        }
+                      </select>
                     </div>
-                    <div class="col-md-4" error-notify="municipio" error-display="inline">
-                      <label for="municipio" class="form-label required">{{ 'socios.fields.municipio.label' | translate
-                        }}</label>
-                      <input #municipio id="municipio" name="municipio" [(ngModel)]="socio.municipio"
-                        engineSync="municipio" autoFocusNext [next]="direccionDomiciliar" type="text"
-                        class="form-control" [placeholder]="'socios.fields.municipio.placeholder' | translate">
+
+                    <div class="col-md-4" error-notify="municipioId" error-display="inline">
+                      <label for="municipioId" class="form-label required">
+                        {{ 'socios.fields.municipio.label' | translate }}
+                      </label>
+
+                      <select #municipio class="form-select" id="municipioId" name="municipioId"
+                        [(ngModel)]="socio.municipioId" engineSync="municipioId" autoFocusNext
+                        [next]="direccionDomiciliar" required>
+                        <option value="">{{ 'common.selectOption' | translate }}</option>
+                        @for (m of municipios; track m.id) {
+                        <option [value]="m.id">{{ m.nombre }}</option>
+                        }
+                      </select>
                     </div>
+
                     <div class="col-12" error-notify="direccionDomiciliar" error-display="inline">
                       <label for="direccionDomiciliar" class="form-label required">{{
-                        'socios.fields.direccionDomiciliar.label' |
-                        translate }}</label>
+                        'socios.fields.direccionDomiciliar.label' | translate }}</label>
                       <textarea #direccionDomiciliar id="direccionDomiciliar" name="direccionDomiciliar"
                         [(ngModel)]="socio.direccionDomiciliar" engineSync="direccionDomiciliar" autoFocusNext
                         [next]="telefono" class="form-control" rows="3"
                         [placeholder]="'socios.fields.direccionDomiciliar.placeholder' | translate"></textarea>
                     </div>
+
                     <div class="col-md-4" error-notify="telefono" error-display="inline">
                       <label for="telefono" class="form-label required">{{ 'socios.fields.telefono.label' | translate
                         }}</label>
@@ -233,6 +275,7 @@
                         autoFocusNext [next]="celular" type="text" class="form-control"
                         [placeholder]="'socios.fields.telefono.placeholder' | translate">
                     </div>
+
                     <div class="col-md-4" error-notify="celular" error-display="inline">
                       <label for="celular" class="form-label required">{{ 'socios.fields.celular.label' | translate
                         }}</label>
@@ -240,6 +283,7 @@
                         autoFocusNext [next]="correo" type="text" class="form-control"
                         [placeholder]="'socios.fields.celular.placeholder' | translate">
                     </div>
+
                     <div class="col-md-4" error-notify="correo" error-display="inline">
                       <label for="correo" class="form-label">{{ 'socios.fields.correo.label' | translate }}</label>
                       <input #correo id="correo" name="correo" [(ngModel)]="socio.correo" engineSync="correo"
@@ -250,16 +294,18 @@
                 </div>
               </div>
             </div>
+
             <div id="actividad-economica" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
                 <h5 class="card-title mb-1">{{ 'socios.sections.actividadEconomica.title' | translate }}</h5>
                 <p class="card-subtitle mb-0">{{ 'socios.sections.actividadEconomica.subtitle' | translate }}</p>
               </div>
+
               <div class="card-body p-4">
                 <div class="row g-3">
                   <div class="col-md-6" error-notify="sociedadLabora" error-display="inline">
-                    <label for="sociedadLabora" class="form-label required">{{ 'socios.fields.sociedadLabora.label' | translate
-                      }}</label>
+                    <label for="sociedadLabora" class="form-label required">{{ 'socios.fields.sociedadLabora.label' |
+                      translate }}</label>
                     <select #sociedadLabora id="sociedadLabora" name="sociedadLabora" [(ngModel)]="socio.sociedadLabora"
                       engineSync="sociedadLabora" autoFocusNext [next]="area" class="form-select required">
                       <option value="">{{ 'common.selectOption' | translate }}</option>
@@ -271,31 +317,36 @@
                       </option>
                     </select>
                   </div>
+
                   <div class="col-md-6" error-notify="area" error-display="inline">
                     <label for="area" class="form-label required">{{ 'socios.fields.area.label' | translate }}</label>
                     <input #area id="area" name="area" [(ngModel)]="socio.area" engineSync="area" autoFocusNext
                       [next]="cargo" type="text" class="form-control"
                       [placeholder]="'socios.fields.area.placeholder' | translate">
                   </div>
+
                   <div class="col-md-4" error-notify="cargo" error-display="inline">
                     <label for="cargo" class="form-label required">{{ 'socios.fields.cargo.label' | translate }}</label>
                     <input #cargo id="cargo" name="cargo" [(ngModel)]="socio.cargo" engineSync="cargo" autoFocusNext
                       [next]="fechaIngreso" type="text" class="form-control"
                       [placeholder]="'socios.fields.cargo.placeholder' | translate">
                   </div>
+
                   <div class="col-md-4" error-notify="fechaIngreso" error-display="inline">
-                    <label for="fechaIngreso" class="form-label required">{{ 'socios.fields.fechaIngreso.label' | translate
-                      }}</label>
+                    <label for="fechaIngreso" class="form-label required">{{ 'socios.fields.fechaIngreso.label' |
+                      translate }}</label>
                     <input #fechaIngreso id="fechaIngreso" name="fechaIngreso" [(ngModel)]="socio.fechaIngreso"
                       engineSync="fechaIngreso" autoFocusNext [next]="numeroIp" type="date" class="form-control"
                       [placeholder]="'socios.fields.fechaIngreso.placeholder' | translate">
                   </div>
+
                   <div class="col-md-4" error-notify="numeroIp" error-display="inline">
                     <label for="numeroIp" class="form-label">{{ 'socios.fields.numeroIp.label' | translate }}</label>
                     <input #numeroIp id="numeroIp" name="numeroIp" [(ngModel)]="socio.numeroIp" engineSync="numeroIp"
                       autoFocusNext [next]="correoLaboral" type="text" class="form-control"
                       [placeholder]="'socios.fields.numeroIp.placeholder' | translate">
                   </div>
+
                   <div class="col-md-6" error-notify="correoLaboral" error-display="inline">
                     <label for="correoLaboral" class="form-label">{{ 'socios.fields.correoLaboral.label' | translate
                       }}</label>
@@ -303,26 +354,29 @@
                       engineSync="correoLaboral" autoFocusNext [next]="jefeInmediato" type="email" class="form-control"
                       [placeholder]="'socios.fields.correoLaboral.placeholder' | translate">
                   </div>
+
                   <div class="col-md-6" error-notify="jefeInmediato" error-display="inline">
-                    <label for="jefeInmediato" class="form-label required">{{ 'socios.fields.jefeInmediato.label' | translate
-                      }}</label>
+                    <label for="jefeInmediato" class="form-label required">{{ 'socios.fields.jefeInmediato.label' |
+                      translate }}</label>
                     <input #jefeInmediato id="jefeInmediato" name="jefeInmediato" [(ngModel)]="socio.jefeInmediato"
                       engineSync="jefeInmediato" autoFocusNext [next]="ingresosMensuales" type="text"
                       class="form-control" [placeholder]="'socios.fields.jefeInmediato.placeholder' | translate">
                   </div>
+
                   <div class="col-md-4" error-notify="ingresosMensuales" error-display="inline">
-                    <label for="ingresosMensuales" class="form-label required">{{ 'socios.fields.ingresosMensuales.label' |
-                      translate }}</label>
+                    <label for="ingresosMensuales" class="form-label required">{{
+                      'socios.fields.ingresosMensuales.label' | translate }}</label>
                     <div class="input-group">
                       <input #ingresosMensuales id="ingresosMensuales" name="ingresosMensuales"
                         [(ngModel)]="socio.ingresosMensuales" engineSync="ingresosMensuales" autoFocusNext
-                        [next]="otrosIngresos"  class="form-control" numberFormat [decimals]="2"
+                        [next]="otrosIngresos" class="form-control" numberFormat [decimals]="2"
                         [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                         [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
                         placeholder="0.00">
                       <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>
+
                   <div class="col-md-4" error-notify="otrosIngresos" error-display="inline">
                     <label for="otrosIngresos" class="form-label">{{ 'socios.fields.otrosIngresos.label' | translate
                       }}</label>
@@ -336,13 +390,14 @@
                       <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>
+
                   <div class="col-md-4" error-notify="ingresosAnuales" error-display="inline">
-                    <label for="ingresosAnuales" class="form-label required">{{ 'socios.fields.ingresosAnuales.label' | translate
-                      }}</label>
+                    <label for="ingresosAnuales" class="form-label required">{{ 'socios.fields.ingresosAnuales.label' |
+                      translate }}</label>
                     <div class="input-group">
                       <input #ingresosAnuales id="ingresosAnuales" name="ingresosAnuales"
                         [(ngModel)]="socio.ingresosAnuales" engineSync="ingresosAnuales" autoFocusNext
-                        [next]="conyugeNombreCompleto"  class="form-control" numberFormat [decimals]="2"
+                        [next]="conyugeNombreCompleto" class="form-control" numberFormat [decimals]="2"
                         [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                         [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
                         placeholder="0.00">
@@ -352,11 +407,13 @@
                 </div>
               </div>
             </div>
+
             <div id="datos-conyuge" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
                 <h5 class="card-title mb-1">{{ 'socios.sections.datosConyuge.title' | translate }}</h5>
                 <p class="card-subtitle mb-0">{{ 'socios.sections.datosConyuge.subtitle' | translate }}</p>
               </div>
+
               <div class="card-body p-4">
                 <div class="row g-3">
                   <div class="col-md-6" error-notify="conyugeNombreCompleto" error-display="inline">
@@ -367,6 +424,7 @@
                       [next]="conyugeTipoIdentificacion" type="text" class="form-control"
                       [placeholder]="'socios.fields.conyugeNombreCompleto.placeholder' | translate">
                   </div>
+
                   <div class="col-md-6" error-notify="conyugeTipoIdentificacion" error-display="inline">
                     <label for="conyugeTipoIdentificacion" class="form-label">{{
                       'socios.fields.conyugeTipoIdentificacion.label' | translate }}</label>
@@ -383,6 +441,7 @@
                       <option value="otro">{{ 'common.options.conyugeTipoIdentificacion.otro' | translate }}</option>
                     </select>
                   </div>
+
                   <div class="col-md-4" error-notify="conyugeNumeroIdentificacion" error-display="inline">
                     <label for="conyugeNumeroIdentificacion" class="form-label">{{
                       'socios.fields.conyugeNumeroIdentificacion.label' | translate }}</label>
@@ -392,30 +451,46 @@
                       class="form-control"
                       [placeholder]="'socios.fields.conyugeNumeroIdentificacion.placeholder' | translate">
                   </div>
+
                   <div class="col-md-4" error-notify="conyugePaisNacimiento" error-display="inline">
-                    <label for="conyugePaisNacimiento" class="form-label">{{ 'socios.fields.conyugePaisNacimiento.label'
-                      | translate }}</label>
-                    <input #conyugePaisNacimiento id="conyugePaisNacimiento" name="conyugePaisNacimiento"
+                    <label for="conyugePaisNacimiento" class="form-label">
+                      {{ 'socios.fields.conyugePaisNacimiento.label' | translate }}
+                    </label>
+
+                    <select #conyugePaisNacimiento id="conyugePaisNacimiento" name="conyugePaisNacimiento"
                       [(ngModel)]="socio.conyugePaisNacimiento" engineSync="conyugePaisNacimiento" autoFocusNext
-                      [next]="conyugeNacionalidad" type="text" class="form-control"
-                      [placeholder]="'socios.fields.conyugePaisNacimiento.placeholder' | translate">
+                      [next]="conyugeNacionalidad" class="form-select">
+                      <option value="">{{ 'common.selectOption' | translate }}</option>
+                      @for (p of paisesEmisor; track p.id) {
+                      <option [value]="p.id">{{ p.nombre }}</option>
+                      }
+                    </select>
                   </div>
-                  <div class="col-md-4" error-notify="conyugeNacionalidad" error-display="inline">
-                    <label for="conyugeNacionalidad" class="form-label">{{ 'socios.fields.conyugeNacionalidad.label' |
-                      translate }}</label>
-                    <input #conyugeNacionalidad id="conyugeNacionalidad" name="conyugeNacionalidad"
-                      [(ngModel)]="socio.conyugeNacionalidad" engineSync="conyugeNacionalidad" autoFocusNext
-                      [next]="beneficiario1Nombre" type="text" class="form-control"
-                      [placeholder]="'socios.fields.conyugeNacionalidad.placeholder' | translate">
+
+                  <div class="col-md-4" error-notify="conyugeNacionalidadId" error-display="inline">
+                    <label for="conyugeNacionalidadId" class="form-label">
+                      {{ 'socios.fields.conyugeNacionalidad.label' | translate }}
+                    </label>
+
+                    <select #conyugeNacionalidad id="conyugeNacionalidadId" name="conyugeNacionalidadId"
+                      [(ngModel)]="socio.conyugeNacionalidadId" engineSync="conyugeNacionalidadId" autoFocusNext
+                      [next]="beneficiario1Nombre" class="form-select">
+                      <option value="">{{ 'common.selectOption' | translate }}</option>
+                      @for (item of nacionalidades; track item.id) {
+                      <option [value]="item.id">{{ item.nombre }}</option>
+                      }
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
+
             <div id="beneficiarios" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
                 <h5 class="card-title mb-1">{{ 'socios.sections.beneficiarios.title' | translate }}</h5>
                 <p class="card-subtitle mb-0">{{ 'socios.sections.beneficiarios.subtitle' | translate }}</p>
               </div>
+
               <div class="card-body p-4">
                 <div class="d-flex flex-column gap-3">
                   <div class="beneficiary-card principal">
@@ -426,15 +501,17 @@
                       </div>
                       <span class="badge badge-soft-primary">{{ 'socios.beneficiarios.1.badge' | translate }}</span>
                     </div>
+
                     <div class="row g-3">
                       <div class="col-md-4" error-notify="beneficiario1Nombre" error-display="inline">
-                        <label for="beneficiario1Nombre" class="form-label required">{{ 'socios.fields.beneficiario1Nombre.label'
-                          | translate }}</label>
+                        <label for="beneficiario1Nombre" class="form-label required">{{
+                          'socios.fields.beneficiario1Nombre.label' | translate }}</label>
                         <input #beneficiario1Nombre id="beneficiario1Nombre" name="beneficiario1Nombre"
                           [(ngModel)]="socio.beneficiario1Nombre" engineSync="beneficiario1Nombre" autoFocusNext
                           [next]="beneficiario1Porcentaje" type="text" class="form-control"
                           [placeholder]="'socios.fields.beneficiario1Nombre.placeholder' | translate">
                       </div>
+
                       <div class="col-md-2" error-notify="beneficiario1Porcentaje" error-display="inline">
                         <label for="beneficiario1Porcentaje" class="form-label required">{{
                           'socios.fields.beneficiario1Porcentaje.label' | translate }}</label>
@@ -446,6 +523,7 @@
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
+
                       <div class="col-md-3" error-notify="beneficiario1Parentesco" error-display="inline">
                         <label for="beneficiario1Parentesco" class="form-label required">{{
                           'socios.fields.beneficiario1Parentesco.label' | translate }}</label>
@@ -454,9 +532,10 @@
                           [next]="beneficiario1Cedula" type="text" class="form-control"
                           [placeholder]="'socios.fields.beneficiario1Parentesco.placeholder' | translate">
                       </div>
+
                       <div class="col-md-3" error-notify="beneficiario1Cedula" error-display="inline">
-                        <label for="beneficiario1Cedula" class="form-label required">{{ 'socios.fields.beneficiario1Cedula.label'
-                          | translate }}</label>
+                        <label for="beneficiario1Cedula" class="form-label required">{{
+                          'socios.fields.beneficiario1Cedula.label' | translate }}</label>
                         <input #beneficiario1Cedula id="beneficiario1Cedula" name="beneficiario1Cedula"
                           [(ngModel)]="socio.beneficiario1Cedula" engineSync="beneficiario1Cedula" autoFocusNext
                           [next]="beneficiario2Nombre" type="text" class="form-control"
@@ -464,6 +543,7 @@
                       </div>
                     </div>
                   </div>
+
                   <div class="beneficiary-card">
                     <div class="beneficiary-head">
                       <div>
@@ -473,6 +553,7 @@
                       <span class="badge badge-outline-secondary">{{ 'socios.beneficiarios.2.badge' | translate
                         }}</span>
                     </div>
+
                     <div class="row g-3">
                       <div class="col-md-4" error-notify="beneficiario2Nombre" error-display="inline">
                         <label for="beneficiario2Nombre" class="form-label">{{ 'socios.fields.beneficiario2Nombre.label'
@@ -482,6 +563,7 @@
                           [next]="beneficiario2Porcentaje" type="text" class="form-control"
                           [placeholder]="'socios.fields.beneficiario2Nombre.placeholder' | translate">
                       </div>
+
                       <div class="col-md-2" error-notify="beneficiario2Porcentaje" error-display="inline">
                         <label for="beneficiario2Porcentaje" class="form-label">{{
                           'socios.fields.beneficiario2Porcentaje.label' | translate }}</label>
@@ -493,6 +575,7 @@
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
+
                       <div class="col-md-3" error-notify="beneficiario2Parentesco" error-display="inline">
                         <label for="beneficiario2Parentesco" class="form-label">{{
                           'socios.fields.beneficiario2Parentesco.label' | translate }}</label>
@@ -501,6 +584,7 @@
                           [next]="beneficiario2Cedula" type="text" class="form-control"
                           [placeholder]="'socios.fields.beneficiario2Parentesco.placeholder' | translate">
                       </div>
+
                       <div class="col-md-3" error-notify="beneficiario2Cedula" error-display="inline">
                         <label for="beneficiario2Cedula" class="form-label">{{ 'socios.fields.beneficiario2Cedula.label'
                           | translate }}</label>
@@ -511,6 +595,7 @@
                       </div>
                     </div>
                   </div>
+
                   <div class="beneficiary-card">
                     <div class="beneficiary-head">
                       <div>
@@ -520,6 +605,7 @@
                       <span class="badge badge-outline-secondary">{{ 'socios.beneficiarios.3.badge' | translate
                         }}</span>
                     </div>
+
                     <div class="row g-3">
                       <div class="col-md-4" error-notify="beneficiario3Nombre" error-display="inline">
                         <label for="beneficiario3Nombre" class="form-label">{{ 'socios.fields.beneficiario3Nombre.label'
@@ -529,6 +615,7 @@
                           [next]="beneficiario3Porcentaje" type="text" class="form-control"
                           [placeholder]="'socios.fields.beneficiario3Nombre.placeholder' | translate">
                       </div>
+
                       <div class="col-md-2" error-notify="beneficiario3Porcentaje" error-display="inline">
                         <label for="beneficiario3Porcentaje" class="form-label">{{
                           'socios.fields.beneficiario3Porcentaje.label' | translate }}</label>
@@ -540,6 +627,7 @@
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
+
                       <div class="col-md-3" error-notify="beneficiario3Parentesco" error-display="inline">
                         <label for="beneficiario3Parentesco" class="form-label">{{
                           'socios.fields.beneficiario3Parentesco.label' | translate }}</label>
@@ -548,6 +636,7 @@
                           [next]="beneficiario3Cedula" type="text" class="form-control"
                           [placeholder]="'socios.fields.beneficiario3Parentesco.placeholder' | translate">
                       </div>
+
                       <div class="col-md-3" error-notify="beneficiario3Cedula" error-display="inline">
                         <label for="beneficiario3Cedula" class="form-label">{{ 'socios.fields.beneficiario3Cedula.label'
                           | translate }}</label>
@@ -573,7 +662,6 @@
                 {{ 'common.actions.clear' | translate }}
               </button>
 
-
               <button #saveButton type="button" class="btn btn-primary" (click)="onSave()"
                 [appPermission]="['new', 'edit']" autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
                 <i class="bi bi-save me-1"></i>
@@ -582,9 +670,6 @@
             </div>
           </div>
         </div>
-
-
-
       </div>
     </form>
   </div>

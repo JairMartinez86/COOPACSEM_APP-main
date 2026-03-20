@@ -31,6 +31,11 @@
       }
     }
   },
+  "choices": {
+    "searchPlaceholder": "Buscar...",
+    "noResults": "No se encontraron resultados",
+    "noChoices": "No hay opciones disponibles"
+  },
   "draft": {
     "leavePageTitle": "Advertencia",
     "leavePageMessage": "Tienes cambios sin guardar. Si sales de esta página se perderán. ¿Deseas continuar?"
@@ -332,15 +337,15 @@
           "label": "Identificación",
           "tooltip": "Campo requerido"
         },
-        "nacionalidad": {
+        "nacionalidadId": {
           "label": "Nacionalidad",
           "tooltip": "Campo requerido"
         },
-        "departamento": {
+        "departamentoId": {
           "label": "Nacionalidad",
           "tooltip": "Campo requerido"
         },
-        "municipio": {
+        "municipioId": {
           "label": "Nacionalidad",
           "tooltip": "Campo requerido"
         },
@@ -416,7 +421,7 @@
           "label": "Datos del cónyuge",
           "tooltip": "Campo opcional"
         },
-        "conyugeNacionalidad": {
+        "conyugeNacionalidadId": {
           "label": "Datos del cónyuge",
           "tooltip": "Campo opcional"
         },
@@ -560,17 +565,17 @@
             }
           }
         },
-        "nacionalidad": {
+        "nacionalidadId": {
           "data": {
             "1": {
               "rule": "LEN>",
               "when": "",
               "value": "0",
-              "msj": "Ingrese una nacionalidad"
+              "msj": "Seleccione una nacionalidad"
             }
           }
         },
-        "departamento": {
+        "departamentoId": {
           "data": {
             "1": {
               "rule": "LEN>",
@@ -580,7 +585,7 @@
             }
           }
         },
-        "municipio": {
+        "municipioId": {
           "data": {
             "1": {
               "rule": "LEN>",
@@ -727,6 +732,58 @@
               "value": "0",
               "when": "",
               "msj": "Ingrese un valor positivo (Ingresos anuales totales)"
+            }
+          }
+        },
+
+        "conyugeNombreCompleto":{
+           "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        
+        "conyugeTipoIdentificacion":{
+           "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+         "conyugeNumeroIdentificacion":{
+           "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+         "conyugePaisNacimiento":{
+           "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        "conyugeNacionalidadId":{
+           "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
             }
           }
         },

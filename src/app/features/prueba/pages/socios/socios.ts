@@ -8,6 +8,7 @@ import {
   Inject,
   NgZone,
   OnDestroy,
+  OnInit,
   PLATFORM_ID,
   QueryList,
   ViewChild,
@@ -28,8 +29,6 @@ import {
   JMartErrorNotifyDirective,
   JMartMassiveValidationService,
   JMartNumberFormatDirective,
-
-  
 } from '@JairMartinez86/jmartinez-validator';
 import { DraftFormService } from '../../../../core/services/draft-manager-options.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -38,6 +37,10 @@ import { AppPermissionDirective } from '../../../../core/services/app-permission
 import { LanguageService } from '../../../../core/services/languageService';
 import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
 import { AppConfigService } from '../../../../core/services/app-config.service';
+import { CatalogosService } from '../../../../shared/service/CatalogosService';
+import { CatalogoItem, MunicipioItem } from '../../../../shared/interfaces/catalogo.model';
+
+declare const Choices: any;
 
 type DraftRef<T> = {
   saveNow(): void;
@@ -64,14 +67,26 @@ type DraftRef<T> = {
   templateUrl: './socios.html',
   styleUrl: './socios.scss',
 })
-export class SociosComponent implements AfterViewInit, OnDestroy {
+export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('socioFormRef') formRef?: NgForm;
   @ViewChild('wizardSlot') wizardSlotRef?: ElementRef<HTMLElement>;
   @ViewChild('wizardCard') wizardCardRef?: ElementRef<HTMLElement>;
   @ViewChild('wizardSteps') wizardStepsRef?: ElementRef<HTMLElement>;
   @ViewChildren('wizardStep') wizardStepRefs?: QueryList<ElementRef<HTMLElement>>;
 
+  @ViewChild('tipoIdentificacion') tipoIdentificacionSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('paisEmisor') paisEmisorSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('paisNacimiento') paisNacimientoSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('nacionalidad') nacionalidadSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('departamento') departamentoSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('municipio') municipioSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('sociedadLabora') sociedadLaboraSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('conyugeTipoIdentificacion') conyugeTipoIdentificacionSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('conyugePaisNacimiento') conyugePaisNacimientoSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('conyugeNacionalidad') conyugeNacionalidadSelectRef?: ElementRef<HTMLSelectElement>;
+
   private sociosService = inject(SociosService);
+  private catalogosService = inject(CatalogosService);
   private translate = inject(TranslateService);
   private draftService = inject(DraftFormService);
   private engine = inject(JMartMassiveValidationService);
@@ -79,7 +94,7 @@ export class SociosComponent implements AfterViewInit, OnDestroy {
   private langService = inject(LanguageService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-   public appConfigService = inject(AppConfigService);
+  public appConfigService = inject(AppConfigService);
 
   activeSection = 'datos-personales';
 
@@ -90,18 +105,19 @@ export class SociosComponent implements AfterViewInit, OnDestroy {
     'beneficiarios',
   ];
 
-
-
   socio: SocioForm = { ...EMPTY_SOCIO };
   copy: SocioForm = { ...EMPTY_SOCIO };
 
-   breadcrumbs = [
+  breadcrumbs = [
     { label: '', url: '' },
     { label: '', url: '/' },
     { label: '' }
   ];
 
-
+  paisesEmisor: CatalogoItem[] = [];
+  nacionalidades: CatalogoItem[] = [];
+  departamentos: CatalogoItem[] = [];
+  municipios: MunicipioItem[] = [];
 
   formReady = false;
   dataReady = false;
@@ -119,8 +135,20 @@ export class SociosComponent implements AfterViewInit, OnDestroy {
   wizardLeft = '';
   wizardWidth = '';
   wizardZIndex = '';
+
   private langChangeSub?: Subscription;
   languages: any[] = [];
+
+  private tipoIdentificacionChoices: any;
+  private paisEmisorChoices: any;
+  private paisNacimientoChoices: any;
+  private nacionalidadChoices: any;
+  private departamentoChoices: any;
+  private municipioChoices: any;
+  private sociedadLaboraChoices: any;
+  private conyugeTipoIdentificacionChoices: any;
+  private conyugePaisNacimientoChoices: any;
+  private conyugeNacionalidadChoices: any;
 
   private readonly isBrowser: boolean;
   private readonly desktopBreakpoint = 1200;
@@ -172,36 +200,19 @@ export class SociosComponent implements AfterViewInit, OnDestroy {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
+  ngOnInit(): void {
+    this.loadBreadcrumbs();
+    this.loadCatalogos();
 
-ngOnInit(): void {
-  this.loadBreadcrumbs();
-
-  console.log(this.appConfigService.getCurrentSettings().dateFormat)
-  this.subs.add(
-    this.translate.onLangChange.subscribe(() => {
-      this.loadBreadcrumbs();
-      this.loadSocioConfig();
-      this.cdr.detectChanges();
-    })
-  );
-}
-  
-  private loadBreadcrumbs(): void {
-  const url = this.router.url.toLowerCase();
-
-  if (url.endsWith('/new')) {
-    this.breadcrumbs = this.translate.instant('socios.breadcrumbs.new') || [];
-    return;
+    this.subs.add(
+      this.translate.onLangChange.subscribe(() => {
+        this.loadBreadcrumbs();
+        this.loadSocioConfig();
+        this.loadCatalogos();
+        this.cdr.detectChanges();
+      })
+    );
   }
-
-  if (url.endsWith('/edit')) {
-    this.breadcrumbs = this.translate.instant('socios.breadcrumbs.edit') || [];
-    return;
-  }
-
-  this.breadcrumbs = this.translate.instant('socios.breadcrumbs.list') || [];
-}
-
 
   ngAfterViewInit(): void {
     if (!this.isBrowser) return;
@@ -219,64 +230,149 @@ ngOnInit(): void {
     this.langChangeSub = this.translate.onLangChange.subscribe(() => {
       this.languages = this.langService.getAvailableLanguages();
       this.loadSocioConfig();
+      this.refreshAllChoices();
     });
 
     setTimeout(() => {
       this.updateActiveSectionByScroll();
       this.updateWizardAffix();
       this.syncWizardHorizontalScroll();
+      this.initAllChoices();
       this.cdr.detectChanges();
-    }, 0);
+    }, 100);
   }
 
   ngOnDestroy(): void {
-    if (!this.isBrowser) return;
+    if (this.isBrowser) {
+      window.removeEventListener('scroll', this.onScrollBound);
+      window.removeEventListener('resize', this.onResizeBound);
+      window.document.removeEventListener('focusin', this.onFocusInBound);
+      window.document.removeEventListener('click', this.onClickBound);
+    }
 
-    window.removeEventListener('scroll', this.onScrollBound);
-    window.removeEventListener('resize', this.onResizeBound);
-    window.document.removeEventListener('focusin', this.onFocusInBound);
-    window.document.removeEventListener('click', this.onClickBound);
-
+    this.destroyAllChoices();
     this.langChangeSub?.unsubscribe();
     this.draftRef?.cancel();
+    this.subs.unsubscribe();
   }
 
+  private destroyAllChoices(): void {
+    try { this.tipoIdentificacionChoices?.destroy(); } catch {}
+    try { this.paisEmisorChoices?.destroy(); } catch {}
+    try { this.paisNacimientoChoices?.destroy(); } catch {}
+    try { this.nacionalidadChoices?.destroy(); } catch {}
+    try { this.departamentoChoices?.destroy(); } catch {}
+    try { this.municipioChoices?.destroy(); } catch {}
+    try { this.sociedadLaboraChoices?.destroy(); } catch {}
+    try { this.conyugeTipoIdentificacionChoices?.destroy(); } catch {}
+    try { this.conyugePaisNacimientoChoices?.destroy(); } catch {}
+    try { this.conyugeNacionalidadChoices?.destroy(); } catch {}
+  }
+
+  private initAllChoices(): void {
+    this.initTipoIdentificacionChoices();
+    this.initPaisEmisorChoices();
+    this.initPaisNacimientoChoices();
+    this.initNacionalidadChoices();
+    this.initDepartamentoChoices();
+    this.initMunicipioChoices();
+    this.initSociedadLaboraChoices();
+    this.initConyugeTipoIdentificacionChoices();
+    this.initConyugePaisNacimientoChoices();
+    this.initConyugeNacionalidadChoices();
+  }
+
+  private refreshAllChoices(): void {
+    if (!this.isBrowser) return;
+    setTimeout(() => this.initAllChoices(), 50);
+  }
+
+  private removeOrphanChoicesWrapper(element: HTMLSelectElement): void {
+    const nextSibling = element.nextElementSibling as HTMLElement | null;
+    if (nextSibling?.classList.contains('choices')) {
+      nextSibling.remove();
+    }
+  }
+
+  private findCatalogIdByValue(items: Array<{ id: any; nombre?: string | null }>, value: any): string | null {
+    const raw = String(value ?? '').trim();
+    if (!raw) return null;
+
+    const byId = items.find(x => String(x.id) === raw);
+    if (byId) return String(byId.id);
+
+    const byNombre = items.find(
+      x => String(x.nombre ?? '').trim().toLowerCase() === raw.toLowerCase()
+    );
+
+    return byNombre ? String(byNombre.id) : null;
+  }
+
+  private syncCatalogValuesWithOptions(): void {
+    this.socio.paisEmisor = this.findCatalogIdByValue(this.paisesEmisor, this.socio.paisEmisor);
+    this.copy.paisEmisor = this.findCatalogIdByValue(this.paisesEmisor, this.copy.paisEmisor);
+
+    this.socio.paisNacimiento = this.findCatalogIdByValue(this.paisesEmisor, this.socio.paisNacimiento);
+    this.copy.paisNacimiento = this.findCatalogIdByValue(this.paisesEmisor, this.copy.paisNacimiento);
+
+    this.socio.conyugePaisNacimiento = this.findCatalogIdByValue(this.paisesEmisor, this.socio.conyugePaisNacimiento);
+    this.copy.conyugePaisNacimiento = this.findCatalogIdByValue(this.paisesEmisor, this.copy.conyugePaisNacimiento);
+
+    this.socio.nacionalidadId = this.findCatalogIdByValue(this.nacionalidades, this.socio.nacionalidadId);
+    this.copy.nacionalidadId = this.findCatalogIdByValue(this.nacionalidades, this.copy.nacionalidadId);
+
+    this.socio.conyugeNacionalidadId = this.findCatalogIdByValue(this.nacionalidades, this.socio.conyugeNacionalidadId);
+    this.copy.conyugeNacionalidadId = this.findCatalogIdByValue(this.nacionalidades, this.copy.conyugeNacionalidadId);
+  }
+
+  private loadBreadcrumbs(): void {
+    const url = this.router.url.toLowerCase();
+
+    if (url.endsWith('/new')) {
+      this.breadcrumbs = this.translate.instant('socios.breadcrumbs.new') || [];
+      return;
+    }
+
+    if (url.endsWith('/edit')) {
+      this.breadcrumbs = this.translate.instant('socios.breadcrumbs.edit') || [];
+      return;
+    }
+
+    this.breadcrumbs = this.translate.instant('socios.breadcrumbs.list') || [];
+  }
 
   private initRouteModeAndLoad(): void {
-  const id = this.route.snapshot.paramMap.get('id');
-  const url = this.router.url.toLowerCase();
+    const id = this.route.snapshot.paramMap.get('id');
+    const url = this.router.url.toLowerCase();
 
-  this.socioId = id;
-  this.loadBreadcrumbs();
+    this.socioId = id;
+    this.loadBreadcrumbs();
 
-  if (url.endsWith('/new')) {
-    this.mode = 'create';
-    this.socio = { ...EMPTY_SOCIO };
-    this.copy = { ...EMPTY_SOCIO };
-    this.patchEngineFromSocio();
-    this.dataReady = true;
-    this.tryInitDraftManager();
-    return;
+    if (url.endsWith('/new')) {
+      this.mode = 'create';
+      this.socio = { ...EMPTY_SOCIO };
+      this.copy = { ...EMPTY_SOCIO };
+      this.patchEngineFromSocio();
+      this.dataReady = true;
+      this.tryInitDraftManager();
+      this.refreshAllChoices();
+      return;
+    }
+
+    this.mode = url.endsWith('/edit') ? 'edit' : 'view';
+
+    if (!id) {
+      this.notify.show?.(
+        this.translate.instant('socios.messages.missingId'),
+        '',
+        'warning'
+      );
+      this.router.navigate(['/socios']);
+      return;
+    }
+
+    this.loadSocioById(id);
   }
-
-  if (url.endsWith('/edit')) {
-    this.mode = 'edit';
-  } else {
-    this.mode = 'view';
-  }
-
-  if (!id) {
-    this.notify.show?.(
-      this.translate.instant('socios.messages.missingId'),
-      '',
-      'warning'
-    );
-    this.router.navigate(['/socios']);
-    return;
-  }
-
-  this.loadSocioById(id);
-}
 
   private loadSocioById(id: string): void {
     this.loading = true;
@@ -289,23 +385,70 @@ ngOnInit(): void {
           const socioApi = res?.data?.socio ?? null;
 
           if (!socioApi) {
-           this.notify.show?.(this.translate.instant('socios.messages.notFound'), '', 'warning');
+            this.notify.show?.(
+              this.translate.instant('socios.messages.notFound'),
+              '',
+              'warning'
+            );
             this.router.navigate(['/socios']);
             return;
           }
 
           const socioMapped = this.toSocioForm(socioApi);
 
-          this.socio = { ...socioMapped };
-          this.copy = { ...socioMapped };
+          const paisEmisorId = this.findCatalogIdByValue(
+            this.paisesEmisor,
+            socioApi?.paisEmisorId ?? socioApi?.paisEmisor ?? socioMapped.paisEmisor
+          );
+
+          const paisNacimientoId = this.findCatalogIdByValue(
+            this.paisesEmisor,
+            socioApi?.paisNacimientoId ?? socioApi?.paisNacimiento ?? socioMapped.paisNacimiento
+          );
+
+          const nacionalidadId = this.findCatalogIdByValue(
+            this.nacionalidades,
+            socioApi?.nacionalidadId ?? socioApi?.nacionalidad ?? socioMapped.nacionalidadId
+          );
+
+          const conyugePaisNacimientoId = this.findCatalogIdByValue(
+            this.paisesEmisor,
+            socioApi?.conyugePaisNacimientoId ?? socioApi?.conyugePaisNacimiento
+          );
+
+          const conyugeNacionalidadId = this.findCatalogIdByValue(
+            this.nacionalidades,
+            socioApi?.conyugeNacionalidadId ?? socioApi?.conyugeNacionalidad
+          );
+
+          this.socio = {
+            ...socioMapped,
+            paisEmisor: paisEmisorId,
+            paisNacimiento: paisNacimientoId,
+            nacionalidadId,
+            conyugePaisNacimiento: conyugePaisNacimientoId,
+            conyugeNacionalidadId
+          };
+
+          this.copy = {
+            ...socioMapped,
+            paisEmisor: paisEmisorId,
+            paisNacimiento: paisNacimientoId,
+            nacionalidadId,
+            conyugePaisNacimiento: conyugePaisNacimientoId,
+            conyugeNacionalidadId
+          };
 
           this.patchEngineFromSocio();
           this.engine.clearErrors?.();
+
+          this.loadMunicipiosIfNeeded();
 
           this.dataReady = true;
           this.tryInitDraftManager();
 
           this.cdr.detectChanges();
+          this.refreshAllChoices();
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -314,41 +457,130 @@ ngOnInit(): void {
       });
   }
 
-loadSocioConfig(): void {
-  this.engine.resetRules?.();
-  this.engine.clearFieldsMeta?.();
+  loadSocioConfig(): void {
+    this.engine.resetRules?.();
+    this.engine.clearFieldsMeta?.();
 
-  const fieldMeta = this.translate.instant('socios.form.fieldMeta') || {};
-  const validations = this.translate.instant('socios.form.validations') || {};
+    const fieldMeta = this.translate.instant('socios.form.fieldMeta') || {};
+    const validations = this.translate.instant('socios.form.validations') || {};
 
-  for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
-    this.engine.addFieldMeta?.({
-      id: fieldId,
-      label: meta?.label ?? '',
-      tooltip: meta?.tooltip ?? '',
-      tooltipIconClass: meta?.tooltipIconClass ?? '',
+    for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
+      this.engine.addFieldMeta?.({
+        id: fieldId,
+        label: meta?.label ?? '',
+        tooltip: meta?.tooltip ?? '',
+        tooltipIconClass: meta?.tooltipIconClass ?? '',
+      });
+    }
+
+    for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
+      const rules = fieldConfig?.data || {};
+
+      for (const rule of Object.values(rules) as any[]) {
+        const value = rule?.value ?? '';
+
+        this.engine.addRule?.({
+          id: fieldId,
+          condition: String(rule?.rule ?? '').trim(),
+          when: String(rule?.when ?? '').trim(),
+          value,
+          message: String(rule?.msj ?? '').replace('{value}', String(value ?? '')),
+          classIconSuccess: rule?.classIconSuccess ?? '',
+          classIconError: rule?.classIconError ?? '',
+        });
+      }
+    }
+  }
+
+  private loadCatalogos(): void {
+    this.catalogosService.getPaises().subscribe({
+      next: (res: any) => {
+        this.paisesEmisor = [...(res?.data?.paises ?? [])];
+        this.syncCatalogValuesWithOptions();
+        this.cdr.detectChanges();
+        this.refreshAllChoices();
+      },
+      error: () => {
+        this.paisesEmisor = [];
+        this.refreshAllChoices();
+      }
+    });
+
+    this.catalogosService.getNacionalidades().subscribe({
+      next: (res: any) => {
+        this.nacionalidades = [...(res?.data?.nacionalidades ?? [])];
+        this.syncCatalogValuesWithOptions();
+        this.cdr.detectChanges();
+        this.refreshAllChoices();
+      },
+      error: () => {
+        this.nacionalidades = [];
+        this.refreshAllChoices();
+      }
+    });
+
+    this.catalogosService.getDepartamentos().subscribe({
+      next: (res: any) => {
+        this.departamentos = res?.data?.departamentos ?? [];
+        this.cdr.detectChanges();
+        this.refreshAllChoices();
+      },
+      error: () => {
+        this.departamentos = [];
+        this.refreshAllChoices();
+      }
     });
   }
 
-  for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
-    const rules = fieldConfig?.data || {};
+  onDepartamentoChange(departamentoId: string): void {
+    this.socio.departamentoId = departamentoId || null;
+    this.socio.municipioId = null;
+    this.municipios = [];
 
-    for (const rule of Object.values(rules) as any[]) {
-      const value = rule?.value ?? '';
+    this.patchEngineFromSocio();
+    this.cdr.detectChanges();
+    this.refreshAllChoices();
 
-      this.engine.addRule?.({
-        id: fieldId,
-        condition: String(rule?.rule ?? '').trim(),
-        when: String(rule?.when ?? '').trim(),
-        value,
-        message: String(rule?.msj ?? '').replace('{value}', String(value ?? '')),
-        classIconSuccess: rule?.classIconSuccess ?? '',
-        classIconError: rule?.classIconError ?? '',
-      });
+    if (!this.socio.departamentoId) {
+      return;
     }
-  }
-}
 
+    this.catalogosService.getMunicipios(this.socio.departamentoId).subscribe({
+      next: (res: any) => {
+        this.municipios = [...(res?.data?.municipios ?? [])];
+        this.patchEngineFromSocio();
+        this.cdr.detectChanges();
+        this.refreshAllChoices();
+      },
+      error: () => {
+        this.municipios = [];
+        this.cdr.detectChanges();
+        this.refreshAllChoices();
+      }
+    });
+  }
+
+  private loadMunicipiosIfNeeded(): void {
+    if (!this.socio.departamentoId) {
+      this.municipios = [];
+      this.cdr.detectChanges();
+      this.refreshAllChoices();
+      return;
+    }
+
+    this.catalogosService.getMunicipios(this.socio.departamentoId).subscribe({
+      next: (res: any) => {
+        this.municipios = [...(res?.data?.municipios ?? [])];
+        this.cdr.detectChanges();
+        this.refreshAllChoices();
+      },
+      error: () => {
+        this.municipios = [];
+        this.cdr.detectChanges();
+        this.refreshAllChoices();
+      }
+    });
+  }
 
   private tryInitDraftManager(): void {
     if (!this.formReady || !this.dataReady || !this.formRef || this.draftRef) {
@@ -368,10 +600,15 @@ loadSocioConfig(): void {
             ...this.copy,
             ...(data ?? {}),
           });
+
+          this.syncCatalogValuesWithOptions();
+          this.loadMunicipiosIfNeeded();
+          this.refreshAllChoices();
         },
 
         restoreSavedData: (data: Partial<SocioForm> | null | undefined) => {
           this.copy = this.toSocioForm(data);
+          this.syncCatalogValuesWithOptions();
         },
 
         patchEngine: (data: Partial<SocioForm> | null | undefined) => {
@@ -393,6 +630,13 @@ loadSocioConfig(): void {
     return {
       ...data,
       id: data?.id ?? null,
+      paisEmisor: data?.paisEmisor ?? null,
+      paisNacimiento: data?.paisNacimiento ?? null,
+      nacionalidadId: data?.nacionalidadId ?? null,
+      departamentoId: data?.departamentoId ?? null,
+      municipioId: data?.municipioId ?? null,
+      conyugePaisNacimiento: data?.conyugePaisNacimiento ?? null,
+      conyugeNacionalidadId: data?.conyugeNacionalidadId ?? null,
       ingresosMensuales:
         data?.ingresosMensuales == null ? null : Number(data.ingresosMensuales),
       otrosIngresos:
@@ -445,7 +689,7 @@ loadSocioConfig(): void {
 
     this.sociosService
       .save(payload)
-      .pipe(finalize(() => { }))
+      .pipe(finalize(() => {}))
       .subscribe({
         next: (res: any) => {
           const savedSocio = this.toSocioForm(res?.data?.socio ?? payload);
@@ -453,11 +697,13 @@ loadSocioConfig(): void {
           this.socio = { ...savedSocio };
           this.copy = { ...savedSocio };
 
+          this.syncCatalogValuesWithOptions();
           this.patchEngineFromSocio();
           this.engine.clearErrors?.();
           this.draftRef?.clear();
 
           this.notify.showFromApiResponse?.(res, 'success');
+          this.refreshAllChoices();
 
           if (this.mode === 'create' && savedSocio.id) {
             this.router.navigate(['/socios', savedSocio.id, 'edit']);
@@ -474,8 +720,11 @@ loadSocioConfig(): void {
     this.draftRef?.cancel();
 
     this.socio = { ...this.copy };
+    this.syncCatalogValuesWithOptions();
     this.patchEngineFromSocio();
     this.engine.clearErrors?.();
+    this.loadMunicipiosIfNeeded();
+    this.refreshAllChoices();
   }
 
   @HostListener('window:beforeunload', ['$event'])
@@ -498,13 +747,9 @@ loadSocioConfig(): void {
 
   canDeactivate(): boolean | Observable<boolean> {
     const forceLogout = sessionStorage.getItem('force-logout') === '1';
-    if (forceLogout) {
-      return true;
-    }
+    if (forceLogout) return true;
 
-    if (!this.hasUnsavedChanges()) {
-      return true;
-    }
+    if (!this.hasUnsavedChanges()) return true;
 
     const title =
       this.translate.instant('draft.leavePageTitle') || 'Advertencia';
@@ -655,5 +900,204 @@ loadSocioConfig(): void {
 
     const targetLeft = Math.max(0, activeStep.offsetLeft - 12);
     container.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  }
+
+  private initChoicesFromDom(
+    elementRef: ElementRef<HTMLSelectElement> | undefined,
+    currentValue: string | null | undefined,
+    assignInstance: (instance: any) => void,
+    previousInstance?: any,
+    searchResultLimit?: number
+  ): void {
+    const element = elementRef?.nativeElement;
+    if (!element) return;
+
+    try {
+      previousInstance?.destroy();
+    } catch {}
+
+    this.removeOrphanChoicesWrapper(element);
+
+    const instance = new Choices(element, {
+      searchEnabled: true,
+      searchChoices: true,
+      searchFloor: 0,
+      searchResultLimit: searchResultLimit ?? 9999,
+      shouldSort: false,
+      allowHTML: false,
+      itemSelectText: '',
+      placeholder: true,
+      placeholderValue: this.translate.instant('common.selectOption'),
+      searchPlaceholderValue: this.translate.instant('choices.searchPlaceholder') || 'Buscar...',
+      noResultsText: this.translate.instant('choices.noResults') || 'No se encontraron resultados',
+      noChoicesText: this.translate.instant('choices.noChoices') || 'No hay opciones disponibles',
+      searchFields: ['label', 'value'],
+      position: 'bottom',
+      renderChoiceLimit: -1
+    });
+
+    assignInstance(instance);
+
+    if (currentValue != null && currentValue !== '') {
+      requestAnimationFrame(() => {
+        this.setChoicesValue(instance, currentValue);
+      });
+    }
+  }
+
+  private initTipoIdentificacionChoices(): void {
+    this.initChoicesFromDom(
+      this.tipoIdentificacionSelectRef,
+      this.socio.tipoIdentificacion,
+      (instance) => (this.tipoIdentificacionChoices = instance),
+      this.tipoIdentificacionChoices,
+      10
+    );
+  }
+
+  private initPaisEmisorChoices(): void {
+    this.initChoicesFromDom(
+      this.paisEmisorSelectRef,
+      this.socio.paisEmisor,
+      (instance) => (this.paisEmisorChoices = instance),
+      this.paisEmisorChoices,
+      9999
+    );
+  }
+
+  private initPaisNacimientoChoices(): void {
+    this.initChoicesFromDom(
+      this.paisNacimientoSelectRef,
+      this.socio.paisNacimiento,
+      (instance) => (this.paisNacimientoChoices = instance),
+      this.paisNacimientoChoices,
+      9999
+    );
+  }
+
+  private initNacionalidadChoices(): void {
+    this.initChoicesFromDom(
+      this.nacionalidadSelectRef,
+      this.socio.nacionalidadId,
+      (instance) => (this.nacionalidadChoices = instance),
+      this.nacionalidadChoices,
+      9999
+    );
+  }
+
+  private initDepartamentoChoices(): void {
+    const element = this.departamentoSelectRef?.nativeElement;
+    if (!element) return;
+
+    try {
+      this.departamentoChoices?.destroy();
+    } catch {}
+
+    this.removeOrphanChoicesWrapper(element);
+
+    this.departamentoChoices = new Choices(element, {
+      searchEnabled: true,
+      searchChoices: true,
+      searchFloor: 0,
+      searchResultLimit: 9999,
+      itemSelectText: '',
+      shouldSort: false,
+      allowHTML: false,
+      placeholder: true,
+      placeholderValue: this.translate.instant('common.selectOption'),
+      searchPlaceholderValue: this.translate.instant('choices.searchPlaceholder') || 'Buscar...',
+      noResultsText: this.translate.instant('choices.noResults') || 'No se encontraron resultados',
+      noChoicesText: this.translate.instant('choices.noChoices') || 'No hay opciones disponibles',
+      position: 'bottom'
+    });
+
+    this.setChoicesValue(this.departamentoChoices, this.socio.departamentoId);
+  }
+
+  private initMunicipioChoices(): void {
+    const element = this.municipioSelectRef?.nativeElement;
+    if (!element) return;
+
+    try {
+      this.municipioChoices?.destroy();
+    } catch {}
+
+    this.removeOrphanChoicesWrapper(element);
+
+    element.disabled = !this.socio.departamentoId;
+
+    this.municipioChoices = new Choices(element, {
+      searchEnabled: true,
+      searchChoices: true,
+      searchFloor: 0,
+      searchResultLimit: 9999,
+      itemSelectText: '',
+      shouldSort: false,
+      allowHTML: false,
+      placeholder: true,
+      placeholderValue: this.translate.instant('common.selectOption'),
+      searchPlaceholderValue: this.translate.instant('choices.searchPlaceholder') || 'Buscar...',
+      noResultsText: this.translate.instant('choices.noResults') || 'No se encontraron resultados',
+      noChoicesText: this.translate.instant('choices.noChoices') || 'No hay opciones disponibles',
+      position: 'bottom'
+    });
+
+    this.setChoicesValue(this.municipioChoices, this.socio.municipioId);
+
+    const wrapper = element.closest('.choices');
+    if (!this.socio.departamentoId) {
+      wrapper?.classList.add('is-disabled');
+    } else {
+      wrapper?.classList.remove('is-disabled');
+    }
+  }
+
+  private initSociedadLaboraChoices(): void {
+    this.initChoicesFromDom(
+      this.sociedadLaboraSelectRef,
+      this.socio.sociedadLabora,
+      (instance) => (this.sociedadLaboraChoices = instance),
+      this.sociedadLaboraChoices,
+      10
+    );
+  }
+
+  private initConyugeTipoIdentificacionChoices(): void {
+    this.initChoicesFromDom(
+      this.conyugeTipoIdentificacionSelectRef,
+      this.socio.conyugeTipoIdentificacion,
+      (instance) => (this.conyugeTipoIdentificacionChoices = instance),
+      this.conyugeTipoIdentificacionChoices,
+      10
+    );
+  }
+
+  private initConyugePaisNacimientoChoices(): void {
+    this.initChoicesFromDom(
+      this.conyugePaisNacimientoSelectRef,
+      this.socio.conyugePaisNacimiento,
+      (instance) => (this.conyugePaisNacimientoChoices = instance),
+      this.conyugePaisNacimientoChoices,
+      9999
+    );
+  }
+
+  private initConyugeNacionalidadChoices(): void {
+    this.initChoicesFromDom(
+      this.conyugeNacionalidadSelectRef,
+      this.socio.conyugeNacionalidadId,
+      (instance) => (this.conyugeNacionalidadChoices = instance),
+      this.conyugeNacionalidadChoices,
+      9999
+    );
+  }
+
+  private setChoicesValue(instance: any, value: string | null | undefined): void {
+    if (!instance || value == null || value === '') return;
+
+    try {
+      instance.removeActiveItems?.();
+      instance.setChoiceByValue(String(value));
+    } catch {}
   }
 }

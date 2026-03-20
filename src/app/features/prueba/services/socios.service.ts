@@ -57,10 +57,10 @@ export class SociosService extends BrowserApiService {
   }
 
   changeStatus(id: string, activo: boolean): Observable<ApiResponse> {
-  return this.http.patch<ApiResponse>(
-    `${this.api.baseUrl}/socios/${id}/status`,
-    { activo },
-    { withCredentials: true }
-  );
-}
+    return this.http.patch<ApiResponse>(
+      `${this.api.baseUrl}/socios/${id}/status`,
+      { activo },
+      { withCredentials: true }
+    );
+  }
 }
