@@ -10,11 +10,7 @@
             <p class="card-subtitle">{{ 'socios.list.subtitle' | translate }}</p>
           </div>
 
-          <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            [appPermission]="['new']"
-            permissionRoute="/socios"
+          <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']" permissionRoute="/socios"
             (click)="onCreate()">
             <i class="bi bi-plus-lg me-1"></i>
             {{ 'socios.list.newButton' | translate }}
@@ -23,105 +19,84 @@
 
         <div class="card-body">
           @if (loading) {
-            <div class="py-4 text-center text-muted">
-              {{ 'socios.list.loading' | translate }}
-            </div>
+          <div class="py-4 text-center text-muted">
+            {{ 'socios.list.loading' | translate }}
+          </div>
           } @else {
-            @if (socios.length > 0) {
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>{{ 'socios.list.columns.member' | translate }}</th>
-                    <th>{{ 'socios.list.columns.identification' | translate }}</th>
-                    <th>{{ 'socios.list.columns.email' | translate }}</th>
-                    <th>{{ 'socios.list.columns.status' | translate }}</th>
-                    <th>{{ 'socios.list.columns.phone' | translate }}</th>
-                    <th>{{ 'socios.list.columns.actions' | translate }}</th>
-                  </tr>
-                </thead>
+          @if (socios.length > 0) {
+          <table class="table">
+            <thead>
+              <tr>
+                <th>{{ 'socios.list.columns.member' | translate }}</th>
+                <th>{{ 'socios.list.columns.identification' | translate }}</th>
+                <th>{{ 'socios.list.columns.email' | translate }}</th>
+                <th>{{ 'socios.list.columns.status' | translate }}</th>
+                <th>{{ 'socios.list.columns.phone' | translate }}</th>
+                <th>{{ 'socios.list.columns.actions' | translate }}</th>
+              </tr>
+            </thead>
 
-                <tbody>
-                  @for (item of socios; track item.id) {
-                    <tr>
-                      <td [attr.data-sort]="item.nombreCompleto">
-                        <div class="table-user">
-                          <div
-                            class="table-user-avatar table-user-avatar-text"
-                            [ngStyle]="getAvatarStyle()">
-                            {{ getInitials(item.nombreCompleto) }}
-                          </div>
+            <tbody>
+              @for (item of socios; track item.id) {
+              <tr>
+                <td [attr.data-sort]="item.nombreCompleto">
+                  <div class="table-user">
+                    <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
+                      {{ getInitials(item.nombreCompleto) }}
+                    </div>
 
-                          <div>
-                            <div class="table-user-name">
-                              {{ item.nombreCompleto || '-' }}
-                            </div>
-                            <div class="table-user-email">
-                              {{ item.nombrePublico || ('socios.list.noPublicName' | translate) }}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
+                    <div>
+                      <div class="table-user-name">
+                        {{ item.nombreCompleto || '-' }}
+                      </div>
+                      <div class="table-user-email">
+                        {{ item.nombrePublico || ('socios.list.noPublicName' | translate) }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
 
-                      <td>{{ item.numeroIdentificacion || '-' }}</td>
-                      <td>{{ item.correo || '-' }}</td>
+                <td>{{ item.numeroIdentificacion || '-' }}</td>
+                <td>{{ item.correo || '-' }}</td>
 
-                      <td>
-                        <span
-                          class="badge"
-                          [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
-                          {{ item.activo ? ('common.status.active' | translate) : ('common.status.inactive' | translate) }}
-                        </span>
-                      </td>
+                <td>
+                  <span class="badge" [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                    {{ item.activo ? ('common.status.active' | translate) : ('common.status.inactive' | translate) }}
+                  </span>
+                </td>
 
-                      <td>{{ item.telefono || item.celular || '-' }}</td>
+                <td>{{ item.telefono || item.celular || '-' }}</td>
 
-                      <td>
-                        <div class="table-actions">
-                          <button
-                            type="button"
-                            class="btn btn-icon btn-sm btn-light"
-                            [appPermission]="['edit']"
-                            permissionRoute="/socios"
-                            [title]="'common.actions.edit' | translate"
-                            (click)="onEdit(item.id)">
-                            <i class="bi bi-pencil"></i>
-                          </button>
+                <td>
+                  <div class="table-actions">
+                    <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['edit']"
+                      permissionRoute="/socios" [title]="'common.actions.edit' | translate" (click)="onEdit(item.id)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
 
-                          <button
-  type="button"
-  class="btn btn-icon btn-sm btn-light"
-  [appPermission]="['edit']"
-  permissionRoute="/socios"
-  [title]="item.activo
+                    <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['edit']"
+                      permissionRoute="/socios" [title]="item.activo
     ? ('socios.statusActions.deactivateButton' | translate)
-    : ('socios.statusActions.activateButton' | translate)"
-  (click)="onToggleStatus(item)">
-  <i
-    class="bi"
-    [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'">
-  </i>
-</button>
+    : ('socios.statusActions.activateButton' | translate)" (click)="onToggleStatus(item)">
+                      <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'">
+                      </i>
+                    </button>
 
-                          <button
-                            type="button"
-                            class="btn btn-icon btn-sm btn-light"
-                            [appPermission]="['delete']"
-                            permissionRoute="/socios"
-                            [title]="'common.actions.delete' | translate"
-                            (click)="onDelete(item)">
-                            <i class="bi bi-trash"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            } @else {
-              <div class="py-4 text-center text-muted">
-                {{ 'socios.list.empty' | translate }}
-              </div>
-            }
+                    <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['delete']"
+                      permissionRoute="/socios" [title]="'common.actions.delete' | translate" (click)="onDelete(item)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          } @else {
+          <div class="py-4 text-center text-muted">
+            {{ 'socios.list.empty' | translate }}
+          </div>
+          }
           }
         </div>
       </div>
@@ -173,47 +148,43 @@
 
         <div class="card-body p-0 activity-card-body">
           @if (latestActivity.length === 0) {
-            <div class="px-3 py-2 text-muted small">
-              {{ 'socios.activity.empty' | translate }}
-            </div>
+          <div class="px-3 py-2 text-muted small">
+            {{ 'socios.activity.empty' | translate }}
+          </div>
           } @else {
-            @for (item of latestActivity; track item.id + '-' + item.tipo + '-' + item.fecha) {
-              <div class="recent-list-item d-flex align-items-center gap-2 px-2 py-2 border-top">
-                <div
-                  class="letter-avatar"
-                  [ngStyle]="getAvatarStyle()">
-                  {{ getInitials(item.nombreCompleto) }}
-                </div>
+          @for (item of latestActivity; track item.id + '-' + item.tipo + '-' + item.fecha) {
+          <div class="recent-list-item d-flex align-items-center gap-2 px-2 py-2 border-top">
+            <div class="letter-avatar" [ngStyle]="getAvatarStyle()">
+              {{ getInitials(item.nombreCompleto) }}
+            </div>
 
-                <div class="flex-grow-1 min-w-0">
-                  <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
-                    <strong class="text-truncate small mb-0">
-                      {{ item.nombreCompleto }}
-                    </strong>
+            <div class="flex-grow-1 min-w-0">
+              <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                <strong class="text-truncate small mb-0">
+                  {{ item.nombreCompleto }}
+                </strong>
 
-                    <span
-                      class="badge badge-xs"
-                      [ngClass]="item.tipo === 'new' ? 'badge-soft-success' : 'badge-soft-info'">
-                      {{ item.tipo === 'new'
-                        ? ('socios.activity.new' | translate)
-                        : ('socios.activity.updated' | translate) }}
-                    </span>
-                  </div>
-
-                  <div class="text-muted xs-text">
-                    {{ formatActivityLabel(item.fecha) }}
-                  </div>
-
-                  <div class="text-muted xs-text">
-                    {{
-                      'socios.activity.byUser' | translate:{
-                        usuario: item.usuario || ('socios.activity.unknownUser' | translate)
-                      }
-                    }}
-                  </div>
-                </div>
+                <span class="badge badge-xs" [ngClass]="item.tipo === 'new' ? 'badge-soft-success' : 'badge-soft-info'">
+                  {{ item.tipo === 'new'
+                  ? ('socios.activity.new' | translate)
+                  : ('socios.activity.updated' | translate) }}
+                </span>
               </div>
-            }
+
+              <div class="text-muted xs-text">
+                {{ formatActivityLabel(item.fecha) }}
+              </div>
+
+              <div class="text-muted xs-text">
+                {{
+                'socios.activity.byUser' | translate:{
+                usuario: item.usuario || ('socios.activity.unknownUser' | translate)
+                }
+                }}
+              </div>
+            </div>
+          </div>
+          }
           }
         </div>
       </div>

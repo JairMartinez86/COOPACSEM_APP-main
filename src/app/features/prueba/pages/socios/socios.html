@@ -24,8 +24,8 @@
                 <i class="bi bi-arrow-counterclockwise me-1"></i>
                 {{ 'common.actions.clear' | translate }}
               </button>
-              <button type="button" class="btn btn-primary" (click)="onSave()" [appPermission]="['new', 'edit']" autoFocusNext
-                [disableClickButton]="true" [unlockOn]="notify.closed$">
+              <button type="button" class="btn btn-primary" (click)="onSave()" [appPermission]="['new', 'edit']"
+                autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
                 <i class="bi bi-save me-1"></i>
                 {{ 'socios.actions.save' | translate }}
               </button>
@@ -155,16 +155,17 @@
                       <label for="fechaEmision" class="form-label">{{ 'socios.fields.fechaEmision.label' | translate
                         }}</label>
                       <input #fechaEmision id="fechaEmision" name="fechaEmision" [(ngModel)]="socio.fechaEmision"
-                        engineSync="fechaEmision" autoFocusNext [next]="fechaVencimiento" type="date"
-                        class="form-control" [placeholder]="'socios.fields.fechaEmision.placeholder' | translate">
+                        engineSync="fechaEmision" autoFocusNext [next]="fechaVencimiento" type="text"
+                        class="form-control" dateFormat
+                        [dateFormat]="appConfigService.getCurrentSettings().dateFormat" />
                     </div>
                     <div class="col-md-3" error-notify="fechaVencimiento" error-display="inline">
                       <label for="fechaVencimiento" class="form-label">{{ 'socios.fields.fechaVencimiento.label' |
                         translate }}</label>
                       <input #fechaVencimiento id="fechaVencimiento" name="fechaVencimiento"
                         [(ngModel)]="socio.fechaVencimiento" engineSync="fechaVencimiento" autoFocusNext
-                        [next]="paisNacimiento" type="date" class="form-control"
-                        [placeholder]="'socios.fields.fechaVencimiento.placeholder' | translate">
+                        [next]="paisNacimiento" type="text" class="form-control" dateFormat
+                        [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
                     </div>
                     <div class="col-md-3" error-notify="paisNacimiento" error-display="inline">
                       <label for="paisNacimiento" class="form-label">{{ 'socios.fields.paisNacimiento.label' | translate
@@ -306,7 +307,7 @@
                         [(ngModel)]="socio.ingresosMensuales" engineSync="ingresosMensuales" autoFocusNext
                         [next]="otrosIngresos" type="number" class="form-control" min="0" step="0.01"
                         [placeholder]="'socios.fields.ingresosMensuales.placeholder' | translate">
-                      <span class="input-group-text">C$</span>
+                      <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>
                   <div class="col-md-4" error-notify="otrosIngresos" error-display="inline">
@@ -314,10 +315,10 @@
                       }}</label>
                     <div class="input-group">
                       <input #otrosIngresos id="otrosIngresos" name="otrosIngresos" [(ngModel)]="socio.otrosIngresos"
-                        engineSync="otrosIngresos" autoFocusNext [next]="ingresosAnuales" type="number"
-                        class="form-control" min="0" step="0.01"
-                        [placeholder]="'socios.fields.otrosIngresos.placeholder' | translate">
-                      <span class="input-group-text">C$</span>
+                        engineSync="otrosIngresos" autoFocusNext [next]="ingresosAnuales" type="text"
+                        class="form-control" numberFormat [decimals]="2" [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator" 
+                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" placeholder="0.00" />
+                      <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>
                   <div class="col-md-4" error-notify="ingresosAnuales" error-display="inline">
@@ -328,7 +329,7 @@
                         [(ngModel)]="socio.ingresosAnuales" engineSync="ingresosAnuales" autoFocusNext
                         [next]="conyugeNombreCompleto" type="number" class="form-control" min="0" step="0.01"
                         [placeholder]="'socios.fields.ingresosAnuales.placeholder' | translate">
-                      <span class="input-group-text">C$</span>
+                      <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>
                 </div>
@@ -547,26 +548,26 @@
           </div>
         </div>
 
-         <div class="row">
-        <div class="col-12">
-          <div class="d-flex justify-content-end gap-2 pt-2">
-            <button type="button" class="btn btn-light border" (click)="onCancel()">
-            <i class="bi bi-arrow-counterclockwise me-1"></i>
-            {{ 'common.actions.clear' | translate }}
-          </button>
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex justify-content-end gap-2 pt-2">
+              <button type="button" class="btn btn-light border" (click)="onCancel()">
+                <i class="bi bi-arrow-counterclockwise me-1"></i>
+                {{ 'common.actions.clear' | translate }}
+              </button>
 
-            
-          <button #saveButton type="button" class="btn btn-primary" (click)="onSave()" [appPermission]="['new', 'edit']"
-            autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
-            <i class="bi bi-save me-1"></i>
-            {{ 'socios.actions.save' | translate }}
-          </button>
+
+              <button #saveButton type="button" class="btn btn-primary" (click)="onSave()"
+                [appPermission]="['new', 'edit']" autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
+                <i class="bi bi-save me-1"></i>
+                {{ 'socios.actions.save' | translate }}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
 
-        
+
       </div>
     </form>
   </div>

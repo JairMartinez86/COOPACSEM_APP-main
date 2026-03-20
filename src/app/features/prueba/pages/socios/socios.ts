@@ -23,9 +23,13 @@ import { SociosService } from '../../services/socios.service';
 import {
   JMartAutoFocusDirective,
   JMartAutoFocusNextDirective,
+  JMartDateFormatDirective,
   JMartEngineSyncDirective,
   JMartErrorNotifyDirective,
-  JMartMassiveValidationService
+  JMartMassiveValidationService,
+  JMartNumberFormatDirective,
+
+  
 } from '@JairMartinez86/jmartinez-validator';
 import { DraftFormService } from '../../../../core/services/draft-manager-options.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -33,6 +37,7 @@ import { EMPTY_SOCIO, SocioForm } from '../../interface/socio.model';
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 import { LanguageService } from '../../../../core/services/languageService';
 import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
+import { AppConfigService } from '../../../../core/services/app-config.service';
 
 type DraftRef<T> = {
   saveNow(): void;
@@ -52,7 +57,9 @@ type DraftRef<T> = {
     JMartEngineSyncDirective,
     JMartAutoFocusDirective,
     AppPermissionDirective,
-    Breadcrumb
+    Breadcrumb,
+    JMartDateFormatDirective,
+    JMartNumberFormatDirective
   ],
   templateUrl: './socios.html',
   styleUrl: './socios.scss',
@@ -72,6 +79,7 @@ export class SociosComponent implements AfterViewInit, OnDestroy {
   private langService = inject(LanguageService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+   public appConfigService = inject(AppConfigService);
 
   activeSection = 'datos-personales';
 
@@ -168,6 +176,7 @@ export class SociosComponent implements AfterViewInit, OnDestroy {
 ngOnInit(): void {
   this.loadBreadcrumbs();
 
+  console.log(this.appConfigService.getCurrentSettings().dateFormat)
   this.subs.add(
     this.translate.onLangChange.subscribe(() => {
       this.loadBreadcrumbs();

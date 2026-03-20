@@ -56,25 +56,23 @@ export class App {
     this.notify.resolve(result);
   }
 
-  ngOnInit(): void {
-    this.configService.getPublicSettings().subscribe({
-      next: (res: any) => {
-        const data = res?.data ?? {};
 
-        const companyName = data?.companyName || 'Mi Empresa S.A.';
-        const logoUrl = data?.logoUrl || '';
-        const logoFileName = data?.logoFileName || '';
 
-        this.title.set(companyName);
-        this.appState.setAppName(companyName);
-        this.appState.setLogo(logoUrl, logoFileName);
-        
-      },
-      error: () => {
-        this.title.set('Mi Empresa S.A.');
-        this.appState.setAppName('Mi Empresa S.A.');
-        this.appState.clearLogo();
-      }
-    });
-  }
+ngOnInit(): void {
+  this.configService.getPublicSettings().subscribe({
+    next: (res) => {
+      const data = res?.data;
+
+      this.title.set(data?.companyName || 'Mi Empresa S.A.');
+      this.appState.setAppName(data?.companyName || 'Mi Empresa S.A.');
+      this.appState.setLogo(data?.logoUrl || '', data?.logoFileName || '');
+    },
+    error: () => {
+      this.title.set('Mi Empresa S.A.');
+      this.appState.setAppName('Mi Empresa S.A.');
+      this.appState.clearLogo();
+    }
+  });
+}
+
 }
