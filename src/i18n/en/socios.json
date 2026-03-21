@@ -752,18 +752,6 @@
               "value": "100",
               "when": "",
               "msj": "The sum of the beneficiaries' percentages must equal 100%"
-            },
-            "2": {
-              "rule": "NUM<=",
-              "value": "100",
-              "when": "",
-              "msj": "The beneficiary percentage must not exceed {value}%"
-            },
-            "3": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})<=",
-              "value": "100",
-              "when": "",
-              "msj": "The sum of the beneficiaries' percentages must not exceed {value}%"
             }
           }
         },
@@ -804,18 +792,6 @@
               "value": "0",
               "when": "{beneficiario2Nombre}!=''",
               "msj": "The sum of the beneficiaries' percentages must equal 100%"
-            },
-            "2": {
-              "rule": "NUM<=",
-              "value": "100",
-              "when": "",
-              "msj": "The second beneficiary percentage must not exceed {value}%"
-            },
-            "3": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})<=",
-              "value": "100",
-              "when": "{beneficiario2Nombre}!=''",
-              "msj": "The sum of the beneficiaries' percentages must not exceed {value}%"
             }
           }
         },
@@ -856,18 +832,6 @@
               "value": "0",
               "when": "{beneficiario3Nombre}!=''",
               "msj": "The sum of the beneficiaries' percentages must equal 100%"
-            },
-            "2": {
-              "rule": "NUM<=",
-              "value": "100",
-              "when": "",
-              "msj": "The third beneficiary percentage must not exceed {value}%"
-            },
-            "3": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})<=",
-              "value": "100",
-              "when": "{beneficiario3Nombre}!=''",
-              "msj": "The sum of the beneficiaries' percentages must not exceed {value}%"
             }
           }
         },

@@ -238,6 +238,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.updateWizardAffix();
       this.syncWizardHorizontalScroll();
       this.initAllChoices();
+      this.reapplyChoicesValues();
       this.cdr.detectChanges();
     }, 100);
   }
@@ -257,16 +258,27 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private destroyAllChoices(): void {
-    try { this.tipoIdentificacionChoices?.destroy(); } catch {}
-    try { this.paisEmisorChoices?.destroy(); } catch {}
-    try { this.paisNacimientoChoices?.destroy(); } catch {}
-    try { this.nacionalidadChoices?.destroy(); } catch {}
-    try { this.departamentoChoices?.destroy(); } catch {}
-    try { this.municipioChoices?.destroy(); } catch {}
-    try { this.sociedadLaboraChoices?.destroy(); } catch {}
-    try { this.conyugeTipoIdentificacionChoices?.destroy(); } catch {}
-    try { this.conyugePaisNacimientoChoices?.destroy(); } catch {}
-    try { this.conyugeNacionalidadChoices?.destroy(); } catch {}
+    try { this.tipoIdentificacionChoices?.destroy(); } catch { }
+    try { this.paisEmisorChoices?.destroy(); } catch { }
+    try { this.paisNacimientoChoices?.destroy(); } catch { }
+    try { this.nacionalidadChoices?.destroy(); } catch { }
+    try { this.departamentoChoices?.destroy(); } catch { }
+    try { this.municipioChoices?.destroy(); } catch { }
+    try { this.sociedadLaboraChoices?.destroy(); } catch { }
+    try { this.conyugeTipoIdentificacionChoices?.destroy(); } catch { }
+    try { this.conyugePaisNacimientoChoices?.destroy(); } catch { }
+    try { this.conyugeNacionalidadChoices?.destroy(); } catch { }
+
+    this.tipoIdentificacionChoices = null;
+    this.paisEmisorChoices = null;
+    this.paisNacimientoChoices = null;
+    this.nacionalidadChoices = null;
+    this.departamentoChoices = null;
+    this.municipioChoices = null;
+    this.sociedadLaboraChoices = null;
+    this.conyugeTipoIdentificacionChoices = null;
+    this.conyugePaisNacimientoChoices = null;
+    this.conyugeNacionalidadChoices = null;
   }
 
   private initAllChoices(): void {
@@ -284,7 +296,84 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private refreshAllChoices(): void {
     if (!this.isBrowser) return;
-    setTimeout(() => this.initAllChoices(), 50);
+
+    setTimeout(() => {
+      this.initAllChoices();
+      this.reapplyChoicesValues();
+    }, 50);
+  }
+
+  private reapplyChoicesValues(): void {
+    requestAnimationFrame(() => {
+      this.setChoicesValue(this.tipoIdentificacionChoices, this.socio.tipoIdentificacion);
+      this.setChoicesValue(this.paisEmisorChoices, this.socio.paisEmisor);
+      this.setChoicesValue(this.paisNacimientoChoices, this.socio.paisNacimiento);
+      this.setChoicesValue(this.nacionalidadChoices, this.socio.nacionalidadId);
+      this.setChoicesValue(this.departamentoChoices, this.socio.departamentoId);
+      this.setChoicesValue(this.municipioChoices, this.socio.municipioId);
+      this.setChoicesValue(this.sociedadLaboraChoices, this.socio.sociedadLabora);
+      this.setChoicesValue(this.conyugeTipoIdentificacionChoices, this.socio.conyugeTipoIdentificacion);
+      this.setChoicesValue(this.conyugePaisNacimientoChoices, this.socio.conyugePaisNacimiento);
+      this.setChoicesValue(this.conyugeNacionalidadChoices, this.socio.conyugeNacionalidadId);
+    });
+  }
+
+  private clearAllChoicesSelections(): void {
+    this.clearChoicesSelection(this.tipoIdentificacionChoices);
+    this.clearChoicesSelection(this.paisEmisorChoices);
+    this.clearChoicesSelection(this.paisNacimientoChoices);
+    this.clearChoicesSelection(this.nacionalidadChoices);
+    this.clearChoicesSelection(this.departamentoChoices);
+    this.clearChoicesSelection(this.municipioChoices);
+    this.clearChoicesSelection(this.sociedadLaboraChoices);
+    this.clearChoicesSelection(this.conyugeTipoIdentificacionChoices);
+    this.clearChoicesSelection(this.conyugePaisNacimientoChoices);
+    this.clearChoicesSelection(this.conyugeNacionalidadChoices);
+  }
+
+  private clearChoicesSelection(instance: any): void {
+    if (!instance) return;
+
+    try {
+      instance.removeActiveItems?.();
+
+      const passedElement = instance.passedElement?.element as HTMLSelectElement | undefined;
+      if (passedElement) {
+        passedElement.value = '';
+        const firstOption = passedElement.querySelector('option[value=""]') as HTMLOptionElement | null;
+        if (firstOption) {
+          firstOption.selected = true;
+        }
+        passedElement.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    } catch { }
+  }
+
+  private resetFormAfterSuccess(): void {
+    this.notify.close?.();
+    this.draftRef?.clear();
+    this.formRef?.resetForm();
+
+    this.socio = { ...EMPTY_SOCIO };
+    this.copy = { ...EMPTY_SOCIO };
+    this.municipios = [];
+
+    this.patchEngineFromSocio();
+    this.engine.clearErrors?.();
+
+    this.activeSection = 'datos-personales';
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.refreshAllChoices();
+
+      setTimeout(() => {
+        this.clearAllChoicesSelections();
+        this.reapplyChoicesValues();
+        this.cdr.detectChanges();
+      }, 50);
+    }, 50);
   }
 
   private removeOrphanChoicesWrapper(element: HTMLSelectElement): void {
@@ -294,9 +383,16 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private findCatalogIdByValue(items: Array<{ id: any; nombre?: string | null }>, value: any): string | null {
+  private findCatalogIdByValue(
+    items: Array<{ id: any; nombre?: string | null }>,
+    value: any
+  ): string | null {
     const raw = String(value ?? '').trim();
     if (!raw) return null;
+
+    if (!items?.length) {
+      return raw;
+    }
 
     const byId = items.find(x => String(x.id) === raw);
     if (byId) return String(byId.id);
@@ -304,8 +400,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     const byNombre = items.find(
       x => String(x.nombre ?? '').trim().toLowerCase() === raw.toLowerCase()
     );
+    if (byNombre) return String(byNombre.id);
 
-    return byNombre ? String(byNombre.id) : null;
+    return raw;
   }
 
   private syncCatalogValuesWithOptions(): void {
@@ -384,6 +481,15 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (res: any) => {
           const socioApi = res?.data?.socio ?? null;
 
+
+          socioApi.fechaEmision = this.appConfigService.formatDate(socioApi.fechaEmision);
+          socioApi.fechaVencimiento = this.appConfigService.formatDate(socioApi.fechaVencimiento);
+          socioApi.fechaNacimiento = this.appConfigService.formatDate(socioApi.fechaNacimiento);
+          socioApi.fechaIngreso = this.appConfigService.formatDate(socioApi.fechaIngreso);
+
+
+
+
           if (!socioApi) {
             this.notify.show?.(
               this.translate.instant('socios.messages.notFound'),
@@ -441,7 +547,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
           this.patchEngineFromSocio();
           this.engine.clearErrors?.();
-
           this.loadMunicipiosIfNeeded();
 
           this.dataReady = true;
@@ -490,6 +595,8 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       }
     }
+
+    this.engine.validateAll?.();
   }
 
   private loadCatalogos(): void {
@@ -497,6 +604,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (res: any) => {
         this.paisesEmisor = [...(res?.data?.paises ?? [])];
         this.syncCatalogValuesWithOptions();
+        this.patchEngineFromSocio();
         this.cdr.detectChanges();
         this.refreshAllChoices();
       },
@@ -510,6 +618,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (res: any) => {
         this.nacionalidades = [...(res?.data?.nacionalidades ?? [])];
         this.syncCatalogValuesWithOptions();
+        this.patchEngineFromSocio();
         this.cdr.detectChanges();
         this.refreshAllChoices();
       },
@@ -521,7 +630,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.catalogosService.getDepartamentos().subscribe({
       next: (res: any) => {
-        this.departamentos = res?.data?.departamentos ?? [];
+        this.departamentos = [...(res?.data?.departamentos ?? [])];
         this.cdr.detectChanges();
         this.refreshAllChoices();
       },
@@ -601,9 +710,17 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
             ...(data ?? {}),
           });
 
-          this.syncCatalogValuesWithOptions();
+          this.patchEngineFromSocio();
           this.loadMunicipiosIfNeeded();
-          this.refreshAllChoices();
+          this.cdr.detectChanges();
+
+          setTimeout(() => {
+            this.syncCatalogValuesWithOptions();
+            this.patchEngineFromSocio();
+            this.refreshAllChoices();
+            this.reapplyChoicesValues();
+            this.cdr.detectChanges();
+          }, 100);
         },
 
         restoreSavedData: (data: Partial<SocioForm> | null | undefined) => {
@@ -670,6 +787,26 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     return JSON.stringify(this.toSocioForm(this.socio)) !== JSON.stringify(this.toSocioForm(this.copy));
   }
 
+  private normalizeDate(value: string | null): string | null {
+    if (!value) return null;
+
+    // ya viene yyyy-MM-dd
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return value;
+    }
+
+    // viene dd/MM/yyyy
+    const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (match) {
+      const [, dd, mm, yyyy] = match;
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    return value;
+  }
+
+
+
   onSave(): void {
     if (this.mode === 'view') {
       return;
@@ -686,28 +823,56 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.notify.close?.();
 
     const payload = this.toSocioForm(this.socio);
+    payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
+    payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
+    payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
+    payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
+
+
+
+
 
     this.sociosService
       .save(payload)
-      .pipe(finalize(() => {}))
+      .pipe(finalize(() => { }))
       .subscribe({
         next: (res: any) => {
           const savedSocio = this.toSocioForm(res?.data?.socio ?? payload);
 
-          this.socio = { ...savedSocio };
-          this.copy = { ...savedSocio };
-
-          this.syncCatalogValuesWithOptions();
-          this.patchEngineFromSocio();
-          this.engine.clearErrors?.();
+          this.notify.showFromApiResponse?.(res, 'success');
           this.draftRef?.clear();
 
-          this.notify.showFromApiResponse?.(res, 'success');
-          this.refreshAllChoices();
+          if (this.mode === 'edit') {
 
-          if (this.mode === 'create' && savedSocio.id) {
-            this.router.navigate(['/socios', savedSocio.id, 'edit']);
+            savedSocio.fechaEmision = this.appConfigService.formatDate(savedSocio.fechaEmision);
+            savedSocio.fechaVencimiento = this.appConfigService.formatDate(savedSocio.fechaVencimiento);
+            savedSocio.fechaNacimiento = this.appConfigService.formatDate(savedSocio.fechaNacimiento);
+            savedSocio.fechaIngreso = this.appConfigService.formatDate(savedSocio.fechaIngreso);
+
+
+            this.socio = { ...savedSocio };
+            this.copy = { ...savedSocio };
+
+
+
+
+            this.syncCatalogValuesWithOptions();
+            this.patchEngineFromSocio();
+            this.engine.clearErrors?.();
+            this.loadMunicipiosIfNeeded();
+
+            this.cdr.detectChanges();
+
+            setTimeout(() => {
+              this.refreshAllChoices();
+              this.reapplyChoicesValues();
+              this.cdr.detectChanges();
+            }, 50);
+
+            return;
           }
+
+          this.resetFormAfterSuccess();
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -914,7 +1079,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     try {
       previousInstance?.destroy();
-    } catch {}
+    } catch { }
 
     this.removeOrphanChoicesWrapper(element);
 
@@ -991,7 +1156,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     try {
       this.departamentoChoices?.destroy();
-    } catch {}
+    } catch { }
 
     this.removeOrphanChoicesWrapper(element);
 
@@ -1020,7 +1185,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     try {
       this.municipioChoices?.destroy();
-    } catch {}
+    } catch { }
 
     this.removeOrphanChoicesWrapper(element);
 
@@ -1093,11 +1258,29 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setChoicesValue(instance: any, value: string | null | undefined): void {
-    if (!instance || value == null || value === '') return;
+    if (!instance) return;
 
     try {
+      if (value == null || value === '') {
+        instance.removeActiveItems?.();
+
+        const passedElement = instance.passedElement?.element as HTMLSelectElement | undefined;
+        if (passedElement) {
+          passedElement.value = '';
+        }
+        return;
+      }
+
+      const choices = instance?._store?.choices ?? [];
+      const exists = choices.some((c: any) => String(c.value) === String(value));
+
+      if (!exists) {
+        instance.removeActiveItems?.();
+        return;
+      }
+
       instance.removeActiveItems?.();
       instance.setChoiceByValue(String(value));
-    } catch {}
+    } catch { }
   }
 }

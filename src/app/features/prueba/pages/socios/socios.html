@@ -1,7 +1,7 @@
 <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
 <div class="page-users-edit page-socios">
   <div class="container-fluid px-0">
-    <form #socioFormRef="ngForm" id="socioForm" class="d-flex flex-column gap-4" novalidate>
+    <form #socioFormRef="ngForm" id="socioForm" class="d-flex flex-column gap-4" autocomplete="off" novalidate>
       <div class="card ue-shell-card socio-topbar">
         <div class="card-body p-4">
           <div class="d-flex flex-column flex-xl-row align-items-xl-start justify-content-between gap-4">
@@ -336,8 +336,9 @@
                     <label for="fechaIngreso" class="form-label required">{{ 'socios.fields.fechaIngreso.label' |
                       translate }}</label>
                     <input #fechaIngreso id="fechaIngreso" name="fechaIngreso" [(ngModel)]="socio.fechaIngreso"
-                      engineSync="fechaIngreso" autoFocusNext [next]="numeroIp" type="date" class="form-control"
-                      [placeholder]="'socios.fields.fechaIngreso.placeholder' | translate">
+                      engineSync="fechaIngreso" autoFocusNext [next]="numeroIp" type="text" class="form-control"
+                      dateFormat
+                        [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
                   </div>
 
                   <div class="col-md-4" error-notify="numeroIp" error-display="inline">
@@ -518,8 +519,11 @@
                         <div class="input-group">
                           <input #beneficiario1Porcentaje id="beneficiario1Porcentaje" name="beneficiario1Porcentaje"
                             [(ngModel)]="socio.beneficiario1Porcentaje" engineSync="beneficiario1Porcentaje"
-                            autoFocusNext [next]="beneficiario1Parentesco" type="number" class="form-control" min="0"
-                            max="100" [placeholder]="'socios.fields.beneficiario1Porcentaje.placeholder' | translate">
+                            autoFocusNext [next]="beneficiario1Parentesco" type="text" class="form-control"
+                             numberFormat [decimals]="2"
+                        [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                        placeholder="0.00">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
@@ -570,8 +574,11 @@
                         <div class="input-group">
                           <input #beneficiario2Porcentaje id="beneficiario2Porcentaje" name="beneficiario2Porcentaje"
                             [(ngModel)]="socio.beneficiario2Porcentaje" engineSync="beneficiario2Porcentaje"
-                            autoFocusNext [next]="beneficiario2Parentesco" type="number" class="form-control" min="0"
-                            max="100" [placeholder]="'socios.fields.beneficiario2Porcentaje.placeholder' | translate">
+                            autoFocusNext [next]="beneficiario2Parentesco" type="text" class="form-control" 
+                             numberFormat [decimals]="2"
+                        [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                        placeholder="0.00">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
@@ -622,8 +629,11 @@
                         <div class="input-group">
                           <input #beneficiario3Porcentaje id="beneficiario3Porcentaje" name="beneficiario3Porcentaje"
                             [(ngModel)]="socio.beneficiario3Porcentaje" engineSync="beneficiario3Porcentaje"
-                            autoFocusNext [next]="beneficiario3Parentesco" type="number" class="form-control" min="0"
-                            max="100" [placeholder]="'socios.fields.beneficiario3Porcentaje.placeholder' | translate">
+                            autoFocusNext [next]="beneficiario3Parentesco" type="text" class="form-control"
+                             numberFormat [decimals]="2"
+                        [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                        placeholder="0.00">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>

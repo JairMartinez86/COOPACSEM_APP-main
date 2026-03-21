@@ -735,9 +735,8 @@
             }
           }
         },
-
-        "conyugeNombreCompleto":{
-           "data": {
+        "conyugeNombreCompleto": {
+          "data": {
             "1": {
               "rule": "LEN>=",
               "value": "0",
@@ -746,9 +745,8 @@
             }
           }
         },
-        
-        "conyugeTipoIdentificacion":{
-           "data": {
+        "conyugeTipoIdentificacion": {
+          "data": {
             "1": {
               "rule": "LEN>=",
               "value": "0",
@@ -757,8 +755,8 @@
             }
           }
         },
-         "conyugeNumeroIdentificacion":{
-           "data": {
+        "conyugeNumeroIdentificacion": {
+          "data": {
             "1": {
               "rule": "LEN>=",
               "value": "0",
@@ -767,8 +765,8 @@
             }
           }
         },
-         "conyugePaisNacimiento":{
-           "data": {
+        "conyugePaisNacimiento": {
+          "data": {
             "1": {
               "rule": "LEN>=",
               "value": "0",
@@ -777,8 +775,8 @@
             }
           }
         },
-        "conyugeNacionalidadId":{
-           "data": {
+        "conyugeNacionalidadId": {
+          "data": {
             "1": {
               "rule": "LEN>=",
               "value": "0",
@@ -804,18 +802,6 @@
               "value": "100",
               "when": "",
               "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
-            },
-            "2": {
-              "rule": "NUM<=",
-              "value": "100",
-              "when": "",
-              "msj": "El procentanje del beneficiario no debe de superar el {value} %"
-            },
-            "3": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})<=",
-              "value": "100",
-              "when": "",
-              "msj": "La suma de los porcentajes de los beneficiarios no debe superar el {value}%"
             }
           }
         },
@@ -853,21 +839,9 @@
           "data": {
             "1": {
               "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
-              "value": "0",
-              "when": "{beneficiario2Nombre}!=''",
-             "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
-            },
-            "2": {
-              "rule": "NUM<=",
               "value": "100",
-              "when": "",
-              "msj": "El procentanje del segundo beneficiario no debe de superar el {value} %"
-            },
-            "3": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})<=",
-              "value": "100",
-              "when": "{beneficiario2Nombre}!=''",
-              "msj": "La suma de los porcentajes de los beneficiarios no debe superar el {value}%"
+              "when": "beneficiario2Nombre}!=''",
+              "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
             }
           }
         },
@@ -905,21 +879,9 @@
           "data": {
             "1": {
               "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
-              "value": "0",
-              "when": "{beneficiario3Nombre}!=''",
+              "value": "100",
+              "when": "beneficiario3Nombre}!=''",
               "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
-            },
-            "2": {
-              "rule": "NUM<=",
-              "value": "100",
-              "when": "",
-              "msj": "El procentanje del tercer beneficiario no debe de superar el {value} %"
-            },
-            "3": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})<=",
-              "value": "100",
-              "when": "{beneficiario3Nombre}!=''",
-              "msj": "La suma de los porcentajes de los beneficiarios no debe superar el {value}%"
             }
           }
         },
