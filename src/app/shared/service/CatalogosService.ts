@@ -46,10 +46,39 @@ export class CatalogosService extends BrowserApiService {
     );
   }
 
-   getPaises(): Observable<any> {
+  getPaises(): Observable<any> {
     return this.http.get<any>(
       `${this.api.baseUrl}/catalogos/paises`,
       { withCredentials: true }
     );
   }
+
+getEmpresas(): Observable<any> {
+    return this.browserOnly(() =>
+      this.http.get<any>(`${this.api.baseUrl}/catalogos/empresas`, {
+        withCredentials: true
+      })
+    );
+  }
+
+  getTratamientosProveedor(): Observable<any> {
+    return this.browserOnly(() =>
+      this.http.get<any>(`${this.api.baseUrl}/catalogos/tratamientos-proveedor`, {
+        withCredentials: true
+      })
+    );
+  }
+
+  getSectoresProveedor(): Observable<any> {
+    return this.browserOnly(() =>
+      this.http.get<any>(`${this.api.baseUrl}/catalogos/sectores-proveedor`, {
+        withCredentials: true
+      })
+    );
+  }
+
+
+
+
+  
 }

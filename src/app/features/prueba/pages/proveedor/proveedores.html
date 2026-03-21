@@ -1,0 +1,260 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<div class="page-users-edit page-socios page-proveedores">
+  <div class="container-fluid px-0">
+    <form #proveedorFormRef="ngForm" id="proveedorForm" class="d-flex flex-column gap-4" autocomplete="off" novalidate>
+      <div class="card ue-shell-card socio-topbar">
+        <div class="card-body p-4">
+          <div class="d-flex flex-column flex-xl-row align-items-xl-start justify-content-between gap-4">
+            <div class="socio-topbar-copy">
+              <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                <span class="badge badge-soft-primary rounded-pill px-3 py-2">
+                  <i class="bi bi-truck me-1"></i>
+                  {{
+                  mode === 'create'
+                  ? ('proveedores.badges.new' | translate)
+                  : mode === 'edit'
+                  ? ('proveedores.badges.edit' | translate)
+                  : ('proveedores.badges.view' | translate)
+                  }}
+                </span>
+
+                <span class="badge badge-outline-secondary rounded-pill px-3 py-2">
+                  {{ 'proveedores.badges.general' | translate }}
+                </span>
+
+                <span class="badge badge-outline-success rounded-pill px-3 py-2">
+                  {{ 'proveedores.badges.contact' | translate }}
+                </span>
+              </div>
+
+              <h1 class="page-title mb-2">
+                {{
+                mode === 'create'
+                ? ('proveedores.titleNew' | translate)
+                : mode === 'edit'
+                ? ('proveedores.titleEdit' | translate)
+                : ('proveedores.titleView' | translate)
+                }}
+              </h1>
+
+              <p class="ue-shell-subtitle mb-0">
+                {{ 'proveedores.subtitle' | translate }}
+              </p>
+            </div>
+
+            <div class="socio-topbar-actions d-flex flex-wrap gap-2">
+
+              @if (mode !== 'view'){
+              <button type="button" class="btn btn-light border" (click)="onCancel()" [appPermission]="['new', 'edit']">
+                <i class="bi bi-arrow-counterclockwise me-1"></i>
+                {{ 'common.actions.clear' | translate }}
+              </button>
+
+              <button type="button" class="btn btn-primary" (click)="onSave()" [appPermission]="['new', 'edit']"
+                autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
+                <i class="bi bi-save me-1"></i>
+                {{ 'proveedores.actions.save' | translate }}
+              </button>
+              }
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card ue-shell-card socio-card">
+        <div class="card-header socio-card-header">
+          <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
+            <div>
+              <h5 class="card-title mb-1">{{ 'proveedores.sections.general.title' | translate }}</h5>
+              <p class="card-subtitle mb-0">{{ 'proveedores.sections.general.subtitle' | translate }}</p>
+            </div>
+
+            @if (mode === 'view') {
+            <span class="badge badge-outline-info rounded-pill px-3 py-2">
+              {{ 'common.actions.view' | translate }}
+            </span>
+            }
+          </div>
+        </div>
+
+        <div class="card-body p-4 d-flex flex-column gap-4">
+          <section class="socio-group">
+            <div class="socio-group-title">{{ 'proveedores.groups.general' | translate }}</div>
+
+            <div class="row g-3">
+              <div class="col-md-6" error-notify="idCompany" error-display="inline">
+                <label for="idCompany" class="form-label required">
+                  {{ 'proveedores.fields.empresa.label' | translate }}
+                </label>
+
+                <select #empresaSelect id="idCompany" name="idCompany" class="form-select"
+                  [(ngModel)]="proveedor.idCompany" engineSync="idCompany" [disabled]="isReadOnly" autoFocus>
+                  <option value="">{{ 'common.selectOption' | translate }}</option>
+                  @for (item of empresas; track item.id) {
+                  <option [value]="item.id">{{ item.nombre }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="col-md-3" error-notify="codigo" error-display="inline">
+                <label for="codigo" class="form-label">
+                  {{ 'proveedores.fields.codigo.label' | translate }}
+                </label>
+                <input id="codigo" name="codigo" type="text" class="form-control" [(ngModel)]="proveedor.codigo"
+                  engineSync="codigo" [readonly]="isReadOnly" autoFocusNext />
+              </div>
+
+              <div class="col-md-3" error-notify="tratamiento" error-display="inline">
+                <label for="tratamiento" class="form-label">
+                  {{ 'proveedores.fields.tratamiento.label' | translate }}
+                </label>
+                <select #tratamientoSelect id="tratamiento" name="tratamiento" class="form-select"
+                  [(ngModel)]="proveedor.tratamiento" engineSync="tratamiento" [disabled]="isReadOnly">
+                  <option value="">{{ 'common.selectOption' | translate }}</option>
+                  @for (item of tratamientos; track item.id) {
+                  <option [value]="item.id">{{ item.nombre }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="col-md-6" error-notify="nombre" error-display="inline">
+                <label for="nombre" class="form-label required">
+                  {{ 'proveedores.fields.nombre.label' | translate }}
+                </label>
+                <input id="nombre" name="nombre" type="text" class="form-control" [(ngModel)]="proveedor.nombre"
+                  engineSync="nombre" [readonly]="isReadOnly" autoFocusNext />
+              </div>
+
+              <div class="col-md-6" error-notify="sector" error-display="inline">
+                <label for="sector" class="form-label">
+                  {{ 'proveedores.fields.sector.label' | translate }}
+                </label>
+                <select #sectorSelect id="sector" name="sector" class="form-select" [(ngModel)]="proveedor.sector"
+                  engineSync="sector" [disabled]="isReadOnly">
+                  <option value="">{{ 'common.selectOption' | translate }}</option>
+                  @for (item of sectores; track item.id) {
+                  <option [value]="item.id">{{ item.nombre }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="col-md-4" error-notify="tipoIdentificacion" error-display="inline">
+                <label for="tipoIdentificacion" class="form-label required">
+                  {{ 'proveedores.fields.tipoIdentificacion.label' | translate }}
+                </label>
+                <select #tipoIdentificacionSelect id="tipoIdentificacion" name="tipoIdentificacion" class="form-select"
+                  [(ngModel)]="proveedor.tipoIdentificacion" engineSync="tipoIdentificacion" [disabled]="isReadOnly">
+                  <option value="">{{ 'common.selectOption' | translate }}</option>
+                  <option value="ruc">RUC</option>
+                  <option value="cedula">Cédula</option>
+                  <option value="pasaporte">Pasaporte</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+
+              <div class="col-md-4" error-notify="numeroIdentificacion" error-display="inline">
+                <label for="numeroIdentificacion" class="form-label required">
+                  {{ 'proveedores.fields.numeroIdentificacion.label' | translate }}
+                </label>
+                <input id="numeroIdentificacion" name="numeroIdentificacion" type="text" class="form-control"
+                  [(ngModel)]="proveedor.numeroIdentificacion" engineSync="numeroIdentificacion" [readonly]="isReadOnly"
+                  autoFocusNext />
+              </div>
+
+              <div class="col-md-4" error-notify="paisId" error-display="inline">
+                <label for="paisId" class="form-label required">
+                  {{ 'proveedores.fields.pais.label' | translate }}
+                </label>
+                <select #paisSelect id="paisId" name="paisId" class="form-select" [(ngModel)]="proveedor.paisId"
+                  engineSync="paisId" [disabled]="isReadOnly">
+                  <option value="">{{ 'common.selectOption' | translate }}</option>
+                  @for (item of paises; track item.id) {
+                  <option [value]="item.id">{{ item.nombre }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section class="socio-group">
+            <div class="socio-group-title">{{ 'proveedores.groups.accounting' | translate }}</div>
+
+            <div class="row g-3">
+              <div class="col-md-6" error-notify="planCuentaNombre" error-display="inline">
+                <label for="planCuentaNombre" class="form-label">
+                  {{ 'proveedores.fields.planCuentaNombre.label' | translate }}
+                </label>
+                <input id="planCuentaNombre" name="planCuentaNombre" type="text" class="form-control"
+                  [(ngModel)]="proveedor.planCuentaNombre" engineSync="planCuentaNombre" [readonly]="isReadOnly"
+                  autoFocusNext />
+              </div>
+
+              <div class="col-md-6" error-notify="cuentaContableNombre" error-display="inline">
+                <label for="cuentaContableNombre" class="form-label">
+                  {{ 'proveedores.fields.cuentaContableNombre.label' | translate }}
+                </label>
+                <input id="cuentaContableNombre" name="cuentaContableNombre" type="text" class="form-control"
+                  [(ngModel)]="proveedor.cuentaContableNombre" engineSync="cuentaContableNombre" [readonly]="isReadOnly"
+                  autoFocusNext />
+              </div>
+            </div>
+          </section>
+
+          <section class="socio-group">
+            <div class="socio-group-title">{{ 'proveedores.groups.contact' | translate }}</div>
+
+            <div class="row g-3">
+              <div class="col-12" error-notify="direccion" error-display="inline">
+                <label for="direccion" class="form-label">
+                  {{ 'proveedores.fields.direccion.label' | translate }}
+                </label>
+                <textarea id="direccion" name="direccion" class="form-control" rows="3"
+                  [(ngModel)]="proveedor.direccion" engineSync="direccion" [readonly]="isReadOnly"></textarea>
+              </div>
+
+              <div class="col-md-4" error-notify="telefono" error-display="inline">
+                <label for="telefono" class="form-label">
+                  {{ 'proveedores.fields.telefono.label' | translate }}
+                </label>
+                <input id="telefono" name="telefono" type="text" class="form-control" [(ngModel)]="proveedor.telefono"
+                  engineSync="telefono" [readonly]="isReadOnly" autoFocusNext />
+              </div>
+
+              <div class="col-md-4" error-notify="correo" error-display="inline">
+                <label for="correo" class="form-label">
+                  {{ 'proveedores.fields.correo.label' | translate }}
+                </label>
+                <input id="correo" name="correo" type="email" class="form-control" [(ngModel)]="proveedor.correo"
+                  engineSync="correo" [readonly]="isReadOnly" autoFocusNext />
+              </div>
+
+
+
+
+              <div class="col-md-4">
+                <label class="form-label d-block">
+                  {{ 'proveedores.fields.activo.label' | translate }}
+                </label>
+
+                <div class="form-check form-switch mt-2">
+                  <input id="activo" name="activo" class="form-check-input" type="checkbox"
+                    [(ngModel)]="proveedor.activo" [disabled]="isReadOnly" />
+                  <label for="activo" class="form-check-label">
+                    {{
+                    proveedor.activo
+                    ? ('common.status.active' | translate)
+                    : ('common.status.inactive' | translate)
+                    }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

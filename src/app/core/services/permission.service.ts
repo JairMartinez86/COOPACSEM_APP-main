@@ -2,6 +2,7 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export type PermissionAction = 'view' | 'create' | 'edit' | 'delete';
+export type PermissionInput = PermissionAction | 'new' | Array<PermissionAction | 'new'>;
 
 export interface RolePermissionDto {
   view: boolean | null;
@@ -29,12 +30,18 @@ export class PermissionService {
 
   private readonly storageKey = 'user';
 
-  has(action: PermissionAction, route?: string): boolean {
+  has(action: PermissionAction | 'new', route?: string): boolean {
     const permissions = this.getPermissionsMap();
     const normalizedRoute = this.normalizeRoute(route || '/');
+    const normalizedAction = this.normalizeAction(action);
     const current = permissions[normalizedRoute];
 
-    return current?.[action] === true;
+    return current?.[normalizedAction] === true;
+  }
+
+  hasAny(actions: PermissionInput, route?: string): boolean {
+    const list = Array.isArray(actions) ? actions : [actions];
+    return list.some(action => this.has(action, route));
   }
 
   canView(route?: string): boolean {
@@ -51,6 +58,10 @@ export class PermissionService {
 
   canDelete(route?: string): boolean {
     return this.has('delete', route);
+  }
+
+  getPermissions(): Record<string, RolePermissionDto> {
+    return this.getPermissionsMap();
   }
 
   private getPermissionsMap(): Record<string, RolePermissionDto> {
@@ -82,6 +93,10 @@ export class PermissionService {
     } catch {
       return {};
     }
+  }
+
+  private normalizeAction(action: PermissionAction | 'new'): PermissionAction {
+    return action === 'new' ? 'create' : action;
   }
 
   private normalizeRoute(route: string): string {

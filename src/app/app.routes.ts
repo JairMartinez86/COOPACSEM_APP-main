@@ -36,6 +36,7 @@ export const routes: Routes = [
     providers: [JMartMassiveValidationService],
   },
 
+
   {
     path: '',
     loadComponent: () =>
@@ -132,7 +133,7 @@ export const routes: Routes = [
       {
         path: 'socios',
         loadComponent: () =>
-          import('./features/prueba/pages/socios/socios-list/socios-list')
+          import('./features/prueba/pages/socios-list/socios-list')
             .then(m => m.SociosListComponent),
         canActivate: [permissionGuard],
         data: { permission: '/socios', action: 'view', tableFilterKey: 'socios' },
@@ -154,7 +155,7 @@ export const routes: Routes = [
           import('./features/prueba/pages/socios/socios')
             .then(m => m.SociosComponent),
         canActivate: [permissionGuard],
-        data: { permission: '/socios', action: 'edit' },
+        data: { permission: '/socios', action: ['view', 'edit'] },
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },
@@ -165,6 +166,49 @@ export const routes: Routes = [
             .then(m => m.SociosComponent),
         canActivate: [permissionGuard],
         data: { permission: '/socios', action: 'view' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+
+
+
+            // PROVEEDORES
+      {
+        path: 'proveedores',
+        loadComponent: () =>
+          import('./features/prueba/pages/proveedores-list/proveedores-list')
+            .then(m => m.ProveedoresListComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/proveedores', action: 'view', tableFilterKey: 'proveedores' },
+        providers: [JMartMassiveValidationService],
+      },
+      {
+        path: 'proveedores/new',
+        loadComponent: () =>
+          import('./features/prueba/pages/proveedor/proveedores')
+            .then(m => m.ProveedoresComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/proveedores', action: 'create' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+      {
+        path: 'proveedores/:id/edit',
+        loadComponent: () =>
+          import('./features/prueba/pages/proveedor/proveedores')
+            .then(m => m.ProveedoresComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/proveedores', action: ['view', 'edit'] },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+      {
+        path: 'proveedores/:id',
+        loadComponent: () =>
+          import('./features/prueba/pages/proveedor/proveedores')
+            .then(m => m.ProveedoresComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/proveedores', action: 'view' },
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       }

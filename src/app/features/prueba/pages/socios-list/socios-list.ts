@@ -9,12 +9,13 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
+import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
+import { SociosService } from '../../services/socios.service';
+import { NotificationService } from '../../../../core/services/notification.service';
+import { TableFilterService } from '../../../../core/services/table-filter.service';
+import { PermissionService } from '../../../../core/services/permission.service';
 
-import { SociosService } from '../../../services/socios.service';
-import { NotificationService } from '../../../../../core/services/notification.service';
-import { Breadcrumb } from '../../../../../shared/components/breadcrumb/breadcrumb';
-import { TableFilterService } from '../../../../../core/services/table-filter.service';
-import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
 
 interface SocioRow {
   id: string;
@@ -57,6 +58,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly filterSvc = inject(TableFilterService);
   private readonly translate = inject(TranslateService);
+  public readonly permissionService = inject(PermissionService)
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'socios';
@@ -142,12 +144,17 @@ export class SociosListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/socios/new']);
   }
 
-  onView(id: string): void {
-    this.router.navigate(['/socios', id]);
-  }
+
 
   onEdit(id: string): void {
-    this.router.navigate(['/socios', id, 'edit']);
+    if (this.permissionService.has('edit', '/socios')) {
+      this.router.navigate(['/socios', id, 'edit']);
+      return;
+    }
+
+    if (this.permissionService.has('view', '/socios')) {
+      this.router.navigate(['/socios', id]);
+    }
   }
 
   onDelete(item: SocioRow): void {

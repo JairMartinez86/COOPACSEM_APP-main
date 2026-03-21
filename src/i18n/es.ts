@@ -15,5 +15,6 @@ import rolesPermissions from './es/rolesPermissions.json';
 import activity from './es/activity.json';
 import userlist from './es/userlist.json';
 import socios from './es/socios.json';
+import proveedor from './es/proveedores.json';
 
-export const es = Object.assign({}, interceptor, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, draft);
+export const es = Object.assign({}, interceptor, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, draft);

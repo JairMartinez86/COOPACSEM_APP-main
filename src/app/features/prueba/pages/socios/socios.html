@@ -20,15 +20,23 @@
               <p class="ue-shell-subtitle mb-0">{{ 'socios.subtitle' | translate }}</p>
             </div>
             <div class="socio-topbar-actions d-flex flex-wrap gap-2">
-              <button type="button" class="btn btn-light border" (click)="onCancel()">
+
+
+              @if (mode !== 'view'){
+
+              <button type="button" class="btn btn-light border" (click)="onCancel()" [appPermission]="['new', 'edit']">
                 <i class="bi bi-arrow-counterclockwise me-1"></i>
                 {{ 'common.actions.clear' | translate }}
               </button>
+
               <button type="button" class="btn btn-primary" (click)="onSave()" [appPermission]="['new', 'edit']"
                 autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
                 <i class="bi bi-save me-1"></i>
                 {{ 'socios.actions.save' | translate }}
               </button>
+
+              }
+
             </div>
           </div>
         </div>
@@ -337,8 +345,7 @@
                       translate }}</label>
                     <input #fechaIngreso id="fechaIngreso" name="fechaIngreso" [(ngModel)]="socio.fechaIngreso"
                       engineSync="fechaIngreso" autoFocusNext [next]="numeroIp" type="text" class="form-control"
-                      dateFormat
-                        [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
+                      dateFormat [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
                   </div>
 
                   <div class="col-md-4" error-notify="numeroIp" error-display="inline">
@@ -519,11 +526,10 @@
                         <div class="input-group">
                           <input #beneficiario1Porcentaje id="beneficiario1Porcentaje" name="beneficiario1Porcentaje"
                             [(ngModel)]="socio.beneficiario1Porcentaje" engineSync="beneficiario1Porcentaje"
-                            autoFocusNext [next]="beneficiario1Parentesco" type="text" class="form-control"
-                             numberFormat [decimals]="2"
-                        [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                        placeholder="0.00">
+                            autoFocusNext [next]="beneficiario1Parentesco" type="text" class="form-control" numberFormat
+                            [decimals]="2" [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                            [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                            placeholder="0.00">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
@@ -574,11 +580,10 @@
                         <div class="input-group">
                           <input #beneficiario2Porcentaje id="beneficiario2Porcentaje" name="beneficiario2Porcentaje"
                             [(ngModel)]="socio.beneficiario2Porcentaje" engineSync="beneficiario2Porcentaje"
-                            autoFocusNext [next]="beneficiario2Parentesco" type="text" class="form-control" 
-                             numberFormat [decimals]="2"
-                        [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                        placeholder="0.00">
+                            autoFocusNext [next]="beneficiario2Parentesco" type="text" class="form-control" numberFormat
+                            [decimals]="2" [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                            [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                            placeholder="0.00">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
@@ -629,11 +634,10 @@
                         <div class="input-group">
                           <input #beneficiario3Porcentaje id="beneficiario3Porcentaje" name="beneficiario3Porcentaje"
                             [(ngModel)]="socio.beneficiario3Porcentaje" engineSync="beneficiario3Porcentaje"
-                            autoFocusNext [next]="beneficiario3Parentesco" type="text" class="form-control"
-                             numberFormat [decimals]="2"
-                        [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                        placeholder="0.00">
+                            autoFocusNext [next]="beneficiario3Parentesco" type="text" class="form-control" numberFormat
+                            [decimals]="2" [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                            [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                            placeholder="0.00">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>

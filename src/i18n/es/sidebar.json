@@ -15,7 +15,8 @@
       "account": "Cuenta",
       "activity": "Actividad",
       "rolesPermissions": "Roles y Permisos",
-      "temp": "Nuevo Socio",
+      "partner": "Socio",
+      "supplier": "Proveedor",
        "emptyPanel": "Vacío",
       "empty": "Vacío"
     }

@@ -1,0 +1,225 @@
+{
+  "common": {
+    "actions": {
+      "clear": "Clear",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "noDate": "Date not available",
+    "selectOption": "Select...",
+    "search": "Search...",
+    "options": {
+      "tipoIdentificacion": {
+        "ruc": "RUC",
+        "cedula": "ID",
+        "pasaporte": "Passport",
+        "otro": "Other"
+      }
+    }
+  },
+  "choices": {
+    "searchPlaceholder": "Search...",
+    "noResults": "No results found",
+    "noChoices": "No options available"
+  },
+  "draft": {
+    "leavePageTitle": "Warning",
+    "leavePageMessage": "You have unsaved changes. If you leave this page, they will be lost. Do you want to continue?",
+    "unsavedDataTitle": "Draft recovered",
+    "unsavedDataRestored": "A draft with unsaved changes was restored."
+  },
+  "proveedores": {
+    "title": "Supplier registration",
+    "titleNew": "New supplier",
+    "titleEdit": "Edit supplier",
+    "titleView": "Supplier details",
+    "subtitle": "Manage the supplier's general, accounting, and contact information.",
+    "actions": {
+      "save": "Save supplier",
+      "delete": {
+      "title": "Eliminar proveedor",
+      "message": "¿Está seguro de eliminar el proveedor {Nombre} ({Identificacion})?",
+      "warning": "Esta acción no se puede deshacer."
+    }
+    },
+    "badges": {
+      "new": "New supplier",
+      "edit": "Edit supplier",
+      "view": "Supplier",
+      "general": "General data",
+      "contact": "Contact"
+    },
+    "messages": {
+      "notFound": "Supplier data not found.",
+      "missingId": "Supplier identifier not found."
+    },
+    "statusActions": {
+      "deactivateTitle": "Deactivate supplier",
+      "deactivateMessage": "Are you sure you want to deactivate the supplier {{nombre}} ({{identificacion}})?",
+      "deactivateWarning": "The supplier will remain inactive until reactivated.",
+      "activateTitle": "Activate supplier",
+      "activateMessage": "Are you sure you want to activate the supplier {{nombre}} ({{identificacion}})?",
+      "activateWarning": "The supplier will be available again in the system.",
+      "activateButton": "Activate",
+      "deactivateButton": "Deactivate"
+    },
+    "groups": {
+      "general": "General",
+      "accounting": "Accounting",
+      "contact": "Contact"
+    },
+    "sections": {
+      "general": {
+        "title": "Supplier data",
+        "subtitle": "General information, classification, accounting account, and contact details."
+      }
+    },
+    "fields": {
+      "idCompany": { "label": "Company", "placeholder": "Company" },
+      "codigo": { "label": "Code", "placeholder": "Code" },
+      "nombre": { "label": "Name", "placeholder": "Supplier name" },
+      "tratamiento": { "label": "Title", "placeholder": "Title" },
+      "sector": { "label": "Sector", "placeholder": "Sector" },
+      "tipoIdentificacion": { "label": "Identification type", "placeholder": "Identification type" },
+      "numeroIdentificacion": { "label": "Identification number", "placeholder": "Identification number" },
+      "paisId": { "label": "Country", "placeholder": "Country" },
+      "direccion": { "label": "Address", "placeholder": "Address" },
+      "telefono": { "label": "Phone", "placeholder": "Phone" },
+      "correo": { "label": "Email", "placeholder": "Email" },
+      "planCuentaNombre": { "label": "Account plan", "placeholder": "Account plan" },
+      "cuentaContableNombre": { "label": "Accounting account", "placeholder": "Accounting account" },
+      "activo": { "label": "Status", "placeholder": "Status" }
+    },
+    "form": {
+      "fieldMeta": {
+        "idCompany": { "label": "General", "tooltip": "Required field" },
+        "codigo": { "label": "General", "tooltip": "Optional field" },
+        "nombre": { "label": "General", "tooltip": "Required field" },
+        "tratamiento": { "label": "General", "tooltip": "Optional field" },
+        "sector": { "label": "General", "tooltip": "Optional field" },
+        "tipoIdentificacion": { "label": "General", "tooltip": "Required field" },
+        "numeroIdentificacion": { "label": "General", "tooltip": "Required field" },
+        "paisId": { "label": "General", "tooltip": "Required field" },
+        "direccion": { "label": "Contact", "tooltip": "Optional field" },
+        "telefono": { "label": "Contact", "tooltip": "Optional field" },
+        "correo": { "label": "Contact", "tooltip": "Optional field" },
+        "planCuentaNombre": { "label": "Accounting", "tooltip": "Optional field" },
+        "cuentaContableNombre": { "label": "Accounting", "tooltip": "Optional field" },
+        "activo": { "label": "General", "tooltip": "Optional field" }
+      },
+      "validations": {
+        "idCompany": {
+          "data": {
+            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "Select a company" }
+          }
+        },
+        "nombre": {
+          "data": {
+            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "Supplier name is required" }
+          }
+        },
+        "tipoIdentificacion": {
+          "data": {
+            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "Identification type is required" }
+          }
+        },
+        "numeroIdentificacion": {
+          "data": {
+            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "Identification number is required" }
+          }
+        },
+        "paisId": {
+          "data": {
+            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "Select a country" }
+          }
+        },
+        "telefono": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^\\+?[1-9][0-9\\s\\-]{6,18}$",
+              "when": "{telefono}!=''",
+              "msj": "Enter a valid phone number"
+            }
+          }
+        },
+        "correo": {
+          "data": {
+            "1": {
+              "rule": "EMAIL",
+              "value": "",
+              "when": "{correo}!=''",
+              "msj": "Enter a valid email"
+            }
+          }
+        }
+      }
+    },
+"list": {
+  "title": "Suppliers",
+  "subtitle": "Manage suppliers with status, contact, and actions",
+  "newButton": "New supplier",
+  "loading": "Loading suppliers...",
+  "empty": "No suppliers found.",
+  "columns": {
+    "provider": "Supplier",
+    "code": "Code",
+    "identification": "Identification",
+    "email": "Email",
+    "status": "Status",
+    "actions": "Actions"
+  }
+},
+    "stats": {
+      "title": "Supplier status",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "activity": {
+      "title": "Recent activity",
+      "empty": "No recent activity.",
+      "new": "New",
+      "updated": "Updated",
+      "byUser": "By: {{usuario}}",
+      "unknownUser": "User not available"
+    },
+    "delete": {
+      "title": "Delete supplier",
+      "message": "Are you sure you want to delete the supplier {{nombre}} ({{identificacion}})?",
+      "warning": "This action cannot be undone."
+    },
+    "status": {
+      "enableTitle": "Activate supplier",
+      "disableTitle": "Deactivate supplier",
+      "enableMessage": "Do you want to activate the supplier {{nombre}}?",
+      "disableMessage": "Do you want to deactivate the supplier {{nombre}}?"
+    },
+    "breadcrumbs": {
+      "list": [
+        { "label": "Home", "url": "/home" },
+        { "label": "Test", "url": "" },
+        { "label": "Suppliers", "url": "/proveedores" }
+      ],
+      "new": [
+        { "label": "Home", "url": "/home" },
+        { "label": "Suppliers", "url": "/proveedores" },
+        { "label": "New", "url": "/proveedores/new" }
+      ],
+      "edit": [
+        { "label": "Home", "url": "/home" },
+        { "label": "Suppliers", "url": "/proveedores" },
+        { "label": "Edit", "url": "/proveedores/id" }
+      ],
+      "view": [
+        { "label": "Home", "url": "/home" },
+        { "label": "Suppliers", "url": "/proveedores" },
+        { "label": "Details", "url": "/proveedores/id" }
+      ]
+    }
+  }
+}

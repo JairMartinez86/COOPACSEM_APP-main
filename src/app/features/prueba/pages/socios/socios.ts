@@ -597,6 +597,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.engine.validateAll?.();
+     this.engine.clearErrors?.();
   }
 
   private loadCatalogos(): void {

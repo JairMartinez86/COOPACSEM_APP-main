@@ -110,9 +110,22 @@ export const SIDEBAR_DATA: SidebarItem[] = [
 
   {
     type: 'link',
-    titleKey: 'sidebar.items.temp',
+    titleKey: 'sidebar.items.partner',
     iconclass: 'ph ph-money',
     router: '/socios',
+    permissions: {
+      view: false,
+      create: false,
+      edit: false,
+      delete: false
+    }
+  },
+
+   {
+    type: 'link',
+    titleKey: 'sidebar.items.supplier',
+    iconclass: 'ph ph-money',
+    router: '/proveedores',
     permissions: {
       view: false,
       create: false,

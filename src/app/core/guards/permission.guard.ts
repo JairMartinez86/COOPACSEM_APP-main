@@ -22,34 +22,28 @@ export const permissionGuard: CanActivateFn = (route) => {
   const platformId = inject(PLATFORM_ID);
 
   const permissionKey = route.data?.['permission'] as string | undefined;
-  const action = (route.data?.['action'] as PermissionAction | undefined) ?? 'view';
+  const actionInput = route.data?.['action'] ?? 'view'; // puede ser array o string
 
-  if (!permissionKey) {
-    return true;
-  }
-
-  if (!isPlatformBrowser(platformId)) {
-    return true;
-  }
+  if (!permissionKey) return true;
+  if (!isPlatformBrowser(platformId)) return true;
 
   const rawUser = localStorage.getItem('user');
-
-  if (!rawUser) {
-    return router.createUrlTree(['/login']);
-  }
+  if (!rawUser) return router.createUrlTree(['/login']);
 
   try {
     const user = JSON.parse(rawUser);
     const permissionsByRoute = user?.permissionsByRoute ?? {};
-
     const normalizedKey = normalizeRoute(permissionKey);
-    const permission: RoutePermission | undefined = permissionsByRoute[normalizedKey];
+    const permission = permissionsByRoute[normalizedKey];
 
-    if (permission?.[action] === true) {
-      return true;
-    }
+    // ✅ ahora soporta array de acciones
+    const actions = Array.isArray(actionInput) ? actionInput : [actionInput];
+    const allowed = actions.some((action: any) => {
+      const normalizedAction = action === 'new' ? 'create' : action;
+      return permission?.[normalizedAction] === true;
+    });
 
-    return false;
+    return allowed ? true : router.createUrlTree(['/unauthorized']);
   } catch {
     localStorage.removeItem('user');
     return router.createUrlTree(['/login']);

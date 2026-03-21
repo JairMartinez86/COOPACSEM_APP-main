@@ -1,0 +1,186 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+  <div class="row g-4">
+    <div class="col-xl-8">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <h5 class="card-title">{{ 'proveedores.list.title' | translate }}</h5>
+            <p class="card-subtitle">{{ 'proveedores.list.subtitle' | translate }}</p>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']"
+            permissionRoute="/proveedores" (click)="onCreate()">
+            <i class="bi bi-plus-lg me-1"></i>
+            {{ 'proveedores.list.newButton' | translate }}
+          </button>
+        </div>
+
+        <div class="card-body">
+          @if (loading) {
+            <div class="py-4 text-center text-muted">
+              {{ 'proveedores.list.loading' | translate }}
+            </div>
+          } @else {
+            @if (proveedores.length > 0) {
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>{{ 'proveedores.list.columns.provider' | translate }}</th>
+                    <th>{{ 'proveedores.list.columns.code' | translate }}</th>
+                    <th>{{ 'proveedores.list.columns.identification' | translate }}</th>
+                    <th>{{ 'proveedores.list.columns.email' | translate }}</th>
+                    <th>{{ 'proveedores.list.columns.status' | translate }}</th>
+                    <th>{{ 'proveedores.list.columns.actions' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of proveedores; track item.id) {
+                    <tr>
+                      <td>
+                        <div class="table-user">
+                          <div class="table-user-avatar table-user-avatar-text">
+                            {{ getInitials(item.nombre) }}
+                          </div>
+
+                          <div>
+                            <div class="table-user-name">{{ item.nombre || '-' }}</div>
+                            <div class="table-user-email">
+                              {{ item.empresa || '-' }}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td>{{ item.codigo || '-' }}</td>
+                      <td>{{ item.numeroIdentificacion || '-' }}</td>
+                      <td>{{ item.correo || '-' }}</td>
+
+                      <td>
+                        <span class="badge" [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                          {{ item.activo
+                            ? ('common.status.active' | translate)
+                            : ('common.status.inactive' | translate) }}
+                        </span>
+                      </td>
+
+                      <td>
+                        
+                        <div class="table-actions">
+                          <button type="button" class="btn btn-icon btn-sm btn-light"
+                            [appPermission]="['view', 'edit']" permissionRoute="/proveedores"
+                            [title]="'common.actions.edit' | translate"
+                            (click)="onEdit(item.id)">
+                            <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
+                          </button>
+
+                          <button type="button" class="btn btn-icon btn-sm btn-light"
+                            [appPermission]="['edit']" permissionRoute="/proveedores"
+                            (click)="onToggleStatus(item)">
+                            <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'"></i>
+                          </button>
+
+                          <button type="button" class="btn btn-icon btn-sm btn-light"
+                            [appPermission]="['delete']" permissionRoute="/proveedores"
+                            [title]="'common.actions.delete' | translate"
+                            (click)="onDelete(item)">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            } @else {
+              <div class="py-4 text-center text-muted">
+                {{ 'proveedores.list.empty' | translate }}
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4">
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="card-title mb-0">{{ 'proveedores.stats.title' | translate }}</h5>
+        </div>
+
+        <div class="card-body">
+          <div class="d-flex flex-column gap-3">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="stats-dot bg-success"></span>
+                  <span>{{ 'proveedores.stats.active' | translate }}</span>
+                </div>
+                <strong>{{ activePercent }}%</strong>
+              </div>
+              <div class="stats-progress">
+                <div class="stats-progress-bar bg-success" [style.width.%]="activePercent"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="stats-dot bg-danger"></span>
+                  <span>{{ 'proveedores.stats.inactive' | translate }}</span>
+                </div>
+                <strong>{{ inactivePercent }}%</strong>
+              </div>
+              <div class="stats-progress">
+                <div class="stats-progress-bar bg-danger" [style.width.%]="inactivePercent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">{{ 'proveedores.activity.title' | translate }}</h5>
+        </div>
+
+        <div class="card-body p-0 activity-card-body">
+          @if (latestActivity.length === 0) {
+            <div class="px-3 py-2 text-muted small">
+              {{ 'proveedores.activity.empty' | translate }}
+            </div>
+          } @else {
+            @for (item of latestActivity; track item.id + '-' + item.tipo + '-' + item.fecha) {
+              <div class="recent-list-item d-flex align-items-center gap-2 px-2 py-2 border-top">
+                <div class="letter-avatar">
+                  {{ getInitials(item.nombre) }}
+                </div>
+
+                <div class="flex-grow-1 min-w-0">
+                  <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                    <strong class="text-truncate small mb-0">{{ item.nombre }}</strong>
+                    <span class="badge badge-xs"
+                      [ngClass]="item.tipo === 'new' ? 'badge-soft-success' : 'badge-soft-info'">
+                      {{ item.tipo === 'new'
+                        ? ('proveedores.activity.new' | translate)
+                        : ('proveedores.activity.updated' | translate) }}
+                    </span>
+                  </div>
+
+                  <div class="text-muted xs-text">
+                    {{ formatActivityLabel(item.fecha) }}
+                  </div>
+
+                  <div class="text-muted xs-text">
+                    {{ 'proveedores.activity.byUser' | translate:{ usuario: item.usuario || '-' } }}
+                  </div>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
