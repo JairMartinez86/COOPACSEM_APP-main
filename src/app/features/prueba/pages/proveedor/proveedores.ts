@@ -56,8 +56,9 @@ type DraftRef<T> = {
     JMartErrorNotifyDirective,
     JMartEngineSyncDirective,
     AppPermissionDirective,
-    Breadcrumb
-  ],
+    Breadcrumb,
+    JMartAutoFocusDirective,
+],
   templateUrl: './proveedores.html',
   styleUrls: ['./proveedores.scss']
 })
