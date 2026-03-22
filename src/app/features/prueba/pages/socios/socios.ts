@@ -597,7 +597,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.engine.validateAll?.();
-     this.engine.clearErrors?.();
+    this.engine.clearErrors?.();
   }
 
   private loadCatalogos(): void {
@@ -808,79 +808,79 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-  onSave(): void {
-    if (this.mode === 'view') {
-      return;
-    }
+onSave(): void {
+  if (this.mode === 'view') {
+    return;
+  }
 
-    const ok = this.engine.validateAll?.();
+  const ok = this.engine.validateAll?.();
 
-    if (!ok) {
-      this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
-      return;
-    }
+  if (!ok) {
+    this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
+    return;
+  }
 
-    this.engine.clearErrors?.();
-    this.notify.close?.();
+  this.engine.clearErrors?.();
+  this.notify.close?.();
 
-    const payload = this.toSocioForm(this.socio);
-    payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
-    payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
-    payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
-    payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
+  const payload = this.toSocioForm(this.socio);
+  payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
+  payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
+  payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
+  payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
 
+  this.sociosService
+    .save(payload)
+    .pipe(finalize(() => { }))
+    .subscribe({
+      next: (res: any) => {
+        const savedSocio = this.toSocioForm(res?.data?.socio ?? payload);
 
+        if (this.mode === 'edit') {
+          savedSocio.fechaEmision = this.appConfigService.formatDate(savedSocio.fechaEmision);
+          savedSocio.fechaVencimiento = this.appConfigService.formatDate(savedSocio.fechaVencimiento);
+          savedSocio.fechaNacimiento = this.appConfigService.formatDate(savedSocio.fechaNacimiento);
+          savedSocio.fechaIngreso = this.appConfigService.formatDate(savedSocio.fechaIngreso);
 
-
-
-    this.sociosService
-      .save(payload)
-      .pipe(finalize(() => { }))
-      .subscribe({
-        next: (res: any) => {
-          const savedSocio = this.toSocioForm(res?.data?.socio ?? payload);
+          this.socio = { ...savedSocio };
+          this.copy = { ...savedSocio };
 
           this.notify.showFromApiResponse?.(res, 'success');
           this.draftRef?.clear();
 
-          if (this.mode === 'edit') {
+          this.syncCatalogValuesWithOptions();
+          this.patchEngineFromSocio();
+          this.engine.clearErrors?.();
+          this.loadMunicipiosIfNeeded();
 
-            savedSocio.fechaEmision = this.appConfigService.formatDate(savedSocio.fechaEmision);
-            savedSocio.fechaVencimiento = this.appConfigService.formatDate(savedSocio.fechaVencimiento);
-            savedSocio.fechaNacimiento = this.appConfigService.formatDate(savedSocio.fechaNacimiento);
-            savedSocio.fechaIngreso = this.appConfigService.formatDate(savedSocio.fechaIngreso);
+          this.formRef?.form.markAsPristine();
+          this.formRef?.form.markAsUntouched();
 
+          this.cdr.detectChanges();
 
-            this.socio = { ...savedSocio };
-            this.copy = { ...savedSocio };
+          setTimeout(() => {
+            this.refreshAllChoices();
+            this.reapplyChoicesValues();
 
-
-
-
-            this.syncCatalogValuesWithOptions();
-            this.patchEngineFromSocio();
-            this.engine.clearErrors?.();
-            this.loadMunicipiosIfNeeded();
+            this.formRef?.form.markAsPristine();
+            this.formRef?.form.markAsUntouched();
 
             this.cdr.detectChanges();
+          }, 50);
 
-            setTimeout(() => {
-              this.refreshAllChoices();
-              this.reapplyChoicesValues();
-              this.cdr.detectChanges();
-            }, 50);
+          return;
+        }
 
-            return;
-          }
+        this.notify.showFromApiResponse?.(res, 'success');
+        this.draftRef?.clear();
 
-          this.resetFormAfterSuccess();
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-        },
-      });
-  }
-
+        this.resetFormAfterSuccess();
+      },
+      error: (err: any) => {
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      },
+    });
+}
   onCancel(): void {
     this.notify.close?.();
     this.draftRef?.cancel();

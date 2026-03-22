@@ -35,6 +35,7 @@ import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb'
 import { CatalogosService } from '../../../../shared/service/CatalogosService';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { EMPTY_PROVEEDOR, ProveedorForm } from '../../interface/proveedor.model';
+import { LanguageService } from '../../../../core/services/languageService';
 
 declare const Choices: any;
 
@@ -77,6 +78,7 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
   public readonly notify = inject(NotificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private langService = inject(LanguageService);
 
   proveedor: ProveedorForm = { ...EMPTY_PROVEEDOR };
   copy: ProveedorForm = { ...EMPTY_PROVEEDOR };
@@ -109,6 +111,9 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
   private sectorChoices: any;
   private tipoIdentificacionChoices: any;
   private paisChoices: any;
+
+  private langChangeSub?: Subscription;
+  languages: any[] = [];
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: object,
@@ -145,7 +150,18 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
       this.reapplyChoicesValues();
       this.cdr.detectChanges();
     }, 100);
+
+
+    this.langChangeSub = this.translate.onLangChange.subscribe(() => {
+      this.languages = this.langService.getAvailableLanguages();
+      this.loadProveedorConfig();
+      this.refreshAllChoices();
+    });
   }
+
+
+
+
 
   ngOnDestroy(): void {
     this.destroyAllChoices();
@@ -408,25 +424,36 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
         const savedProveedor = this.toProveedorForm(res?.data?.proveedor ?? payload);
 
         this.notify.showFromApiResponse?.(res, 'success');
-        this.draftRef?.clear();
 
         if (this.mode === 'edit') {
           this.proveedor = { ...savedProveedor };
           this.copy = { ...savedProveedor };
 
+          this.draftRef?.clear();
+
+
           this.patchEngineFromProveedor();
           this.engine.clearErrors?.();
+
+          this.formRef?.form.markAsPristine();
+          this.formRef?.form.markAsUntouched();
 
           this.cdr.detectChanges();
 
           setTimeout(() => {
             this.refreshAllChoices();
             this.reapplyChoicesValues();
+
+            this.formRef?.form.markAsPristine();
+            this.formRef?.form.markAsUntouched();
+
             this.cdr.detectChanges();
+            this.resetFormAfterSuccess();
           }, 50);
 
           return;
         }
+
 
         this.resetFormAfterSuccess();
       },
@@ -447,7 +474,6 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private resetFormAfterSuccess(): void {
-    this.notify.close?.();
     this.draftRef?.clear();
     this.formRef?.resetForm();
 
@@ -466,11 +492,18 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
     this.patchEngineFromProveedor();
     this.engine.clearErrors?.();
 
+    this.formRef?.form.markAsPristine();
+    this.formRef?.form.markAsUntouched();
+
     this.cdr.detectChanges();
 
     setTimeout(() => {
       this.refreshAllChoices();
       this.reapplyChoicesValues();
+
+      this.formRef?.form.markAsPristine();
+      this.formRef?.form.markAsUntouched();
+
       this.cdr.detectChanges();
     }, 50);
   }
@@ -632,7 +665,5 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
     this.paisChoices = this.createChoicesInstance(this.paisSelectRef, this.proveedor.paisId);
   }
 
-  get isReadOnly(): boolean {
-    return this.mode === 'view';
-  }
+
 }

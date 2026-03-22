@@ -75,62 +75,201 @@
       }
     },
     "fields": {
-      "idCompany": { "label": "Empresa", "placeholder": "Empresa" },
-      "codigo": { "label": "Código", "placeholder": "Código" },
-      "nombre": { "label": "Nombre", "placeholder": "Nombre del proveedor" },
-      "tratamiento": { "label": "Tratamiento", "placeholder": "Tratamiento" },
-      "sector": { "label": "Sector", "placeholder": "Sector" },
-      "tipoIdentificacion": { "label": "Tipo de identificación", "placeholder": "Tipo de identificación" },
-      "numeroIdentificacion": { "label": "Número de identificación", "placeholder": "Número de identificación" },
-      "paisId": { "label": "País", "placeholder": "País" },
-      "direccion": { "label": "Dirección", "placeholder": "Dirección" },
-      "telefono": { "label": "Teléfono", "placeholder": "Teléfono" },
-      "correo": { "label": "Correo", "placeholder": "Correo electrónico" },
-      "planCuentaNombre": { "label": "Plan de cuenta", "placeholder": "Plan de cuenta" },
-      "cuentaContableNombre": { "label": "Cuenta contable", "placeholder": "Cuenta contable" },
-      "activo": { "label": "Estado", "placeholder": "Estado" }
+      "idCompany": {
+        "label": "Empresa",
+        "placeholder": "Empresa"
+      },
+      "codigo": {
+        "label": "Código",
+        "placeholder": "Código"
+      },
+      "nombre": {
+        "label": "Nombre",
+        "placeholder": "Nombre del proveedor"
+      },
+      "tratamiento": {
+        "label": "Tratamiento",
+        "placeholder": "Tratamiento"
+      },
+      "sector": {
+        "label": "Sector",
+        "placeholder": "Sector"
+      },
+      "tipoIdentificacion": {
+        "label": "Tipo de identificación",
+        "placeholder": "Tipo de identificación"
+      },
+      "numeroIdentificacion": {
+        "label": "Número de identificación",
+        "placeholder": "Número de identificación"
+      },
+      "paisId": {
+        "label": "País",
+        "placeholder": "País"
+      },
+      "direccion": {
+        "label": "Dirección",
+        "placeholder": "Dirección"
+      },
+      "telefono": {
+        "label": "Teléfono",
+        "placeholder": "Teléfono"
+      },
+      "correo": {
+        "label": "Correo",
+        "placeholder": "Correo electrónico"
+      },
+      "planCuentaNombre": {
+        "label": "Plan de cuenta",
+        "placeholder": "Plan de cuenta"
+      },
+      "cuentaContableNombre": {
+        "label": "Cuenta contable",
+        "placeholder": "Cuenta contable"
+      },
+      "activo": {
+        "label": "Estado",
+        "placeholder": "Estado"
+      }
     },
     "form": {
       "fieldMeta": {
-        "idCompany": { "label": "General", "tooltip": "Campo requerido" },
-        "codigo": { "label": "General", "tooltip": "Campo opcional" },
-        "nombre": { "label": "General", "tooltip": "Campo requerido" },
-        "tratamiento": { "label": "General", "tooltip": "Campo opcional" },
-        "sector": { "label": "General", "tooltip": "Campo opcional" },
-        "tipoIdentificacion": { "label": "General", "tooltip": "Campo requerido" },
-        "numeroIdentificacion": { "label": "General", "tooltip": "Campo requerido" },
-        "paisId": { "label": "General", "tooltip": "Campo requerido" },
-        "direccion": { "label": "Contacto", "tooltip": "Campo opcional" },
-        "telefono": { "label": "Contacto", "tooltip": "Campo opcional" },
-        "correo": { "label": "Contacto", "tooltip": "Campo opcional" },
-        "planCuentaNombre": { "label": "Contabilidad", "tooltip": "Campo opcional" },
-        "cuentaContableNombre": { "label": "Contabilidad", "tooltip": "Campo opcional" },
-        "activo": { "label": "General", "tooltip": "Campo opcional" }
+        "idCompany": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        },
+        "codigo": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        },
+        "nombre": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        },
+        "tratamiento": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        },
+        "sector": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        },
+        "tipoIdentificacion": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        },
+        "numeroIdentificacion": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        },
+        "paisId": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        },
+        "direccion": {
+          "label": "Proveedor",
+          "tooltip": "Campo opcional"
+        },
+        "telefono": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        },
+        "correo": {
+          "label": "Proveedor",
+          "tooltip": "Campo opcional"
+        },
+        "planCuentaNombre": {
+          "label": "Contabilidad",
+          "tooltip": "Campo requerido"
+        },
+        "cuentaContableNombre": {
+          "label": "Contabilidad",
+          "tooltip": "Campo requerido"
+        },
+        "activo": {
+          "label": "Proveedor",
+          "tooltip": "Campo requerido"
+        }
       },
       "validations": {
         "idCompany": {
           "data": {
-            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "Seleccione una empresa" }
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione una empresa"
+            }
+          }
+        },
+        "codigo": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese un código"
+            }
+          }
+        },
+        "tratamiento": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione una opción (Tratamiento)"
+            }
           }
         },
         "nombre": {
           "data": {
-            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "El nombre del proveedor es requerido" }
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "El nombre del proveedor es requerido"
+            }
+          }
+        },
+        "sector": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione un sector"
+            }
           }
         },
         "tipoIdentificacion": {
           "data": {
-            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "El tipo de identificación es requerido" }
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "El tipo de identificación es requerido"
+            }
           }
         },
         "numeroIdentificacion": {
           "data": {
-            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "El número de identificación es requerido" }
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "El número de identificación es requerido"
+            }
           }
         },
         "paisId": {
           "data": {
-            "1": { "rule": "LEN>", "value": "0", "when": "", "msj": "Seleccione un país" }
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione un país"
+            }
           }
         },
         "telefono": {
@@ -140,6 +279,36 @@
               "value": "^\\+?[1-9][0-9\\s\\-]{6,18}$",
               "when": "{telefono}!=''",
               "msj": "Ingrese un número de teléfono válido"
+            }
+          }
+        },
+        "planCuentaNombre": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Plan de cuenta es requerido"
+            }
+          }
+        },
+         "cuentaContableNombre": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Cuenta contable es requerido"
+            }
+          }
+        },
+          "direccion": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
             }
           }
         },
@@ -155,21 +324,21 @@
         }
       }
     },
-"list": {
-  "title": "Proveedores",
-  "subtitle": "Administra los proveedores con estado, contacto y acciones",
-  "newButton": "Nuevo proveedor",
-  "loading": "Cargando proveedores...",
-  "empty": "No se encontraron proveedores.",
-  "columns": {
-    "provider": "Proveedor",
-    "code": "Código",
-    "identification": "Identificación",
-    "email": "Correo",
-    "status": "Estado",
-    "actions": "Acciones"
-  }
-},
+    "list": {
+      "title": "Proveedores",
+      "subtitle": "Administra los proveedores con estado, contacto y acciones",
+      "newButton": "Nuevo proveedor",
+      "loading": "Cargando proveedores...",
+      "empty": "No se encontraron proveedores.",
+      "columns": {
+        "provider": "Proveedor",
+        "code": "Código",
+        "identification": "Identificación",
+        "email": "Correo",
+        "status": "Estado",
+        "actions": "Acciones"
+      }
+    },
     "stats": {
       "title": "Estado de proveedores",
       "active": "Activos",
@@ -183,11 +352,11 @@
       "byUser": "Por: {{usuario}}",
       "unknownUser": "Usuario no disponible"
     },
- "delete": {
-  "title": "Eliminar proveedor",
-  "message": "¿Está seguro de eliminar el proveedor {{nombre}} ({{identificacion}})?",
-  "warning": "Esta acción no se puede deshacer."
-},
+    "delete": {
+      "title": "Eliminar proveedor",
+      "message": "¿Está seguro de eliminar el proveedor {{nombre}} ({{identificacion}})?",
+      "warning": "Esta acción no se puede deshacer."
+    },
     "status": {
       "enableTitle": "Activar proveedor",
       "disableTitle": "Desactivar proveedor",
@@ -196,24 +365,60 @@
     },
     "breadcrumbs": {
       "list": [
-        { "label": "Inicio", "url": "/home" },
-        { "label": "Prueba", "url": "" },
-        { "label": "Proveedores", "url": "/proveedores" }
+        {
+          "label": "Inicio",
+          "url": "/home"
+        },
+        {
+          "label": "Prueba",
+          "url": ""
+        },
+        {
+          "label": "Proveedores",
+          "url": "/proveedores"
+        }
       ],
       "new": [
-        { "label": "Inicio", "url": "/home" },
-        { "label": "Proveedores", "url": "/proveedores" },
-        { "label": "Nuevo", "url": "/proveedores/new" }
+        {
+          "label": "Inicio",
+          "url": "/home"
+        },
+        {
+          "label": "Proveedores",
+          "url": "/proveedores"
+        },
+        {
+          "label": "Nuevo",
+          "url": "/proveedores/new"
+        }
       ],
       "edit": [
-        { "label": "Inicio", "url": "/home" },
-        { "label": "Proveedores", "url": "/proveedores" },
-        { "label": "Editar", "url": "/proveedores/id" }
+        {
+          "label": "Inicio",
+          "url": "/home"
+        },
+        {
+          "label": "Proveedores",
+          "url": "/proveedores"
+        },
+        {
+          "label": "Editar",
+          "url": "/proveedores/id"
+        }
       ],
       "view": [
-        { "label": "Inicio", "url": "/home" },
-        { "label": "Proveedores", "url": "/proveedores" },
-        { "label": "Detalle", "url": "/proveedores/id" }
+        {
+          "label": "Inicio",
+          "url": "/home"
+        },
+        {
+          "label": "Proveedores",
+          "url": "/proveedores"
+        },
+        {
+          "label": "Detalle",
+          "url": "/proveedores/id"
+        }
       ]
     }
   }
