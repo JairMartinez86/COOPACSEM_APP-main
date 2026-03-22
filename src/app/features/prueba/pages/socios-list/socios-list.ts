@@ -19,6 +19,7 @@ import { PermissionService } from '../../../../core/services/permission.service'
 
 interface SocioRow {
   id: string;
+  codigoSocio : string;
   nombreCompleto: string;
   nombrePublico: string;
   numeroIdentificacion: string;
