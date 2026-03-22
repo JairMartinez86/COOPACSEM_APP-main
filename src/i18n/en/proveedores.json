@@ -35,7 +35,7 @@
   },
   "proveedores": {
     "title": "Supplier Registration",
-    "titleNew": "New Supplier",
+    "titleNew": "Supplier",
     "titleEdit": "Edit Supplier",
     "titleView": "Supplier Details",
     "subtitle": "Manage the supplier's general, accounting, and contact information.",

@@ -35,7 +35,7 @@
   },
   "proveedores": {
     "title": "Registro de proveedor",
-    "titleNew": "Nuevo proveedor",
+    "titleNew": "Proveedor",
     "titleEdit": "Editar proveedor",
     "titleView": "Detalle del proveedor",
     "subtitle": "Administra la información general, contable y de contacto del proveedor.",
