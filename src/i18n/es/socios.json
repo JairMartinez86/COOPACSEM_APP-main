@@ -1,45 +1,4 @@
 {
-  "common": {
-    "actions": {
-      "clear": "Limpiar",
-      "edit": "Editar",
-      "delete": "Eliminar"
-    },
-    "status": {
-      "active": "Activo",
-      "inactive": "Inactivo"
-    },
-    "noDate": "Fecha no disponible",
-    "selectOption": "Seleccione...",
-    "options": {
-      "tipoIdentificacion": {
-        "cedula": "Cédula",
-        "pasaporte": "Pasaporte",
-        "residencia": "Residencia",
-        "otro": "Otro"
-      },
-      "conyugeTipoIdentificacion": {
-        "cedula": "Cédula",
-        "pasaporte": "Pasaporte",
-        "residencia": "Residencia",
-        "otro": "Otro"
-      },
-      "sociedadLabora": {
-        "gmg_comercial": "GMG Comercial",
-        "gmg_servicios": "GMG Servicios",
-        "gmg_zona_franca": "GMG Zona Franca"
-      }
-    }
-  },
-  "choices": {
-    "searchPlaceholder": "Buscar...",
-    "noResults": "No se encontraron resultados",
-    "noChoices": "No hay opciones disponibles"
-  },
-  "draft": {
-    "leavePageTitle": "Advertencia",
-    "leavePageMessage": "Tienes cambios sin guardar. Si sales de esta página se perderán. ¿Deseas continuar?"
-  },
   "socios": {
     "title": "Registro de socio",
     "subtitle": "En PC el wizard queda fijo a la izquierda. En móvil queda fijo arriba y se mueve horizontalmente según la sección activa.",
@@ -48,7 +7,7 @@
     },
     "badges": {
       "newMember": "Nuevo socio",
-      "sections": "4 secciones",
+      "sections": "5 secciones",
       "beneficiaries": "Hasta 3 beneficiarios"
     },
     "messages": {
@@ -71,6 +30,10 @@
         "datosPersonales": {
           "title": "Datos personales",
           "desc": "Identidad y contacto"
+        },
+        "ahorro": {
+          "title": "Ahorro",
+          "desc": "Cuentas y deducciones"
         },
         "actividadEconomica": {
           "title": "Actividad económica",
@@ -106,6 +69,10 @@
       "beneficiarios": {
         "title": "Beneficiarios",
         "subtitle": "Distribuya el porcentaje entre los beneficiarios registrados."
+      },
+      "ahorro": {
+        "title": "Ahorro",
+        "subtitle": "Configura ahorro programado para cuenta corriente y navideña."
       }
     },
     "beneficiarios": {
@@ -297,6 +264,55 @@
       "beneficiario3Cedula": {
         "label": "Cédula",
         "placeholder": "Cédula"
+      },
+      "codigoSocio": {
+        "label": "Código del socio",
+        "placeholder": "Autogenerado"
+      },
+      "sexo": {
+        "label": "Sexo",
+        "placeholder": "Seleccione",
+        "options": {
+          "m": "Hombre",
+          "f": "Mujer"
+        }
+      },
+      "numeroInss": {
+        "label": "Número INSS",
+        "placeholder": "Ingrese el número INSS"
+      },
+      "observaciones": {
+        "label": "Observaciones",
+        "placeholder": "Ingrese observaciones"
+      },
+      "cuentaCorrienteActiva": {
+        "label": "Cuenta corriente",
+        "placeholder": ""
+      },
+      "cuentaCorrienteFechaInicioDeduccion": {
+        "label": "Fecha inicio de deducción",
+        "placeholder": ""
+      },
+      "cuentaCorrienteMontoCuota": {
+        "label": "Monto de cuota",
+        "placeholder": "0.00"
+      },
+      "cuentaNavidenaActiva": {
+        "label": "Cuenta navideña",
+        "placeholder": ""
+      },
+      "cuentaNavidenaFechaInicioDeduccion": {
+        "label": "Fecha inicio de deducción",
+        "placeholder": ""
+      },
+      "cuentaNavidenaMontoCuota": {
+        "label": "Monto de cuota",
+        "placeholder": "0.00"
+      },
+      "frecuencia": {
+        "label": "Frecuencia",
+        "mensual": "Mensual",
+        "quincenal": "Quincenal"
       }
     },
     "form": {
@@ -471,6 +487,38 @@
         },
         "beneficiario3Cedula": {
           "label": "Beneficiarios",
+          "tooltip": "Campo opcional"
+        },
+        "codigoSocio": {
+          "label": "Identificación",
+          "tooltip": "Campo autogenerado"
+        },
+        "sexo": {
+          "label": "Identificación",
+          "tooltip": "Campo opcional"
+        },
+        "numeroInss": {
+          "label": "Identificación",
+          "tooltip": "Campo opcional"
+        },
+        "observaciones": {
+          "label": "Ubicación y contacto",
+          "tooltip": "Campo opcional"
+        },
+        "cuentaCorrienteFechaInicioDeduccion": {
+          "label": "Ahorro",
+          "tooltip": "Campo opcional"
+        },
+        "cuentaCorrienteMontoCuota": {
+          "label": "Ahorro",
+          "tooltip": "Campo opcional"
+        },
+        "cuentaNavidenaFechaInicioDeduccion": {
+          "label": "Ahorro",
+          "tooltip": "Campo opcional"
+        },
+        "cuentaNavidenaMontoCuota": {
+          "label": "Ahorro",
           "tooltip": "Campo opcional"
         }
       },
@@ -904,6 +952,26 @@
               "msj": "Ingrese el número de cédula del tercer beneficiario"
             }
           }
+        },
+        "cuentaCorrienteMontoCuota": {
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese un valor válido"
+            }
+          }
+        },
+        "cuentaNavidenaMontoCuota": {
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese un valor válido"
+            }
+          }
         }
       }
     },
@@ -984,6 +1052,47 @@
           "url": "/socios/id"
         }
       ]
+    },
+    "common": {
+      "actions": {
+        "clear": "Limpiar",
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo"
+      },
+      "noDate": "Fecha no disponible",
+      "selectOption": "Seleccione...",
+      "options": {
+        "tipoIdentificacion": {
+          "cedula": "Cédula",
+          "pasaporte": "Pasaporte",
+          "residencia": "Residencia",
+          "otro": "Otro"
+        },
+        "conyugeTipoIdentificacion": {
+          "cedula": "Cédula",
+          "pasaporte": "Pasaporte",
+          "residencia": "Residencia",
+          "otro": "Otro"
+        },
+        "sociedadLabora": {
+          "gmg_comercial": "GMG Comercial",
+          "gmg_servicios": "GMG Servicios",
+          "gmg_zona_franca": "GMG Zona Franca"
+        }
+      }
+    },
+    "choices": {
+      "searchPlaceholder": "Buscar...",
+      "noResults": "No se encontraron resultados",
+      "noChoices": "No hay opciones disponibles"
+    },
+    "draft": {
+      "leavePageTitle": "Advertencia",
+      "leavePageMessage": "Tienes cambios sin guardar. Si sales de esta página se perderán. ¿Deseas continuar?"
     }
   }
 }

@@ -1,6 +1,11 @@
 export interface SocioForm {
   id: string | null;
 
+  codigoSocio: string | null;
+  sexo: string | null;
+  numeroInss: string | null;
+  observaciones: string | null;
+
   nombreCompleto: string | null;
   nombrePublico: string | null;
   tipoIdentificacion: string | null;
@@ -37,6 +42,16 @@ export interface SocioForm {
   conyugePaisNacimiento: string | null;
   conyugeNacionalidadId: string | null;
 
+  cuentaCorrienteActiva: boolean;
+  cuentaCorrienteFechaInicioDeduccion: string | null;
+  cuentaCorrienteMontoCuota: number | null;
+  cuentaCorrienteEsMensual: boolean;
+
+  cuentaNavidenaActiva: boolean;
+  cuentaNavidenaFechaInicioDeduccion: string | null;
+  cuentaNavidenaMontoCuota: number | null;
+  cuentaNavidenaEsMensual: boolean;
+
   beneficiario1Nombre: string | null;
   beneficiario1Porcentaje: number | null;
   beneficiario1Parentesco: string | null;
@@ -57,6 +72,11 @@ export interface SocioForm {
 
 export const EMPTY_SOCIO: SocioForm = {
   id: null,
+
+  codigoSocio: null,
+  sexo: null,
+  numeroInss: null,
+  observaciones: null,
 
   nombreCompleto: null,
   nombrePublico: null,
@@ -93,6 +113,16 @@ export const EMPTY_SOCIO: SocioForm = {
   conyugeNumeroIdentificacion: null,
   conyugePaisNacimiento: null,
   conyugeNacionalidadId: null,
+
+  cuentaCorrienteActiva: false,
+  cuentaCorrienteFechaInicioDeduccion: null,
+  cuentaCorrienteMontoCuota: null,
+  cuentaCorrienteEsMensual: false,
+
+  cuentaNavidenaActiva: false,
+  cuentaNavidenaFechaInicioDeduccion: null,
+  cuentaNavidenaMontoCuota: null,
+  cuentaNavidenaEsMensual: false,
 
   beneficiario1Nombre: null,
   beneficiario1Porcentaje: null,

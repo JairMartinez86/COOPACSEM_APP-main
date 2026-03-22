@@ -100,6 +100,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly sections = [
     'datos-personales',
+    'ahorro',
     'actividad-economica',
     'datos-conyuge',
     'beneficiarios',
@@ -349,19 +350,22 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     } catch { }
   }
 
-  private resetFormAfterSuccess(): void {
-    this.notify.close?.();
+  private resetFormAfterSuccess(response?: any): void {
     this.draftRef?.clear();
-    this.formRef?.resetForm();
+    this.draftRef?.cancel();
 
-    this.socio = { ...EMPTY_SOCIO };
-    this.copy = { ...EMPTY_SOCIO };
+    this.socio = this.toSocioForm({ ...EMPTY_SOCIO });
+    this.copy = this.toSocioForm({ ...EMPTY_SOCIO });
     this.municipios = [];
+    this.activeSection = 'datos-personales';
 
+    this.formRef?.resetForm(this.socio);
+    this.syncCatalogValuesWithOptions();
     this.patchEngineFromSocio();
     this.engine.clearErrors?.();
 
-    this.activeSection = 'datos-personales';
+    this.formRef?.form.markAsPristine();
+    this.formRef?.form.markAsUntouched();
 
     this.cdr.detectChanges();
 
@@ -371,9 +375,17 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       setTimeout(() => {
         this.clearAllChoicesSelections();
         this.reapplyChoicesValues();
+
+        this.formRef?.form.markAsPristine();
+        this.formRef?.form.markAsUntouched();
+
         this.cdr.detectChanges();
-      }, 50);
-    }, 50);
+
+        if (response) {
+          this.notify.showFromApiResponse?.(response, 'success');
+        }
+      }, 80);
+    }, 80);
   }
 
   private removeOrphanChoicesWrapper(element: HTMLSelectElement): void {
@@ -761,6 +773,10 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         data?.otrosIngresos == null ? null : Number(data.otrosIngresos),
       ingresosAnuales:
         data?.ingresosAnuales == null ? null : Number(data.ingresosAnuales),
+      cuentaCorrienteMontoCuota:
+        data?.cuentaCorrienteMontoCuota == null ? null : Number(data.cuentaCorrienteMontoCuota),
+      cuentaNavidenaMontoCuota:
+        data?.cuentaNavidenaMontoCuota == null ? null : Number(data.cuentaNavidenaMontoCuota),
       beneficiario1Porcentaje:
         data?.beneficiario1Porcentaje == null ? null : Number(data.beneficiario1Porcentaje),
       beneficiario2Porcentaje:
@@ -785,7 +801,8 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   hasUnsavedChanges(): boolean {
-    return JSON.stringify(this.toSocioForm(this.socio)) !== JSON.stringify(this.toSocioForm(this.copy));
+    return JSON.stringify(this.normalize(this.toSocioForm(this.socio))) !==
+      JSON.stringify(this.normalize(this.toSocioForm(this.copy)));
   }
 
   private normalizeDate(value: string | null): string | null {
@@ -807,95 +824,133 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-
-onSave(): void {
-  if (this.mode === 'view') {
-    return;
+  onCuentaCorrienteToggle(): void {
+    if (!this.socio.cuentaCorrienteActiva) {
+      this.socio.cuentaCorrienteFechaInicioDeduccion = null;
+      this.socio.cuentaCorrienteMontoCuota = null;
+      this.socio.cuentaCorrienteEsMensual = false;
+    }
   }
 
-  const ok = this.engine.validateAll?.();
-
-  if (!ok) {
-    this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
-    return;
+  onCuentaNavidenaToggle(): void {
+    if (!this.socio.cuentaNavidenaActiva) {
+      this.socio.cuentaNavidenaFechaInicioDeduccion = null;
+      this.socio.cuentaNavidenaMontoCuota = null;
+      this.socio.cuentaNavidenaEsMensual = false;
+    }
   }
 
-  this.engine.clearErrors?.();
-  this.notify.close?.();
+  onSave(): void {
+    if (this.mode === 'view') {
+      return;
+    }
 
-  const payload = this.toSocioForm(this.socio);
-  payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
-  payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
-  payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
-  payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
+    const ok = this.engine.validateAll?.();
 
-  this.sociosService
-    .save(payload)
-    .pipe(finalize(() => { }))
-    .subscribe({
-      next: (res: any) => {
-        const savedSocio = this.toSocioForm(res?.data?.socio ?? payload);
+    if (!ok) {
+      this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
+      return;
+    }
 
-        if (this.mode === 'edit') {
-          savedSocio.fechaEmision = this.appConfigService.formatDate(savedSocio.fechaEmision);
-          savedSocio.fechaVencimiento = this.appConfigService.formatDate(savedSocio.fechaVencimiento);
-          savedSocio.fechaNacimiento = this.appConfigService.formatDate(savedSocio.fechaNacimiento);
-          savedSocio.fechaIngreso = this.appConfigService.formatDate(savedSocio.fechaIngreso);
+    this.engine.clearErrors?.();
+    this.notify.close?.();
 
-          this.socio = { ...savedSocio };
-          this.copy = { ...savedSocio };
+    const payload = this.toSocioForm(this.socio);
+    payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
+    payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
+    payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
+    payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
+    payload.cuentaCorrienteFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaCorrienteFechaInicioDeduccion);
+    payload.cuentaNavidenaFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaNavidenaFechaInicioDeduccion);
 
-          this.notify.showFromApiResponse?.(res, 'success');
-          this.draftRef?.clear();
+    this.sociosService
+      .save(payload)
+      .pipe(finalize(() => { }))
+      .subscribe({
+        next: (res: any) => {
+          const savedSocio = this.toSocioForm(res?.data?.socio ?? payload);
 
-          this.syncCatalogValuesWithOptions();
-          this.patchEngineFromSocio();
-          this.engine.clearErrors?.();
-          this.loadMunicipiosIfNeeded();
+          if (this.mode === 'edit') {
+            savedSocio.fechaEmision = this.appConfigService.formatDate(savedSocio.fechaEmision);
+            savedSocio.fechaVencimiento = this.appConfigService.formatDate(savedSocio.fechaVencimiento);
+            savedSocio.fechaNacimiento = this.appConfigService.formatDate(savedSocio.fechaNacimiento);
+            savedSocio.fechaIngreso = this.appConfigService.formatDate(savedSocio.fechaIngreso);
+            savedSocio.cuentaCorrienteFechaInicioDeduccion = this.appConfigService.formatDate(savedSocio.cuentaCorrienteFechaInicioDeduccion);
+            savedSocio.cuentaNavidenaFechaInicioDeduccion = this.appConfigService.formatDate(savedSocio.cuentaNavidenaFechaInicioDeduccion);
 
-          this.formRef?.form.markAsPristine();
-          this.formRef?.form.markAsUntouched();
+            this.socio = { ...savedSocio };
+            this.copy = { ...savedSocio };
 
-          this.cdr.detectChanges();
+            this.draftRef?.clear();
+            this.draftRef?.cancel();
 
-          setTimeout(() => {
-            this.refreshAllChoices();
-            this.reapplyChoicesValues();
+            this.syncCatalogValuesWithOptions();
+            this.patchEngineFromSocio();
+            this.engine.clearErrors?.();
+            this.loadMunicipiosIfNeeded();
 
+            this.formRef?.resetForm(this.socio);
             this.formRef?.form.markAsPristine();
             this.formRef?.form.markAsUntouched();
 
             this.cdr.detectChanges();
-          }, 50);
 
-          return;
-        }
+            setTimeout(() => {
+              this.refreshAllChoices();
 
-        this.notify.showFromApiResponse?.(res, 'success');
-        this.draftRef?.clear();
+              setTimeout(() => {
+                this.reapplyChoicesValues();
 
-        this.resetFormAfterSuccess();
-      },
-      error: (err: any) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      },
-    });
-}
+                this.formRef?.form.markAsPristine();
+                this.formRef?.form.markAsUntouched();
+
+                this.cdr.detectChanges();
+                this.notify.showFromApiResponse?.(res, 'success');
+              }, 80);
+            }, 80);
+
+            return;
+          }
+
+          this.resetFormAfterSuccess(res);
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        },
+      });
+  }
+
   onCancel(): void {
     this.notify.close?.();
     this.draftRef?.cancel();
 
-    this.socio = { ...this.copy };
+    this.socio = this.toSocioForm({ ...this.copy });
     this.syncCatalogValuesWithOptions();
     this.patchEngineFromSocio();
     this.engine.clearErrors?.();
     this.loadMunicipiosIfNeeded();
-    this.refreshAllChoices();
+
+    this.formRef?.resetForm(this.socio);
+    this.formRef?.form.markAsPristine();
+    this.formRef?.form.markAsUntouched();
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.refreshAllChoices();
+
+      setTimeout(() => {
+        this.reapplyChoicesValues();
+        this.formRef?.form.markAsPristine();
+        this.formRef?.form.markAsUntouched();
+        this.cdr.detectChanges();
+      }, 80);
+    }, 80);
   }
 
   @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload(event: BeforeUnloadEvent): void {
-    if (!this.hasUnsavedChanges()) {
+    if (!this.formRef?.form.dirty || !this.hasUnsavedChanges()) {
       return;
     }
 
@@ -906,6 +961,10 @@ onSave(): void {
 
   @HostListener('window:pagehide')
   handlePageHide(): void {
+    if (!this.formRef?.form.dirty) {
+      return;
+    }
+
     if (this.hasUnsavedChanges()) {
       this.draftRef?.saveNow();
     }
@@ -915,13 +974,16 @@ onSave(): void {
     const forceLogout = sessionStorage.getItem('force-logout') === '1';
     if (forceLogout) return true;
 
-    if (!this.hasUnsavedChanges()) return true;
+    if (!this.formRef?.form.dirty || !this.hasUnsavedChanges()) {
+      this.draftRef?.clear();
+      return true;
+    }
 
     const title =
-      this.translate.instant('draft.leavePageTitle') || 'Advertencia';
+      this.translate.instant('socios.draft.leavePageTitle') || 'Advertencia';
 
     const message =
-      this.translate.instant('draft.leavePageMessage') ||
+      this.translate.instant('socios.draft.leavePageMessage') ||
       'Tienes cambios sin guardar. Si sales de esta página se perderán. ¿Deseas continuar?';
 
     const ref = this.notify.confirm?.(message, title, 'warning');
@@ -942,26 +1004,31 @@ onSave(): void {
     );
   }
 
-  scrollToSection(sectionId: string): void {
-    if (!this.isBrowser) return;
+scrollToSection(sectionId: string): void {
+  if (!this.isBrowser) return;
 
-    this.activeSection = sectionId;
-    this.syncWizardHorizontalScroll();
-    this.cdr.detectChanges();
+  this.activeSection = sectionId;
+  this.syncWizardHorizontalScroll();
+  this.cdr.detectChanges();
 
-    const section = window.document.getElementById(sectionId);
-    if (!section) return;
+  const section = window.document.getElementById(sectionId);
+  if (!section) return;
 
-    const isDesktop = window.innerWidth >= this.desktopBreakpoint;
-    const offset = isDesktop ? this.scrollOffsetDesktop : this.scrollOffsetMobile;
-    const top = section.getBoundingClientRect().top + window.scrollY - offset;
+  const isDesktop = window.innerWidth >= this.desktopBreakpoint;
+  const offset = isDesktop
+    ? this.scrollOffsetDesktop
+    : this.scrollOffsetMobile;
 
-    window.scrollTo({
-      top,
-      behavior: 'smooth',
-    });
-  }
+  const top =
+    section.getBoundingClientRect().top +
+    window.scrollY -
+    offset;
 
+  window.scrollTo({
+    top,
+    behavior: 'smooth',
+  });
+}
   isCompleted(sectionId: string): boolean {
     return this.sections.indexOf(sectionId) < this.sections.indexOf(this.activeSection);
   }
@@ -1093,10 +1160,10 @@ onSave(): void {
       allowHTML: false,
       itemSelectText: '',
       placeholder: true,
-      placeholderValue: this.translate.instant('common.selectOption'),
-      searchPlaceholderValue: this.translate.instant('choices.searchPlaceholder') || 'Buscar...',
-      noResultsText: this.translate.instant('choices.noResults') || 'No se encontraron resultados',
-      noChoicesText: this.translate.instant('choices.noChoices') || 'No hay opciones disponibles',
+      placeholderValue: this.translate.instant('socios.common.selectOption'),
+      searchPlaceholderValue: this.translate.instant('socios.choices.searchPlaceholder') || 'Buscar...',
+      noResultsText: this.translate.instant('socios.choices.noResults') || 'No se encontraron resultados',
+      noChoicesText: this.translate.instant('socios.choices.noChoices') || 'No hay opciones disponibles',
       searchFields: ['label', 'value'],
       position: 'bottom',
       renderChoiceLimit: -1
@@ -1170,10 +1237,10 @@ onSave(): void {
       shouldSort: false,
       allowHTML: false,
       placeholder: true,
-      placeholderValue: this.translate.instant('common.selectOption'),
-      searchPlaceholderValue: this.translate.instant('choices.searchPlaceholder') || 'Buscar...',
-      noResultsText: this.translate.instant('choices.noResults') || 'No se encontraron resultados',
-      noChoicesText: this.translate.instant('choices.noChoices') || 'No hay opciones disponibles',
+      placeholderValue: this.translate.instant('socios.common.selectOption'),
+      searchPlaceholderValue: this.translate.instant('socios.choices.searchPlaceholder') || 'Buscar...',
+      noResultsText: this.translate.instant('socios.choices.noResults') || 'No se encontraron resultados',
+      noChoicesText: this.translate.instant('socios.choices.noChoices') || 'No hay opciones disponibles',
       position: 'bottom'
     });
 
@@ -1201,10 +1268,10 @@ onSave(): void {
       shouldSort: false,
       allowHTML: false,
       placeholder: true,
-      placeholderValue: this.translate.instant('common.selectOption'),
-      searchPlaceholderValue: this.translate.instant('choices.searchPlaceholder') || 'Buscar...',
-      noResultsText: this.translate.instant('choices.noResults') || 'No se encontraron resultados',
-      noChoicesText: this.translate.instant('choices.noChoices') || 'No hay opciones disponibles',
+      placeholderValue: this.translate.instant('socios.common.selectOption'),
+      searchPlaceholderValue: this.translate.instant('socios.choices.searchPlaceholder') || 'Buscar...',
+      noResultsText: this.translate.instant('socios.choices.noResults') || 'No se encontraron resultados',
+      noChoicesText: this.translate.instant('socios.choices.noChoices') || 'No hay opciones disponibles',
       position: 'bottom'
     });
 
