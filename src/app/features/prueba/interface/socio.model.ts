@@ -4,6 +4,7 @@ export interface SocioForm {
   codigoSocio: string | null;
   sexo: string | null;
   numeroInss: string | null;
+  estadoCivil: string | null;
   observaciones: string | null;
 
   nombreCompleto: string | null;
@@ -76,6 +77,7 @@ export const EMPTY_SOCIO: SocioForm = {
   codigoSocio: null,
   sexo: null,
   numeroInss: null,
+  estadoCivil: null,
   observaciones: null,
 
   nombreCompleto: null,
@@ -87,6 +89,7 @@ export const EMPTY_SOCIO: SocioForm = {
   fechaVencimiento: null,
   paisNacimiento: null,
   fechaNacimiento: null,
+
 
   nacionalidadId: null,
   departamentoId: null,

@@ -73,9 +73,11 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('wizardCard') wizardCardRef?: ElementRef<HTMLElement>;
   @ViewChild('wizardSteps') wizardStepsRef?: ElementRef<HTMLElement>;
   @ViewChildren('wizardStep') wizardStepRefs?: QueryList<ElementRef<HTMLElement>>;
+  @ViewChild('ingresosAnuales') ingresosAnualesRef?: ElementRef<HTMLInputElement>;
 
   @ViewChild('tipoIdentificacion') tipoIdentificacionSelectRef?: ElementRef<HTMLSelectElement>;
   @ViewChild('paisEmisor') paisEmisorSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('estadoCivil') estadoCivilSelectRef?: ElementRef<HTMLSelectElement>;
   @ViewChild('paisNacimiento') paisNacimientoSelectRef?: ElementRef<HTMLSelectElement>;
   @ViewChild('nacionalidad') nacionalidadSelectRef?: ElementRef<HTMLSelectElement>;
   @ViewChild('departamento') departamentoSelectRef?: ElementRef<HTMLSelectElement>;
@@ -142,6 +144,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private tipoIdentificacionChoices: any;
   private paisEmisorChoices: any;
+  private estadoCivilChoices: any;
   private paisNacimientoChoices: any;
   private nacionalidadChoices: any;
   private departamentoChoices: any;
@@ -150,6 +153,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private conyugeTipoIdentificacionChoices: any;
   private conyugePaisNacimientoChoices: any;
   private conyugeNacionalidadChoices: any;
+  public FechaCreacion: any;
 
   private readonly isBrowser: boolean;
   private readonly desktopBreakpoint = 1200;
@@ -213,6 +217,12 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
+
+
+
+    setInterval(() => {
+      this.calcularIngresosAnuales();
+    }, 300);
   }
 
   ngAfterViewInit(): void {
@@ -261,6 +271,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroyAllChoices(): void {
     try { this.tipoIdentificacionChoices?.destroy(); } catch { }
     try { this.paisEmisorChoices?.destroy(); } catch { }
+    try { this.estadoCivilChoices?.destroy(); } catch { }
     try { this.paisNacimientoChoices?.destroy(); } catch { }
     try { this.nacionalidadChoices?.destroy(); } catch { }
     try { this.departamentoChoices?.destroy(); } catch { }
@@ -272,6 +283,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.tipoIdentificacionChoices = null;
     this.paisEmisorChoices = null;
+    this.estadoCivilChoices = null;
     this.paisNacimientoChoices = null;
     this.nacionalidadChoices = null;
     this.departamentoChoices = null;
@@ -285,6 +297,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private initAllChoices(): void {
     this.initTipoIdentificacionChoices();
     this.initPaisEmisorChoices();
+    this.initEstadoCivilChoices();
     this.initPaisNacimientoChoices();
     this.initNacionalidadChoices();
     this.initDepartamentoChoices();
@@ -308,6 +321,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     requestAnimationFrame(() => {
       this.setChoicesValue(this.tipoIdentificacionChoices, this.socio.tipoIdentificacion);
       this.setChoicesValue(this.paisEmisorChoices, this.socio.paisEmisor);
+      this.setChoicesValue(this.estadoCivilChoices, this.socio.estadoCivil);
       this.setChoicesValue(this.paisNacimientoChoices, this.socio.paisNacimiento);
       this.setChoicesValue(this.nacionalidadChoices, this.socio.nacionalidadId);
       this.setChoicesValue(this.departamentoChoices, this.socio.departamentoId);
@@ -322,6 +336,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private clearAllChoicesSelections(): void {
     this.clearChoicesSelection(this.tipoIdentificacionChoices);
     this.clearChoicesSelection(this.paisEmisorChoices);
+    this.clearChoicesSelection(this.estadoCivilChoices);
     this.clearChoicesSelection(this.paisNacimientoChoices);
     this.clearChoicesSelection(this.nacionalidadChoices);
     this.clearChoicesSelection(this.departamentoChoices);
@@ -493,13 +508,19 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (res: any) => {
           const socioApi = res?.data?.socio ?? null;
 
+          console.log(socioApi.createdAtUtc)
 
           socioApi.fechaEmision = this.appConfigService.formatDate(socioApi.fechaEmision);
           socioApi.fechaVencimiento = this.appConfigService.formatDate(socioApi.fechaVencimiento);
           socioApi.fechaNacimiento = this.appConfigService.formatDate(socioApi.fechaNacimiento);
           socioApi.fechaIngreso = this.appConfigService.formatDate(socioApi.fechaIngreso);
+          socioApi.cuentaCorrienteFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaCorrienteFechaInicioDeduccion);
+          socioApi.cuentaNavidenaFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaNavidenaFechaInicioDeduccion);
 
 
+
+
+          this.FechaCreacion = socioApi.createdAtUtc;
 
 
           if (!socioApi) {
@@ -1004,31 +1025,31 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-scrollToSection(sectionId: string): void {
-  if (!this.isBrowser) return;
+  scrollToSection(sectionId: string): void {
+    if (!this.isBrowser) return;
 
-  this.activeSection = sectionId;
-  this.syncWizardHorizontalScroll();
-  this.cdr.detectChanges();
+    this.activeSection = sectionId;
+    this.syncWizardHorizontalScroll();
+    this.cdr.detectChanges();
 
-  const section = window.document.getElementById(sectionId);
-  if (!section) return;
+    const section = window.document.getElementById(sectionId);
+    if (!section) return;
 
-  const isDesktop = window.innerWidth >= this.desktopBreakpoint;
-  const offset = isDesktop
-    ? this.scrollOffsetDesktop
-    : this.scrollOffsetMobile;
+    const isDesktop = window.innerWidth >= this.desktopBreakpoint;
+    const offset = isDesktop
+      ? this.scrollOffsetDesktop
+      : this.scrollOffsetMobile;
 
-  const top =
-    section.getBoundingClientRect().top +
-    window.scrollY -
-    offset;
+    const top =
+      section.getBoundingClientRect().top +
+      window.scrollY -
+      offset;
 
-  window.scrollTo({
-    top,
-    behavior: 'smooth',
-  });
-}
+    window.scrollTo({
+      top,
+      behavior: 'smooth',
+    });
+  }
   isCompleted(sectionId: string): boolean {
     return this.sections.indexOf(sectionId) < this.sections.indexOf(this.activeSection);
   }
@@ -1197,6 +1218,16 @@ scrollToSection(sectionId: string): void {
       9999
     );
   }
+  private initEstadoCivilChoices(): void {
+    this.initChoicesFromDom(
+      this.estadoCivilSelectRef,
+      this.socio.estadoCivil,
+      (instance) => (this.estadoCivilChoices = instance),
+      this.estadoCivilChoices,
+      10
+    );
+  }
+
 
   private initPaisNacimientoChoices(): void {
     this.initChoicesFromDom(
@@ -1351,4 +1382,64 @@ scrollToSection(sectionId: string): void {
       instance.setChoiceByValue(String(value));
     } catch { }
   }
+
+formatIngresosAnuales(): string {
+  const value = Number(this.socio.ingresosAnuales ?? 0);
+
+  const decimalSeparator =
+    this.appConfigService.getCurrentSettings().decimalSeparator || '.';
+
+  const thousandSeparator =
+    this.appConfigService.getCurrentSettings().thousandSeparator || ',';
+
+  const fixed = value.toFixed(2);
+  const parts = fixed.split('.');
+  const integerPart = parts[0];
+  const decimalPart = parts[1] ?? '00';
+
+  const formattedInteger = integerPart.replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    thousandSeparator
+  );
+
+  return `${formattedInteger}${decimalSeparator}${decimalPart}`;
+}
+
+private toNumber(value: any): number {
+  if (value === null || value === undefined || value === '') return 0;
+
+  const decimalSeparator =
+    this.appConfigService.getCurrentSettings().decimalSeparator || '.';
+
+  const thousandSeparator =
+    this.appConfigService.getCurrentSettings().thousandSeparator || ',';
+
+  let text = String(value).trim();
+
+  if (thousandSeparator) {
+    text = text.split(thousandSeparator).join('');
+  }
+
+  if (decimalSeparator && decimalSeparator !== '.') {
+    text = text.replace(decimalSeparator, '.');
+  }
+
+  const result = Number(text);
+  return isNaN(result) ? 0 : result;
+}
+
+calcularIngresosAnuales(): void {
+  const mensual = this.toNumber(this.socio.ingresosMensuales);
+  const otros = this.toNumber(this.socio.otrosIngresos);
+
+  const total = Number(((mensual + otros) * 12).toFixed(2));
+
+  this.socio.ingresosAnuales = total;
+
+  this.engine?.patchValues?.({
+    ingresosAnuales: total
+  });
+}
+
+ 
 }

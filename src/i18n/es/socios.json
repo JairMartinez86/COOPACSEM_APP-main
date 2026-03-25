@@ -2,6 +2,7 @@
   "socios": {
     "title": "Registro de socio",
     "subtitle": "En PC el wizard queda fijo a la izquierda. En móvil queda fijo arriba y se mueve horizontalmente según la sección activa.",
+    "subtitle2": "Creado el:",
     "actions": {
       "save": "Guardar socio"
     },
@@ -108,6 +109,16 @@
       "numeroIdentificacion": {
         "label": "No. de identificación",
         "placeholder": "No. de identificación"
+      },
+      "estadoCivil": {
+        "label": "Estado civil",
+        "options": {
+          "soltero": "Soltero(a)",
+          "casado": "Casado(a)",
+          "divorciado": "Divorciado(a)",
+          "viudo": "Viudo(a)",
+          "unionLibre": "Unión libre"
+        }
       },
       "paisEmisor": {
         "label": "País emisor",
@@ -318,67 +329,83 @@
     "form": {
       "fieldMeta": {
         "nombreCompleto": {
-          "label": "IDENTIFICACIÓN",
+          "label": "Datos personales",
           "tooltip": "Campo requerido"
         },
         "nombrePublico": {
-          "label": "IDENTIFICACIÓN",
+          "label": "Datos personales",
           "tooltip": "Campo requerido"
         },
         "tipoIdentificacion": {
-          "label": "Identificación",
+          "label": "Datos personales",
           "tooltip": "Campo requerido"
         },
         "numeroIdentificacion": {
-          "label": "Identificación",
+          "label": "Datos personales",
           "tooltip": "Campo requerido"
         },
         "paisEmisor": {
-          "label": "Identificación",
+          "label": "Datos personales",
           "tooltip": "Campo requerido"
         },
         "fechaEmision": {
-          "label": "Identificación",
+          "label": "Datos personales",
           "tooltip": "Campo requerido"
         },
         "fechaVencimiento": {
-          "label": "Identificación",
+          "label": "Datos personales",
           "tooltip": "Campo requerido"
         },
         "paisNacimiento": {
-          "label": "Identificación",
+          "label": "Datos personales",
           "tooltip": "Campo requerido"
         },
         "fechaNacimiento": {
-          "label": "Identificación",
+          "label": "Datos personales",
           "tooltip": "Campo requerido"
         },
+        "cuentaCorrienteFechaInicioDeduccion": {
+          "label": "Ahorro",
+          "tooltip": "Campo opcional"
+        },
+        "cuentaCorrienteMontoCuota": {
+          "label": "Ahorro",
+          "tooltip": "Campo opcional"
+        },
+        "cuentaNavidenaFechaInicioDeduccion": {
+          "label": "Ahorro",
+          "tooltip": "Campo opcional"
+        },
+        "cuentaNavidenaMontoCuota": {
+          "label": "Ahorro",
+          "tooltip": "Campo opcional"
+        },
         "nacionalidadId": {
-          "label": "Nacionalidad",
+          "label": "Ubicación y Contacto",
           "tooltip": "Campo requerido"
         },
         "departamentoId": {
-          "label": "Nacionalidad",
+          "label": "Ubicación y Contacto",
           "tooltip": "Campo requerido"
         },
         "municipioId": {
-          "label": "Nacionalidad",
+          "label": "Ubicación y Contacto",
           "tooltip": "Campo requerido"
         },
         "direccionDomiciliar": {
-          "label": "Nacionalidad",
+          "label": "Ubicación y Contacto",
           "tooltip": "Campo requerido"
         },
         "telefono": {
-          "label": "Nacionalidad",
+          "label": "Ubicación y Contacto",
           "tooltip": "Campo requerido si el celular esta vacío"
         },
         "celular": {
-          "label": "Nacionalidad",
+          "label": "Ubicación y Contacto",
           "tooltip": "Campo requerido si el télefono esta vacío"
         },
         "correo": {
-          "label": "Nacionalidad",
+          "label": "Ubicación y Contacto",
           "tooltip": "Campo opcional"
         },
         "sociedadLabora": {
@@ -497,28 +524,16 @@
           "label": "Identificación",
           "tooltip": "Campo opcional"
         },
+        "estadoCovil": {
+          "label": "Identificación",
+          "tooltip": "Campo opcional"
+        },
         "numeroInss": {
           "label": "Identificación",
           "tooltip": "Campo opcional"
         },
         "observaciones": {
           "label": "Ubicación y contacto",
-          "tooltip": "Campo opcional"
-        },
-        "cuentaCorrienteFechaInicioDeduccion": {
-          "label": "Ahorro",
-          "tooltip": "Campo opcional"
-        },
-        "cuentaCorrienteMontoCuota": {
-          "label": "Ahorro",
-          "tooltip": "Campo opcional"
-        },
-        "cuentaNavidenaFechaInicioDeduccion": {
-          "label": "Ahorro",
-          "tooltip": "Campo opcional"
-        },
-        "cuentaNavidenaMontoCuota": {
-          "label": "Ahorro",
           "tooltip": "Campo opcional"
         }
       },
@@ -543,6 +558,36 @@
             }
           }
         },
+        "sexo": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "El campo Sexo es requerido"
+            }
+          }
+        },
+        "estadoCivil": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "EL campo Estado Civil es requerido"
+            }
+          }
+        },
+        "numeroInss": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "EL No Inss requerido"
+            }
+          }
+        },
         "tipoIdentificacion": {
           "data": {
             "1": {
@@ -560,6 +605,18 @@
               "when": "",
               "value": "0",
               "msj": "El número de identificación es requerido"
+            },
+            "2": {
+              "rule": "REGEX",
+              "when": "{tipoIdentificacion}='cedula' || {tipoIdentificacion}='residencia'",
+              "value": "^[0-9]+[A-Za-z]$",
+              "msj": "Solo se permiten números y una letra al final"
+            },
+            "3": {
+              "rule": "LEN==",
+              "when": "{tipoIdentificacion}='residencia' || {tipoIdentificacion}='cedula' ",
+              "value": "14",
+              "msj": "Debe tener exactamente 14 caracteres"
             }
           }
         },
@@ -786,50 +843,74 @@
         "conyugeNombreCompleto": {
           "data": {
             "1": {
-              "rule": "LEN>=",
+              "rule": "LEN>",
               "value": "0",
-              "when": "",
-              "msj": ""
+              "when": "{estadoCivil}='casado' || {estadoCivil}='union_libre'",
+              "msj": "Ingrese el nombre completo"
             }
           }
         },
         "conyugeTipoIdentificacion": {
           "data": {
             "1": {
-              "rule": "LEN>=",
+              "rule": "LEN>",
               "value": "0",
-              "when": "",
-              "msj": ""
+              "when": "{estadoCivil}='casado' || {estadoCivil}='union_libre'",
+              "msj": "Seleccion eun tipo de identificación"
             }
           }
         },
         "conyugeNumeroIdentificacion": {
           "data": {
             "1": {
-              "rule": "LEN>=",
+              "rule": "IF({estadoCivil}='casado' || {estadoCivil}='union_libre')->{2,3,4,5}",
               "value": "0",
               "when": "",
               "msj": ""
+            },
+            "2": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{conyugeTipoIdentificacion} !='cedula'",
+              "msj": "El número de identificación del cónyuge es requerido"
+            },
+            "3": {
+              "rule": "IGUAL!=",
+              "value": "{numeroIdentificacion}",
+              "when": "{conyugeTipoIdentificacion}='cedula'",
+              "msj": "El número de identificación del cónyuge no puede ser igual al del socio"
+            },
+            "4": {
+              "rule": "REGEX",
+              "when": "{conyugeTipoIdentificacion}='cedula' || {conyugeTipoIdentificacion}='residencia'",
+              "value": "^[0-9]+[A-Za-z]$",
+              "msj": "Solo se permiten números y una letra al final"
+            },
+            "5": {
+              "rule": "LEN==",
+              "when": "{conyugeTipoIdentificacion}='residencia' || {conyugeTipoIdentificacion}='cedula'",
+              "value": "14",
+              "msj": "Debe tener exactamente 14 caracteres"
             }
           }
         },
         "conyugePaisNacimiento": {
           "data": {
             "1": {
-              "rule": "LEN>=",
+              "rule": "LEN>",
               "value": "0",
-              "when": "",
-              "msj": ""
+              "when": "{estadoCivil}='casado' || {estadoCivil}='union_libre'",
+              "msj": "Seleccion el pais de nacimiento"
             }
           }
         },
         "conyugeNacionalidadId": {
           "data": {
             "1": {
-              "rule": "LEN>=",
+              "rule": "LEN>",
               "value": "0",
-              "when": "",
-              "msj": ""
+              "when": "{estadoCivil}='casado' || {estadoCivil}='union_libre'",
+              "msj": "Ingrese la nacionalidad"
             }
           }
         },
@@ -953,23 +1034,107 @@
             }
           }
         },
+        "cuentaCorrienteActiva": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
         "cuentaCorrienteMontoCuota": {
           "data": {
             "1": {
-              "rule": "NUM>=",
+              "rule": "NUM>",
+              "value": "0",
+              "when": "{cuentaCorrienteActiva} = true",
+              "msj": "Ingrese un valor válido"
+            }
+          }
+        },
+        "cuentaCorrienteFechaInicioDeduccion": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{cuentaCorrienteActiva}=true",
+              "msj": "Ingrese la fecha de la deducción (Cuenta Corriente)"
+            },
+           "2": {
+              "rule": "DAYIN_VALID_MONTH",
+              "value": "15,30",
+              "when": "{cuentaCorrienteActiva}=true && LEN>0",
+              "msj": "La fecha debe ser día 15 o el último día permitido del mes"
+            },
+            "3": {
+              "rule": "DATE>",
+              "value": "{fechaIngreso}",
+              "when": "{cuentaCorrienteActiva}=true && LEN>0 && {fechaIngreso}!=''",
+              "msj": "La fecha de deducción debe ser mayor a la fecha de ingreso"
+            }
+          }
+        },
+        "cuentaCorrienteEsMensual": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
               "value": "0",
               "when": "",
-              "msj": "Ingrese un valor válido"
+              "msj": ""
+            }
+          }
+        },
+        "cuentaNavidenaActiva": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
             }
           }
         },
         "cuentaNavidenaMontoCuota": {
           "data": {
             "1": {
-              "rule": "NUM>=",
+              "rule": "NUM>",
+              "value": "0",
+              "when": "{cuentaNavidenaActiva} = true",
+              "msj": "Ingrese un valor válido"
+            }
+          }
+        },
+        "cuentaNavidenaFechaInicioDeduccion": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{cuentaNavidenaActiva}=true",
+              "msj": "Ingrese la fecha de la deducción (Cuenta Navideña)"
+            },
+            "2": {
+              "rule": "DAYIN_VALID_MONTH",
+              "value": "15,30",
+              "when": "{cuentaNavidenaEsMensual}=true && LEN>0",
+              "msj": "La fecha debe ser día 15 o el último día permitido del mes"
+            },
+            "3": {
+              "rule": "DATE>",
+              "value": "{fechaIngreso}",
+              "when": "{cuentaNavidenaActiva}=true && LEN>0 && {fechaIngreso}!=''",
+              "msj": "La fecha de deducción debe ser mayor a la fecha de ingreso"
+            }
+          }
+        },
+        "cuentaNavidenaEsMensual": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
               "value": "0",
               "when": "",
-              "msj": "Ingrese un valor válido"
+              "msj": ""
             }
           }
         }

@@ -76,7 +76,7 @@
                       <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
                     </button>
 
-                    <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['edit']"
+                    <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['delete']"
                       permissionRoute="/socios" [title]="item.activo
     ? ('socios.statusActions.deactivateButton' | translate)
     : ('socios.statusActions.activateButton' | translate)" (click)="onToggleStatus(item)">
