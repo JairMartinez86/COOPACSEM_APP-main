@@ -1062,7 +1062,7 @@
               "when": "{cuentaCorrienteActiva}=true",
               "msj": "Ingrese la fecha de la deducción (Cuenta Corriente)"
             },
-           "2": {
+            "2": {
               "rule": "DAYIN_VALID_MONTH",
               "value": "15,30",
               "when": "{cuentaCorrienteActiva}=true && LEN>0",
@@ -1258,6 +1258,13 @@
     "draft": {
       "leavePageTitle": "Advertencia",
       "leavePageMessage": "Tienes cambios sin guardar. Si sales de esta página se perderán. ¿Deseas continuar?"
+    },
+    "import": {
+      "title": "Carga masiva de socios",
+      "button": "Cargar Excel",
+      "invalidFile": "Debe seleccionar un archivo Excel válido (.xlsx).",
+      "errorTitle": "Errores en carga masiva",
+      "errorMessage": "Se encontraron errores en el archivo Excel."
     }
   }
 }

@@ -63,4 +63,17 @@ export class SociosService extends BrowserApiService {
       { withCredentials: true }
     );
   }
+
+
+  importExcel(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<any>(
+      `${this.api.baseUrl}/socios/import-excel`,
+      formData,
+      { withCredentials: true }
+    );
+  }
+
 }

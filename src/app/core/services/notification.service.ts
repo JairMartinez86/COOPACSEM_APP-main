@@ -32,7 +32,7 @@ export class NotificationService {
   constructor(
     private loader: LoaderService,
     private translate: TranslateService
-  ) { }
+  ) {}
 
   private t(key: string, params?: Record<string, any>): string {
     return this.translate.instant(key, params);
@@ -45,6 +45,36 @@ export class NotificationService {
       : 'text';
   }
 
+  // 🔥 NUEVO: normalizador de mensaje
+  private normalizeMessage(message: string): { value: string; format: 'text' | 'html' } {
+    const raw = (message ?? '').trim();
+
+    if (!raw) {
+      return { value: '', format: 'text' };
+    }
+
+    // Si ya es HTML → respetar
+    if (this.detectFormat(raw) === 'html') {
+      return { value: raw, format: 'html' };
+    }
+
+    // 🔥 Si hay saltos de línea → convertir a HTML
+    if (raw.includes('\n')) {
+      const html = raw
+        .split('\n')
+        .map(line => line.trim())
+        .map(line => {
+          if (!line) return '<br>';
+          return `<div>${line}</div>`;
+        })
+        .join('');
+
+      return { value: html, format: 'html' };
+    }
+
+    return { value: raw, format: 'text' };
+  }
+
   private getDefaultTitle(): string {
     return this.t('modal.services.defaultTitle');
   }
@@ -54,8 +84,6 @@ export class NotificationService {
   }
 
   private getApiErrorMessage(code: number): string {
-
-
     switch (code) {
       case 400: return this.t('modal.services.badRequest');
       case 401: return this.t('modal.services.unauthorized');
@@ -72,12 +100,6 @@ export class NotificationService {
   }
 
   showFromApiResponse(api: any, title?: string) {
-    // if (this.isOpen) return;
-
-
-
-
-
     this.isOpen = true;
     this.loader.hide();
 
@@ -94,11 +116,13 @@ export class NotificationService {
     const type: 'success' | 'error' | 'warning' =
       api?.esError === 1 || code >= 400 ? 'error' : 'success';
 
+    const normalized = this.normalizeMessage(msg);
+
     this.stateSubject.next({
       open: true,
       title: resolvedTitle,
-      message: msg,
-      messageFormat: this.detectFormat(msg),
+      message: normalized.value,
+      messageFormat: normalized.format,
       type
     });
   }
@@ -108,20 +132,19 @@ export class NotificationService {
     title?: string,
     type: 'success' | 'error' | 'warning' | 'delete' | 'cancel' | 'info' = 'success'
   ) {
-
-
     if (this.isOpen) return;
 
     this.isOpen = true;
     this.loader.hide();
 
     const resolvedTitle = title ?? this.getDefaultTitle();
+    const normalized = this.normalizeMessage(message);
 
     this.stateSubject.next({
       open: true,
       title: resolvedTitle,
-      message,
-      messageFormat: this.detectFormat(message),
+      message: normalized.value,
+      messageFormat: normalized.format,
       type
     });
   }
@@ -139,31 +162,30 @@ export class NotificationService {
     this.resultSubject = new Subject<number>();
 
     const resolvedTitle = title ?? this.getConfirmTitle();
+    const normalized = this.normalizeMessage(message);
 
     this.stateSubject.next({
       open: true,
       title: resolvedTitle,
-      message,
-      messageFormat: this.detectFormat(message),
+      message: normalized.value,
+      messageFormat: normalized.format,
       type
     });
 
     return this.resultSubject.asObservable();
   }
 
- resolve(result: number) {
+  resolve(result: number) {
+    if (this.resultSubject) {
+      this.resultSubject.next(result);
+      this.resultSubject.complete();
+      this.resultSubject = null;
+    }
 
-  if (this.resultSubject) {
-    this.resultSubject.next(result);
-    this.resultSubject.complete();
-    this.resultSubject = null;
+    this.close();
   }
 
-  this.close();
-}
-
   close() {
-
     const s = this.stateSubject.value;
     this.isOpen = false;
     this.loader.hide();
@@ -172,17 +194,13 @@ export class NotificationService {
     this.closedSubject.next();
   }
 
-
   public errorFortmat(errors: any[]): string {
-    
-
     if (!errors || errors.length === 0) {
       return '';
     }
 
     const html = errors
       .map(e => {
-
         const messages = (e.messages || [])
           .map((m: string) => `<li>${m}</li>`)
           .join('');

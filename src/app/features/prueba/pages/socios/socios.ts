@@ -74,6 +74,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('wizardSteps') wizardStepsRef?: ElementRef<HTMLElement>;
   @ViewChildren('wizardStep') wizardStepRefs?: QueryList<ElementRef<HTMLElement>>;
   @ViewChild('ingresosAnuales') ingresosAnualesRef?: ElementRef<HTMLInputElement>;
+  
 
   @ViewChild('tipoIdentificacion') tipoIdentificacionSelectRef?: ElementRef<HTMLSelectElement>;
   @ViewChild('paisEmisor') paisEmisorSelectRef?: ElementRef<HTMLSelectElement>;
@@ -154,6 +155,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private conyugePaisNacimientoChoices: any;
   private conyugeNacionalidadChoices: any;
   public FechaCreacion: any;
+
 
   private readonly isBrowser: boolean;
   private readonly desktopBreakpoint = 1200;
@@ -1382,6 +1384,8 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       instance.setChoiceByValue(String(value));
     } catch { }
   }
+
+
 
 formatIngresosAnuales(): string {
   const value = Number(this.socio.ingresosAnuales ?? 0);

@@ -135,7 +135,54 @@ export class AuthInterceptor implements HttpInterceptor {
     const value = payload.toLowerCase();
     return value.includes('<!doctype html') || value.includes('<html');
   }
-/*
+  /*
+    private extractErrorMessage(err: any, fallbackKey: string): string {
+      const fallback = this.t(fallbackKey);
+  
+      if (!err) {
+        return fallback;
+      }
+  
+      if (typeof err?.mensaje === 'string' && err.mensaje.trim()) {
+        return err.mensaje;
+      }
+  
+      if (typeof err?.message === 'string' && err.message.trim()) {
+        return err.message;
+      }
+  
+      if (typeof err?.error?.mensaje === 'string' && err.error.mensaje.trim()) {
+        return err.error.mensaje;
+      }
+  
+      if (typeof err?.error?.message === 'string' && err.error.message.trim()) {
+        return err.error.message;
+      }
+  
+      if (typeof err?.error === 'string') {
+        if (this.isHtmlPayload(err.error)) {
+          return this.t('interceptor.errors.sessionExpiredMessage');
+        }
+  
+        if (err.error.trim()) {
+          return err.error;
+        }
+      }
+  
+      if (typeof err === 'string') {
+        if (this.isHtmlPayload(err)) {
+          return this.t('interceptor.errors.sessionExpiredMessage');
+        }
+  
+        if (err.trim()) {
+          return err;
+        }
+      }
+  
+      return fallback;
+    }*/
+
+
   private extractErrorMessage(err: any, fallbackKey: string): string {
     const fallback = this.t(fallbackKey);
 
@@ -143,20 +190,17 @@ export class AuthInterceptor implements HttpInterceptor {
       return fallback;
     }
 
-    if (typeof err?.mensaje === 'string' && err.mensaje.trim()) {
-      return err.mensaje;
-    }
-
-    if (typeof err?.message === 'string' && err.message.trim()) {
-      return err.message;
-    }
-
+    // Primero: mensaje real que viene del backend
     if (typeof err?.error?.mensaje === 'string' && err.error.mensaje.trim()) {
       return err.error.mensaje;
     }
 
     if (typeof err?.error?.message === 'string' && err.error.message.trim()) {
       return err.error.message;
+    }
+
+    if (typeof err?.error?.Message === 'string' && err.error.Message.trim()) {
+      return err.error.Message;
     }
 
     if (typeof err?.error === 'string') {
@@ -167,6 +211,15 @@ export class AuthInterceptor implements HttpInterceptor {
       if (err.error.trim()) {
         return err.error;
       }
+    }
+
+    // Después: errores locales
+    if (typeof err?.mensaje === 'string' && err.mensaje.trim()) {
+      return err.mensaje;
+    }
+
+    if (typeof err?.message === 'string' && err.message.trim()) {
+      return err.message;
     }
 
     if (typeof err === 'string') {
@@ -180,60 +233,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     return fallback;
-  }*/
-
-
-    private extractErrorMessage(err: any, fallbackKey: string): string {
-  const fallback = this.t(fallbackKey);
-
-  if (!err) {
-    return fallback;
   }
-
-  // Primero: mensaje real que viene del backend
-  if (typeof err?.error?.mensaje === 'string' && err.error.mensaje.trim()) {
-    return err.error.mensaje;
-  }
-
-  if (typeof err?.error?.message === 'string' && err.error.message.trim()) {
-    return err.error.message;
-  }
-
-  if (typeof err?.error?.Message === 'string' && err.error.Message.trim()) {
-    return err.error.Message;
-  }
-
-  if (typeof err?.error === 'string') {
-    if (this.isHtmlPayload(err.error)) {
-      return this.t('interceptor.errors.sessionExpiredMessage');
-    }
-
-    if (err.error.trim()) {
-      return err.error;
-    }
-  }
-
-  // Después: errores locales
-  if (typeof err?.mensaje === 'string' && err.mensaje.trim()) {
-    return err.mensaje;
-  }
-
-  if (typeof err?.message === 'string' && err.message.trim()) {
-    return err.message;
-  }
-
-  if (typeof err === 'string') {
-    if (this.isHtmlPayload(err)) {
-      return this.t('interceptor.errors.sessionExpiredMessage');
-    }
-
-    if (err.trim()) {
-      return err;
-    }
-  }
-
-  return fallback;
-}
   private cloneRequest(req: HttpRequest<any>, token?: string): HttpRequest<any> {
     const headers: Record<string, string> = {
       'Accept-Language': this.getCurrentLanguageHeader(),
@@ -635,15 +635,21 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         const normalized = {
+          ...(err?.error ?? {}), // 👈 mantiene todo lo del backend
           ok: false,
           mensaje: message,
-          codigo: err.status ?? 0
+          codigo: err.status ?? err?.error?.codigo ?? 0
         };
 
-        if (!this.isLoggingOut) {
-          this.notification.show(message, title, type);
-        }
 
+       const errorCode = err?.error?.errorCode;
+
+      const skipModal =
+        errorCode === 'CUSTOM_ERROR';
+
+      if (!this.isLoggingOut && !skipModal) {
+        this.notification.show(message, title, type);
+      }
         return throwError(() => normalized);
       })
     );

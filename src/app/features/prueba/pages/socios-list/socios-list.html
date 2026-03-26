@@ -10,6 +10,16 @@
             <p class="card-subtitle">{{ 'socios.list.subtitle' | translate }}</p>
           </div>
 
+          
+              <button type="button" class="btn btn-outline-success btn-sm" (click)="onExcelImportClick()"
+                [disabled]="importingExcel" [appPermission]="['new', 'edit']">
+                <i class="bi bi-file-earmark-excel me-1"></i>
+                {{ 'socios.import.button' | translate }}
+              </button>
+
+              <input #excelFileInput type="file" accept=".xlsx" class="d-none" (change)="onExcelFileSelected($event)" />
+
+
           <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']" permissionRoute="/socios"
             (click)="onCreate()">
             <i class="bi bi-plus-lg me-1"></i>

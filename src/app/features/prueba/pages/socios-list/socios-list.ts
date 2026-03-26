@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
+  ViewChild,
   inject
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -54,6 +56,9 @@ interface SocioActivityRow {
   styleUrl: './socios-list.scss'
 })
 export class SociosListComponent implements OnInit, OnDestroy {
+  @ViewChild('excelFileInput') excelFileInputRef?: ElementRef<HTMLInputElement>;
+
+  
   private readonly sociosService = inject(SociosService);
   private readonly notify = inject(NotificationService);
   private readonly router = inject(Router);
@@ -63,6 +68,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'socios';
+    public importingExcel = false;
 
   sociosAll: SocioRow[] = [];
   socios: SocioRow[] = [];
@@ -343,4 +349,105 @@ export class SociosListComponent implements OnInit, OnDestroy {
 
     this.subs.add(sub);
   }
+
+
+  
+onExcelImportClick(): void {
+
+  this.excelFileInputRef?.nativeElement?.click();
+}
+
+onExcelFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement | null;
+  const file = input?.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+  const fileName = (file.name || '').toLowerCase();
+  if (!fileName.endsWith('.xlsx')) {
+    this.notify.show?.(
+      this.translate.instant('socios.import.invalidFile'),
+      this.translate.instant('socios.import.title'),
+      'warning'
+    );
+
+    input.value = '';
+    return;
+  }
+
+  this.importExcel(file);
+  input.value = '';
+}
+
+
+private importExcel(file: File): void {
+  this.importingExcel = true;
+  this.notify.close?.();
+
+  this.sociosService.importExcel(file)
+    .pipe(finalize(() => (this.importingExcel = false)))
+    .subscribe({
+      next: (res: any) => {
+        const errors: string[] = Array.isArray(res?.errors)
+          ? res.errors
+          : Array.isArray(res?.data?.errors)
+            ? res.data.errors
+            : [];
+
+        if (errors.length > 0) {
+          this.showExcelImportErrors(res);
+          return;
+        }
+
+        this.notify.showFromApiResponse?.(res, 'success');
+
+        this.loadData();
+      },
+      error: (err: any) => {
+        this.showExcelImportErrors(err?.error ?? err);
+      }
+    });
+}
+
+private showExcelImportErrors(payload: any): void {
+  console.log('payload error', payload);
+
+  const message =
+    payload?.mensaje ||
+    payload?.message ||
+    this.translate.instant('socios.import.errorMessage');
+
+  const rawErrors =
+    payload?.data?.errors ??
+    payload?.errors ??
+    [];
+
+  if (!Array.isArray(rawErrors) || !rawErrors.length) {
+    this.notify.showFromApiResponse?.(payload, 'error');
+    return;
+  }
+
+  const detail = rawErrors
+    .map((x: any) => {
+      const row = x?.row ? `Fila ${x.row}` : '';
+      const col = x?.columnLetter ? `Col ${x.columnLetter}` : '';
+      const field = x?.field ? `(${x.field})` : '';
+      const msg = x?.message || '';
+
+      return `• ${row} ${col} ${field}: ${msg}`.trim();
+    })
+    .join('\n');
+
+  const fullMessage = `${message}\n\n${detail}`;
+
+  this.notify.show?.(
+    fullMessage,
+    this.translate.instant('socios.import.errorTitle'),
+    'error'
+  );
+}
+
+
 }
