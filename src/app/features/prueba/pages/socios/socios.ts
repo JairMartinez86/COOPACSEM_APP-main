@@ -6,6 +6,7 @@ import {
   ElementRef,
   HostListener,
   Inject,
+  Injectable,
   NgZone,
   OnDestroy,
   OnInit,
@@ -39,8 +40,15 @@ import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb'
 import { AppConfigService } from '../../../../core/services/app-config.service';
 import { CatalogosService } from '../../../../shared/service/CatalogosService';
 import { CatalogoItem, MunicipioItem } from '../../../../shared/interfaces/catalogo.model';
+import { BeneficiarioForm, EMPTY_BENEFICIARIO } from '../../interface/beneficiario.model';
+import { PermissionService } from '../../../../core/services/permission.service';
 
 declare const Choices: any;
+@Injectable()
+export class SocioValidationEngine extends JMartMassiveValidationService {}
+
+@Injectable()
+export class BeneficiarioValidationEngine extends JMartMassiveValidationService {}
 
 type DraftRef<T> = {
   saveNow(): void;
@@ -64,6 +72,7 @@ type DraftRef<T> = {
     JMartDateFormatDirective,
     JMartNumberFormatDirective
   ],
+  providers: [SocioValidationEngine, BeneficiarioValidationEngine],
   templateUrl: './socios.html',
   styleUrl: './socios.scss',
 })
@@ -74,7 +83,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('wizardSteps') wizardStepsRef?: ElementRef<HTMLElement>;
   @ViewChildren('wizardStep') wizardStepRefs?: QueryList<ElementRef<HTMLElement>>;
   @ViewChild('ingresosAnuales') ingresosAnualesRef?: ElementRef<HTMLInputElement>;
-  
+
 
   @ViewChild('tipoIdentificacion') tipoIdentificacionSelectRef?: ElementRef<HTMLSelectElement>;
   @ViewChild('paisEmisor') paisEmisorSelectRef?: ElementRef<HTMLSelectElement>;
@@ -92,12 +101,14 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private catalogosService = inject(CatalogosService);
   private translate = inject(TranslateService);
   private draftService = inject(DraftFormService);
-  private engine = inject(JMartMassiveValidationService);
+  private engine = inject(SocioValidationEngine);
+  private engineBene = inject(BeneficiarioValidationEngine);
   public notify = inject(NotificationService);
   private langService = inject(LanguageService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   public appConfigService = inject(AppConfigService);
+  public readonly permissionService = inject(PermissionService)
 
   activeSection = 'datos-personales';
 
@@ -155,6 +166,16 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private conyugePaisNacimientoChoices: any;
   private conyugeNacionalidadChoices: any;
   public FechaCreacion: any;
+
+
+  beneficiarios: BeneficiarioForm[] = [];
+  beneficiarioModalOpen = false;
+  beneficiarioSaving = false;
+  beneficiarioEditing: BeneficiarioForm | null = null;
+  beneficiarioDraft: BeneficiarioForm = { ...EMPTY_BENEFICIARIO };
+
+
+
 
 
   private readonly isBrowser: boolean;
@@ -737,7 +758,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         form: this.formRef!,
         routeKey: `socios-edit-${this.socio.id ?? 'new'}`,
 
-        currentData: () => ({ ...this.socio }),
+        currentData: () => ({ ...this.socio, beneficiarios: this.beneficiarios }),
         savedData: () => ({ ...this.copy }),
 
         restoreData: (data: Partial<SocioForm> | null | undefined) => {
@@ -745,6 +766,10 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
             ...this.copy,
             ...(data ?? {}),
           });
+
+            this.beneficiarios = this.mapBeneficiarios(data?.beneficiarios);
+
+            this.socio.beneficiarios = [...this.beneficiarios];
 
           this.patchEngineFromSocio();
           this.loadMunicipiosIfNeeded();
@@ -800,12 +825,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         data?.cuentaCorrienteMontoCuota == null ? null : Number(data.cuentaCorrienteMontoCuota),
       cuentaNavidenaMontoCuota:
         data?.cuentaNavidenaMontoCuota == null ? null : Number(data.cuentaNavidenaMontoCuota),
-      beneficiario1Porcentaje:
-        data?.beneficiario1Porcentaje == null ? null : Number(data.beneficiario1Porcentaje),
-      beneficiario2Porcentaje:
-        data?.beneficiario2Porcentaje == null ? null : Number(data.beneficiario2Porcentaje),
-      beneficiario3Porcentaje:
-        data?.beneficiario3Porcentaje == null ? null : Number(data.beneficiario3Porcentaje),
     };
   }
 
@@ -868,6 +887,15 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+
+
+    this.engine.patchValues?.({
+      ...this.socio,
+      beneficiarioPorcentaje: this.beneficiariosTotalPorcentaje
+    });
+
+
+
     const ok = this.engine.validateAll?.();
 
     if (!ok) {
@@ -877,6 +905,8 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.engine.clearErrors?.();
     this.notify.close?.();
+
+    return;
 
     const payload = this.toSocioForm(this.socio);
     payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
@@ -1387,63 +1417,278 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-formatIngresosAnuales(): string {
-  const value = Number(this.socio.ingresosAnuales ?? 0);
+  formatIngresosAnuales(): string {
+    const value = Number(this.socio.ingresosAnuales ?? 0);
 
-  const decimalSeparator =
-    this.appConfigService.getCurrentSettings().decimalSeparator || '.';
+    const decimalSeparator =
+      this.appConfigService.getCurrentSettings().decimalSeparator || '.';
 
-  const thousandSeparator =
-    this.appConfigService.getCurrentSettings().thousandSeparator || ',';
+    const thousandSeparator =
+      this.appConfigService.getCurrentSettings().thousandSeparator || ',';
 
-  const fixed = value.toFixed(2);
-  const parts = fixed.split('.');
-  const integerPart = parts[0];
-  const decimalPart = parts[1] ?? '00';
+    const fixed = value.toFixed(2);
+    const parts = fixed.split('.');
+    const integerPart = parts[0];
+    const decimalPart = parts[1] ?? '00';
 
-  const formattedInteger = integerPart.replace(
-    /\B(?=(\d{3})+(?!\d))/g,
-    thousandSeparator
-  );
+    const formattedInteger = integerPart.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      thousandSeparator
+    );
 
-  return `${formattedInteger}${decimalSeparator}${decimalPart}`;
-}
-
-private toNumber(value: any): number {
-  if (value === null || value === undefined || value === '') return 0;
-
-  const decimalSeparator =
-    this.appConfigService.getCurrentSettings().decimalSeparator || '.';
-
-  const thousandSeparator =
-    this.appConfigService.getCurrentSettings().thousandSeparator || ',';
-
-  let text = String(value).trim();
-
-  if (thousandSeparator) {
-    text = text.split(thousandSeparator).join('');
+    return `${formattedInteger}${decimalSeparator}${decimalPart}`;
   }
 
-  if (decimalSeparator && decimalSeparator !== '.') {
-    text = text.replace(decimalSeparator, '.');
+  private toNumber(value: any): number {
+    if (value === null || value === undefined || value === '') return 0;
+
+    const decimalSeparator =
+      this.appConfigService.getCurrentSettings().decimalSeparator || '.';
+
+    const thousandSeparator =
+      this.appConfigService.getCurrentSettings().thousandSeparator || ',';
+
+    let text = String(value).trim();
+
+    if (thousandSeparator) {
+      text = text.split(thousandSeparator).join('');
+    }
+
+    if (decimalSeparator && decimalSeparator !== '.') {
+      text = text.replace(decimalSeparator, '.');
+    }
+
+    const result = Number(text);
+    return isNaN(result) ? 0 : result;
   }
 
-  const result = Number(text);
-  return isNaN(result) ? 0 : result;
-}
+  calcularIngresosAnuales(): void {
+    const mensual = this.toNumber(this.socio.ingresosMensuales);
+    const otros = this.toNumber(this.socio.otrosIngresos);
 
-calcularIngresosAnuales(): void {
-  const mensual = this.toNumber(this.socio.ingresosMensuales);
-  const otros = this.toNumber(this.socio.otrosIngresos);
+    const total = Number(((mensual + otros) * 12).toFixed(2));
 
-  const total = Number(((mensual + otros) * 12).toFixed(2));
+    this.socio.ingresosAnuales = total;
 
-  this.socio.ingresosAnuales = total;
+    this.engine?.patchValues?.({
+      ingresosAnuales: total
+    });
+  }
 
-  this.engine?.patchValues?.({
-    ingresosAnuales: total
-  });
-}
 
- 
+
+
+
+
+
+
+  get beneficiariosTotalPorcentaje(): number {
+    return this.beneficiarios
+      .filter(x => !x.isDeleted)
+      .reduce((sum, item) => sum + Number(item.porcentaje ?? 0), 0);
+  }
+
+  private mapBeneficiarios(items: any[] | null | undefined): BeneficiarioForm[] {
+    return (items ?? []).map((item: any) => ({
+      id: item?.id ?? null,
+      socioId: item?.socioId ?? this.socio?.id ?? null,
+      benefnombre: item?.benefnombre ?? null,
+      porcentaje: item?.porcentaje == null ? null : Number(item.porcentaje),
+      parentesco: item?.parentesco ?? null,
+      cedula: item?.cedula ?? null,
+      activo: item?.activo ?? true,
+      createdAtUtc: item?.createdAtUtc ?? null,
+      updatedAtUtc: item?.updatedAtUtc ?? null,
+      isNew: false,
+      isDeleted: false,
+    }));
+  }
+
+  private createBeneficiarioPayload(item: BeneficiarioForm): BeneficiarioForm {
+    return {
+      ...item,
+      socioId: this.socio.id,
+      benefnombre: item.benefnombre?.trim() ?? null,
+      parentesco: item.parentesco?.trim() ?? null,
+      cedula: item.cedula?.trim() ?? null,
+      porcentaje: item.porcentaje == null ? null : Number(item.porcentaje),
+    };
+  }
+
+
+  openBeneficiarioModal(item?: BeneficiarioForm | null): void {
+
+    let porcentaje = 100 - this.beneficiariosTotalPorcentaje;
+
+    this.notify.close?.();
+    this.beneficiarioEditing = item ? { ...item } : null;
+    this.beneficiarioDraft = item ? { ...item } : { ...EMPTY_BENEFICIARIO, socioId: this.socio.id };
+
+
+
+    this.engineBene.resetRules?.();
+    this.engineBene.clearFieldsMeta?.();
+
+    const fieldMeta = this.translate.instant('socios.table.fieldMeta') || {};
+    const validations = this.translate.instant('socios.table.validations') || {};
+
+    for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
+      this.engineBene.addFieldMeta?.({
+        id: fieldId,
+        label: meta?.label ?? '',
+        tooltip: meta?.tooltip ?? '',
+        tooltipIconClass: meta?.tooltipIconClass ?? '',
+      });
+    }
+
+    let x = 0;
+    for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
+      const rules = fieldConfig?.data || {};
+
+      for (const rule of Object.values(rules) as any[]) {
+        let value = rule?.value ?? '';
+
+        this.engineBene.addRule?.({
+          id: fieldId,
+          condition: String(rule?.rule ?? '').trim(),
+          when: String(rule?.when ?? '').trim(),
+          value,
+          message: String(rule?.msj ?? '').replace('{value}', String(value ?? '')),
+          classIconSuccess: rule?.classIconSuccess ?? '',
+          classIconError: rule?.classIconError ?? '',
+        });
+
+        x++;
+      }
+
+    }
+
+    this.engineBene.validateAll?.();
+    this.engineBene.clearErrors?.();
+
+
+
+
+
+
+
+
+
+    this.beneficiarioModalOpen = true;
+  }
+
+  closeBeneficiarioModal(): void {
+    this.beneficiarioModalOpen = false;
+    this.beneficiarioEditing = null;
+    this.beneficiarioDraft = { ...EMPTY_BENEFICIARIO };
+  }
+
+  saveBeneficiarioFromModal(): void {
+
+
+    this.engineBene.patchValues?.(this.beneficiarioDraft);
+
+
+    const ok = this.engineBene.validateAll();
+
+    if (!ok) {
+      this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
+      return;
+    }
+
+    this.engineBene.clearErrors?.();
+    this.notify.close?.();
+
+
+
+    const payload = this.createBeneficiarioPayload(this.beneficiarioDraft);
+
+    // MODO NUEVO: solo memoria local, todo se guarda cuando el socio se guarda
+    if (this.mode === 'create' || !this.socio.id) {
+      if (payload.id) {
+        this.beneficiarios = this.beneficiarios.map(x => x.id === payload.id ? { ...payload, isNew: true } : x);
+      } else {
+        this.beneficiarios = [
+          ...this.beneficiarios,
+          { ...payload, id: crypto.randomUUID(), isNew: true, isDeleted: false },
+        ];
+      }
+
+      this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
+      this.formRef?.form.markAsDirty();
+      this.closeBeneficiarioModal();
+      return;
+    }
+
+    // MODO EDICIÓN: persistencia inmediata
+    this.beneficiarioSaving = true;
+    const request$ = payload.id
+      ? this.sociosService.updateBeneficiario(this.socio.id, payload.id, payload)
+      : this.sociosService.createBeneficiario(this.socio.id, payload);
+
+    request$.subscribe({
+      next: (res: any) => {
+        const saved = res?.data?.beneficiario ?? payload;
+
+        if (payload.id) {
+          this.beneficiarios = this.beneficiarios.map(x => x.id === saved.id ? { ...saved, isNew: false, isDeleted: false } : x);
+        } else {
+          this.beneficiarios = [...this.beneficiarios, { ...saved, isNew: false, isDeleted: false }];
+        }
+
+        this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
+        this.copy.beneficiarios = [...this.socio.beneficiarios];
+        this.formRef?.form.markAsPristine();
+        this.notify.showFromApiResponse?.(res, 'success');
+        this.closeBeneficiarioModal();
+        this.beneficiarioSaving = false;
+      },
+      error: (err: any) => {
+        this.beneficiarioSaving = false;
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      }
+    });
+  }
+
+  removeBeneficiario(item: BeneficiarioForm): void {
+
+    this.beneficiarioModalOpen = false;
+    this.beneficiarioEditing = null;
+    this.beneficiarioDraft = { ...EMPTY_BENEFICIARIO };
+
+
+    const title = this.translate.instant('socios.beneficiariosTable.deleteTitle');
+    const message = this.translate.instant('socios.beneficiariosTable.deleteMessage', { nombre: item.benefnombre || '' });
+    const ref = this.notify.confirm?.(message, title, 'warning');
+
+    ref?.subscribe((result: number) => {
+      if (result !== 1) return;
+
+      // MODO NUEVO: solo quita de la tabla
+      if (this.mode === 'create' || !this.socio.id || !item.id || item.isNew) {
+        this.beneficiarios = this.beneficiarios.filter(x => x.id !== item.id);
+        this.socio.beneficiarios = [...this.beneficiarios];
+        this.formRef?.form.markAsDirty();
+        return;
+      }
+
+      // MODO EDICIÓN: borra inmediatamente en BD
+      this.sociosService.deleteBeneficiario(this.socio.id, item.id).subscribe({
+        next: (res: any) => {
+          this.beneficiarios = this.beneficiarios.filter(x => x.id !== item.id);
+          this.socio.beneficiarios = [...this.beneficiarios];
+          this.copy.beneficiarios = [...this.socio.beneficiarios];
+          this.formRef?.form.markAsPristine();
+          this.notify.showFromApiResponse?.(res, 'success');
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        }
+      });
+    });
+  }
+
+
+
+
 }

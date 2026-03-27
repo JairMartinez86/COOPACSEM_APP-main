@@ -562,7 +562,7 @@
                         [next]="otrosIngresos" class="form-control" numberFormat [decimals]="2"
                         [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                         [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                        placeholder="0.00" >
+                        placeholder="0.00">
                       <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>
@@ -584,14 +584,8 @@
                     <label for="ingresosAnuales" class="form-label required">{{ 'socios.fields.ingresosAnuales.label' |
                       translate }}</label>
                     <div class="input-group">
-                      <input
-      #ingresosAnuales
-      id="ingresosAnuales"
-      name="ingresosAnualesView"
-      [ngModel]="formatIngresosAnuales()"
-      readonly
-      class="form-control text-end"
-      placeholder="0.00">
+                      <input #ingresosAnuales id="ingresosAnuales" name="ingresosAnualesView"
+                        [ngModel]="formatIngresosAnuales()" readonly class="form-control text-end" placeholder="0.00">
                       <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>
@@ -668,7 +662,7 @@
 
                     <select #conyugeNacionalidad id="conyugeNacionalidadId" name="conyugeNacionalidadId"
                       [(ngModel)]="socio.conyugeNacionalidadId" engineSync="conyugeNacionalidadId" autoFocusNext
-                      [next]="beneficiario1Nombre" class="form-select">
+                      class="form-select">
                       <option value="">{{ 'socios.common.selectOption' | translate }}</option>
                       @for (item of nacionalidades; track item.id) {
                       <option [value]="item.id">{{ item.nombre }}</option>
@@ -680,177 +674,208 @@
             </div>
 
             <div id="beneficiarios" class="card ue-shell-card socio-card socio-scroll-section">
-              <div class="card-header socio-card-header">
-                <h5 class="card-title mb-1">{{ 'socios.sections.beneficiarios.title' | translate }}</h5>
-                <p class="card-subtitle mb-0">{{ 'socios.sections.beneficiarios.subtitle' | translate }}</p>
+
+              <div
+                class="card-header ue-shell-card-header d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                  <h5 class="card-title mb-1">
+                    {{ 'socios.sections.beneficiarios.title' | translate }}
+                  </h5>
+                  <p class="card-subtitle mb-0">
+                    {{ 'socios.sections.beneficiarios.subtitle' | translate }}
+                  </p>
+                </div>
+
+                @if (beneficiarios.length > 0) {
+                <button type="button" class="btn btn-primary" (click)="openBeneficiarioModal()">
+                  <i class="ti ti-plus me-1"></i>
+                  {{ 'socios.beneficiariosTable.add' | translate }}
+                </button>
+                }
               </div>
 
-              <div class="card-body p-4">
-                <div class="d-flex flex-column gap-3">
-                  <div class="beneficiary-card principal">
-                    <div class="beneficiary-head">
-                      <div>
-                        <h6 class="mb-1">{{ 'socios.beneficiarios.1.title' | translate }}</h6>
-                        <small>{{ 'socios.beneficiarios.1.subtitle' | translate }}</small>
-                      </div>
-                      <span class="badge badge-soft-primary">{{ 'socios.beneficiarios.1.badge' | translate }}</span>
+              <div class="card-body">
+
+                <div class="table-responsive">
+                  <table class="table align-middle mb-0">
+
+                    <thead>
+                      <tr>
+                        <th>{{ 'socios.beneficiariosTable.columns.nombre' | translate }}</th>
+                        <th>{{ 'socios.beneficiariosTable.columns.parentesco' | translate }}</th>
+                        <th>{{ 'socios.beneficiariosTable.columns.cedula' | translate }}</th>
+                        <th class="text-center">{{ 'socios.beneficiariosTable.columns.porcentaje' | translate }}</th>
+                        <th>{{ 'socios.beneficiariosTable.columns.actions' | translate }}</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+
+                      <!-- EMPTY STATE -->
+                      @if (!beneficiarios.length) {
+                      <tr>
+                        <td colspan="5">
+                          <div class="text-center py-5">
+
+                            <div class="mb-2">
+                              <i class="ti ti-inbox fs-1"></i>
+                            </div>
+
+                            <h6>{{ 'socios.beneficiariosTable.emptyTitle' | translate }}</h6>
+
+                            <p class="mb-3">
+                              {{ 'socios.beneficiariosTable.emptySubtitle' | translate }}
+                            </p>
+
+                            <button type="button" class="btn btn-primary" [disabled]="mode === 'view'"
+                              (click)="openBeneficiarioModal()">
+                              <i class="ti ti-plus me-1"></i>
+                              {{ 'socios.beneficiariosTable.addFirst' | translate }}
+                            </button>
+
+                          </div>
+                        </td>
+                      </tr>
+                      }
+
+                      <!-- DATA -->
+                      @for (item of beneficiarios; track item.id ?? item.id) {
+                      <tr>
+
+                        <td>
+                          <div class="fw-semibold">
+                            {{ item.benefnombre }}
+                          </div>
+                        </td>
+
+                        <td>{{ item.parentesco || '-' }}</td>
+
+                        <td>{{ item.cedula || '-' }}</td>
+
+                        <td class="text-center">
+                          <span class="badge bg-info">
+                            {{ item.porcentaje ?? 0 }}%
+                          </span>
+                        </td>
+
+                        <td>
+
+
+
+                          <div class="table-actions">
+                            <button type="button" class="btn btn-icon btn-sm btn-light"
+                              [appPermission]="['new', 'edit']" permissionRoute="/socios"
+                              [title]="'common.actions.edit' | translate" (click)="openBeneficiarioModal(item)">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+
+
+                            <button type="button" class="btn btn-icon btn-sm btn-light"
+                              [appPermission]="['new', 'delete']" permissionRoute="/socios"
+                              [title]="'common.actions.delete' | translate" (click)="removeBeneficiario(item)">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </div>
+
+
+                        </td>
+
+                      </tr>
+                      }
+
+                    </tbody>
+
+                    @if (beneficiarios.length > 0) {
+                    <tfoot>
+                      <tr>
+                        <td colspan="3" class="text-end fw-semibold">
+                          {{ 'socios.beneficiariosTable.total' | translate }}
+                        </td>
+                        <td class="text-center fw-bold">
+                          {{ beneficiariosTotalPorcentaje }}%
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                    }
+
+                  </table>
+                </div>
+
+              </div>
+            </div>
+
+            @if (beneficiarioModalOpen) {
+            <div class="beneficiario-modal-backdrop"></div>
+            <div class="beneficiario-modal-wrapper" role="dialog" aria-modal="true">
+              <div class="card ue-shell-card beneficiario-modal-card">
+
+
+
+                <div class="modal-header">
+                  <h5 class="modal-title">
+                    {{ beneficiarioEditing?.id ? ('socios.beneficiariosModal.editTitle' |
+                    translate) : ('socios.beneficiariosModal.createTitle' | translate) }}
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    (click)="closeBeneficiarioModal()"></button>
+                </div>
+
+
+
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-md-6" error-notify="benefnombre" error-display="inline">
+                      <label class="form-label required">{{ 'socios.beneficiariosTable.columns.nombre' | translate
+                        }}</label>
+                      <input type="text" class="form-control" [(ngModel)]="beneficiarioDraft.benefnombre"
+                        [placeholder]="'socios.beneficiariosTable.columns.nombre' | translate" id="benefnombre"
+                        name="benefnombre" engineSync="benefnombre" autoFocusNext [next]="porcentaje" />
                     </div>
 
-                    <div class="row g-3">
-                      <div class="col-md-4" error-notify="beneficiario1Nombre" error-display="inline">
-                        <label for="beneficiario1Nombre" class="form-label required">{{
-                          'socios.fields.beneficiario1Nombre.label' | translate }}</label>
-                        <input #beneficiario1Nombre id="beneficiario1Nombre" name="beneficiario1Nombre"
-                          [(ngModel)]="socio.beneficiario1Nombre" engineSync="beneficiario1Nombre" autoFocusNext
-                          [next]="beneficiario1Porcentaje" type="text" class="form-control"
-                          [placeholder]="'socios.fields.beneficiario1Nombre.placeholder' | translate">
-                      </div>
-
-                      <div class="col-md-2" error-notify="beneficiario1Porcentaje" error-display="inline">
-                        <label for="beneficiario1Porcentaje" class="form-label required">{{
-                          'socios.fields.beneficiario1Porcentaje.label' | translate }}</label>
-                        <div class="input-group">
-                          <input #beneficiario1Porcentaje id="beneficiario1Porcentaje" name="beneficiario1Porcentaje"
-                            [(ngModel)]="socio.beneficiario1Porcentaje" engineSync="beneficiario1Porcentaje"
-                            autoFocusNext [next]="beneficiario1Parentesco" type="text" class="form-control" numberFormat
-                            [decimals]="2" [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                            [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                            placeholder="0.00">
-                          <span class="input-group-text">%</span>
-                        </div>
-                      </div>
-
-                      <div class="col-md-3" error-notify="beneficiario1Parentesco" error-display="inline">
-                        <label for="beneficiario1Parentesco" class="form-label required">{{
-                          'socios.fields.beneficiario1Parentesco.label' | translate }}</label>
-                        <input #beneficiario1Parentesco id="beneficiario1Parentesco" name="beneficiario1Parentesco"
-                          [(ngModel)]="socio.beneficiario1Parentesco" engineSync="beneficiario1Parentesco" autoFocusNext
-                          [next]="beneficiario1Cedula" type="text" class="form-control"
-                          [placeholder]="'socios.fields.beneficiario1Parentesco.placeholder' | translate">
-                      </div>
-
-                      <div class="col-md-3" error-notify="beneficiario1Cedula" error-display="inline">
-                        <label for="beneficiario1Cedula" class="form-label required">{{
-                          'socios.fields.beneficiario1Cedula.label' | translate }}</label>
-                        <input #beneficiario1Cedula id="beneficiario1Cedula" name="beneficiario1Cedula"
-                          [(ngModel)]="socio.beneficiario1Cedula" engineSync="beneficiario1Cedula" autoFocusNext
-                          [next]="beneficiario2Nombre" type="text" class="form-control"
-                          [placeholder]="'socios.fields.beneficiario1Cedula.placeholder' | translate">
+                    <div class="col-md-2" error-notify="porcentaje" error-display="inline">
+                      <label class="form-label required">{{ 'socios.beneficiariosTable.columns.porcentaje' | translate
+                        }}</label>
+                      <div class="input-group">
+                        <input #porcentaje type="text" class="form-control" numberFormat
+                          [(ngModel)]="beneficiarioDraft.porcentaje" id="porcentaje" name="porcentaje"
+                          engineSync="porcentaje" autoFocusNext [next]="parentesco" />
+                        <span class="input-group-text">%</span>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="beneficiary-card">
-                    <div class="beneficiary-head">
-                      <div>
-                        <h6 class="mb-1">{{ 'socios.beneficiarios.2.title' | translate }}</h6>
-                        <small>{{ 'socios.beneficiarios.2.subtitle' | translate }}</small>
-                      </div>
-                      <span class="badge badge-outline-secondary">{{ 'socios.beneficiarios.2.badge' | translate
-                        }}</span>
+                    <div class="col-md-2" error-notify="parentesco" error-display="inline">
+                      <label class="form-label required">{{ 'socios.beneficiariosTable.columns.parentesco' | translate
+                        }}</label>
+                      <input #parentesco type="text" class="form-control" [(ngModel)]="beneficiarioDraft.parentesco"
+                        [placeholder]="'socios.beneficiariosTable.columns.parentesco' | translate" id="parentesco"
+                        name="parentesco" engineSync="parentesco" autoFocusNext [next]="cedula" />
                     </div>
 
-                    <div class="row g-3">
-                      <div class="col-md-4" error-notify="beneficiario2Nombre" error-display="inline">
-                        <label for="beneficiario2Nombre" class="form-label">{{ 'socios.fields.beneficiario2Nombre.label'
-                          | translate }}</label>
-                        <input #beneficiario2Nombre id="beneficiario2Nombre" name="beneficiario2Nombre"
-                          [(ngModel)]="socio.beneficiario2Nombre" engineSync="beneficiario2Nombre" autoFocusNext
-                          [next]="beneficiario2Porcentaje" type="text" class="form-control"
-                          [placeholder]="'socios.fields.beneficiario2Nombre.placeholder' | translate">
-                      </div>
-
-                      <div class="col-md-2" error-notify="beneficiario2Porcentaje" error-display="inline">
-                        <label for="beneficiario2Porcentaje" class="form-label">{{
-                          'socios.fields.beneficiario2Porcentaje.label' | translate }}</label>
-                        <div class="input-group">
-                          <input #beneficiario2Porcentaje id="beneficiario2Porcentaje" name="beneficiario2Porcentaje"
-                            [(ngModel)]="socio.beneficiario2Porcentaje" engineSync="beneficiario2Porcentaje"
-                            autoFocusNext [next]="beneficiario2Parentesco" type="text" class="form-control" numberFormat
-                            [decimals]="2" [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                            [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                            placeholder="0.00">
-                          <span class="input-group-text">%</span>
-                        </div>
-                      </div>
-
-                      <div class="col-md-3" error-notify="beneficiario2Parentesco" error-display="inline">
-                        <label for="beneficiario2Parentesco" class="form-label">{{
-                          'socios.fields.beneficiario2Parentesco.label' | translate }}</label>
-                        <input #beneficiario2Parentesco id="beneficiario2Parentesco" name="beneficiario2Parentesco"
-                          [(ngModel)]="socio.beneficiario2Parentesco" engineSync="beneficiario2Parentesco" autoFocusNext
-                          [next]="beneficiario2Cedula" type="text" class="form-control"
-                          [placeholder]="'socios.fields.beneficiario2Parentesco.placeholder' | translate">
-                      </div>
-
-                      <div class="col-md-3" error-notify="beneficiario2Cedula" error-display="inline">
-                        <label for="beneficiario2Cedula" class="form-label">{{ 'socios.fields.beneficiario2Cedula.label'
-                          | translate }}</label>
-                        <input #beneficiario2Cedula id="beneficiario2Cedula" name="beneficiario2Cedula"
-                          [(ngModel)]="socio.beneficiario2Cedula" engineSync="beneficiario2Cedula" autoFocusNext
-                          [next]="beneficiario3Nombre" type="text" class="form-control"
-                          [placeholder]="'socios.fields.beneficiario2Cedula.placeholder' | translate">
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="beneficiary-card">
-                    <div class="beneficiary-head">
-                      <div>
-                        <h6 class="mb-1">{{ 'socios.beneficiarios.3.title' | translate }}</h6>
-                        <small>{{ 'socios.beneficiarios.3.subtitle' | translate }}</small>
-                      </div>
-                      <span class="badge badge-outline-secondary">{{ 'socios.beneficiarios.3.badge' | translate
-                        }}</span>
-                    </div>
-
-                    <div class="row g-3">
-                      <div class="col-md-4" error-notify="beneficiario3Nombre" error-display="inline">
-                        <label for="beneficiario3Nombre" class="form-label">{{ 'socios.fields.beneficiario3Nombre.label'
-                          | translate }}</label>
-                        <input #beneficiario3Nombre id="beneficiario3Nombre" name="beneficiario3Nombre"
-                          [(ngModel)]="socio.beneficiario3Nombre" engineSync="beneficiario3Nombre" autoFocusNext
-                          [next]="beneficiario3Porcentaje" type="text" class="form-control"
-                          [placeholder]="'socios.fields.beneficiario3Nombre.placeholder' | translate">
-                      </div>
-
-                      <div class="col-md-2" error-notify="beneficiario3Porcentaje" error-display="inline">
-                        <label for="beneficiario3Porcentaje" class="form-label">{{
-                          'socios.fields.beneficiario3Porcentaje.label' | translate }}</label>
-                        <div class="input-group">
-                          <input #beneficiario3Porcentaje id="beneficiario3Porcentaje" name="beneficiario3Porcentaje"
-                            [(ngModel)]="socio.beneficiario3Porcentaje" engineSync="beneficiario3Porcentaje"
-                            autoFocusNext [next]="beneficiario3Parentesco" type="text" class="form-control" numberFormat
-                            [decimals]="2" [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                            [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                            placeholder="0.00">
-                          <span class="input-group-text">%</span>
-                        </div>
-                      </div>
-
-                      <div class="col-md-3" error-notify="beneficiario3Parentesco" error-display="inline">
-                        <label for="beneficiario3Parentesco" class="form-label">{{
-                          'socios.fields.beneficiario3Parentesco.label' | translate }}</label>
-                        <input #beneficiario3Parentesco id="beneficiario3Parentesco" name="beneficiario3Parentesco"
-                          [(ngModel)]="socio.beneficiario3Parentesco" engineSync="beneficiario3Parentesco" autoFocusNext
-                          [next]="beneficiario3Cedula" type="text" class="form-control"
-                          [placeholder]="'socios.fields.beneficiario3Parentesco.placeholder' | translate">
-                      </div>
-
-                      <div class="col-md-3" error-notify="beneficiario3Cedula" error-display="inline">
-                        <label for="beneficiario3Cedula" class="form-label">{{ 'socios.fields.beneficiario3Cedula.label'
-                          | translate }}</label>
-                        <input #beneficiario3Cedula id="beneficiario3Cedula" name="beneficiario3Cedula"
-                          [(ngModel)]="socio.beneficiario3Cedula" engineSync="beneficiario3Cedula" autoFocusNext
-                          [next]="saveButton" [disableClickButton]="true" [unlockOn]="notify.closed$" type="text"
-                          class="form-control"
-                          [placeholder]="'socios.fields.beneficiario3Cedula.placeholder' | translate">
-                      </div>
+                    <div class="col-md-2" error-notify="cedula" error-display="inline">
+                      <label class="form-label required">{{ 'socios.beneficiariosTable.columns.cedula' | translate
+                        }}</label>
+                      <input #cedula type="text" class="form-control" [(ngModel)]="beneficiarioDraft.cedula"
+                        [placeholder]="'socios.beneficiariosTable.columns.cedula' | translate" id="cedula" name="cedula"
+                        engineSync="cedula" autoFocusNext [next]="btnAregar" />
                     </div>
                   </div>
                 </div>
+
+                <div class="card-footer d-flex justify-content-end gap-2">
+                  <button type="button" class="btn btn-outline-secondary" (click)="closeBeneficiarioModal()">
+                    {{ 'socios.common.actions.cancel' | translate }}
+                  </button>
+                  <button type="button" class="btn btn-primary" (click)="saveBeneficiarioFromModal()" #btnAregar
+                    autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
+                    {{ 'socios.common.actions.save' | translate }}
+                  </button>
+                </div>
               </div>
             </div>
+            }
+
+
           </div>
         </div>
 

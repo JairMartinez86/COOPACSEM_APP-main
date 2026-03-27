@@ -5,6 +5,7 @@ import { BrowserApiService } from '../../../core/services/browser-api.service';
 import { ApiConfigService } from '../../../core/services/ApiConfigService ';
 import { ApiResponse } from '../../../core/auth/services/auth.service';
 import { SocioForm } from '../interface/socio.model';
+import { BeneficiarioForm } from '../interface/beneficiario.model';
 
 @Injectable({
   providedIn: 'root'
@@ -76,4 +77,35 @@ export class SociosService extends BrowserApiService {
     );
   }
 
+
+  getBeneficiarios(socioId: string): Observable<any> {
+    return this.http.get<any>(
+      `${this.api.baseUrl}/socios/${socioId}/beneficiarios`,
+      { withCredentials: true }
+    );
+  }
+
+  createBeneficiario(socioId: string, body: BeneficiarioForm): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/beneficiarios`,
+      body,
+      { withCredentials: true }
+    );
+  }
+
+  updateBeneficiario(socioId: string, beneficiarioId: string, body: BeneficiarioForm): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/beneficiarios/${beneficiarioId}`,
+      body,
+      { withCredentials: true }
+    );
+  }
+
+  deleteBeneficiario(socioId: string, beneficiarioId: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/beneficiarios/${beneficiarioId}`,
+      { withCredentials: true }
+    );
+  }
+  
 }

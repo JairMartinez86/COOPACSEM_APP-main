@@ -1,3 +1,5 @@
+import { BeneficiarioForm } from './beneficiario.model';
+
 export interface SocioForm {
   id: string | null;
 
@@ -53,22 +55,10 @@ export interface SocioForm {
   cuentaNavidenaMontoCuota: number | null;
   cuentaNavidenaEsMensual: boolean;
 
-  beneficiario1Nombre: string | null;
-  beneficiario1Porcentaje: number | null;
-  beneficiario1Parentesco: string | null;
-  beneficiario1Cedula: string | null;
-
-  beneficiario2Nombre: string | null;
-  beneficiario2Porcentaje: number | null;
-  beneficiario2Parentesco: string | null;
-  beneficiario2Cedula: string | null;
-
-  beneficiario3Nombre: string | null;
-  beneficiario3Porcentaje: number | null;
-  beneficiario3Parentesco: string | null;
-  beneficiario3Cedula: string | null;
-
+  beneficiarios: BeneficiarioForm[];
   activo: boolean;
+
+  beneficiarioPorcentaje :  number | null;
 }
 
 export const EMPTY_SOCIO: SocioForm = {
@@ -89,7 +79,6 @@ export const EMPTY_SOCIO: SocioForm = {
   fechaVencimiento: null,
   paisNacimiento: null,
   fechaNacimiento: null,
-
 
   nacionalidadId: null,
   departamentoId: null,
@@ -127,20 +116,8 @@ export const EMPTY_SOCIO: SocioForm = {
   cuentaNavidenaMontoCuota: null,
   cuentaNavidenaEsMensual: false,
 
-  beneficiario1Nombre: null,
-  beneficiario1Porcentaje: null,
-  beneficiario1Parentesco: null,
-  beneficiario1Cedula: null,
+  beneficiarios: [],
+  activo: true,
 
-  beneficiario2Nombre: null,
-  beneficiario2Porcentaje: null,
-  beneficiario2Parentesco: null,
-  beneficiario2Cedula: null,
-
-  beneficiario3Nombre: null,
-  beneficiario3Porcentaje: null,
-  beneficiario3Parentesco: null,
-  beneficiario3Cedula: null,
-
-  activo: true
+  beneficiarioPorcentaje: 0,
 };

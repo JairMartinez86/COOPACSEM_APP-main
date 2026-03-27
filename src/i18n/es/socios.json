@@ -9,7 +9,28 @@
     "badges": {
       "newMember": "Nuevo socio",
       "sections": "5 secciones",
-      "beneficiaries": "Hasta 3 beneficiarios"
+      "beneficiaries": "Beneficiarios dinámicos"
+    },
+    "beneficiariosTable": {
+      "add": "Agregar beneficiario",
+      "addFirst": "Agregar primer beneficiario",
+      "emptyTitle": "No hay beneficiarios registrados",
+      "emptySubtitle": "Agregue beneficiarios para distribuir el porcentaje del socio.",
+      "total": "Total",
+      "deleteTitle": "Eliminar beneficiario",
+      "deleteMessage": "¿Desea eliminar a {{nombre}}?",
+      "columns": {
+        "nombre": "Nombre completo",
+        "parentesco": "Parentesco",
+        "cedula": "Cédula",
+        "porcentaje": "Porcentaje",
+        "actions": "Acciones"
+      }
+    },
+    "beneficiariosModal": {
+      "createTitle": "Nuevo beneficiario",
+      "editTitle": "Editar beneficiario",
+      "subtitle": "Complete la información del beneficiario."
     },
     "messages": {
       "notFound": "No se encontraron datos del socio."
@@ -74,23 +95,6 @@
       "ahorro": {
         "title": "Ahorro",
         "subtitle": "Configura ahorro programado para cuenta corriente y navideña."
-      }
-    },
-    "beneficiarios": {
-      "1": {
-        "title": "Beneficiario 1",
-        "subtitle": "Registro principal",
-        "badge": "Principal"
-      },
-      "2": {
-        "title": "Beneficiario 2",
-        "subtitle": "Registro opcional",
-        "badge": "Opcional"
-      },
-      "3": {
-        "title": "Beneficiario 3",
-        "subtitle": "Registro opcional",
-        "badge": "Opcional"
       }
     },
     "fields": {
@@ -228,51 +232,19 @@
         "label": "Nacionalidad",
         "placeholder": "Nacionalidad"
       },
-      "beneficiario1Nombre": {
+      "benefnombre": {
         "label": "Nombre completo",
         "placeholder": "Nombre completo"
       },
-      "beneficiario1Porcentaje": {
+      "porcentaje": {
         "label": "Porcentaje",
         "placeholder": "Porcentaje"
       },
-      "beneficiario1Parentesco": {
+      "parentesco": {
         "label": "Parentesco",
         "placeholder": "Parentesco"
       },
-      "beneficiario1Cedula": {
-        "label": "Cédula",
-        "placeholder": "Cédula"
-      },
-      "beneficiario2Nombre": {
-        "label": "Nombre completo",
-        "placeholder": "Nombre completo"
-      },
-      "beneficiario2Porcentaje": {
-        "label": "Porcentaje",
-        "placeholder": "Porcentaje"
-      },
-      "beneficiario2Parentesco": {
-        "label": "Parentesco",
-        "placeholder": "Parentesco"
-      },
-      "beneficiario2Cedula": {
-        "label": "Cédula",
-        "placeholder": "Cédula"
-      },
-      "beneficiario3Nombre": {
-        "label": "Nombre completo",
-        "placeholder": "Nombre completo"
-      },
-      "beneficiario3Porcentaje": {
-        "label": "Porcentaje",
-        "placeholder": "Porcentaje"
-      },
-      "beneficiario3Parentesco": {
-        "label": "Parentesco",
-        "placeholder": "Parentesco"
-      },
-      "beneficiario3Cedula": {
+      "cedula": {
         "label": "Cédula",
         "placeholder": "Cédula"
       },
@@ -466,54 +438,6 @@
         },
         "conyugeNacionalidadId": {
           "label": "Datos del cónyuge",
-          "tooltip": "Campo opcional"
-        },
-        "beneficiario1Nombre": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo requerido"
-        },
-        "beneficiario1Porcentaje": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo requerido"
-        },
-        "beneficiario1Parentesco": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo requerido"
-        },
-        "beneficiario1Cedula": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo requerido"
-        },
-        "beneficiario2Nombre": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo opcional"
-        },
-        "beneficiario2Porcentaje": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo opcional"
-        },
-        "beneficiario2Parentesco": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo opcional"
-        },
-        "beneficiario2Cedula": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo opcional"
-        },
-        "beneficiario3Nombre": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo opcional"
-        },
-        "beneficiario3Porcentaje": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo opcional"
-        },
-        "beneficiario3Parentesco": {
-          "label": "Beneficiarios",
-          "tooltip": "Campo opcional"
-        },
-        "beneficiario3Cedula": {
-          "label": "Beneficiarios",
           "tooltip": "Campo opcional"
         },
         "codigoSocio": {
@@ -914,126 +838,6 @@
             }
           }
         },
-        "beneficiario1Nombre": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Ingrese el nombre del Beneficiario"
-            }
-          }
-        },
-        "beneficiario1Porcentaje": {
-          "data": {
-            "1": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
-              "value": "100",
-              "when": "",
-              "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
-            }
-          }
-        },
-        "beneficiario1Parentesco": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Ingrese el parentesco"
-            }
-          }
-        },
-        "beneficiario1Cedula": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Ingrese el número de cédula"
-            }
-          }
-        },
-        "beneficiario2Nombre": {
-          "data": {
-            "1": {
-              "rule": "LEN>=",
-              "value": "0",
-              "when": "",
-              "msj": ""
-            }
-          }
-        },
-        "beneficiario2Porcentaje": {
-          "data": {
-            "1": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
-              "value": "100",
-              "when": "beneficiario2Nombre}!=''",
-              "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
-            }
-          }
-        },
-        "beneficiario2Parentesco": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{beneficiario2Nombre}!=''",
-              "msj": "Ingrese el parentesco del segundo beneficiario"
-            }
-          }
-        },
-        "beneficiario2Cedula": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{beneficiario2Nombre}!=''",
-              "msj": "Ingrese el número de cédula del segundo beneficiario"
-            }
-          }
-        },
-        "beneficiario3Nombre": {
-          "data": {
-            "1": {
-              "rule": "LEN>=",
-              "value": "0",
-              "when": "",
-              "msj": ""
-            }
-          }
-        },
-        "beneficiario3Porcentaje": {
-          "data": {
-            "1": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
-              "value": "100",
-              "when": "beneficiario3Nombre}!=''",
-              "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
-            }
-          }
-        },
-        "beneficiario3Parentesco": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{beneficiario3Nombre}!=''",
-              "msj": "Ingrese el parentesco del tercer beneficiario"
-            }
-          }
-        },
-        "beneficiario3Cedula": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{beneficiario3Nombre}!=''",
-              "msj": "Ingrese el número de cédula del tercer beneficiario"
-            }
-          }
-        },
         "cuentaCorrienteActiva": {
           "data": {
             "1": {
@@ -1137,6 +941,90 @@
               "msj": ""
             }
           }
+        },
+        "beneficiarioPorcentaje": {
+          "data": {
+            "1": {
+              "rule": "NUM=",
+              "value": "100",
+              "when": "",
+              "msj": "La suma de los porcentajes de los beneficiarios debe ser igual al 100%"
+            }
+          }
+        }
+      }
+    },
+    "table": {
+      "fieldMeta": {
+        "benefnombre": {
+          "label": "Beneficiario",
+          "tooltip": "Campo requerido"
+        },
+        "porcentaje": {
+          "label": "Beneficiario",
+          "tooltip": "Campo requerido"
+        },
+        "parentesco": {
+          "label": "Beneficiario",
+          "tooltip": "Campo requerido"
+        },
+        "cedula": {
+          "label": "Beneficiario",
+          "tooltip": "Campo requerido"
+        }
+      },
+      "validations": {
+        "benefnombre": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el nombre del Beneficiario"
+            }
+          }
+        },
+        "porcentaje": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "El valor del procentaje debe de ser mayor a 0"
+            },
+            "2": {
+              "rule": "NUM<=",
+              "value": "100",
+              "when": "",
+              "msj": "Solo se permite un maximo del 100%"
+            }
+          }
+        },
+        "parentesco": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el parentesco"
+            }
+          }
+        },
+        "cedula": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "when": "",
+              "value": "^[0-9]+[A-Za-z]$",
+              "msj": "Solo se permiten números y una letra al final"
+            },
+            "2": {
+              "rule": "LEN==",
+              "when": "",
+              "value": "14",
+              "msj": "Debe tener exactamente 14 caracteres"
+            }
+          }
         }
       }
     },
@@ -1222,7 +1110,9 @@
       "actions": {
         "clear": "Limpiar",
         "edit": "Editar",
-        "delete": "Eliminar"
+        "delete": "Eliminar",
+        "save": "Guardar",
+        "cancel": "Cancelar"
       },
       "status": {
         "active": "Activo",
