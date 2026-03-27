@@ -42,13 +42,10 @@ import { CatalogosService } from '../../../../shared/service/CatalogosService';
 import { CatalogoItem, MunicipioItem } from '../../../../shared/interfaces/catalogo.model';
 import { BeneficiarioForm, EMPTY_BENEFICIARIO } from '../../interface/beneficiario.model';
 import { PermissionService } from '../../../../core/services/permission.service';
+import { BeneficiarioModalComponent } from "./beneficiario/beneficiario-modal.component";
 
 declare const Choices: any;
-@Injectable()
-export class SocioValidationEngine extends JMartMassiveValidationService {}
 
-@Injectable()
-export class BeneficiarioValidationEngine extends JMartMassiveValidationService {}
 
 type DraftRef<T> = {
   saveNow(): void;
@@ -70,9 +67,9 @@ type DraftRef<T> = {
     AppPermissionDirective,
     Breadcrumb,
     JMartDateFormatDirective,
-    JMartNumberFormatDirective
-  ],
-  providers: [SocioValidationEngine, BeneficiarioValidationEngine],
+    JMartNumberFormatDirective,
+    BeneficiarioModalComponent
+],
   templateUrl: './socios.html',
   styleUrl: './socios.scss',
 })
@@ -101,8 +98,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private catalogosService = inject(CatalogosService);
   private translate = inject(TranslateService);
   private draftService = inject(DraftFormService);
-  private engine = inject(SocioValidationEngine);
-  private engineBene = inject(BeneficiarioValidationEngine);
+  private engine = inject(JMartMassiveValidationService);
   public notify = inject(NotificationService);
   private langService = inject(LanguageService);
   private route = inject(ActivatedRoute);
@@ -241,11 +237,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     );
 
-
-
-    setInterval(() => {
-      this.calcularIngresosAnuales();
-    }, 300);
   }
 
   ngAfterViewInit(): void {
@@ -531,7 +522,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (res: any) => {
           const socioApi = res?.data?.socio ?? null;
 
-          console.log(socioApi.createdAtUtc)
 
           socioApi.fechaEmision = this.appConfigService.formatDate(socioApi.fechaEmision);
           socioApi.fechaVencimiento = this.appConfigService.formatDate(socioApi.fechaVencimiento);
@@ -600,6 +590,10 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
             conyugePaisNacimiento: conyugePaisNacimientoId,
             conyugeNacionalidadId
           };
+
+
+          this.loadBeneficiarios(id);
+
 
           this.patchEngineFromSocio();
           this.engine.clearErrors?.();
@@ -758,8 +752,15 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         form: this.formRef!,
         routeKey: `socios-edit-${this.socio.id ?? 'new'}`,
 
-        currentData: () => ({ ...this.socio, beneficiarios: this.beneficiarios }),
-        savedData: () => ({ ...this.copy }),
+       currentData: () => ({
+  ...this.socio,
+  beneficiarios: this.mapBeneficiarios(this.beneficiarios)
+}),
+
+savedData: () => ({
+  ...this.copy,
+  beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios)
+}),
 
         restoreData: (data: Partial<SocioForm> | null | undefined) => {
           this.socio = this.toSocioForm({
@@ -767,9 +768,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
             ...(data ?? {}),
           });
 
-            this.beneficiarios = this.mapBeneficiarios(data?.beneficiarios);
+          this.beneficiarios = this.mapBeneficiarios(data?.beneficiarios);
 
-            this.socio.beneficiarios = [...this.beneficiarios];
+          this.socio.beneficiarios = [...this.beneficiarios];
 
           this.patchEngineFromSocio();
           this.loadMunicipiosIfNeeded();
@@ -785,9 +786,10 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         },
 
         restoreSavedData: (data: Partial<SocioForm> | null | undefined) => {
-          this.copy = this.toSocioForm(data);
-          this.syncCatalogValuesWithOptions();
-        },
+  this.copy = this.toSocioForm(data);
+  this.copy.beneficiarios = this.mapBeneficiarios(data?.beneficiarios);
+  this.syncCatalogValuesWithOptions();
+},
 
         patchEngine: (data: Partial<SocioForm> | null | undefined) => {
           this.engine.patchValues?.(data ?? {});
@@ -802,31 +804,32 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private normalize(
-    data: Partial<SocioForm> | null | undefined
-  ): Partial<SocioForm> {
-    return {
-      ...data,
-      id: data?.id ?? null,
-      paisEmisor: data?.paisEmisor ?? null,
-      paisNacimiento: data?.paisNacimiento ?? null,
-      nacionalidadId: data?.nacionalidadId ?? null,
-      departamentoId: data?.departamentoId ?? null,
-      municipioId: data?.municipioId ?? null,
-      conyugePaisNacimiento: data?.conyugePaisNacimiento ?? null,
-      conyugeNacionalidadId: data?.conyugeNacionalidadId ?? null,
-      ingresosMensuales:
-        data?.ingresosMensuales == null ? null : Number(data.ingresosMensuales),
-      otrosIngresos:
-        data?.otrosIngresos == null ? null : Number(data.otrosIngresos),
-      ingresosAnuales:
-        data?.ingresosAnuales == null ? null : Number(data.ingresosAnuales),
-      cuentaCorrienteMontoCuota:
-        data?.cuentaCorrienteMontoCuota == null ? null : Number(data.cuentaCorrienteMontoCuota),
-      cuentaNavidenaMontoCuota:
-        data?.cuentaNavidenaMontoCuota == null ? null : Number(data.cuentaNavidenaMontoCuota),
-    };
-  }
+private normalize(
+  data: Partial<SocioForm> | null | undefined
+): Partial<SocioForm> {
+  return {
+    ...data,
+    id: data?.id ?? null,
+    paisEmisor: data?.paisEmisor ?? null,
+    paisNacimiento: data?.paisNacimiento ?? null,
+    nacionalidadId: data?.nacionalidadId ?? null,
+    departamentoId: data?.departamentoId ?? null,
+    municipioId: data?.municipioId ?? null,
+    conyugePaisNacimiento: data?.conyugePaisNacimiento ?? null,
+    conyugeNacionalidadId: data?.conyugeNacionalidadId ?? null,
+    ingresosMensuales:
+      data?.ingresosMensuales == null ? null : Number(data.ingresosMensuales),
+    otrosIngresos:
+      data?.otrosIngresos == null ? null : Number(data.otrosIngresos),
+    ingresosAnuales:
+      data?.ingresosAnuales == null ? null : Number(data.ingresosAnuales),
+    cuentaCorrienteMontoCuota:
+      data?.cuentaCorrienteMontoCuota == null ? null : Number(data.cuentaCorrienteMontoCuota),
+    cuentaNavidenaMontoCuota:
+      data?.cuentaNavidenaMontoCuota == null ? null : Number(data.cuentaNavidenaMontoCuota),
+    beneficiarios: this.mapBeneficiarios(data?.beneficiarios).filter(x => !x.isDeleted),
+  };
+}
 
   private toSocioForm(
     data: Partial<SocioForm> | null | undefined
@@ -842,10 +845,19 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.engine.patchValues?.(this.socio);
   }
 
-  hasUnsavedChanges(): boolean {
-    return JSON.stringify(this.normalize(this.toSocioForm(this.socio))) !==
-      JSON.stringify(this.normalize(this.toSocioForm(this.copy)));
-  }
+hasUnsavedChanges(): boolean {
+  const current = this.normalize({
+    ...this.socio,
+    beneficiarios: this.mapBeneficiarios(this.beneficiarios)
+  });
+
+  const saved = this.normalize({
+    ...this.copy,
+    beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios)
+  });
+
+  return JSON.stringify(current) !== JSON.stringify(saved);
+}
 
   private normalizeDate(value: string | null): string | null {
     if (!value) return null;
@@ -906,7 +918,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.engine.clearErrors?.();
     this.notify.close?.();
 
-    return;
+
 
     const payload = this.toSocioForm(this.socio);
     payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
@@ -933,6 +945,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.socio = { ...savedSocio };
             this.copy = { ...savedSocio };
+
 
             this.draftRef?.clear();
             this.draftRef?.cancel();
@@ -973,34 +986,28 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  onCancel(): void {
-    this.notify.close?.();
-    this.draftRef?.cancel();
+onCancel(): void {
+  this.notify.close?.();
+  this.draftRef?.cancel();
 
-    this.socio = this.toSocioForm({ ...this.copy });
-    this.syncCatalogValuesWithOptions();
-    this.patchEngineFromSocio();
-    this.engine.clearErrors?.();
-    this.loadMunicipiosIfNeeded();
+  this.beneficiarios = this.mapBeneficiarios(this.copy.beneficiarios);
+  this.socio.beneficiarios = [...this.beneficiarios];
 
-    this.formRef?.resetForm(this.socio);
-    this.formRef?.form.markAsPristine();
-    this.formRef?.form.markAsUntouched();
+  this.syncCatalogValuesWithOptions();
+  this.patchEngineFromSocio();
+  this.engine.clearErrors?.();
 
-    this.cdr.detectChanges();
+  this.cdr.detectChanges();
+
+  setTimeout(() => {
+    this.refreshAllChoices();
 
     setTimeout(() => {
-      this.refreshAllChoices();
-
-      setTimeout(() => {
-        this.reapplyChoicesValues();
-        this.formRef?.form.markAsPristine();
-        this.formRef?.form.markAsUntouched();
-        this.cdr.detectChanges();
-      }, 80);
+      this.reapplyChoicesValues();
+      this.cdr.detectChanges();
     }, 80);
-  }
-
+  }, 80);
+}
   @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload(event: BeforeUnloadEvent): void {
     if (!this.formRef?.form.dirty || !this.hasUnsavedChanges()) {
@@ -1089,6 +1096,13 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateActiveSectionByScroll(): void {
     if (!this.isBrowser) return;
 
+    // ✅ mientras el formulario/modal de beneficiario está abierto,
+    // el wizard debe quedarse en beneficiarios
+    if (this.beneficiarioModalOpen) {
+      this.activeSection = 'beneficiarios';
+      return;
+    }
+
     const isDesktop = window.innerWidth >= this.desktopBreakpoint;
     const offset = isDesktop ? this.scrollOffsetDesktop : this.scrollOffsetMobile;
     const probeY = window.scrollY + offset;
@@ -1123,7 +1137,19 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     const target = event.target as HTMLElement | null;
     if (!target) return;
 
-    const field = target.closest('input, select, textarea');
+    // ✅ Si el modal de beneficiarios está abierto y el click/focus fue dentro del modal,
+    // marcamos directamente la sección beneficiarios
+    const modal =
+      target.closest('.beneficiario-modal') ||
+      target.closest('.modal') ||
+      target.closest('[data-beneficiario-modal="true"]');
+
+    if (this.beneficiarioModalOpen && modal) {
+      this.activeSection = 'beneficiarios';
+      return;
+    }
+
+    const field = target.closest('input, select, textarea, button');
     if (!field) return;
 
     const section = target.closest('.socio-scroll-section') as HTMLElement | null;
@@ -1462,21 +1488,34 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     return isNaN(result) ? 0 : result;
   }
 
-  calcularIngresosAnuales(): void {
-    const mensual = this.toNumber(this.socio.ingresosMensuales);
-    const otros = this.toNumber(this.socio.otrosIngresos);
+calcularIngresosAnuales(): void {
+  const mensualRaw = this.socio.ingresosMensuales;
+  const otrosRaw = this.socio.otrosIngresos;
 
-    const total = Number(((mensual + otros) * 12).toFixed(2));
+  const mensualTexto = String(mensualRaw ?? '').trim();
+  const otrosTexto = String(otrosRaw ?? '').trim();
 
-    this.socio.ingresosAnuales = total;
+  const ambosVacios = mensualTexto === '' && otrosTexto === '';
 
-    this.engine?.patchValues?.({
-      ingresosAnuales: total
-    });
+  const nuevoTotal = ambosVacios
+    ? null
+    : Number(((this.toNumber(mensualRaw) + this.toNumber(otrosRaw)) * 12).toFixed(2));
+
+  if (this.socio.ingresosAnuales === nuevoTotal) {
+    return;
   }
 
+  this.socio.ingresosAnuales = nuevoTotal;
+
+  this.engine?.patchValues?.({
+    ingresosAnuales: nuevoTotal
+  });
+}
 
 
+onIngresosChange(): void {
+  this.calcularIngresosAnuales();
+}
 
 
 
@@ -1504,6 +1543,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
   }
 
+
+  
+
   private createBeneficiarioPayload(item: BeneficiarioForm): BeneficiarioForm {
     return {
       ...item,
@@ -1516,139 +1558,95 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  openBeneficiarioModal(item?: BeneficiarioForm | null): void {
 
-    let porcentaje = 100 - this.beneficiariosTotalPorcentaje;
+openBeneficiarioModal(item?: BeneficiarioForm | null): void {
+  this.activeSection = 'beneficiarios';
+  this.syncWizardHorizontalScroll();
+  this.cdr.detectChanges();
 
-    this.notify.close?.();
-    this.beneficiarioEditing = item ? { ...item } : null;
-    this.beneficiarioDraft = item ? { ...item } : { ...EMPTY_BENEFICIARIO, socioId: this.socio.id };
-
-
-
-    this.engineBene.resetRules?.();
-    this.engineBene.clearFieldsMeta?.();
-
-    const fieldMeta = this.translate.instant('socios.table.fieldMeta') || {};
-    const validations = this.translate.instant('socios.table.validations') || {};
-
-    for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
-      this.engineBene.addFieldMeta?.({
-        id: fieldId,
-        label: meta?.label ?? '',
-        tooltip: meta?.tooltip ?? '',
-        tooltipIconClass: meta?.tooltipIconClass ?? '',
-      });
-    }
-
-    let x = 0;
-    for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
-      const rules = fieldConfig?.data || {};
-
-      for (const rule of Object.values(rules) as any[]) {
-        let value = rule?.value ?? '';
-
-        this.engineBene.addRule?.({
-          id: fieldId,
-          condition: String(rule?.rule ?? '').trim(),
-          when: String(rule?.when ?? '').trim(),
-          value,
-          message: String(rule?.msj ?? '').replace('{value}', String(value ?? '')),
-          classIconSuccess: rule?.classIconSuccess ?? '',
-          classIconError: rule?.classIconError ?? '',
-        });
-
-        x++;
-      }
-
-    }
-
-    this.engineBene.validateAll?.();
-    this.engineBene.clearErrors?.();
-
-
-
-
-
-
-
-
-
-    this.beneficiarioModalOpen = true;
-  }
-
+  this.notify.close?.();
+  this.beneficiarioEditing = item ? { ...item } : null;
+  this.beneficiarioModalOpen = true;
+}
   closeBeneficiarioModal(): void {
     this.beneficiarioModalOpen = false;
     this.beneficiarioEditing = null;
     this.beneficiarioDraft = { ...EMPTY_BENEFICIARIO };
+
+    this.updateActiveSectionByScroll();
+    this.syncWizardHorizontalScroll();
+    this.cdr.detectChanges();
   }
 
+
   saveBeneficiarioFromModal(): void {
+  this.engine.patchValues?.(this.beneficiarioDraft);
 
+  const ok = this.engine.validateAll?.();
 
-    this.engineBene.patchValues?.(this.beneficiarioDraft);
+  if (!ok) {
+    this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
+    return;
+  }
 
+  this.engine.clearErrors?.();
+  this.notify.close?.();
 
-    const ok = this.engineBene.validateAll();
+  const payload = this.createBeneficiarioPayload(this.beneficiarioDraft);
 
-    if (!ok) {
-      this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
-      return;
+  if (this.mode === 'create' || !this.socio.id) {
+    if (payload.id) {
+      this.beneficiarios = this.beneficiarios.map(x =>
+        x.id === payload.id ? { ...payload, isNew: true } : x
+      );
+    } else {
+      this.beneficiarios = [
+        ...this.beneficiarios,
+        { ...payload, id: crypto.randomUUID(), isNew: true, isDeleted: false },
+      ];
     }
 
-    this.engineBene.clearErrors?.();
-    this.notify.close?.();
+    this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
+    this.formRef?.form.markAsDirty();
 
+    this.closeBeneficiarioModal();
+    return;
+  }
 
+  this.beneficiarioSaving = true;
+  const request$ = payload.id
+    ? this.sociosService.updateBeneficiario(this.socio.id, payload.id, payload)
+    : this.sociosService.createBeneficiario(this.socio.id, payload);
 
-    const payload = this.createBeneficiarioPayload(this.beneficiarioDraft);
+  request$.subscribe({
+    next: (res: any) => {
+      const saved = res?.data?.beneficiario ?? payload;
 
-    // MODO NUEVO: solo memoria local, todo se guarda cuando el socio se guarda
-    if (this.mode === 'create' || !this.socio.id) {
       if (payload.id) {
-        this.beneficiarios = this.beneficiarios.map(x => x.id === payload.id ? { ...payload, isNew: true } : x);
+        this.beneficiarios = this.beneficiarios.map(x =>
+          x.id === saved.id ? { ...saved, isNew: false, isDeleted: false } : x
+        );
       } else {
         this.beneficiarios = [
           ...this.beneficiarios,
-          { ...payload, id: crypto.randomUUID(), isNew: true, isDeleted: false },
+          { ...saved, isNew: false, isDeleted: false }
         ];
       }
 
       this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
-      this.formRef?.form.markAsDirty();
+      this.copy.beneficiarios = [...this.socio.beneficiarios];
+      this.formRef?.form.markAsPristine();
+
       this.closeBeneficiarioModal();
-      return;
+      this.notify.showFromApiResponse?.(res, 'success');
+      this.beneficiarioSaving = false;
+    },
+    error: (err: any) => {
+      this.beneficiarioSaving = false;
+      this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
     }
-
-    // MODO EDICIÓN: persistencia inmediata
-    this.beneficiarioSaving = true;
-    const request$ = payload.id
-      ? this.sociosService.updateBeneficiario(this.socio.id, payload.id, payload)
-      : this.sociosService.createBeneficiario(this.socio.id, payload);
-
-    request$.subscribe({
-      next: (res: any) => {
-        const saved = res?.data?.beneficiario ?? payload;
-
-        if (payload.id) {
-          this.beneficiarios = this.beneficiarios.map(x => x.id === saved.id ? { ...saved, isNew: false, isDeleted: false } : x);
-        } else {
-          this.beneficiarios = [...this.beneficiarios, { ...saved, isNew: false, isDeleted: false }];
-        }
-
-        this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
-        this.copy.beneficiarios = [...this.socio.beneficiarios];
-        this.formRef?.form.markAsPristine();
-        this.notify.showFromApiResponse?.(res, 'success');
-        this.closeBeneficiarioModal();
-        this.beneficiarioSaving = false;
-      },
-      error: (err: any) => {
-        this.beneficiarioSaving = false;
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      }
-    });
-  }
+  });
+}
 
   removeBeneficiario(item: BeneficiarioForm): void {
 
@@ -1689,6 +1687,79 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
+  private loadBeneficiarios(socioId: string): void {
+    this.sociosService.getBeneficiarios(socioId).subscribe({
+      next: (res: any) => {
+        const items = res?.data?.beneficiarios ?? [];
+        this.beneficiarios = this.mapBeneficiarios(items);
+        this.socio.beneficiarios = [...this.beneficiarios];
+        this.copy.beneficiarios = [...this.beneficiarios];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.beneficiarios = [];
+        this.socio.beneficiarios = [];
+        this.copy.beneficiarios = [];
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
+
+
+  onBeneficiarioModalSaved(payload: BeneficiarioForm): void {
+  if (this.mode === 'create' || !this.socio.id) {
+    if (payload.id) {
+      this.beneficiarios = this.beneficiarios.map(x =>
+        x.id === payload.id ? { ...payload, isNew: true } : x
+      );
+    } else {
+      this.beneficiarios = [
+        ...this.beneficiarios,
+        { ...payload, id: crypto.randomUUID(), isNew: true, isDeleted: false },
+      ];
+    }
+
+    this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
+    this.formRef?.form.markAsDirty();
+    this.closeBeneficiarioModal();
+    return;
+  }
+
+  this.beneficiarioSaving = true;
+
+  const request$ = payload.id
+    ? this.sociosService.updateBeneficiario(this.socio.id, payload.id, payload)
+    : this.sociosService.createBeneficiario(this.socio.id, payload);
+
+  request$.subscribe({
+    next: (res: any) => {
+      const saved = res?.data?.beneficiario ?? payload;
+
+      if (payload.id) {
+        this.beneficiarios = this.beneficiarios.map(x =>
+          x.id === saved.id ? { ...saved, isNew: false, isDeleted: false } : x
+        );
+      } else {
+        this.beneficiarios = [
+          ...this.beneficiarios,
+          { ...saved, isNew: false, isDeleted: false }
+        ];
+      }
+
+      this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
+      this.copy.beneficiarios = [...this.socio.beneficiarios];
+      this.formRef?.form.markAsPristine();
+
+      this.notify.showFromApiResponse?.(res, 'success');
+      this.beneficiarioSaving = false;
+      this.closeBeneficiarioModal();
+    },
+    error: (err: any) => {
+      this.beneficiarioSaving = false;
+      this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+    }
+  });
+}
 
 }

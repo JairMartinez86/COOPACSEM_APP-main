@@ -805,76 +805,12 @@
               </div>
             </div>
 
-            @if (beneficiarioModalOpen) {
-            <div class="beneficiario-modal-backdrop"></div>
-            <div class="beneficiario-modal-wrapper" role="dialog" aria-modal="true">
-              <div class="card ue-shell-card beneficiario-modal-card">
+            
 
-
-
-                <div class="modal-header">
-                  <h5 class="modal-title">
-                    {{ beneficiarioEditing?.id ? ('socios.beneficiariosModal.editTitle' |
-                    translate) : ('socios.beneficiariosModal.createTitle' | translate) }}
-                  </h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    (click)="closeBeneficiarioModal()"></button>
-                </div>
-
-
-
-                <div class="card-body">
-                  <div class="row g-3">
-                    <div class="col-md-6" error-notify="benefnombre" error-display="inline">
-                      <label class="form-label required">{{ 'socios.beneficiariosTable.columns.nombre' | translate
-                        }}</label>
-                      <input type="text" class="form-control" [(ngModel)]="beneficiarioDraft.benefnombre"
-                        [placeholder]="'socios.beneficiariosTable.columns.nombre' | translate" id="benefnombre"
-                        name="benefnombre" engineSync="benefnombre" autoFocusNext [next]="porcentaje" />
-                    </div>
-
-                    <div class="col-md-2" error-notify="porcentaje" error-display="inline">
-                      <label class="form-label required">{{ 'socios.beneficiariosTable.columns.porcentaje' | translate
-                        }}</label>
-                      <div class="input-group">
-                        <input #porcentaje type="text" class="form-control" numberFormat
-                          [(ngModel)]="beneficiarioDraft.porcentaje" id="porcentaje" name="porcentaje"
-                          engineSync="porcentaje" autoFocusNext [next]="parentesco" />
-                        <span class="input-group-text">%</span>
-                      </div>
-                    </div>
-
-                    <div class="col-md-2" error-notify="parentesco" error-display="inline">
-                      <label class="form-label required">{{ 'socios.beneficiariosTable.columns.parentesco' | translate
-                        }}</label>
-                      <input #parentesco type="text" class="form-control" [(ngModel)]="beneficiarioDraft.parentesco"
-                        [placeholder]="'socios.beneficiariosTable.columns.parentesco' | translate" id="parentesco"
-                        name="parentesco" engineSync="parentesco" autoFocusNext [next]="cedula" />
-                    </div>
-
-                    <div class="col-md-2" error-notify="cedula" error-display="inline">
-                      <label class="form-label required">{{ 'socios.beneficiariosTable.columns.cedula' | translate
-                        }}</label>
-                      <input #cedula type="text" class="form-control" [(ngModel)]="beneficiarioDraft.cedula"
-                        [placeholder]="'socios.beneficiariosTable.columns.cedula' | translate" id="cedula" name="cedula"
-                        engineSync="cedula" autoFocusNext [next]="btnAregar" />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card-footer d-flex justify-content-end gap-2">
-                  <button type="button" class="btn btn-outline-secondary" (click)="closeBeneficiarioModal()">
-                    {{ 'socios.common.actions.cancel' | translate }}
-                  </button>
-                  <button type="button" class="btn btn-primary" (click)="saveBeneficiarioFromModal()" #btnAregar
-                    autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
-                    {{ 'socios.common.actions.save' | translate }}
-                  </button>
-                </div>
-              </div>
-            </div>
-            }
-
+            <app-beneficiario-modal [open]="beneficiarioModalOpen" [item]="beneficiarioEditing" [socioId]="socio.id"
+              [saving]="beneficiarioSaving" (closed)="closeBeneficiarioModal()"
+              (saved)="onBeneficiarioModalSaved($event)">
+            </app-beneficiario-modal>
 
           </div>
         </div>
