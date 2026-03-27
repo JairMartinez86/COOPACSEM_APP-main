@@ -562,7 +562,8 @@
                         [next]="otrosIngresos" class="form-control" numberFormat [decimals]="2"
                         [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                         [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                        placeholder="0.00">
+                        placeholder="0.00"
+                        (ngModelChange)="onIngresosChange()" />
                       <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>
@@ -576,7 +577,8 @@
                         class="form-control" numberFormat [decimals]="2"
                         [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                         [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                        placeholder="0.00" />
+                        placeholder="0.00" 
+                        (ngModelChange)="onIngresosChange()"/>
                       <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>

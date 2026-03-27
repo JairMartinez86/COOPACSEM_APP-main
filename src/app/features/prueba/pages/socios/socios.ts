@@ -69,7 +69,7 @@ type DraftRef<T> = {
     JMartDateFormatDirective,
     JMartNumberFormatDirective,
     BeneficiarioModalComponent
-],
+  ],
   templateUrl: './socios.html',
   styleUrl: './socios.scss',
 })
@@ -752,15 +752,15 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         form: this.formRef!,
         routeKey: `socios-edit-${this.socio.id ?? 'new'}`,
 
-       currentData: () => ({
-  ...this.socio,
-  beneficiarios: this.mapBeneficiarios(this.beneficiarios)
-}),
+        currentData: () => ({
+          ...this.socio,
+          beneficiarios: this.mapBeneficiarios(this.beneficiarios)
+        }),
 
-savedData: () => ({
-  ...this.copy,
-  beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios)
-}),
+        savedData: () => ({
+          ...this.copy,
+          beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios)
+        }),
 
         restoreData: (data: Partial<SocioForm> | null | undefined) => {
           this.socio = this.toSocioForm({
@@ -786,10 +786,10 @@ savedData: () => ({
         },
 
         restoreSavedData: (data: Partial<SocioForm> | null | undefined) => {
-  this.copy = this.toSocioForm(data);
-  this.copy.beneficiarios = this.mapBeneficiarios(data?.beneficiarios);
-  this.syncCatalogValuesWithOptions();
-},
+          this.copy = this.toSocioForm(data);
+          this.copy.beneficiarios = this.mapBeneficiarios(data?.beneficiarios);
+          this.syncCatalogValuesWithOptions();
+        },
 
         patchEngine: (data: Partial<SocioForm> | null | undefined) => {
           this.engine.patchValues?.(data ?? {});
@@ -804,32 +804,32 @@ savedData: () => ({
     });
   }
 
-private normalize(
-  data: Partial<SocioForm> | null | undefined
-): Partial<SocioForm> {
-  return {
-    ...data,
-    id: data?.id ?? null,
-    paisEmisor: data?.paisEmisor ?? null,
-    paisNacimiento: data?.paisNacimiento ?? null,
-    nacionalidadId: data?.nacionalidadId ?? null,
-    departamentoId: data?.departamentoId ?? null,
-    municipioId: data?.municipioId ?? null,
-    conyugePaisNacimiento: data?.conyugePaisNacimiento ?? null,
-    conyugeNacionalidadId: data?.conyugeNacionalidadId ?? null,
-    ingresosMensuales:
-      data?.ingresosMensuales == null ? null : Number(data.ingresosMensuales),
-    otrosIngresos:
-      data?.otrosIngresos == null ? null : Number(data.otrosIngresos),
-    ingresosAnuales:
-      data?.ingresosAnuales == null ? null : Number(data.ingresosAnuales),
-    cuentaCorrienteMontoCuota:
-      data?.cuentaCorrienteMontoCuota == null ? null : Number(data.cuentaCorrienteMontoCuota),
-    cuentaNavidenaMontoCuota:
-      data?.cuentaNavidenaMontoCuota == null ? null : Number(data.cuentaNavidenaMontoCuota),
-    beneficiarios: this.mapBeneficiarios(data?.beneficiarios).filter(x => !x.isDeleted),
-  };
-}
+  private normalize(
+    data: Partial<SocioForm> | null | undefined
+  ): Partial<SocioForm> {
+    return {
+      ...data,
+      id: data?.id ?? null,
+      paisEmisor: data?.paisEmisor ?? null,
+      paisNacimiento: data?.paisNacimiento ?? null,
+      nacionalidadId: data?.nacionalidadId ?? null,
+      departamentoId: data?.departamentoId ?? null,
+      municipioId: data?.municipioId ?? null,
+      conyugePaisNacimiento: data?.conyugePaisNacimiento ?? null,
+      conyugeNacionalidadId: data?.conyugeNacionalidadId ?? null,
+      ingresosMensuales:
+        data?.ingresosMensuales == null ? null : Number(data.ingresosMensuales),
+      otrosIngresos:
+        data?.otrosIngresos == null ? null : Number(data.otrosIngresos),
+      ingresosAnuales:
+        data?.ingresosAnuales == null ? null : Number(data.ingresosAnuales),
+      cuentaCorrienteMontoCuota:
+        data?.cuentaCorrienteMontoCuota == null ? null : Number(data.cuentaCorrienteMontoCuota),
+      cuentaNavidenaMontoCuota:
+        data?.cuentaNavidenaMontoCuota == null ? null : Number(data.cuentaNavidenaMontoCuota),
+      beneficiarios: this.mapBeneficiarios(data?.beneficiarios).filter(x => !x.isDeleted),
+    };
+  }
 
   private toSocioForm(
     data: Partial<SocioForm> | null | undefined
@@ -845,19 +845,19 @@ private normalize(
     this.engine.patchValues?.(this.socio);
   }
 
-hasUnsavedChanges(): boolean {
-  const current = this.normalize({
-    ...this.socio,
-    beneficiarios: this.mapBeneficiarios(this.beneficiarios)
-  });
+  hasUnsavedChanges(): boolean {
+    const current = this.normalize({
+      ...this.socio,
+      beneficiarios: this.mapBeneficiarios(this.beneficiarios)
+    });
 
-  const saved = this.normalize({
-    ...this.copy,
-    beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios)
-  });
+    const saved = this.normalize({
+      ...this.copy,
+      beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios)
+    });
 
-  return JSON.stringify(current) !== JSON.stringify(saved);
-}
+    return JSON.stringify(current) !== JSON.stringify(saved);
+  }
 
   private normalizeDate(value: string | null): string | null {
     if (!value) return null;
@@ -933,6 +933,8 @@ hasUnsavedChanges(): boolean {
       .pipe(finalize(() => { }))
       .subscribe({
         next: (res: any) => {
+
+
           const savedSocio = this.toSocioForm(res?.data?.socio ?? payload);
 
           if (this.mode === 'edit') {
@@ -943,6 +945,9 @@ hasUnsavedChanges(): boolean {
             savedSocio.cuentaCorrienteFechaInicioDeduccion = this.appConfigService.formatDate(savedSocio.cuentaCorrienteFechaInicioDeduccion);
             savedSocio.cuentaNavidenaFechaInicioDeduccion = this.appConfigService.formatDate(savedSocio.cuentaNavidenaFechaInicioDeduccion);
 
+
+
+            this.beneficiarios = [...(savedSocio.beneficiarios ?? [])];
             this.socio = { ...savedSocio };
             this.copy = { ...savedSocio };
 
@@ -986,28 +991,28 @@ hasUnsavedChanges(): boolean {
       });
   }
 
-onCancel(): void {
-  this.notify.close?.();
-  this.draftRef?.cancel();
+  onCancel(): void {
+    this.notify.close?.();
+    this.draftRef?.cancel();
 
-  this.beneficiarios = this.mapBeneficiarios(this.copy.beneficiarios);
-  this.socio.beneficiarios = [...this.beneficiarios];
+    this.beneficiarios = this.mapBeneficiarios(this.copy.beneficiarios);
+    this.socio.beneficiarios = [...this.beneficiarios];
 
-  this.syncCatalogValuesWithOptions();
-  this.patchEngineFromSocio();
-  this.engine.clearErrors?.();
+    this.syncCatalogValuesWithOptions();
+    this.patchEngineFromSocio();
+    this.engine.clearErrors?.();
 
-  this.cdr.detectChanges();
-
-  setTimeout(() => {
-    this.refreshAllChoices();
+    this.cdr.detectChanges();
 
     setTimeout(() => {
-      this.reapplyChoicesValues();
-      this.cdr.detectChanges();
+      this.refreshAllChoices();
+
+      setTimeout(() => {
+        this.reapplyChoicesValues();
+        this.cdr.detectChanges();
+      }, 80);
     }, 80);
-  }, 80);
-}
+  }
   @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload(event: BeforeUnloadEvent): void {
     if (!this.formRef?.form.dirty || !this.hasUnsavedChanges()) {
@@ -1488,34 +1493,34 @@ onCancel(): void {
     return isNaN(result) ? 0 : result;
   }
 
-calcularIngresosAnuales(): void {
-  const mensualRaw = this.socio.ingresosMensuales;
-  const otrosRaw = this.socio.otrosIngresos;
+  calcularIngresosAnuales(): void {
+    const mensualRaw = this.socio.ingresosMensuales;
+    const otrosRaw = this.socio.otrosIngresos;
 
-  const mensualTexto = String(mensualRaw ?? '').trim();
-  const otrosTexto = String(otrosRaw ?? '').trim();
+    const mensualTexto = String(mensualRaw ?? '').trim();
+    const otrosTexto = String(otrosRaw ?? '').trim();
 
-  const ambosVacios = mensualTexto === '' && otrosTexto === '';
+    const ambosVacios = mensualTexto === '' && otrosTexto === '';
 
-  const nuevoTotal = ambosVacios
-    ? null
-    : Number(((this.toNumber(mensualRaw) + this.toNumber(otrosRaw)) * 12).toFixed(2));
+    const nuevoTotal = ambosVacios
+      ? null
+      : Number(((this.toNumber(mensualRaw) + this.toNumber(otrosRaw)) * 12).toFixed(2));
 
-  if (this.socio.ingresosAnuales === nuevoTotal) {
-    return;
+    if (this.socio.ingresosAnuales === nuevoTotal) {
+      return;
+    }
+
+    this.socio.ingresosAnuales = nuevoTotal;
+
+    this.engine?.patchValues?.({
+      ingresosAnuales: nuevoTotal
+    });
   }
 
-  this.socio.ingresosAnuales = nuevoTotal;
 
-  this.engine?.patchValues?.({
-    ingresosAnuales: nuevoTotal
-  });
-}
-
-
-onIngresosChange(): void {
-  this.calcularIngresosAnuales();
-}
+  onIngresosChange(): void {
+    this.calcularIngresosAnuales();
+  }
 
 
 
@@ -1544,30 +1549,20 @@ onIngresosChange(): void {
   }
 
 
-  
 
-  private createBeneficiarioPayload(item: BeneficiarioForm): BeneficiarioForm {
-    return {
-      ...item,
-      socioId: this.socio.id,
-      benefnombre: item.benefnombre?.trim() ?? null,
-      parentesco: item.parentesco?.trim() ?? null,
-      cedula: item.cedula?.trim() ?? null,
-      porcentaje: item.porcentaje == null ? null : Number(item.porcentaje),
-    };
+
+
+
+
+  openBeneficiarioModal(item?: BeneficiarioForm | null): void {
+    this.activeSection = 'beneficiarios';
+    this.syncWizardHorizontalScroll();
+    this.cdr.detectChanges();
+
+    this.notify.close?.();
+    this.beneficiarioEditing = item ? { ...item } : null;
+    this.beneficiarioModalOpen = true;
   }
-
-
-
-openBeneficiarioModal(item?: BeneficiarioForm | null): void {
-  this.activeSection = 'beneficiarios';
-  this.syncWizardHorizontalScroll();
-  this.cdr.detectChanges();
-
-  this.notify.close?.();
-  this.beneficiarioEditing = item ? { ...item } : null;
-  this.beneficiarioModalOpen = true;
-}
   closeBeneficiarioModal(): void {
     this.beneficiarioModalOpen = false;
     this.beneficiarioEditing = null;
@@ -1579,74 +1574,7 @@ openBeneficiarioModal(item?: BeneficiarioForm | null): void {
   }
 
 
-  saveBeneficiarioFromModal(): void {
-  this.engine.patchValues?.(this.beneficiarioDraft);
 
-  const ok = this.engine.validateAll?.();
-
-  if (!ok) {
-    this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
-    return;
-  }
-
-  this.engine.clearErrors?.();
-  this.notify.close?.();
-
-  const payload = this.createBeneficiarioPayload(this.beneficiarioDraft);
-
-  if (this.mode === 'create' || !this.socio.id) {
-    if (payload.id) {
-      this.beneficiarios = this.beneficiarios.map(x =>
-        x.id === payload.id ? { ...payload, isNew: true } : x
-      );
-    } else {
-      this.beneficiarios = [
-        ...this.beneficiarios,
-        { ...payload, id: crypto.randomUUID(), isNew: true, isDeleted: false },
-      ];
-    }
-
-    this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
-    this.formRef?.form.markAsDirty();
-
-    this.closeBeneficiarioModal();
-    return;
-  }
-
-  this.beneficiarioSaving = true;
-  const request$ = payload.id
-    ? this.sociosService.updateBeneficiario(this.socio.id, payload.id, payload)
-    : this.sociosService.createBeneficiario(this.socio.id, payload);
-
-  request$.subscribe({
-    next: (res: any) => {
-      const saved = res?.data?.beneficiario ?? payload;
-
-      if (payload.id) {
-        this.beneficiarios = this.beneficiarios.map(x =>
-          x.id === saved.id ? { ...saved, isNew: false, isDeleted: false } : x
-        );
-      } else {
-        this.beneficiarios = [
-          ...this.beneficiarios,
-          { ...saved, isNew: false, isDeleted: false }
-        ];
-      }
-
-      this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
-      this.copy.beneficiarios = [...this.socio.beneficiarios];
-      this.formRef?.form.markAsPristine();
-
-      this.closeBeneficiarioModal();
-      this.notify.showFromApiResponse?.(res, 'success');
-      this.beneficiarioSaving = false;
-    },
-    error: (err: any) => {
-      this.beneficiarioSaving = false;
-      this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-    }
-  });
-}
 
   removeBeneficiario(item: BeneficiarioForm): void {
 
@@ -1708,58 +1636,58 @@ openBeneficiarioModal(item?: BeneficiarioForm | null): void {
 
 
   onBeneficiarioModalSaved(payload: BeneficiarioForm): void {
-  if (this.mode === 'create' || !this.socio.id) {
-    if (payload.id) {
-      this.beneficiarios = this.beneficiarios.map(x =>
-        x.id === payload.id ? { ...payload, isNew: true } : x
-      );
-    } else {
-      this.beneficiarios = [
-        ...this.beneficiarios,
-        { ...payload, id: crypto.randomUUID(), isNew: true, isDeleted: false },
-      ];
-    }
-
-    this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
-    this.formRef?.form.markAsDirty();
-    this.closeBeneficiarioModal();
-    return;
-  }
-
-  this.beneficiarioSaving = true;
-
-  const request$ = payload.id
-    ? this.sociosService.updateBeneficiario(this.socio.id, payload.id, payload)
-    : this.sociosService.createBeneficiario(this.socio.id, payload);
-
-  request$.subscribe({
-    next: (res: any) => {
-      const saved = res?.data?.beneficiario ?? payload;
-
+    if (this.mode === 'create' || !this.socio.id) {
       if (payload.id) {
         this.beneficiarios = this.beneficiarios.map(x =>
-          x.id === saved.id ? { ...saved, isNew: false, isDeleted: false } : x
+          x.id === payload.id ? { ...payload, isNew: true } : x
         );
       } else {
         this.beneficiarios = [
           ...this.beneficiarios,
-          { ...saved, isNew: false, isDeleted: false }
+          { ...payload, id: crypto.randomUUID(), isNew: true, isDeleted: false },
         ];
       }
 
       this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
-      this.copy.beneficiarios = [...this.socio.beneficiarios];
-      this.formRef?.form.markAsPristine();
-
-      this.notify.showFromApiResponse?.(res, 'success');
-      this.beneficiarioSaving = false;
+      this.formRef?.form.markAsDirty();
       this.closeBeneficiarioModal();
-    },
-    error: (err: any) => {
-      this.beneficiarioSaving = false;
-      this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      return;
     }
-  });
-}
+
+    this.beneficiarioSaving = true;
+
+    const request$ = payload.id
+      ? this.sociosService.updateBeneficiario(this.socio.id, payload.id, payload)
+      : this.sociosService.createBeneficiario(this.socio.id, payload);
+
+    request$.subscribe({
+      next: (res: any) => {
+        const saved = res?.data?.beneficiario ?? payload;
+
+        if (payload.id) {
+          this.beneficiarios = this.beneficiarios.map(x =>
+            x.id === saved.id ? { ...saved, isNew: false, isDeleted: false } : x
+          );
+        } else {
+          this.beneficiarios = [
+            ...this.beneficiarios,
+            { ...saved, isNew: false, isDeleted: false }
+          ];
+        }
+
+        this.socio.beneficiarios = [...this.beneficiarios.filter(x => !x.isDeleted)];
+        this.copy.beneficiarios = [...this.socio.beneficiarios];
+        this.formRef?.form.markAsPristine();
+
+        this.notify.showFromApiResponse?.(res, 'success');
+        this.beneficiarioSaving = false;
+        this.closeBeneficiarioModal();
+      },
+      error: (err: any) => {
+        this.beneficiarioSaving = false;
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      }
+    });
+  }
 
 }
