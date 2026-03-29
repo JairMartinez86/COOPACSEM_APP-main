@@ -94,7 +94,8 @@
         <button
           type="button"
           class="btn btn-outline-secondary"
-          (click)="onClose()">
+          (click)="onClose()"
+          [appPermission]="['new', 'edit']">
           {{ 'socios.common.actions.cancel' | translate }}
         </button>
 
@@ -106,7 +107,8 @@
           autoFocusNext
           [disableClickButton]="true"
           [unlockOn]="notify.closed$"
-          [disabled]="saving">
+          [disabled]="saving"
+          [appPermission]="['new', 'edit']">
           {{ 'socios.common.actions.save' | translate }}
         </button>
       </div>

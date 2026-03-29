@@ -11,6 +11,7 @@ import {
 } from '@JairMartinez86/jmartinez-validator';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import { BeneficiarioForm, EMPTY_BENEFICIARIO } from '../../../interface/beneficiario.model';
+import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
 
 
 @Injectable()
@@ -26,7 +27,8 @@ export class BeneficiarioValidationEngine extends JMartMassiveValidationService 
     JMartEngineSyncDirective,
     JMartErrorNotifyDirective,
     JMartAutoFocusNextDirective,
-    JMartNumberFormatDirective
+    JMartNumberFormatDirective,
+    AppPermissionDirective
   ],
   providers: [
     BeneficiarioValidationEngine,
