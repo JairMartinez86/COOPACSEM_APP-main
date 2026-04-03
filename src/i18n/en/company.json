@@ -115,6 +115,15 @@
           "space": "Space"
         }
       },
+      "affiliationAccount": {
+        "label": "Affiliation account"
+      },
+      "ordinaryCapitalAccount": {
+        "label": "Ordinary capital account"
+      },
+      "otherDeferredIncomeAccount": {
+        "label": "Other deferred income account"
+      },
       "smtpHost": {
         "label": "SMTP server",
         "placeholder": "E.g.: smtp.gmail.com"
@@ -254,6 +263,18 @@
           "tooltip": "Required field"
         },
         "OtherDeferredIncomePercentage": {
+          "label": "Affiliation settings",
+          "tooltip": "Required field"
+        },
+        "AffiliationAccount": {
+          "label": "Affiliation settings",
+          "tooltip": "Required field"
+        },
+        "OrdinaryCapitalAccount": {
+          "label": "Affiliation settings",
+          "tooltip": "Required field"
+        },
+        "OtherDeferredIncomeAccount": {
           "label": "Affiliation settings",
           "tooltip": "Required field"
         },
@@ -502,6 +523,33 @@
               "value": "100",
               "when": "",
               "msj": "The ordinary capital percentage and other deferred income percentage must total 100"
+            }
+          }
+        },
+        "AffiliationAccount": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Enter the accounting account for affiliation"
+            }
+          }
+        },
+        "OrdinaryCapitalAccount": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Enter the ordinary capital account"
+            }
+          }
+        },
+        "OtherDeferredIncomeAccount": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Enter the deferred income account"
             }
           }
         },

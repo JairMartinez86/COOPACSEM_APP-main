@@ -323,7 +323,7 @@
         "label": "Número de voucher",
         "placeholder": "Ingrese el número de voucher"
       },
-      "afiliacionFecha": {
+      "afiliacionFechaDeposito": {
         "label": "Fecha de voucher"
       },
       "afiliacionCuotas": {
@@ -513,7 +513,7 @@
           "label": "Afiliación",
           "tooltip": "Campo requerido"
         },
-        "afiliacionFecha": {
+        "afiliacionFechaDeposito": {
           "label": "Afiliación",
           "tooltip": "Campo requerido"
         },
@@ -775,7 +775,7 @@
             }
           }
         },
-        "afiliacionFecha": {
+        "afiliacionFechaDeposito": {
           "data": {
             "1": {
               "rule": "REGEX",

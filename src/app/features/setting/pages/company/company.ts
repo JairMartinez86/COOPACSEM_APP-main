@@ -247,6 +247,9 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
       AffiliationCost: data?.AffiliationCost ?? 0,
       OrdinaryCapitalPercentage: data?.OrdinaryCapitalPercentage ?? 0,
       OtherDeferredIncomePercentage: data?.OtherDeferredIncomePercentage ?? 0,
+      AffiliationAccount: data?.AffiliationAccount ?? '',
+      OrdinaryCapitalAccount: data?.OrdinaryCapitalAccount ?? '',
+      OtherDeferredIncomeAccount: data?.OtherDeferredIncomeAccount ?? '',
       SmtpHost: data?.SmtpHost ?? '',
       SmtpPort: data?.SmtpPort ?? 0,
       SmtpUsername: data?.SmtpUsername ?? '',
@@ -274,6 +277,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
       .subscribe({
         next: (res: any) => {
           const apiCompany = res?.data?.company ?? {};
+  
 
           this.copy = {
             CompanyName: apiCompany.CompanyName ?? apiCompany.companyName ?? '',
@@ -294,7 +298,10 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
             DateFormat: apiCompany.DateFormat ?? apiCompany.dateFormat ?? 'dd/MM/yyyy',
             Currency: apiCompany.Currency ?? apiCompany.currency ?? 'NIO',
             DecimalSeparator: apiCompany.DecimalSeparator ?? apiCompany.decimalSeparator ?? '.',
-            ThousandSeparator: apiCompany.ThousandSeparator ?? apiCompany.thousandSeparator ?? ',',
+            ThousandSeparator: apiCompany.ThousandSeparator ?? apiCompany.thousandSeparator ?? ',', 
+            AffiliationAccount: apiCompany.affiliationAccount ?? apiCompany.affiliationAccount ?? '',
+            OrdinaryCapitalAccount: apiCompany.ordinaryCapitalAccount ?? apiCompany.ordinaryCapitalAccount ?? '',
+            OtherDeferredIncomeAccount: apiCompany.otherDeferredIncomeAccount ?? apiCompany.otherDeferredIncomeAccount ?? '',
             SmtpHost: apiCompany.SmtpHost ?? apiCompany.smtpHost ?? '',
             SmtpPort: apiCompany.SmtpPort ?? apiCompany.smtpPort ?? 0,
             SmtpUsername: apiCompany.SmtpUsername ?? apiCompany.smtpUsername ?? '',

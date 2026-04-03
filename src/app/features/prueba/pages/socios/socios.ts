@@ -527,6 +527,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (res: any) => {
           const socioApi = res?.data?.socio ?? null;
 
+        
 
           socioApi.fechaEmision = this.appConfigService.formatDate(socioApi.fechaEmision);
           socioApi.fechaVencimiento = this.appConfigService.formatDate(socioApi.fechaVencimiento);
@@ -534,7 +535,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
           socioApi.fechaIngreso = this.appConfigService.formatDate(socioApi.fechaIngreso);
           socioApi.cuentaCorrienteFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaCorrienteFechaInicioDeduccion);
           socioApi.cuentaNavidenaFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaNavidenaFechaInicioDeduccion);
-          socioApi.afiliacionFecha = this.appConfigService.formatDate(socioApi.afiliacionFecha);
+          socioApi.afiliacionFechaDeposito = this.appConfigService.formatDate(socioApi.afiliacionFechaDeposito);
 
 
 
@@ -889,7 +890,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       fechaIngreso: this.normalizeEmpty(data?.fechaIngreso),
       fechaNacimiento: this.normalizeEmpty(data?.fechaNacimiento),
       fechaVencimiento: this.normalizeEmpty(data?.fechaVencimiento),
-      afiliacionFecha: this.normalizeEmpty(data?.afiliacionFecha),
+      afiliacionFechaDeposito: this.normalizeEmpty(data?.afiliacionFechaDeposito),
       cuentaCorrienteFechaInicioDeduccion: this.normalizeEmpty(data?.cuentaCorrienteFechaInicioDeduccion),
       cuentaNavidenaFechaInicioDeduccion: this.normalizeEmpty(data?.cuentaNavidenaFechaInicioDeduccion),
 
@@ -1012,13 +1013,12 @@ onSave(): void {
   payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
   payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
   payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
-  payload.afiliacionFecha = this.normalizeDate(this.socio.afiliacionFecha);
+  payload.afiliacionFechaDeposito = this.normalizeDate(this.socio.afiliacionFechaDeposito);
   payload.cuentaCorrienteFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaCorrienteFechaInicioDeduccion);
   payload.cuentaNavidenaFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaNavidenaFechaInicioDeduccion);
 
-  payload.afiliacionCostoTotal = Number(this.socio.afiliacionCostoTotal ?? 0);
-  payload.afiliacionCapitalOrdinario = Number(this.socio.afiliacionCapitalOrdinario ?? 0);
-  payload.afiliacionOtrosIngresosDiferidos = Number(this.socio.afiliacionOtrosIngresosDiferidos ?? 0);
+
+
 
   this.sociosService
     .save(payload)
@@ -1782,7 +1782,7 @@ onSave(): void {
     if (tipo === 'credito') {
       this.socio.afiliacionBancoCodigo = null;
       this.socio.afiliacionVoucherNumero = null;
-      this.socio.afiliacionFecha = null;
+      this.socio.afiliacionFechaDeposito = null;
 
       if (!this.socio.afiliacionCuotas) {
         this.socio.afiliacionCuotas = 1;

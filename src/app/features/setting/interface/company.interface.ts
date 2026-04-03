@@ -25,6 +25,9 @@ export interface CompanyRequest {
   AffiliationCost: number;
   OrdinaryCapitalPercentage: number;
   OtherDeferredIncomePercentage: number;
+  AffiliationAccount?: string;
+  OrdinaryCapitalAccount?: string;
+  OtherDeferredIncomeAccount?: string;
 
   SmtpHost: string;
   SmtpPort: number;
@@ -67,6 +70,9 @@ export const EMPTY_COMPANY: CompanyRequest = {
   AffiliationCost: 0,
   OrdinaryCapitalPercentage: 0,
   OtherDeferredIncomePercentage: 0,
+  AffiliationAccount: '',
+  OrdinaryCapitalAccount: '',
+  OtherDeferredIncomeAccount: '',
 
   SmtpHost: '',
   SmtpPort: 0,

@@ -48,7 +48,7 @@ export interface SocioForm {
   afiliacionTipoPago: string | null;
   afiliacionBancoCodigo: string | null;
   afiliacionVoucherNumero: string | null;
-  afiliacionFecha: string | null;
+  afiliacionFechaDeposito: string | null;
   afiliacionCuotas: number | null;
   afiliacionCostoTotal: number | null;
   afiliacionCapitalOrdinario: number | null;
@@ -119,7 +119,7 @@ export const EMPTY_SOCIO: SocioForm = {
   afiliacionTipoPago: null,
   afiliacionBancoCodigo: null,
   afiliacionVoucherNumero: null,
-  afiliacionFecha: null,
+  afiliacionFechaDeposito: null,
   afiliacionCuotas: null,
   afiliacionCostoTotal: null,
   afiliacionCapitalOrdinario: null,

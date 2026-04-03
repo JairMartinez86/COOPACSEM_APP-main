@@ -130,6 +130,8 @@
 
         <div class="col-12 col-xl-9">
           <div class="d-flex flex-column gap-4">
+
+            
             <div id="datos-personales" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
                 <h5 class="card-title mb-1">{{ 'socios.sections.datosPersonales.title' | translate }}</h5>
@@ -368,8 +370,8 @@
                       <label for="observaciones" class="form-label">{{ 'socios.fields.observaciones.label' | translate
                         }}</label>
                       <textarea #observaciones id="observaciones" name="observaciones" [(ngModel)]="socio.observaciones"
-                        engineSync="observaciones" autoFocusNext [next]="cuentaCorrienteFechaInicioDeduccion"
-                        [next-isdisable]="[cuentaNavidenaFechaInicioDeduccion, sociedadLabora]" class="form-control"
+                        engineSync="observaciones" autoFocusNext [next]="afiliacionTipoPago"
+                        class="form-control"
                         rows="3" [placeholder]="'socios.fields.observaciones.placeholder' | translate"></textarea>
                     </div>
                   </div>
@@ -395,7 +397,7 @@
                   <!-- TIPO -->
                   <div class="col-md-4" error-notify="afiliacionTipoPago" error-display="inline">
                     <label class="form-label required">Tipo de pago</label>
-                    <select name="afiliacionTipoPago" class="form-select" [(ngModel)]="socio.afiliacionTipoPago"
+                    <select #afiliacionTipoPago name="afiliacionTipoPago" class="form-select" [(ngModel)]="socio.afiliacionTipoPago"
                       (ngModelChange)="onAfiliacionTipoPagoChange($event)" engineSync="afiliacionTipoPago" required>
                       <option [ngValue]="null">
                         {{ 'socios.common.selectOption' | translate }}
@@ -422,7 +424,7 @@
                   }
 
                   <!-- TOTAL (SIEMPRE ÚLTIMO) -->
-                  <div class="col-md-4">
+                  <div class="col-md-4 align-self-start">
                     <label class="form-label">Total afiliación</label>
                     <div class="input-group">
                       <input class="form-control text-end" [(ngModel)]="socio.afiliacionCostoTotal"
@@ -434,7 +436,6 @@
                       </span>
                     </div>
                   </div>
-
                   <!-- CONTADO (SEGUNDA FILA) -->
                   @if (socio.afiliacionTipoPago === 'contado') {
 
@@ -457,14 +458,14 @@
                     <label class="form-label required">Voucher</label>
                     <input class="form-control" [(ngModel)]="socio.afiliacionVoucherNumero"
                       name="afiliacionVoucherNumero" engineSync="afiliacionVoucherNumero"
-                      placeholder="Número de voucher">
+                      placeholder="Número de voucher" autoFocusNext [next]="afiliacionFechaDeposito">
                   </div>
 
-                  <div class="col-md-4" error-notify="afiliacionFecha" error-display="inline">
+                  <div class="col-md-4" error-notify="afiliacionFechaDeposito" error-display="inline">
                     <label class="form-label required">Fecha depósito</label>
-                    <input class="form-control" [(ngModel)]="socio.afiliacionFecha" name="afiliacionFecha"
-                      engineSync="afiliacionFecha" dateFormat
-                      [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
+                    <input #afiliacionFechaDeposito class="form-control" [(ngModel)]="socio.afiliacionFechaDeposito"
+                      name="afiliacionFechaDeposito" engineSync="afiliacionFechaDeposito" dateFormat
+                      [dateFormat]="appConfigService.getCurrentSettings().dateFormat" autoFocusNext [next]="cuentaCorrienteFechaInicioDeduccion" [next-isdisable]="[cuentaNavidenaFechaInicioDeduccion, sociedadLabora]">
                   </div>
                   }
 

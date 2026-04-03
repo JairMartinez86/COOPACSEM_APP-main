@@ -115,6 +115,15 @@
           "space": "Espacio"
         }
       },
+      "affiliationAccount": {
+        "label": "Cuenta contable de afiliación"
+      },
+      "ordinaryCapitalAccount": {
+        "label": "Cuenta contable de capital ordinario"
+      },
+      "otherDeferredIncomeAccount": {
+        "label": "Cuenta contable de otros ingresos diferidos"
+      },
       "smtpHost": {
         "label": "Servidor SMTP",
         "placeholder": "Ej: smtp.gmail.com"
@@ -245,7 +254,7 @@
           "label": "Configuración regional",
           "tooltip": "Símbolo de miles"
         },
-         "AffiliationCost": {
+        "AffiliationCost": {
           "label": "Costo de afiliación",
           "tooltip": "Campo requerido"
         },
@@ -257,7 +266,18 @@
           "label": "Configuración de afiliación",
           "tooltip": "Campo requerido"
         },
-
+        "AffiliationAccount": {
+          "label": "Configuración de afiliación",
+          "tooltip": "Campo requerido"
+        },
+        "OrdinaryCapitalAccount": {
+          "label": "Configuración de afiliación",
+          "tooltip": "Campo requerido"
+        },
+        "OtherDeferredIncomeAccount": {
+          "label": "Configuración de afiliación",
+          "tooltip": "Campo requerido"
+        },
         "SmtpHost": {
           "label": "Configuración SMTP",
           "tooltip": "Host del servidor SMTP"
@@ -302,7 +322,6 @@
           "label": "Seguridad del sistema",
           "tooltip": "Cantidad de minutos que durará el bloqueo"
         }
-       
       },
       "validations": {
         "CompanyName": {
@@ -465,7 +484,7 @@
             }
           }
         },
-        "AffiliationCost":{
+        "AffiliationCost": {
           "data": {
             "1": {
               "rule": "NUM>=",
@@ -473,9 +492,9 @@
               "when": "",
               "msj": "El monto de afiliacion debe de ser mayor a 0"
             }
-        }
-      },
-       "OrdinaryCapitalPercentage":{
+          }
+        },
+        "OrdinaryCapitalPercentage": {
           "data": {
             "1": {
               "rule": "NUM>=",
@@ -484,14 +503,14 @@
               "msj": "El porcentaje de capital ordinario debe de ser mayor o igual a 0"
             },
             "2": {
-               "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
+              "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
               "value": "100",
               "when": "",
               "msj": "El porcentaje de capital ordinario y otros ingresos diferidos deben sumar 100"
             }
-        }
-      },
-      "OtherDeferredIncomePercentage":{
+          }
+        },
+        "OtherDeferredIncomePercentage": {
           "data": {
             "1": {
               "rule": "NUM>=",
@@ -499,15 +518,41 @@
               "when": "",
               "msj": "El porcentaje de otros ingresos diferidos debe de ser mayor o igual a 0"
             },
-             "2": {
-               "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
+            "2": {
+              "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
               "value": "100",
               "when": "",
               "msj": "El porcentaje de capital ordinario y otros ingresos diferidos deben sumar 100"
             }
-        }
-      },
-
+          }
+        },
+        "AffiliationAccount":{
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Ingrese la cuenta contable de afiliación"
+            }
+          }
+        },
+         "OrdinaryCapitalAccount":{
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Ingrese la cuenta contable de capital ordinario"
+            }
+          }
+        },
+         "OtherDeferredIncomeAccount":{
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Ingrese la cuenta de otros ingresos diferidos"
+            }
+          }
+        },
         "SmtpHost": {
           "data": {
             "1": {
