@@ -12,7 +12,8 @@
       "contact": "Información de contacto",
       "regional": "Configuración regional",
       "smtp": "Configuración SMTP",
-      "security": "Seguridad del sistema"
+      "security": "Seguridad del sistema",
+      "affiliation": "Configuración de afiliación"
     },
     "fields": {
       "companyName": {
@@ -163,122 +164,145 @@
         "label": "Bloqueo por intentos fallidos",
         "placeholder": "10",
         "suffix": "min"
+      },
+      "affiliationCost": {
+        "label": "Costo de afiliación"
+      },
+      "ordinaryCapitalPercentage": {
+        "label": "% Capital Ordinario"
+      },
+      "otherDeferredIncomePercentage": {
+        "label": "% Otros Ingresos Diferidos"
       }
     },
     "form": {
       "fieldMeta": {
         "CompanyName": {
-          "label": "Nombre de la compañía",
+          "label": "Información general",
           "tooltip": "Campo requerido"
         },
         "TradeName": {
-          "label": "Nombre comercial",
+          "label": "Información general",
           "tooltip": "Campo requerido"
         },
         "Ruc": {
-          "label": "RUC",
+          "label": "Información general",
           "tooltip": "Campo de identificación"
         },
         "BusinessType": {
-          "label": "Tipo de empresa",
+          "label": "Información general",
           "tooltip": "Seleccione el tipo de empresa"
         },
         "Status": {
-          "label": "Estado",
+          "label": "Información general",
           "tooltip": "Estado actual de la compañía"
         },
         "Description": {
-          "label": "Descripción",
+          "label": "Información general",
           "tooltip": "Descripción general de la compañía"
         },
         "Phone": {
-          "label": "Teléfono",
+          "label": "Información de contacto",
           "tooltip": "Número principal de contacto"
         },
         "Mobile": {
-          "label": "Celular",
+          "label": "Información de contacto",
           "tooltip": "Número secundario de contacto"
         },
         "Email": {
-          "label": "Correo electrónico",
+          "label": "Información de contacto",
           "tooltip": "Correo principal de la compañía"
         },
         "Website": {
-          "label": "Sitio web",
+          "label": "Información de contacto",
           "tooltip": "Sitio web público"
         },
         "Address": {
-          "label": "Dirección",
+          "label": "Información de contacto",
           "tooltip": "Dirección física"
         },
         "Country": {
-          "label": "País",
+          "label": "Información de contacto",
           "tooltip": "País de operación"
         },
         "City": {
-          "label": "Ciudad",
+          "label": "Información de contacto",
           "tooltip": "Ciudad de operación"
         },
         "DateFormat": {
-          "label": "Formato de fecha",
+          "label": "Configuración regional",
           "tooltip": "Formato regional de fecha"
         },
         "Currency": {
-          "label": "Moneda",
+          "label": "Configuración regional",
           "tooltip": "Moneda por defecto"
         },
         "DecimalSeparator": {
-          "label": "Separador decimal",
+          "label": "Configuración regional",
           "tooltip": "Símbolo decimal"
         },
         "ThousandSeparator": {
-          "label": "Separador de miles",
+          "label": "Configuración regional",
           "tooltip": "Símbolo de miles"
         },
+         "AffiliationCost": {
+          "label": "Costo de afiliación",
+          "tooltip": "Campo requerido"
+        },
+        "OrdinaryCapitalPercentage": {
+          "label": "Configuración de afiliación",
+          "tooltip": "Campo requerido"
+        },
+        "OtherDeferredIncomePercentage": {
+          "label": "Configuración de afiliación",
+          "tooltip": "Campo requerido"
+        },
+
         "SmtpHost": {
-          "label": "Servidor SMTP",
+          "label": "Configuración SMTP",
           "tooltip": "Host del servidor SMTP"
         },
         "SmtpPort": {
-          "label": "Puerto",
+          "label": "Configuración SMTP",
           "tooltip": "Puerto SMTP"
         },
         "SmtpFrom": {
-          "label": "Correo remitente",
+          "label": "Configuración SMTP",
           "tooltip": "Correo de envío"
         },
         "SmtpUsername": {
-          "label": "Usuario SMTP",
+          "label": "Configuración SMTP",
           "tooltip": "Usuario de acceso SMTP"
         },
         "SmtpPassword": {
-          "label": "Contraseña SMTP",
+          "label": "Configuración SMTP",
           "tooltip": "Contraseña de acceso SMTP"
         },
         "TwoFactorCodeExpirationMinutes": {
-          "label": "Expiración código 2FA",
+          "label": "Seguridad del sistema",
           "tooltip": "Expiración en minutos"
         },
         "PasswordResetExpirationMinutes": {
-          "label": "Restablecimiento de contraseña",
+          "label": "Seguridad del sistema",
           "tooltip": "Expiración en minutos"
         },
         "JwtExpiresMinutes": {
-          "label": "Expiración JWT",
+          "label": "Seguridad del sistema",
           "tooltip": "Expiración en minutos"
         },
         "RefreshExpiresMinutes": {
-          "label": "Token refresh",
+          "label": "Seguridad del sistema",
           "tooltip": "Expiración en minutos"
         },
         "TrustedDeviceExpirationDays": {
-          "label": "Vigencia dispositivo de confianza",
+          "label": "Seguridad del sistema",
           "tooltip": "Cantidad de días que dura un dispositivo confiable"
         },
         "LoginLockMinutes": {
-          "label": "Bloqueo por intentos fallidos",
+          "label": "Seguridad del sistema",
           "tooltip": "Cantidad de minutos que durará el bloqueo"
         }
+       
       },
       "validations": {
         "CompanyName": {
@@ -441,6 +465,49 @@
             }
           }
         },
+        "AffiliationCost":{
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": "El monto de afiliacion debe de ser mayor a 0"
+            }
+        }
+      },
+       "OrdinaryCapitalPercentage":{
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": "El porcentaje de capital ordinario debe de ser mayor o igual a 0"
+            },
+            "2": {
+               "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
+              "value": "100",
+              "when": "",
+              "msj": "El porcentaje de capital ordinario y otros ingresos diferidos deben sumar 100"
+            }
+        }
+      },
+      "OtherDeferredIncomePercentage":{
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": "El porcentaje de otros ingresos diferidos debe de ser mayor o igual a 0"
+            },
+             "2": {
+               "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
+              "value": "100",
+              "when": "",
+              "msj": "El porcentaje de capital ordinario y otros ingresos diferidos deben sumar 100"
+            }
+        }
+      },
+
         "SmtpHost": {
           "data": {
             "1": {

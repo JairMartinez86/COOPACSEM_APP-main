@@ -21,7 +21,8 @@ import {
   JMartAutoFocusNextDirective,
   JMartEngineSyncDirective,
   JMartErrorNotifyDirective,
-  JMartMassiveValidationService
+  JMartMassiveValidationService,
+  JMartNumberFormatDirective
 } from '@JairMartinez86/jmartinez-validator';
 import {
   DraftFormService,
@@ -31,6 +32,7 @@ import { CompanyService } from '../../services/company.service';
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 import { CanComponentDeactivate } from '../../../../core/guards/pending-changes.guard';
 import { ApiConfigService } from '../../../../core/services/ApiConfigService ';
+import { AppConfigService } from '../../../../core/services/app-config.service';
 
 @Component({
   selector: 'app-company',
@@ -43,6 +45,7 @@ import { ApiConfigService } from '../../../../core/services/ApiConfigService ';
     JMartErrorNotifyDirective,
     JMartEngineSyncDirective,
     JMartAutoFocusDirective,
+    JMartNumberFormatDirective,
     Breadcrumb,
     AppPermissionDirective
   ],
@@ -58,12 +61,14 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
   private draftService = inject(DraftFormService);
   private api = inject(ApiConfigService);
 
+
   @ViewChild('companyForm') companyForm?: NgForm;
 
   private langChangeSub?: Subscription;
   private draftRef?: DraftManagerRef;
   private formReady = false;
   private dataReady = false;
+
 
   company: CompanyRequest = { ...EMPTY_COMPANY };
   copy: CompanyRequest = { ...EMPTY_COMPANY };
@@ -239,6 +244,9 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
       Currency: data?.Currency ?? 'NIO',
       DecimalSeparator: data?.DecimalSeparator ?? '.',
       ThousandSeparator: data?.ThousandSeparator ?? ',',
+      AffiliationCost: data?.AffiliationCost ?? 0,
+      OrdinaryCapitalPercentage: data?.OrdinaryCapitalPercentage ?? 0,
+      OtherDeferredIncomePercentage: data?.OtherDeferredIncomePercentage ?? 0,
       SmtpHost: data?.SmtpHost ?? '',
       SmtpPort: data?.SmtpPort ?? 0,
       SmtpUsername: data?.SmtpUsername ?? '',
@@ -315,7 +323,22 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
             RefreshExpiresMinutes:
               apiCompany.RefreshExpiresMinutes ??
               apiCompany.refreshExpiresMinutes ??
-              1440
+              1440,
+
+            AffiliationCost:
+              apiCompany.AffiliationCost ??
+              apiCompany.affiliationCost ??
+              0,
+
+            OrdinaryCapitalPercentage:
+              apiCompany.OrdinaryCapitalPercentage ??
+              apiCompany.ordinaryCapitalPercentage ??
+              0,
+
+            OtherDeferredIncomePercentage:
+              apiCompany.OtherDeferredIncomePercentage ??
+              apiCompany.otherDeferredIncomePercentage ??
+              0
           };
 
           this.company = { ...this.copy };

@@ -1,7 +1,7 @@
 {
   "socios": {
     "title": "Member registration",
-    "subtitle": "On desktop the wizard stays fixed on the left. On mobile it stays fixed at the top and moves horizontally according to the active section.",
+    "subtitle": "On desktop, the wizard remains fixed on the left. On mobile, it stays fixed at the top and moves horizontally based on the active section.",
     "subtitle2": "Created on:",
     "actions": {
       "save": "Save member"
@@ -9,10 +9,31 @@
     "badges": {
       "newMember": "New member",
       "sections": "5 sections",
-      "beneficiaries": "Up to 3 beneficiaries"
+      "beneficiaries": "Dynamic beneficiaries"
+    },
+    "beneficiariosTable": {
+      "add": "Add beneficiary",
+      "addFirst": "Add first beneficiary",
+      "emptyTitle": "No beneficiaries registered",
+      "emptySubtitle": "Add beneficiaries to distribute the member percentage.",
+      "total": "Total",
+      "deleteTitle": "Delete beneficiary",
+      "deleteMessage": "Do you want to delete {{nombre}}?",
+      "columns": {
+        "nombre": "Full name",
+        "parentesco": "Relationship",
+        "cedula": "ID card",
+        "porcentaje": "Percentage",
+        "actions": "Actions"
+      }
+    },
+    "beneficiariosModal": {
+      "createTitle": "New beneficiary",
+      "editTitle": "Edit beneficiary",
+      "subtitle": "Complete the beneficiary information."
     },
     "messages": {
-      "notFound": "Member data was not found."
+      "notFound": "Member data not found."
     },
     "statusActions": {
       "deactivateTitle": "Deactivate member",
@@ -29,7 +50,7 @@
       "subtitle": "Click or scroll to navigate.",
       "steps": {
         "datosPersonales": {
-          "title": "Personal information",
+          "title": "Personal data",
           "desc": "Identity and contact"
         },
         "ahorro": {
@@ -41,12 +62,16 @@
           "desc": "Employment and income"
         },
         "datosConyuge": {
-          "title": "Spouse information",
+          "title": "Spouse data",
           "desc": "Optional information"
         },
         "beneficiarios": {
           "title": "Beneficiaries",
           "desc": "Percentage control"
+        },
+        "afiliacion": {
+          "title": "Membership",
+          "desc": "Configure the member affiliation."
         }
       }
     },
@@ -56,16 +81,16 @@
     },
     "sections": {
       "datosPersonales": {
-        "title": "Personal information",
-        "subtitle": "Identity, birth and contact information."
+        "title": "Personal data",
+        "subtitle": "Identity, birth, and contact information."
       },
       "actividadEconomica": {
         "title": "Economic activity or employment",
-        "subtitle": "Professional environment and member income details."
+        "subtitle": "Professional environment and member income information."
       },
       "datosConyuge": {
-        "title": "Spouse information",
-        "subtitle": "Complete this section when applicable according to the member's marital status."
+        "title": "Spouse data",
+        "subtitle": "Complete this section when applicable based on the member’s marital status."
       },
       "beneficiarios": {
         "title": "Beneficiaries",
@@ -73,24 +98,11 @@
       },
       "ahorro": {
         "title": "Savings",
-        "subtitle": "Set up scheduled savings for checking and Christmas accounts."
-      }
-    },
-    "beneficiarios": {
-      "1": {
-        "title": "Beneficiary 1",
-        "subtitle": "Primary record",
-        "badge": "Primary"
+        "subtitle": "Configure scheduled savings for checking and Christmas accounts."
       },
-      "2": {
-        "title": "Beneficiary 2",
-        "subtitle": "Optional record",
-        "badge": "Optional"
-      },
-      "3": {
-        "title": "Beneficiary 3",
-        "subtitle": "Optional record",
-        "badge": "Optional"
+      "afiliacion": {
+        "title": "Membership",
+        "subtitle": "Define the cost, payment method, and accounting distribution of the membership."
       }
     },
     "fields": {
@@ -107,8 +119,8 @@
         "placeholder": "Identification type"
       },
       "numeroIdentificacion": {
-        "label": "Identification No.",
-        "placeholder": "Identification No."
+        "label": "ID number",
+        "placeholder": "ID number"
       },
       "estadoCivil": {
         "label": "Marital status",
@@ -137,8 +149,8 @@
         "placeholder": "Country of birth"
       },
       "fechaNacimiento": {
-        "label": "Date of birth",
-        "placeholder": "Date of birth"
+        "label": "Birth date",
+        "placeholder": "Birth date"
       },
       "nacionalidad": {
         "label": "Nationality",
@@ -161,8 +173,8 @@
         "placeholder": "Phone"
       },
       "celular": {
-        "label": "Mobile phone",
-        "placeholder": "Mobile phone"
+        "label": "Mobile",
+        "placeholder": "Mobile"
       },
       "correo": {
         "label": "Email",
@@ -217,8 +229,8 @@
         "placeholder": "Identification type"
       },
       "conyugeNumeroIdentificacion": {
-        "label": "Identification No.",
-        "placeholder": "Identification No."
+        "label": "ID number",
+        "placeholder": "ID number"
       },
       "conyugePaisNacimiento": {
         "label": "Country of birth",
@@ -228,51 +240,19 @@
         "label": "Nationality",
         "placeholder": "Nationality"
       },
-      "beneficiario1Nombre": {
+      "benefnombre": {
         "label": "Full name",
         "placeholder": "Full name"
       },
-      "beneficiario1Porcentaje": {
+      "porcentaje": {
         "label": "Percentage",
         "placeholder": "Percentage"
       },
-      "beneficiario1Parentesco": {
+      "parentesco": {
         "label": "Relationship",
         "placeholder": "Relationship"
       },
-      "beneficiario1Cedula": {
-        "label": "ID card",
-        "placeholder": "ID card"
-      },
-      "beneficiario2Nombre": {
-        "label": "Full name",
-        "placeholder": "Full name"
-      },
-      "beneficiario2Porcentaje": {
-        "label": "Percentage",
-        "placeholder": "Percentage"
-      },
-      "beneficiario2Parentesco": {
-        "label": "Relationship",
-        "placeholder": "Relationship"
-      },
-      "beneficiario2Cedula": {
-        "label": "ID card",
-        "placeholder": "ID card"
-      },
-      "beneficiario3Nombre": {
-        "label": "Full name",
-        "placeholder": "Full name"
-      },
-      "beneficiario3Porcentaje": {
-        "label": "Percentage",
-        "placeholder": "Percentage"
-      },
-      "beneficiario3Parentesco": {
-        "label": "Relationship",
-        "placeholder": "Relationship"
-      },
-      "beneficiario3Cedula": {
+      "cedula": {
         "label": "ID card",
         "placeholder": "ID card"
       },
@@ -281,7 +261,7 @@
         "placeholder": "Auto-generated"
       },
       "sexo": {
-        "label": "Gender",
+        "label": "Sex",
         "placeholder": "Select",
         "options": {
           "m": "Male",
@@ -290,11 +270,11 @@
       },
       "numeroInss": {
         "label": "INSS number",
-        "placeholder": "Enter INSS number"
+        "placeholder": "Enter the INSS number"
       },
       "observaciones": {
-        "label": "Notes",
-        "placeholder": "Enter notes"
+        "label": "Observations",
+        "placeholder": "Enter observations"
       },
       "cuentaCorrienteActiva": {
         "label": "Checking account",
@@ -324,44 +304,77 @@
         "label": "Frequency",
         "mensual": "Monthly",
         "quincenal": "Biweekly"
+      },
+      "afiliacionActiva": {
+        "label": "Membership",
+        "help": "Enable this option to register the member affiliation."
+      },
+      "afiliacionTipoPago": {
+        "label": "Payment type",
+        "options": {
+          "credito": "Credit",
+          "contado": "Cash"
+        }
+      },
+      "afiliacionBancoCodigo": {
+        "label": "Bank"
+      },
+      "afiliacionVoucherNumero": {
+        "label": "Voucher number",
+        "placeholder": "Enter the voucher number"
+      },
+      "afiliacionFecha": {
+        "label": "Voucher date"
+      },
+      "afiliacionCuotas": {
+        "label": "Installments"
+      },
+      "afiliacionCostoTotal": {
+        "label": "Total membership cost"
+      },
+      "afiliacionCapitalOrdinario": {
+        "label": "Ordinary capital"
+      },
+      "afiliacionOtrosIngresosDiferidos": {
+        "label": "Other deferred income"
       }
     },
     "form": {
       "fieldMeta": {
         "nombreCompleto": {
-          "label": "Personal information",
+          "label": "Personal data",
           "tooltip": "Required field"
         },
         "nombrePublico": {
-          "label": "Personal information",
+          "label": "Personal data",
           "tooltip": "Required field"
         },
         "tipoIdentificacion": {
-          "label": "Personal information",
+          "label": "Personal data",
           "tooltip": "Required field"
         },
         "numeroIdentificacion": {
-          "label": "Personal information",
+          "label": "Personal data",
           "tooltip": "Required field"
         },
         "paisEmisor": {
-          "label": "Personal information",
+          "label": "Personal data",
           "tooltip": "Required field"
         },
         "fechaEmision": {
-          "label": "Personal information",
+          "label": "Personal data",
           "tooltip": "Required field"
         },
         "fechaVencimiento": {
-          "label": "Personal information",
+          "label": "Personal data",
           "tooltip": "Required field"
         },
         "paisNacimiento": {
-          "label": "Personal information",
+          "label": "Personal data",
           "tooltip": "Required field"
         },
         "fechaNacimiento": {
-          "label": "Personal information",
+          "label": "Personal data",
           "tooltip": "Required field"
         },
         "cuentaCorrienteFechaInicioDeduccion": {
@@ -398,11 +411,11 @@
         },
         "telefono": {
           "label": "Location and Contact",
-          "tooltip": "Required field if mobile phone is empty"
+          "tooltip": "Required if the mobile field is empty"
         },
         "celular": {
           "label": "Location and Contact",
-          "tooltip": "Required field if phone is empty"
+          "tooltip": "Required if the phone field is empty"
         },
         "correo": {
           "label": "Location and Contact",
@@ -449,71 +462,23 @@
           "tooltip": "Required field"
         },
         "conyugeNombreCompleto": {
-          "label": "Spouse information",
+          "label": "Spouse data",
           "tooltip": "Optional field"
         },
         "conyugeTipoIdentificacion": {
-          "label": "Spouse information",
+          "label": "Spouse data",
           "tooltip": "Optional field"
         },
         "conyugeNumeroIdentificacion": {
-          "label": "Spouse information",
+          "label": "Spouse data",
           "tooltip": "Optional field"
         },
         "conyugePaisNacimiento": {
-          "label": "Spouse information",
+          "label": "Spouse data",
           "tooltip": "Optional field"
         },
         "conyugeNacionalidadId": {
-          "label": "Spouse information",
-          "tooltip": "Optional field"
-        },
-        "beneficiario1Nombre": {
-          "label": "Beneficiaries",
-          "tooltip": "Required field"
-        },
-        "beneficiario1Porcentaje": {
-          "label": "Beneficiaries",
-          "tooltip": "Required field"
-        },
-        "beneficiario1Parentesco": {
-          "label": "Beneficiaries",
-          "tooltip": "Required field"
-        },
-        "beneficiario1Cedula": {
-          "label": "Beneficiaries",
-          "tooltip": "Required field"
-        },
-        "beneficiario2Nombre": {
-          "label": "Beneficiaries",
-          "tooltip": "Optional field"
-        },
-        "beneficiario2Porcentaje": {
-          "label": "Beneficiaries",
-          "tooltip": "Optional field"
-        },
-        "beneficiario2Parentesco": {
-          "label": "Beneficiaries",
-          "tooltip": "Optional field"
-        },
-        "beneficiario2Cedula": {
-          "label": "Beneficiaries",
-          "tooltip": "Optional field"
-        },
-        "beneficiario3Nombre": {
-          "label": "Beneficiaries",
-          "tooltip": "Optional field"
-        },
-        "beneficiario3Porcentaje": {
-          "label": "Beneficiaries",
-          "tooltip": "Optional field"
-        },
-        "beneficiario3Parentesco": {
-          "label": "Beneficiaries",
-          "tooltip": "Optional field"
-        },
-        "beneficiario3Cedula": {
-          "label": "Beneficiaries",
+          "label": "Spouse data",
           "tooltip": "Optional field"
         },
         "codigoSocio": {
@@ -524,7 +489,7 @@
           "label": "Identification",
           "tooltip": "Optional field"
         },
-        "estadoCovil": {
+        "estadoCivil": {
           "label": "Identification",
           "tooltip": "Optional field"
         },
@@ -535,6 +500,26 @@
         "observaciones": {
           "label": "Location and contact",
           "tooltip": "Optional field"
+        },
+        "afiliacionTipoPago": {
+          "label": "Membership",
+          "tooltip": "Required field"
+        },
+        "afiliacionBancoCodigo": {
+          "label": "Membership",
+          "tooltip": ""
+        },
+        "afiliacionVoucherNumero": {
+          "label": "Membership",
+          "tooltip": "Required field"
+        },
+        "afiliacionFecha": {
+          "label": "Membership",
+          "tooltip": "Required field"
+        },
+        "afiliacionCuotas": {
+          "label": "Membership",
+          "tooltip": "Required field"
         }
       },
       "validations": {
@@ -564,7 +549,7 @@
               "rule": "LEN>",
               "when": "",
               "value": "0",
-              "msj": "Gender is required"
+              "msj": "The Sex field is required"
             }
           }
         },
@@ -574,7 +559,7 @@
               "rule": "LEN>",
               "when": "",
               "value": "0",
-              "msj": "Marital status is required"
+              "msj": "The Marital Status field is required"
             }
           }
         },
@@ -604,7 +589,7 @@
               "rule": "LEN>",
               "when": "",
               "value": "0",
-              "msj": "Identification number is required"
+              "msj": "ID number is required"
             },
             "2": {
               "rule": "REGEX",
@@ -666,7 +651,7 @@
               "rule": "REGEX",
               "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
               "when": "",
-              "msj": "Enter a valid date of birth"
+              "msj": "Enter a valid expiration date"
             }
           }
         },
@@ -716,7 +701,7 @@
               "rule": "REGEX",
               "when": "{telefono}=''",
               "value": "^\\+?[0-9]{1,4}([ -]?[0-9]{2,4}){2,4}$",
-              "msj": "Enter a valid mobile phone number"
+              "msj": "Enter a valid mobile number"
             }
           }
         },
@@ -737,6 +722,66 @@
               "value": "",
               "when": "{correo}!=''",
               "msj": "Enter a valid email address"
+            }
+          }
+        },
+        "afiliacionTipoPago": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Select the membership type"
+            }
+          }
+        },
+        "afiliacionCuotas": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{afiliacionTipoPago}='credito'",
+              "msj": "Select the number of installments for the membership"
+            }
+          }
+        },
+        "afiliacionCostoTotal": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        "afiliacionBancoCodigo": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{afiliacionTipoPago}='contado'",
+              "msj": "Select a bank"
+            }
+          }
+        },
+        "afiliacionVoucherNumero": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "{afiliacionTipoPago}='contado'",
+              "msj": "Enter the voucher number"
+            }
+          }
+        },
+        "afiliacionFecha": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "{afiliacionTipoPago}='contado'",
+              "msj": "Enter a valid date"
             }
           }
         },
@@ -776,7 +821,7 @@
               "rule": "REGEX",
               "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
               "when": "",
-              "msj": "Enter a valid start date"
+              "msj": "Enter the position"
             }
           }
         },
@@ -806,7 +851,7 @@
               "rule": "LEN>",
               "value": "0",
               "when": "",
-              "msj": "Enter the immediate supervisor's name"
+              "msj": "Enter the immediate supervisor name"
             }
           }
         },
@@ -872,13 +917,13 @@
               "rule": "LEN>",
               "value": "0",
               "when": "{conyugeTipoIdentificacion} !='cedula'",
-              "msj": "The spouse's identification number is required"
+              "msj": "The spouse ID number is required"
             },
             "3": {
               "rule": "IGUAL!=",
               "value": "{numeroIdentificacion}",
               "when": "{conyugeTipoIdentificacion}='cedula'",
-              "msj": "The spouse's identification number cannot be the same as the member's"
+              "msj": "The spouse ID number cannot be the same as the member’s"
             },
             "4": {
               "rule": "REGEX",
@@ -914,126 +959,6 @@
             }
           }
         },
-        "beneficiario1Nombre": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Enter the beneficiary's name"
-            }
-          }
-        },
-        "beneficiario1Porcentaje": {
-          "data": {
-            "1": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
-              "value": "100",
-              "when": "",
-              "msj": "The sum of the beneficiaries' percentages must equal 100%"
-            }
-          }
-        },
-        "beneficiario1Parentesco": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Enter the relationship"
-            }
-          }
-        },
-        "beneficiario1Cedula": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Enter the ID number"
-            }
-          }
-        },
-        "beneficiario2Nombre": {
-          "data": {
-            "1": {
-              "rule": "LEN>=",
-              "value": "0",
-              "when": "",
-              "msj": ""
-            }
-          }
-        },
-        "beneficiario2Porcentaje": {
-          "data": {
-            "1": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
-              "value": "100",
-              "when": "beneficiario2Nombre}!=''",
-              "msj": "The sum of the beneficiaries' percentages must equal 100%"
-            }
-          }
-        },
-        "beneficiario2Parentesco": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{beneficiario2Nombre}!=''",
-              "msj": "Enter the second beneficiary's relationship"
-            }
-          }
-        },
-        "beneficiario2Cedula": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{beneficiario2Nombre}!=''",
-              "msj": "Enter the second beneficiary's ID number"
-            }
-          }
-        },
-        "beneficiario3Nombre": {
-          "data": {
-            "1": {
-              "rule": "LEN>=",
-              "value": "0",
-              "when": "",
-              "msj": ""
-            }
-          }
-        },
-        "beneficiario3Porcentaje": {
-          "data": {
-            "1": {
-              "rule": "NUM({beneficiario1Porcentaje}+{beneficiario2Porcentaje}+{beneficiario3Porcentaje})=",
-              "value": "100",
-              "when": "beneficiario3Nombre}!=''",
-              "msj": "The sum of the beneficiaries' percentages must equal 100%"
-            }
-          }
-        },
-        "beneficiario3Parentesco": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{beneficiario3Nombre}!=''",
-              "msj": "Enter the third beneficiary's relationship"
-            }
-          }
-        },
-        "beneficiario3Cedula": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{beneficiario3Nombre}!=''",
-              "msj": "Enter the third beneficiary's ID number"
-            }
-          }
-        },
         "cuentaCorrienteActiva": {
           "data": {
             "1": {
@@ -1060,13 +985,13 @@
               "rule": "LEN>",
               "value": "0",
               "when": "{cuentaCorrienteActiva}=true",
-              "msj": "Enter the deduction date (Checking Account)"
+              "msj": "Enter the deduction date (Checking account)"
             },
             "2": {
               "rule": "DAYIN_VALID_MONTH",
               "value": "15,30",
               "when": "{cuentaCorrienteActiva}=true && LEN>0",
-              "msj": "The date must be day 15 or the last allowed day of the month"
+              "msj": "The date must be the 15th or the last allowed day of the month"
             },
             "3": {
               "rule": "DATE>",
@@ -1112,13 +1037,13 @@
               "rule": "LEN>",
               "value": "0",
               "when": "{cuentaNavidenaActiva}=true",
-              "msj": "Enter the deduction date (Christmas Account)"
+              "msj": "Enter the deduction date (Christmas account)"
             },
             "2": {
               "rule": "DAYIN_VALID_MONTH",
               "value": "15,30",
               "when": "{cuentaNavidenaEsMensual}=true && LEN>0",
-              "msj": "The date must be day 15 or the last allowed day of the month"
+              "msj": "The date must be the 15th or the last allowed day of the month"
             },
             "3": {
               "rule": "DATE>",
@@ -1137,12 +1062,96 @@
               "msj": ""
             }
           }
+        },
+        "beneficiarioPorcentaje": {
+          "data": {
+            "1": {
+              "rule": "NUM=",
+              "value": "100",
+              "when": "",
+              "msj": "The sum of beneficiary percentages must equal 100%"
+            }
+          }
+        }
+      }
+    },
+    "table": {
+      "fieldMeta": {
+        "benefnombre": {
+          "label": "Beneficiary",
+          "tooltip": "Required field"
+        },
+        "porcentaje": {
+          "label": "Beneficiary",
+          "tooltip": "Required field"
+        },
+        "parentesco": {
+          "label": "Beneficiary",
+          "tooltip": "Required field"
+        },
+        "cedula": {
+          "label": "Beneficiary",
+          "tooltip": "Required field"
+        }
+      },
+      "validations": {
+        "benefnombre": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Enter the beneficiary name"
+            }
+          }
+        },
+        "porcentaje": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "The percentage value must be greater than 0"
+            },
+            "2": {
+              "rule": "NUM<=",
+              "value": "100",
+              "when": "",
+              "msj": "A maximum of 100% is allowed"
+            }
+          }
+        },
+        "parentesco": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el parentesco"
+            }
+          }
+        },
+        "cedula": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "when": "",
+              "value": "^[0-9]+[A-Za-z]$",
+              "msj": "Only numbers and one letter at the end are allowed"
+            },
+            "2": {
+              "rule": "LEN==",
+              "when": "",
+              "value": "14",
+              "msj": "It must have exactly 14 characters"
+            }
+          }
         }
       }
     },
     "list": {
       "title": "Members",
-      "subtitle": "Manage members with status, contact information, and actions",
+      "subtitle": "Manage members with status, contact, and actions",
       "newButton": "New member",
       "loading": "Loading members...",
       "empty": "No members found.",
@@ -1163,7 +1172,7 @@
     },
     "activity": {
       "title": "Recent activity",
-      "empty": "No recent activity.",
+      "empty": "There is no recent activity.",
       "new": "New",
       "updated": "Updated",
       "byUser": "By: {{usuario}}",
@@ -1222,25 +1231,27 @@
       "actions": {
         "clear": "Clear",
         "edit": "Edit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "save": "Save",
+        "cancel": "Cancel"
       },
       "status": {
         "active": "Active",
         "inactive": "Inactive"
       },
-      "noDate": "Date not available",
+      "noDate": "Date unavailable",
       "selectOption": "Select...",
       "options": {
         "tipoIdentificacion": {
           "cedula": "ID card",
           "pasaporte": "Passport",
-          "residencia": "Residence permit",
+          "residencia": "Residence",
           "otro": "Other"
         },
         "conyugeTipoIdentificacion": {
           "cedula": "ID card",
           "pasaporte": "Passport",
-          "residencia": "Residence permit",
+          "residencia": "Residence",
           "otro": "Other"
         },
         "sociedadLabora": {

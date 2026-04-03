@@ -11,6 +11,9 @@ export interface AppRegionalConfig {
   currency: string;
   decimalSeparator: string;
   thousandSeparator: string;
+  affiliationCost: number;
+  ordinaryCapitalPercentage: number;
+  otherDeferredIncomePercentage: number;
 }
 
 export interface PublicSettingsResponse {
@@ -31,7 +34,10 @@ export class AppConfigService {
     dateFormat: 'dd/MM/yyyy',
     currency: 'NIO',
     decimalSeparator: '.',
-    thousandSeparator: ','
+    thousandSeparator: ',',
+    affiliationCost: 0,
+    ordinaryCapitalPercentage: 0,
+    otherDeferredIncomePercentage: 0
   };
 
   getPublicSettings(): Observable<PublicSettingsResponse> {

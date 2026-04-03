@@ -46,6 +46,13 @@ export class CatalogosService extends BrowserApiService {
     );
   }
 
+  getBancos(): Observable<any> {
+     return this.http.get<any>(
+      `${this.api.baseUrl}/catalogos/bancos`,
+      { withCredentials: true }
+    );
+  }
+
   getPaises(): Observable<any> {
     return this.http.get<any>(
       `${this.api.baseUrl}/catalogos/paises`,

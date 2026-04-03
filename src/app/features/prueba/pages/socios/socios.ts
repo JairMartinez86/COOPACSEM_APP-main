@@ -39,7 +39,7 @@ import { LanguageService } from '../../../../core/services/languageService';
 import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
 import { AppConfigService } from '../../../../core/services/app-config.service';
 import { CatalogosService } from '../../../../shared/service/CatalogosService';
-import { CatalogoItem, MunicipioItem } from '../../../../shared/interfaces/catalogo.model';
+import { Banco, CatalogoItem, MunicipioItem } from '../../../../shared/interfaces/catalogo.model';
 import { BeneficiarioForm, EMPTY_BENEFICIARIO } from '../../interface/beneficiario.model';
 import { PermissionService } from '../../../../core/services/permission.service';
 import { BeneficiarioModalComponent } from "./beneficiario/beneficiario-modal.component";
@@ -110,6 +110,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly sections = [
     'datos-personales',
+    'afiliacion',
     'ahorro',
     'actividad-economica',
     'datos-conyuge',
@@ -129,6 +130,10 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   nacionalidades: CatalogoItem[] = [];
   departamentos: CatalogoItem[] = [];
   municipios: MunicipioItem[] = [];
+  bancos: Banco[] = [];
+
+
+  readonly afiliacionCuotasOptions = [1, 2, 3];
 
   formReady = false;
   dataReady = false;
@@ -529,6 +534,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
           socioApi.fechaIngreso = this.appConfigService.formatDate(socioApi.fechaIngreso);
           socioApi.cuentaCorrienteFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaCorrienteFechaInicioDeduccion);
           socioApi.cuentaNavidenaFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaNavidenaFechaInicioDeduccion);
+          socioApi.afiliacionFecha = this.appConfigService.formatDate(socioApi.afiliacionFecha);
 
 
 
@@ -592,18 +598,30 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
           };
 
 
+
           this.loadBeneficiarios(id);
 
 
           this.patchEngineFromSocio();
           this.engine.clearErrors?.();
-          this.loadMunicipiosIfNeeded();
 
-          this.dataReady = true;
-          this.tryInitDraftManager();
+          this.loadMunicipiosIfNeeded(this.socio.municipioId, () => {
+            this.copy.municipioId = this.socio.municipioId;
 
-          this.cdr.detectChanges();
-          this.refreshAllChoices();
+            this.dataReady = true;
+            this.tryInitDraftManager();
+
+            this.cdr.detectChanges();
+            this.refreshAllChoices();
+
+            setTimeout(() => {
+              this.reapplyChoicesValues();
+              this.setChoicesValue(this.municipioChoices, this.socio.municipioId);
+              this.formRef?.form.markAsPristine();
+              this.formRef?.form.markAsUntouched();
+              this.cdr.detectChanges();
+            }, 100);
+          });
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -648,6 +666,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.engine.validateAll?.();
     this.engine.clearErrors?.();
+
   }
 
   private loadCatalogos(): void {
@@ -690,6 +709,17 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.refreshAllChoices();
       }
     });
+
+    this.catalogosService.getBancos().subscribe({
+      next: (res: any) => {
+        this.bancos = [...(res?.data?.bancos ?? [])];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.bancos = [];
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   onDepartamentoChange(departamentoId: string): void {
@@ -710,7 +740,15 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.municipios = [...(res?.data?.municipios ?? [])];
         this.patchEngineFromSocio();
         this.cdr.detectChanges();
-        this.refreshAllChoices();
+
+        setTimeout(() => {
+          this.refreshAllChoices();
+          setTimeout(() => {
+            this.setChoicesValue(this.departamentoChoices, this.socio.departamentoId);
+            this.setChoicesValue(this.municipioChoices, this.socio.municipioId);
+            this.cdr.detectChanges();
+          }, 80);
+        }, 50);
       },
       error: () => {
         this.municipios = [];
@@ -720,24 +758,47 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private loadMunicipiosIfNeeded(): void {
+
+  private loadMunicipiosIfNeeded(
+    municipioIdToKeep?: string | null,
+    done?: () => void
+  ): void {
+    const municipioTarget = municipioIdToKeep ?? this.socio.municipioId ?? null;
+
     if (!this.socio.departamentoId) {
       this.municipios = [];
       this.cdr.detectChanges();
       this.refreshAllChoices();
+      done?.();
       return;
     }
 
     this.catalogosService.getMunicipios(this.socio.departamentoId).subscribe({
       next: (res: any) => {
         this.municipios = [...(res?.data?.municipios ?? [])];
+
+        const exists = this.municipios.some(
+          m => String(m.id) === String(municipioTarget)
+        );
+
+        if (exists) {
+          this.socio.municipioId = municipioTarget;
+        }
+
         this.cdr.detectChanges();
-        this.refreshAllChoices();
+
+        setTimeout(() => {
+          this.initMunicipioChoices();
+          this.setChoicesValue(this.municipioChoices, this.socio.municipioId);
+          this.cdr.detectChanges();
+          done?.();
+        }, 80);
       },
       error: () => {
         this.municipios = [];
         this.cdr.detectChanges();
         this.refreshAllChoices();
+        done?.();
       }
     });
   }
@@ -773,16 +834,17 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
           this.socio.beneficiarios = [...this.beneficiarios];
 
           this.patchEngineFromSocio();
-          this.loadMunicipiosIfNeeded();
-          this.cdr.detectChanges();
-
-          setTimeout(() => {
-            this.syncCatalogValuesWithOptions();
-            this.patchEngineFromSocio();
-            this.refreshAllChoices();
-            this.reapplyChoicesValues();
+          this.loadMunicipiosIfNeeded(this.socio.municipioId, () => {
             this.cdr.detectChanges();
-          }, 100);
+
+            setTimeout(() => {
+              this.syncCatalogValuesWithOptions();
+              this.patchEngineFromSocio();
+              this.refreshAllChoices();
+              this.reapplyChoicesValues();
+              this.cdr.detectChanges();
+            }, 100);
+          });
         },
 
         restoreSavedData: (data: Partial<SocioForm> | null | undefined) => {
@@ -804,32 +866,62 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+
+
+
+
   private normalize(
     data: Partial<SocioForm> | null | undefined
   ): Partial<SocioForm> {
     return {
       ...data,
       id: data?.id ?? null,
-      paisEmisor: data?.paisEmisor ?? null,
-      paisNacimiento: data?.paisNacimiento ?? null,
-      nacionalidadId: data?.nacionalidadId ?? null,
-      departamentoId: data?.departamentoId ?? null,
-      municipioId: data?.municipioId ?? null,
-      conyugePaisNacimiento: data?.conyugePaisNacimiento ?? null,
-      conyugeNacionalidadId: data?.conyugeNacionalidadId ?? null,
+
+      paisEmisor: this.normalizeEmpty(data?.paisEmisor),
+      paisNacimiento: this.normalizeEmpty(data?.paisNacimiento),
+      nacionalidadId: this.normalizeEmpty(data?.nacionalidadId),
+      departamentoId: this.normalizeEmpty(data?.departamentoId),
+      municipioId: this.normalizeEmpty(data?.municipioId),
+      conyugePaisNacimiento: this.normalizeEmpty(data?.conyugePaisNacimiento),
+      conyugeNacionalidadId: this.normalizeEmpty(data?.conyugeNacionalidadId),
+
+      fechaEmision: this.normalizeEmpty(data?.fechaEmision),
+      fechaIngreso: this.normalizeEmpty(data?.fechaIngreso),
+      fechaNacimiento: this.normalizeEmpty(data?.fechaNacimiento),
+      fechaVencimiento: this.normalizeEmpty(data?.fechaVencimiento),
+      afiliacionFecha: this.normalizeEmpty(data?.afiliacionFecha),
+      cuentaCorrienteFechaInicioDeduccion: this.normalizeEmpty(data?.cuentaCorrienteFechaInicioDeduccion),
+      cuentaNavidenaFechaInicioDeduccion: this.normalizeEmpty(data?.cuentaNavidenaFechaInicioDeduccion),
+
       ingresosMensuales:
         data?.ingresosMensuales == null ? null : Number(data.ingresosMensuales),
       otrosIngresos:
         data?.otrosIngresos == null ? null : Number(data.otrosIngresos),
       ingresosAnuales:
         data?.ingresosAnuales == null ? null : Number(data.ingresosAnuales),
+
+      afiliacionTipoPago: this.normalizeEmpty(data?.afiliacionTipoPago),
+      afiliacionVoucherNumero: this.normalizeEmpty(data?.afiliacionVoucherNumero),
+      afiliacionBancoCodigo: this.normalizeEmpty(data?.afiliacionBancoCodigo),
+      afiliacionCuotas:
+        data?.afiliacionCuotas == null ? null : Number(data.afiliacionCuotas),
+      afiliacionCostoTotal:
+        data?.afiliacionCostoTotal == null ? null : Number(data.afiliacionCostoTotal),
+      afiliacionCapitalOrdinario:
+        data?.afiliacionCapitalOrdinario == null ? null : Number(data.afiliacionCapitalOrdinario),
+      afiliacionOtrosIngresosDiferidos:
+        data?.afiliacionOtrosIngresosDiferidos == null ? null : Number(data.afiliacionOtrosIngresosDiferidos),
+
       cuentaCorrienteMontoCuota:
         data?.cuentaCorrienteMontoCuota == null ? null : Number(data.cuentaCorrienteMontoCuota),
       cuentaNavidenaMontoCuota:
         data?.cuentaNavidenaMontoCuota == null ? null : Number(data.cuentaNavidenaMontoCuota),
+
       beneficiarios: this.mapBeneficiarios(data?.beneficiarios).filter(x => !x.isDeleted),
     };
   }
+
+
 
   private toSocioForm(
     data: Partial<SocioForm> | null | undefined
@@ -878,6 +970,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
+
   onCuentaCorrienteToggle(): void {
     if (!this.socio.cuentaCorrienteActiva) {
       this.socio.cuentaCorrienteFechaInicioDeduccion = null;
@@ -894,103 +987,67 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onSave(): void {
-    if (this.mode === 'view') {
-      return;
-    }
-
-
-
-    this.engine.patchValues?.({
-      ...this.socio,
-      beneficiarioPorcentaje: this.beneficiariosTotalPorcentaje
-    });
-
-
-
-    const ok = this.engine.validateAll?.();
-
-    if (!ok) {
-      this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
-      return;
-    }
-
-    this.engine.clearErrors?.();
-    this.notify.close?.();
-
-
-
-    const payload = this.toSocioForm(this.socio);
-    payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
-    payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
-    payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
-    payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
-    payload.cuentaCorrienteFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaCorrienteFechaInicioDeduccion);
-    payload.cuentaNavidenaFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaNavidenaFechaInicioDeduccion);
-
-    this.sociosService
-      .save(payload)
-      .pipe(finalize(() => { }))
-      .subscribe({
-        next: (res: any) => {
-
-
-          const savedSocio = this.toSocioForm(res?.data?.socio ?? payload);
-
-          if (this.mode === 'edit') {
-            savedSocio.fechaEmision = this.appConfigService.formatDate(savedSocio.fechaEmision);
-            savedSocio.fechaVencimiento = this.appConfigService.formatDate(savedSocio.fechaVencimiento);
-            savedSocio.fechaNacimiento = this.appConfigService.formatDate(savedSocio.fechaNacimiento);
-            savedSocio.fechaIngreso = this.appConfigService.formatDate(savedSocio.fechaIngreso);
-            savedSocio.cuentaCorrienteFechaInicioDeduccion = this.appConfigService.formatDate(savedSocio.cuentaCorrienteFechaInicioDeduccion);
-            savedSocio.cuentaNavidenaFechaInicioDeduccion = this.appConfigService.formatDate(savedSocio.cuentaNavidenaFechaInicioDeduccion);
-
-
-
-            this.beneficiarios = [...(savedSocio.beneficiarios ?? [])];
-            this.socio = { ...savedSocio };
-            this.copy = { ...savedSocio };
-
-
-            this.draftRef?.clear();
-            this.draftRef?.cancel();
-
-            this.syncCatalogValuesWithOptions();
-            this.patchEngineFromSocio();
-            this.engine.clearErrors?.();
-            this.loadMunicipiosIfNeeded();
-
-            this.formRef?.resetForm(this.socio);
-            this.formRef?.form.markAsPristine();
-            this.formRef?.form.markAsUntouched();
-
-            this.cdr.detectChanges();
-
-            setTimeout(() => {
-              this.refreshAllChoices();
-
-              setTimeout(() => {
-                this.reapplyChoicesValues();
-
-                this.formRef?.form.markAsPristine();
-                this.formRef?.form.markAsUntouched();
-
-                this.cdr.detectChanges();
-                this.notify.showFromApiResponse?.(res, 'success');
-              }, 80);
-            }, 80);
-
-            return;
-          }
-
-          this.resetFormAfterSuccess(res);
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-        },
-      });
+onSave(): void {
+  if (this.mode === 'view') {
+    return;
   }
 
+  this.engine.patchValues?.({
+    ...this.socio,
+    beneficiarioPorcentaje: this.beneficiariosTotalPorcentaje
+  });
+
+  const ok = this.engine.validateAll?.();
+
+  if (!ok) {
+    this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
+    return;
+  }
+
+  this.engine.clearErrors?.();
+  this.notify.close?.();
+
+  const payload = this.toSocioForm(this.socio);
+  payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
+  payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
+  payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
+  payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
+  payload.afiliacionFecha = this.normalizeDate(this.socio.afiliacionFecha);
+  payload.cuentaCorrienteFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaCorrienteFechaInicioDeduccion);
+  payload.cuentaNavidenaFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaNavidenaFechaInicioDeduccion);
+
+  payload.afiliacionCostoTotal = Number(this.socio.afiliacionCostoTotal ?? 0);
+  payload.afiliacionCapitalOrdinario = Number(this.socio.afiliacionCapitalOrdinario ?? 0);
+  payload.afiliacionOtrosIngresosDiferidos = Number(this.socio.afiliacionOtrosIngresosDiferidos ?? 0);
+
+  this.sociosService
+    .save(payload)
+    .pipe(finalize(() => { }))
+    .subscribe({
+      next: (res: any) => {
+        if (this.mode === 'edit') {
+          const savedId = res?.data?.socio?.id ?? this.socio.id;
+
+          this.draftRef?.clear();
+          this.draftRef?.cancel();
+          this.notify.showFromApiResponse?.(res, 'success');
+
+          if (savedId) {
+            this.draftRef = undefined;
+            this.dataReady = false;
+            this.loadSocioById(savedId);
+          }
+
+          return;
+        }
+
+        this.resetFormAfterSuccess(res);
+      },
+      error: (err: any) => {
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      },
+    });
+}
   onCancel(): void {
     this.notify.close?.();
     this.draftRef?.cancel();
@@ -1448,6 +1505,28 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
+  formatMoneyValue(value: number | null | undefined): string {
+    const numericValue = Number(value ?? 0);
+
+    const decimalSeparator =
+      this.appConfigService.getCurrentSettings().decimalSeparator || '.';
+
+    const thousandSeparator =
+      this.appConfigService.getCurrentSettings().thousandSeparator || ',';
+
+    const fixed = numericValue.toFixed(2);
+    const parts = fixed.split('.');
+    const integerPart = parts[0];
+    const decimalPart = parts[1] ?? '00';
+
+    const formattedInteger = integerPart.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      thousandSeparator
+    );
+
+    return `${formattedInteger}${decimalSeparator}${decimalPart}`;
+  }
+
   formatIngresosAnuales(): string {
     const value = Number(this.socio.ingresosAnuales ?? 0);
 
@@ -1690,4 +1769,45 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+
+
+
+  onAfiliacionTipoPagoChange(tipo: string | null): void {
+    this.socio.afiliacionTipoPago = tipo;
+
+    if (tipo === 'contado') {
+      this.socio.afiliacionCuotas = null;
+    }
+
+    if (tipo === 'credito') {
+      this.socio.afiliacionBancoCodigo = null;
+      this.socio.afiliacionVoucherNumero = null;
+      this.socio.afiliacionFecha = null;
+
+      if (!this.socio.afiliacionCuotas) {
+        this.socio.afiliacionCuotas = 1;
+      }
+    }
+
+    this.syncAfiliacionConfigValues();
+    this.patchEngineFromSocio();
+    this.cdr.detectChanges();
+  }
+  private syncAfiliacionConfigValues(): void {
+
+    const settings = this.appConfigService.getCurrentSettings();
+    const costo = Number(settings?.affiliationCost ?? 0);
+
+    this.socio.afiliacionCostoTotal = costo;
+  }
+
+
+  private normalizeEmpty(value: any): any {
+    return value === '' ? null : value;
+  }
+
+  private normalizeCatalogText(value: any): any {
+    const v = String(value ?? '').trim();
+    return v === '' ? null : v;
+  }
 }

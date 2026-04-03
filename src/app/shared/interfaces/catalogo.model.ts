@@ -6,3 +6,10 @@ export interface CatalogoItem {
 export interface MunicipioItem extends CatalogoItem {
   departamentoId: string;
 }
+
+
+export interface Banco {
+  codigo: string;
+  nombreBanco: string;
+  cuentaContable?: string;
+}

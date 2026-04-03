@@ -13,23 +13,13 @@
       </div>
 
       <div class="d-flex flex-wrap gap-2">
-        <button
-          type="button"
-          class="btn btn-outline-secondary btn-sm"
-          (click)="onCancel()"
-          appPermission="edit">
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="onCancel()" appPermission="edit">
           <i class="bi bi-arrow-counterclockwise me-1"></i>
           {{ 'company.actions.reset' | translate }}
         </button>
 
-        <button
-          type="button"
-          class="btn btn-primary btn-sm"
-          (click)="onSave()"
-          autoFocusNext
-          [disableClickButton]="true"
-          [unlockOn]="notify.closed$"
-          appPermission="edit">
+        <button type="button" class="btn btn-primary btn-sm" (click)="onSave()" autoFocusNext
+          [disableClickButton]="true" [unlockOn]="notify.closed$" appPermission="edit">
           <i class="bi bi-check-lg me-1"></i>
           {{ 'company.actions.saveAll' | translate }}
         </button>
@@ -53,19 +43,10 @@
                     <label for="CompanyName" class="form-label">
                       {{ 'company.fields.companyName.label' | translate }}
                     </label>
-                    <input
-                      #CompanyName
-                      type="text"
-                      class="form-control"
-                      id="CompanyName"
-                      name="CompanyName"
+                    <input #CompanyName type="text" class="form-control" id="CompanyName" name="CompanyName"
                       [placeholder]="'company.fields.companyName.placeholder' | translate"
-                      [(ngModel)]="company.CompanyName"
-                      engineSync="CompanyName"
-                      autoFocusNext
-                      [next]="TradeName"
-                      required
-                      JmartAutoFocus>
+                      [(ngModel)]="company.CompanyName" engineSync="CompanyName" autoFocusNext [next]="TradeName"
+                      required JmartAutoFocus>
                   </div>
                 </div>
 
@@ -74,18 +55,9 @@
                     <label for="TradeName" class="form-label">
                       {{ 'company.fields.tradeName.label' | translate }}
                     </label>
-                    <input
-                      #TradeName
-                      type="text"
-                      class="form-control"
-                      id="TradeName"
-                      name="TradeName"
-                      [placeholder]="'company.fields.tradeName.placeholder' | translate"
-                      [(ngModel)]="company.TradeName"
-                      engineSync="TradeName"
-                      autoFocusNext
-                      [next]="Ruc"
-                      required>
+                    <input #TradeName type="text" class="form-control" id="TradeName" name="TradeName"
+                      [placeholder]="'company.fields.tradeName.placeholder' | translate" [(ngModel)]="company.TradeName"
+                      engineSync="TradeName" autoFocusNext [next]="Ruc" required>
                   </div>
                 </div>
 
@@ -94,18 +66,9 @@
                     <label for="Ruc" class="form-label">
                       {{ 'company.fields.ruc.label' | translate }}
                     </label>
-                    <input
-                      #Ruc
-                      type="text"
-                      class="form-control"
-                      id="Ruc"
-                      name="Ruc"
-                      [placeholder]="'company.fields.ruc.placeholder' | translate"
-                      [(ngModel)]="company.Ruc"
-                      engineSync="Ruc"
-                      autoFocusNext
-                      [next]="BusinessType"
-                      required>
+                    <input #Ruc type="text" class="form-control" id="Ruc" name="Ruc"
+                      [placeholder]="'company.fields.ruc.placeholder' | translate" [(ngModel)]="company.Ruc"
+                      engineSync="Ruc" autoFocusNext [next]="BusinessType" required>
                   </div>
                 </div>
 
@@ -114,20 +77,16 @@
                     <label for="BusinessType" class="form-label">
                       {{ 'company.fields.businessType.label' | translate }}
                     </label>
-                    <select
-                      #BusinessType
-                      id="BusinessType"
-                      name="BusinessType"
-                      class="form-select"
-                      [(ngModel)]="company.BusinessType"
-                      engineSync="BusinessType"
-                      autoFocusNext
-                      [next]="Status"
+                    <select #BusinessType id="BusinessType" name="BusinessType" class="form-select"
+                      [(ngModel)]="company.BusinessType" engineSync="BusinessType" autoFocusNext [next]="Status"
                       required>
                       <option value="">{{ 'company.fields.businessType.placeholder' | translate }}</option>
-                      <option value="Corporation">{{ 'company.fields.businessType.options.corporation' | translate }}</option>
-                      <option value="Individual">{{ 'company.fields.businessType.options.individual' | translate }}</option>
-                      <option value="SoleProprietor">{{ 'company.fields.businessType.options.soleProprietor' | translate }}</option>
+                      <option value="Corporation">{{ 'company.fields.businessType.options.corporation' | translate }}
+                      </option>
+                      <option value="Individual">{{ 'company.fields.businessType.options.individual' | translate }}
+                      </option>
+                      <option value="SoleProprietor">{{ 'company.fields.businessType.options.soleProprietor' | translate
+                        }}</option>
                       <option value="Other">{{ 'company.fields.businessType.options.other' | translate }}</option>
                     </select>
                   </div>
@@ -138,16 +97,8 @@
                     <label for="Status" class="form-label">
                       {{ 'company.fields.status.label' | translate }}
                     </label>
-                    <select
-                      #Status
-                      id="Status"
-                      name="Status"
-                      class="form-select"
-                      [(ngModel)]="company.Status"
-                      engineSync="Status"
-                      autoFocusNext
-                      [next]="Description"
-                      required>
+                    <select #Status id="Status" name="Status" class="form-select" [(ngModel)]="company.Status"
+                      engineSync="Status" autoFocusNext [next]="Description" required>
                       <option value="Active">{{ 'company.fields.status.options.active' | translate }}</option>
                       <option value="Inactive">{{ 'company.fields.status.options.inactive' | translate }}</option>
                     </select>
@@ -159,17 +110,9 @@
                     <label for="Description" class="form-label">
                       {{ 'company.fields.description.label' | translate }}
                     </label>
-                    <textarea
-                      #Description
-                      class="form-control"
-                      id="Description"
-                      name="Description"
-                      rows="3"
+                    <textarea #Description class="form-control" id="Description" name="Description" rows="3"
                       [placeholder]="'company.fields.description.placeholder' | translate"
-                      [(ngModel)]="company.Description"
-                      engineSync="Description"
-                      autoFocusNext
-                      [next]="Phone"
+                      [(ngModel)]="company.Description" engineSync="Description" autoFocusNext [next]="Phone"
                       required></textarea>
                   </div>
                 </div>
@@ -194,21 +137,13 @@
                   <span class="input-group-text">
                     <i class="bi bi-upload"></i>
                   </span>
-                  <input
-                    type="file"
-                    class="form-control"
-                    id="logoFile"
-                    name="logoFile"
-                    accept="image/*"
-                    (change)="onLogoSelected($event)"
-                    appPermission="edit">
+                  <input type="file" class="form-control" id="logoFile" name="logoFile" accept="image/*"
+                    (change)="onLogoSelected($event)" appPermission="edit">
                 </div>
               </div>
 
               <div class="company-logo-preview mb-3">
-                <img
-                  [src]="logoPreview || 'assets/img/logo.webp'"
-                  class="company-logo-preview-img"
+                <img [src]="logoPreview || 'assets/img/logo.webp'" class="company-logo-preview-img"
                   [attr.alt]="'company.fields.logoFile.previewAlt' | translate">
               </div>
 
@@ -233,18 +168,9 @@
                     <label for="Phone" class="form-label">
                       {{ 'company.fields.phone.label' | translate }}
                     </label>
-                    <input
-                      #Phone
-                      type="tel"
-                      class="form-control"
-                      id="Phone"
-                      name="Phone"
-                      [placeholder]="'company.fields.phone.placeholder' | translate"
-                      [(ngModel)]="company.Phone"
-                      engineSync="Phone"
-                      autoFocusNext
-                      [next]="Mobile"
-                      required>
+                    <input #Phone type="tel" class="form-control" id="Phone" name="Phone"
+                      [placeholder]="'company.fields.phone.placeholder' | translate" [(ngModel)]="company.Phone"
+                      engineSync="Phone" autoFocusNext [next]="Mobile" required>
                   </div>
                 </div>
 
@@ -253,18 +179,9 @@
                     <label for="Mobile" class="form-label">
                       {{ 'company.fields.mobile.label' | translate }}
                     </label>
-                    <input
-                      #Mobile
-                      type="tel"
-                      class="form-control"
-                      id="Mobile"
-                      name="Mobile"
-                      [placeholder]="'company.fields.mobile.placeholder' | translate"
-                      [(ngModel)]="company.Mobile"
-                      engineSync="Mobile"
-                      autoFocusNext
-                      [next]="Email"
-                      required>
+                    <input #Mobile type="tel" class="form-control" id="Mobile" name="Mobile"
+                      [placeholder]="'company.fields.mobile.placeholder' | translate" [(ngModel)]="company.Mobile"
+                      engineSync="Mobile" autoFocusNext [next]="Email" required>
                   </div>
                 </div>
 
@@ -273,18 +190,9 @@
                     <label for="Email" class="form-label">
                       {{ 'company.fields.email.label' | translate }}
                     </label>
-                    <input
-                      #Email
-                      type="email"
-                      class="form-control"
-                      id="Email"
-                      name="Email"
-                      [placeholder]="'company.fields.email.placeholder' | translate"
-                      [(ngModel)]="company.Email"
-                      engineSync="Email"
-                      autoFocusNext
-                      [next]="Website"
-                      required>
+                    <input #Email type="email" class="form-control" id="Email" name="Email"
+                      [placeholder]="'company.fields.email.placeholder' | translate" [(ngModel)]="company.Email"
+                      engineSync="Email" autoFocusNext [next]="Website" required>
                   </div>
                 </div>
 
@@ -293,18 +201,9 @@
                     <label for="Website" class="form-label">
                       {{ 'company.fields.website.label' | translate }}
                     </label>
-                    <input
-                      #Website
-                      type="url"
-                      class="form-control"
-                      id="Website"
-                      name="Website"
-                      [placeholder]="'company.fields.website.placeholder' | translate"
-                      [(ngModel)]="company.Website"
-                      engineSync="Website"
-                      autoFocusNext
-                      [next]="Address"
-                      required>
+                    <input #Website type="url" class="form-control" id="Website" name="Website"
+                      [placeholder]="'company.fields.website.placeholder' | translate" [(ngModel)]="company.Website"
+                      engineSync="Website" autoFocusNext [next]="Address" required>
                   </div>
                 </div>
 
@@ -313,18 +212,9 @@
                     <label for="Address" class="form-label">
                       {{ 'company.fields.address.label' | translate }}
                     </label>
-                    <textarea
-                      #Address
-                      class="form-control"
-                      id="Address"
-                      name="Address"
-                      rows="3"
-                      [(ngModel)]="company.Address"
-                      [placeholder]="'company.fields.address.placeholder' | translate"
-                      engineSync="Address"
-                      autoFocusNext
-                      [next]="Country"
-                      required></textarea>
+                    <textarea #Address class="form-control" id="Address" name="Address" rows="3"
+                      [(ngModel)]="company.Address" [placeholder]="'company.fields.address.placeholder' | translate"
+                      engineSync="Address" autoFocusNext [next]="Country" required></textarea>
                   </div>
                 </div>
 
@@ -333,16 +223,8 @@
                     <label for="Country" class="form-label">
                       {{ 'company.fields.country.label' | translate }}
                     </label>
-                    <select
-                      #Country
-                      id="Country"
-                      name="Country"
-                      class="form-select"
-                      [(ngModel)]="company.Country"
-                      engineSync="Country"
-                      autoFocusNext
-                      [next]="City"
-                      required>
+                    <select #Country id="Country" name="Country" class="form-select" [(ngModel)]="company.Country"
+                      engineSync="Country" autoFocusNext [next]="City" required>
                       <option value="">{{ 'company.fields.country.placeholder' | translate }}</option>
                       <option value="Nicaragua">{{ 'company.fields.country.options.nicaragua' | translate }}</option>
                       <option value="Honduras">{{ 'company.fields.country.options.honduras' | translate }}</option>
@@ -358,18 +240,9 @@
                     <label for="City" class="form-label">
                       {{ 'company.fields.city.label' | translate }}
                     </label>
-                    <input
-                      #City
-                      type="text"
-                      class="form-control"
-                      id="City"
-                      name="City"
-                      [(ngModel)]="company.City"
-                      [placeholder]="'company.fields.city.placeholder' | translate"
-                      engineSync="City"
-                      autoFocusNext
-                      [next]="DateFormat"
-                      required>
+                    <input #City type="text" class="form-control" id="City" name="City" [(ngModel)]="company.City"
+                      [placeholder]="'company.fields.city.placeholder' | translate" engineSync="City" autoFocusNext
+                      [next]="DateFormat" required>
                   </div>
                 </div>
 
@@ -392,16 +265,8 @@
                     <label for="DateFormat" class="form-label">
                       {{ 'company.fields.dateFormat.label' | translate }}
                     </label>
-                    <select
-                      #DateFormat
-                      id="DateFormat"
-                      name="DateFormat"
-                      class="form-select"
-                      [(ngModel)]="company.DateFormat"
-                      engineSync="DateFormat"
-                      autoFocusNext
-                      [next]="Currency"
-                      required>
+                    <select #DateFormat id="DateFormat" name="DateFormat" class="form-select"
+                      [(ngModel)]="company.DateFormat" engineSync="DateFormat" autoFocusNext [next]="Currency" required>
                       <option value="dd/MM/yyyy">{{ 'company.fields.dateFormat.options.dmy' | translate }}</option>
                       <option value="MM/dd/yyyy">{{ 'company.fields.dateFormat.options.mdy' | translate }}</option>
                       <option value="yyyy-MM-dd">{{ 'company.fields.dateFormat.options.ymd' | translate }}</option>
@@ -414,16 +279,8 @@
                     <label for="Currency" class="form-label">
                       {{ 'company.fields.currency.label' | translate }}
                     </label>
-                    <select
-                      #Currency
-                      id="Currency"
-                      name="Currency"
-                      class="form-select"
-                      [(ngModel)]="company.Currency"
-                      engineSync="Currency"
-                      autoFocusNext
-                      [next]="DecimalSeparator"
-                      required>
+                    <select #Currency id="Currency" name="Currency" class="form-select" [(ngModel)]="company.Currency"
+                      engineSync="Currency" autoFocusNext [next]="DecimalSeparator" required>
                       <option value="NIO">NIO</option>
                       <option value="USD">USD</option>
                     </select>
@@ -435,16 +292,9 @@
                     <label for="DecimalSeparator" class="form-label">
                       {{ 'company.fields.decimalSeparator.label' | translate }}
                     </label>
-                    <select
-                      #DecimalSeparator
-                      id="DecimalSeparator"
-                      name="DecimalSeparator"
-                      class="form-select"
-                      [(ngModel)]="company.DecimalSeparator"
-                      engineSync="DecimalSeparator"
-                      autoFocusNext
-                      [next]="ThousandSeparator"
-                      required>
+                    <select #DecimalSeparator id="DecimalSeparator" name="DecimalSeparator" class="form-select"
+                      [(ngModel)]="company.DecimalSeparator" engineSync="DecimalSeparator" autoFocusNext
+                      [next]="ThousandSeparator" required>
                       <option value=".">{{ 'company.fields.decimalSeparator.options.dot' | translate }}</option>
                       <option value=",">{{ 'company.fields.decimalSeparator.options.comma' | translate }}</option>
                     </select>
@@ -456,16 +306,9 @@
                     <label for="ThousandSeparator" class="form-label">
                       {{ 'company.fields.thousandSeparator.label' | translate }}
                     </label>
-                    <select
-                      #ThousandSeparator
-                      id="ThousandSeparator"
-                      name="ThousandSeparator"
-                      class="form-select"
-                      [(ngModel)]="company.ThousandSeparator"
-                      engineSync="ThousandSeparator"
-                      autoFocusNext
-                      [next]="SmtpHost"
-                      required>
+                    <select #ThousandSeparator id="ThousandSeparator" name="ThousandSeparator" class="form-select"
+                      [(ngModel)]="company.ThousandSeparator" engineSync="ThousandSeparator" autoFocusNext
+                      [next]="SmtpHost" required>
                       <option value=",">{{ 'company.fields.thousandSeparator.options.comma' | translate }}</option>
                       <option value=".">{{ 'company.fields.thousandSeparator.options.dot' | translate }}</option>
                       <option value=" ">{{ 'company.fields.thousandSeparator.options.space' | translate }}</option>
@@ -473,6 +316,66 @@
                   </div>
                 </div>
 
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-12 col-xl-6">
+          <div class="card shadow-sm h-100">
+            <div class="card-header py-3">
+              <h5 class="mb-0">{{ 'company.sections.affiliation' | translate }}</h5>
+            </div>
+
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <div error-notify="AffiliationCost" error-display="inline">
+                    <label for="AffiliationCost" class="form-label">{{ 'company.fields.affiliationCost.label' |
+                      translate }}</label>
+                    <div class="input-group">
+                      <input #AffiliationCost class="form-control" id="AffiliationCost"
+                        name="AffiliationCost" [(ngModel)]="company.AffiliationCost" engineSync="AffiliationCost"
+                        autoFocusNext [next]="OrdinaryCapitalPercentage" 
+                        numberFormat [decimals]="2" type="text" 
+                        [decimalSeparator]="company.DecimalSeparator"
+                        [thousandSeparator]="company.ThousandSeparator" placeholder="0.00">
+                      <span class="input-group-text">{{ company.Currency}}</span>
+                    </div>
+
+
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div error-notify="OrdinaryCapitalPercentage" error-display="inline">
+                    <label for="OrdinaryCapitalPercentage" class="form-label">{{
+                      'company.fields.ordinaryCapitalPercentage.label' | translate }}</label>
+          
+                      <div class="input-group">
+                        <input #OrdinaryCapitalPercentage type="number" class="form-control"
+                          id="OrdinaryCapitalPercentage" name="OrdinaryCapitalPercentage"
+                          [(ngModel)]="company.OrdinaryCapitalPercentage" engineSync="OrdinaryCapitalPercentage"
+                          autoFocusNext [next]="OtherDeferredIncomePercentage" min="0" max="100">
+                        <span class="input-group-text">%</span>
+                      </div>
+
+            
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div error-notify="OtherDeferredIncomePercentage" error-display="inline">
+                    <label for="OtherDeferredIncomePercentage" class="form-label">{{
+                      'company.fields.otherDeferredIncomePercentage.label' | translate }}</label>
+                    <div class="input-group">
+                      <input #OtherDeferredIncomePercentage type="number" class="form-control"
+                        id="OtherDeferredIncomePercentage" name="OtherDeferredIncomePercentage"
+                        [(ngModel)]="company.OtherDeferredIncomePercentage" engineSync="OtherDeferredIncomePercentage"
+                        autoFocusNext [next]="SmtpHost" min="0" max="100">
+                      <span class="input-group-text">%</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -492,18 +395,9 @@
                     <label for="SmtpHost" class="form-label">
                       {{ 'company.fields.smtpHost.label' | translate }}
                     </label>
-                    <input
-                      #SmtpHost
-                      type="text"
-                      class="form-control"
-                      id="SmtpHost"
-                      name="SmtpHost"
-                      [(ngModel)]="company.SmtpHost"
-                      [placeholder]="'company.fields.smtpHost.placeholder' | translate"
-                      engineSync="SmtpHost"
-                      autoFocusNext
-                      [next]="SmtpPort"
-                      required>
+                    <input #SmtpHost type="text" class="form-control" id="SmtpHost" name="SmtpHost"
+                      [(ngModel)]="company.SmtpHost" [placeholder]="'company.fields.smtpHost.placeholder' | translate"
+                      engineSync="SmtpHost" autoFocusNext [next]="SmtpPort" required>
                   </div>
                 </div>
 
@@ -512,17 +406,8 @@
                     <label for="SmtpPort" class="form-label">
                       {{ 'company.fields.smtpPort.label' | translate }}
                     </label>
-                    <input
-                      #SmtpPort
-                      type="number"
-                      class="form-control"
-                      id="SmtpPort"
-                      name="SmtpPort"
-                      [(ngModel)]="company.SmtpPort"
-                      engineSync="SmtpPort"
-                      autoFocusNext
-                      [next]="SmtpFrom"
-                      required>
+                    <input #SmtpPort type="number" class="form-control" id="SmtpPort" name="SmtpPort"
+                      [(ngModel)]="company.SmtpPort" engineSync="SmtpPort" autoFocusNext [next]="SmtpFrom" required>
                   </div>
                 </div>
 
@@ -531,18 +416,9 @@
                     <label for="SmtpFrom" class="form-label">
                       {{ 'company.fields.smtpFrom.label' | translate }}
                     </label>
-                    <input
-                      #SmtpFrom
-                      type="email"
-                      class="form-control"
-                      id="SmtpFrom"
-                      name="SmtpFrom"
-                      [(ngModel)]="company.SmtpFrom"
-                      [placeholder]="'company.fields.smtpFrom.placeholder' | translate"
-                      engineSync="SmtpFrom"
-                      autoFocusNext
-                      [next]="SmtpUsername"
-                      required>
+                    <input #SmtpFrom type="email" class="form-control" id="SmtpFrom" name="SmtpFrom"
+                      [(ngModel)]="company.SmtpFrom" [placeholder]="'company.fields.smtpFrom.placeholder' | translate"
+                      engineSync="SmtpFrom" autoFocusNext [next]="SmtpUsername" required>
                   </div>
                 </div>
 
@@ -551,18 +427,10 @@
                     <label for="SmtpUsername" class="form-label">
                       {{ 'company.fields.smtpUsername.label' | translate }}
                     </label>
-                    <input
-                      #SmtpUsername
-                      type="text"
-                      class="form-control"
-                      id="SmtpUsername"
-                      name="SmtpUsername"
+                    <input #SmtpUsername type="text" class="form-control" id="SmtpUsername" name="SmtpUsername"
                       [(ngModel)]="company.SmtpUsername"
-                      [placeholder]="'company.fields.smtpUsername.placeholder' | translate"
-                      engineSync="SmtpUsername"
-                      autoFocusNext
-                      [next]="SmtpPassword"
-                      required>
+                      [placeholder]="'company.fields.smtpUsername.placeholder' | translate" engineSync="SmtpUsername"
+                      autoFocusNext [next]="SmtpPassword" required>
                   </div>
                 </div>
 
@@ -571,18 +439,10 @@
                     <label for="SmtpPassword" class="form-label">
                       {{ 'company.fields.smtpPassword.label' | translate }}
                     </label>
-                    <input
-                      #SmtpPassword
-                      type="password"
-                      class="form-control"
-                      id="SmtpPassword"
-                      name="SmtpPassword"
+                    <input #SmtpPassword type="password" class="form-control" id="SmtpPassword" name="SmtpPassword"
                       [(ngModel)]="company.SmtpPassword"
-                      [placeholder]="'company.fields.smtpPassword.placeholder' | translate"
-                      engineSync="SmtpPassword"
-                      autoFocusNext
-                      [next]="TwoFactorCodeExpirationMinutes"
-                      required>
+                      [placeholder]="'company.fields.smtpPassword.placeholder' | translate" engineSync="SmtpPassword"
+                      autoFocusNext [next]="TwoFactorCodeExpirationMinutes" required>
                   </div>
                 </div>
 
@@ -606,17 +466,10 @@
                       {{ 'company.fields.twoFactorCodeExpirationMinutes.label' | translate }}
                     </label>
                     <div class="input-group">
-                      <input
-                        #TwoFactorCodeExpirationMinutes
-                        type="number"
-                        class="form-control"
-                        id="TwoFactorCodeExpirationMinutes"
-                        name="TwoFactorCodeExpirationMinutes"
-                        [(ngModel)]="company.TwoFactorCodeExpirationMinutes"
-                        engineSync="TwoFactorCodeExpirationMinutes"
-                        autoFocusNext
-                        [next]="PasswordResetExpirationMinutes"
-                        required>
+                      <input #TwoFactorCodeExpirationMinutes type="number" class="form-control"
+                        id="TwoFactorCodeExpirationMinutes" name="TwoFactorCodeExpirationMinutes"
+                        [(ngModel)]="company.TwoFactorCodeExpirationMinutes" engineSync="TwoFactorCodeExpirationMinutes"
+                        autoFocusNext [next]="PasswordResetExpirationMinutes" required>
                       <span class="input-group-text">
                         {{ 'company.fields.twoFactorCodeExpirationMinutes.suffix' | translate }}
                       </span>
@@ -630,17 +483,10 @@
                       {{ 'company.fields.passwordResetExpirationMinutes.label' | translate }}
                     </label>
                     <div class="input-group">
-                      <input
-                        #PasswordResetExpirationMinutes
-                        type="number"
-                        class="form-control"
-                        id="PasswordResetExpirationMinutes"
-                        name="PasswordResetExpirationMinutes"
-                        [(ngModel)]="company.PasswordResetExpirationMinutes"
-                        engineSync="PasswordResetExpirationMinutes"
-                        autoFocusNext
-                        [next]="TrustedDeviceExpirationDays"
-                        required>
+                      <input #PasswordResetExpirationMinutes type="number" class="form-control"
+                        id="PasswordResetExpirationMinutes" name="PasswordResetExpirationMinutes"
+                        [(ngModel)]="company.PasswordResetExpirationMinutes" engineSync="PasswordResetExpirationMinutes"
+                        autoFocusNext [next]="TrustedDeviceExpirationDays" required>
                       <span class="input-group-text">
                         {{ 'company.fields.passwordResetExpirationMinutes.suffix' | translate }}
                       </span>
@@ -656,17 +502,10 @@
                       {{ 'company.fields.trustedDeviceExpirationDays.label' | translate }}
                     </label>
                     <div class="input-group">
-                      <input
-                        #TrustedDeviceExpirationDays
-                        type="number"
-                        class="form-control"
-                        id="TrustedDeviceExpirationDays"
-                        name="TrustedDeviceExpirationDays"
-                        [(ngModel)]="company.TrustedDeviceExpirationDays"
-                        engineSync="TrustedDeviceExpirationDays"
-                        autoFocusNext
-                        [next]="LoginLockMinutes"
-                        required>
+                      <input #TrustedDeviceExpirationDays type="number" class="form-control"
+                        id="TrustedDeviceExpirationDays" name="TrustedDeviceExpirationDays"
+                        [(ngModel)]="company.TrustedDeviceExpirationDays" engineSync="TrustedDeviceExpirationDays"
+                        autoFocusNext [next]="LoginLockMinutes" required>
                       <span class="input-group-text">
                         {{ 'company.fields.trustedDeviceExpirationDays.suffix' | translate }}
                       </span>
@@ -680,17 +519,9 @@
                       {{ 'company.fields.loginLockMinutes.label' | translate }}
                     </label>
                     <div class="input-group">
-                      <input
-                        #LoginLockMinutes
-                        type="number"
-                        class="form-control"
-                        id="LoginLockMinutes"
-                        name="LoginLockMinutes"
-                        [(ngModel)]="company.LoginLockMinutes"
-                        engineSync="LoginLockMinutes"
-                        autoFocusNext
-                        [next]="JwtExpiresMinutes"
-                        required>
+                      <input #LoginLockMinutes type="number" class="form-control" id="LoginLockMinutes"
+                        name="LoginLockMinutes" [(ngModel)]="company.LoginLockMinutes" engineSync="LoginLockMinutes"
+                        autoFocusNext [next]="JwtExpiresMinutes" required>
                       <span class="input-group-text">
                         {{ 'company.fields.loginLockMinutes.suffix' | translate }}
                       </span>
@@ -704,17 +535,9 @@
                       {{ 'company.fields.jwtExpiresMinutes.label' | translate }}
                     </label>
                     <div class="input-group">
-                      <input
-                        #JwtExpiresMinutes
-                        type="number"
-                        class="form-control"
-                        id="JwtExpiresMinutes"
-                        name="JwtExpiresMinutes"
-                        [(ngModel)]="company.JwtExpiresMinutes"
-                        engineSync="JwtExpiresMinutes"
-                        autoFocusNext
-                        [next]="RefreshExpiresMinutes"
-                        required>
+                      <input #JwtExpiresMinutes type="number" class="form-control" id="JwtExpiresMinutes"
+                        name="JwtExpiresMinutes" [(ngModel)]="company.JwtExpiresMinutes" engineSync="JwtExpiresMinutes"
+                        autoFocusNext [next]="RefreshExpiresMinutes" required>
                       <span class="input-group-text">
                         {{ 'company.fields.jwtExpiresMinutes.suffix' | translate }}
                       </span>
@@ -728,19 +551,10 @@
                       {{ 'company.fields.refreshExpiresMinutes.label' | translate }}
                     </label>
                     <div class="input-group">
-                      <input
-                        #RefreshExpiresMinutes
-                        type="number"
-                        class="form-control"
-                        id="RefreshExpiresMinutes"
-                        name="RefreshExpiresMinutes"
-                        [(ngModel)]="company.RefreshExpiresMinutes"
-                        engineSync="RefreshExpiresMinutes"
-                        autoFocusNext
-                        [next]="saveButton"
-                        [disableClickButton]="true"
-                        [unlockOn]="notify.closed$"
-                        required>
+                      <input #RefreshExpiresMinutes type="number" class="form-control" id="RefreshExpiresMinutes"
+                        name="RefreshExpiresMinutes" [(ngModel)]="company.RefreshExpiresMinutes"
+                        engineSync="RefreshExpiresMinutes" autoFocusNext [next]="saveButton" [disableClickButton]="true"
+                        [unlockOn]="notify.closed$" required>
                       <span class="input-group-text">
                         {{ 'company.fields.refreshExpiresMinutes.suffix' | translate }}
                       </span>
@@ -755,20 +569,11 @@
 
         <div class="col-12">
           <div class="d-flex justify-content-end gap-2 pt-2">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="onCancel()"
-              appPermission="edit">
+            <button type="button" class="btn btn-outline-secondary" (click)="onCancel()" appPermission="edit">
               {{ 'company.actions.reset' | translate }}
             </button>
 
-            <button
-              #saveButton
-              type="button"
-              class="btn btn-primary"
-              (click)="onSave()"
-              appPermission="edit">
+            <button #saveButton type="button" class="btn btn-primary" (click)="onSave()" appPermission="edit">
               {{ 'company.actions.saveAll' | translate }}
             </button>
           </div>

@@ -22,6 +22,10 @@ export interface CompanyRequest {
   DecimalSeparator: string;
   ThousandSeparator: string;
 
+  AffiliationCost: number;
+  OrdinaryCapitalPercentage: number;
+  OtherDeferredIncomePercentage: number;
+
   SmtpHost: string;
   SmtpPort: number;
   SmtpUsername: string;
@@ -59,6 +63,10 @@ export const EMPTY_COMPANY: CompanyRequest = {
   Currency: 'NIO',
   DecimalSeparator: '.',
   ThousandSeparator: ',',
+
+  AffiliationCost: 0,
+  OrdinaryCapitalPercentage: 0,
+  OtherDeferredIncomePercentage: 0,
 
   SmtpHost: '',
   SmtpPort: 0,

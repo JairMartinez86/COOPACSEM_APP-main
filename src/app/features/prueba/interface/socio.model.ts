@@ -45,6 +45,15 @@ export interface SocioForm {
   conyugePaisNacimiento: string | null;
   conyugeNacionalidadId: string | null;
 
+  afiliacionTipoPago: string | null;
+  afiliacionBancoCodigo: string | null;
+  afiliacionVoucherNumero: string | null;
+  afiliacionFecha: string | null;
+  afiliacionCuotas: number | null;
+  afiliacionCostoTotal: number | null;
+  afiliacionCapitalOrdinario: number | null;
+  afiliacionOtrosIngresosDiferidos: number | null;
+
   cuentaCorrienteActiva: boolean;
   cuentaCorrienteFechaInicioDeduccion: string | null;
   cuentaCorrienteMontoCuota: number | null;
@@ -105,6 +114,16 @@ export const EMPTY_SOCIO: SocioForm = {
   conyugeNumeroIdentificacion: null,
   conyugePaisNacimiento: null,
   conyugeNacionalidadId: null,
+
+
+  afiliacionTipoPago: null,
+  afiliacionBancoCodigo: null,
+  afiliacionVoucherNumero: null,
+  afiliacionFecha: null,
+  afiliacionCuotas: null,
+  afiliacionCostoTotal: null,
+  afiliacionCapitalOrdinario: null,
+  afiliacionOtrosIngresosDiferidos: null,
 
   cuentaCorrienteActiva: false,
   cuentaCorrienteFechaInicioDeduccion: null,

@@ -70,10 +70,20 @@
                     </div>
                   </button>
 
+                  <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'afiliacion'"
+                    [class.active]="activeSection === 'afiliacion'" [class.completed]="isCompleted('afiliacion')"
+                    (click)="scrollToSection('afiliacion')">
+                    <div class="wizard-step-v-icon"><span>2</span></div>
+                    <div class="wizard-step-v-content">
+                      <div class="wizard-step-v-title">{{ 'socios.wizard.steps.afiliacion.title' | translate }}</div>
+                      <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.afiliacion.desc' | translate }}</div>
+                    </div>
+                  </button>
+
                   <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'ahorro'"
                     [class.active]="activeSection === 'ahorro'" [class.completed]="isCompleted('ahorro')"
                     (click)="scrollToSection('ahorro')">
-                    <div class="wizard-step-v-icon"><span>2</span></div>
+                    <div class="wizard-step-v-icon"><span>3</span></div>
                     <div class="wizard-step-v-content">
                       <div class="wizard-step-v-title">{{ 'socios.wizard.steps.ahorro.title' | translate }}</div>
                       <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.ahorro.desc' | translate }}</div>
@@ -84,7 +94,7 @@
                     [class.active]="activeSection === 'actividad-economica'"
                     [class.completed]="isCompleted('actividad-economica')"
                     (click)="scrollToSection('actividad-economica')">
-                    <div class="wizard-step-v-icon"><span>5</span></div>
+                    <div class="wizard-step-v-icon"><span>4</span></div>
                     <div class="wizard-step-v-content">
                       <div class="wizard-step-v-title">{{ 'socios.wizard.steps.actividadEconomica.title' | translate }}
                       </div>
@@ -96,7 +106,7 @@
                   <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'datos-conyuge'"
                     [class.active]="activeSection === 'datos-conyuge'" [class.completed]="isCompleted('datos-conyuge')"
                     (click)="scrollToSection('datos-conyuge')">
-                    <div class="wizard-step-v-icon"><span>3</span></div>
+                    <div class="wizard-step-v-icon"><span>5</span></div>
                     <div class="wizard-step-v-content">
                       <div class="wizard-step-v-title">{{ 'socios.wizard.steps.datosConyuge.title' | translate }}</div>
                       <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.datosConyuge.desc' | translate }}</div>
@@ -106,7 +116,7 @@
                   <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'beneficiarios'"
                     [class.active]="activeSection === 'beneficiarios'" [class.completed]="isCompleted('beneficiarios')"
                     (click)="scrollToSection('beneficiarios')">
-                    <div class="wizard-step-v-icon"><span>4</span></div>
+                    <div class="wizard-step-v-icon"><span>6</span></div>
                     <div class="wizard-step-v-content">
                       <div class="wizard-step-v-title">{{ 'socios.wizard.steps.beneficiarios.title' | translate }}</div>
                       <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.beneficiarios.desc' | translate }}</div>
@@ -363,6 +373,101 @@
                         rows="3" [placeholder]="'socios.fields.observaciones.placeholder' | translate"></textarea>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div id="afiliacion" class="card ue-shell-card socio-card socio-scroll-section">
+              <div class="card-header socio-card-header">
+                <h5 class="card-title mb-1">
+                  {{ 'socios.wizard.steps.afiliacion.title' | translate }}
+                </h5>
+                <p class="card-subtitle mb-0">
+                  {{ 'socios.wizard.steps.afiliacion.desc' | translate }}
+                </p>
+              </div>
+
+              <div class="card-body p-4">
+                <div class="row g-3 align-items-end">
+
+                  <!-- TIPO -->
+                  <div class="col-md-4" error-notify="afiliacionTipoPago" error-display="inline">
+                    <label class="form-label required">Tipo de pago</label>
+                    <select name="afiliacionTipoPago" class="form-select" [(ngModel)]="socio.afiliacionTipoPago"
+                      (ngModelChange)="onAfiliacionTipoPagoChange($event)" engineSync="afiliacionTipoPago" required>
+                      <option [ngValue]="null">
+                        {{ 'socios.common.selectOption' | translate }}
+                      </option>
+                      <option value="contado">Contado</option>
+                      <option value="credito">Crédito</option>
+                    </select>
+                  </div>
+
+                  <!-- CUOTAS (SOLO CRÉDITO) -->
+                  @if (socio.afiliacionTipoPago === 'credito') {
+                  <div class="col-md-4" error-notify="afiliacionCuotas" error-display="inline">
+                    <label class="form-label required">Cuotas</label>
+                    <select class="form-select" [(ngModel)]="socio.afiliacionCuotas" name="afiliacionCuotas"
+                      engineSync="afiliacionCuotas">
+                      <option [ngValue]="null">
+                        {{ 'socios.common.selectOption' | translate }}
+                      </option>
+                      <option [ngValue]="1">1</option>
+                      <option [ngValue]="2">2</option>
+                      <option [ngValue]="3">3</option>
+                    </select>
+                  </div>
+                  }
+
+                  <!-- TOTAL (SIEMPRE ÚLTIMO) -->
+                  <div class="col-md-4">
+                    <label class="form-label">Total afiliación</label>
+                    <div class="input-group">
+                      <input class="form-control text-end" [(ngModel)]="socio.afiliacionCostoTotal"
+                        name="afiliacionCostoTotal" readonly numberFormat [decimals]="2"
+                        [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator">
+                      <span class="input-group-text">
+                        {{ appConfigService.getCurrentSettings().currency }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- CONTADO (SEGUNDA FILA) -->
+                  @if (socio.afiliacionTipoPago === 'contado') {
+
+                  <div class="col-md-12"></div>
+
+                  <div class="col-md-4" error-notify="afiliacionBancoCodigo" error-display="inline">
+                    <label class="form-label required">Banco</label>
+                    <select class="form-select" [(ngModel)]="socio.afiliacionBancoCodigo" name="afiliacionBancoCodigo"
+                      engineSync="afiliacionBancoCodigo">
+                      <option [ngValue]="null">
+                        {{ 'socios.common.selectOption' | translate }}
+                      </option>
+                      @for (b of bancos; track b.codigo) {
+                      <option [value]="b.codigo">{{ b.nombreBanco }}</option>
+                      }
+                    </select>
+                  </div>
+
+                  <div class="col-md-4" error-notify="afiliacionVoucherNumero" error-display="inline">
+                    <label class="form-label required">Voucher</label>
+                    <input class="form-control" [(ngModel)]="socio.afiliacionVoucherNumero"
+                      name="afiliacionVoucherNumero" engineSync="afiliacionVoucherNumero"
+                      placeholder="Número de voucher">
+                  </div>
+
+                  <div class="col-md-4" error-notify="afiliacionFecha" error-display="inline">
+                    <label class="form-label required">Fecha depósito</label>
+                    <input class="form-control" [(ngModel)]="socio.afiliacionFecha" name="afiliacionFecha"
+                      engineSync="afiliacionFecha" dateFormat
+                      [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
+                  </div>
+                  }
+
                 </div>
               </div>
             </div>

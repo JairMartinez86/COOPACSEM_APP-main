@@ -1,7 +1,7 @@
 {
   "company": {
     "title": "COMPANY",
-    "subtitle": "Define the corporate information that will be used in documents, reports, and system processes.",
+    "subtitle": "Defines the corporate information that will be used in documents, reports, and system processes.",
     "actions": {
       "reset": "Reset",
       "saveAll": "Save all"
@@ -12,7 +12,8 @@
       "contact": "Contact information",
       "regional": "Regional settings",
       "smtp": "SMTP configuration",
-      "security": "System security"
+      "security": "System security",
+      "affiliation": "Affiliation settings"
     },
     "fields": {
       "companyName": {
@@ -46,7 +47,7 @@
       },
       "description": {
         "label": "Description",
-        "placeholder": "Brief description of the company"
+        "placeholder": "Brief company description"
       },
       "logoFile": {
         "label": "Company logo",
@@ -62,7 +63,7 @@
         "placeholder": "Enter the mobile number"
       },
       "email": {
-        "label": "Email address",
+        "label": "Email",
         "placeholder": "company@email.com"
       },
       "website": {
@@ -116,7 +117,7 @@
       },
       "smtpHost": {
         "label": "SMTP server",
-        "placeholder": "Example: smtp.gmail.com"
+        "placeholder": "E.g.: smtp.gmail.com"
       },
       "smtpPort": {
         "label": "Port",
@@ -155,129 +156,150 @@
         "suffix": "min"
       },
       "trustedDeviceExpirationDays": {
-        "label": "Trusted device expiration",
+        "label": "Trusted device validity",
         "placeholder": "30",
         "suffix": "days"
       },
       "loginLockMinutes": {
-        "label": "Lock time after failed attempts",
+        "label": "Lockout after failed attempts",
         "placeholder": "10",
         "suffix": "min"
+      },
+      "affiliationCost": {
+        "label": "Affiliation cost"
+      },
+      "ordinaryCapitalPercentage": {
+        "label": "% Ordinary Capital"
+      },
+      "otherDeferredIncomePercentage": {
+        "label": "% Other Deferred Income"
       }
     },
     "form": {
       "fieldMeta": {
         "CompanyName": {
-          "label": "Company name",
+          "label": "General information",
           "tooltip": "Required field"
         },
         "TradeName": {
-          "label": "Trade name",
+          "label": "General information",
           "tooltip": "Required field"
         },
         "Ruc": {
-          "label": "RUC",
+          "label": "General information",
           "tooltip": "Identification field"
         },
         "BusinessType": {
-          "label": "Business type",
+          "label": "General information",
           "tooltip": "Select the business type"
         },
         "Status": {
-          "label": "Status",
+          "label": "General information",
           "tooltip": "Current company status"
         },
         "Description": {
-          "label": "Description",
+          "label": "General information",
           "tooltip": "General company description"
         },
         "Phone": {
-          "label": "Phone",
+          "label": "Contact information",
           "tooltip": "Primary contact number"
         },
         "Mobile": {
-          "label": "Mobile",
+          "label": "Contact information",
           "tooltip": "Secondary contact number"
         },
         "Email": {
-          "label": "Email address",
-          "tooltip": "Main company email"
+          "label": "Contact information",
+          "tooltip": "Company primary email"
         },
         "Website": {
-          "label": "Website",
+          "label": "Contact information",
           "tooltip": "Public website"
         },
         "Address": {
-          "label": "Address",
+          "label": "Contact information",
           "tooltip": "Physical address"
         },
         "Country": {
-          "label": "Country",
+          "label": "Contact information",
           "tooltip": "Country of operation"
         },
         "City": {
-          "label": "City",
+          "label": "Contact information",
           "tooltip": "City of operation"
         },
         "DateFormat": {
-          "label": "Date format",
+          "label": "Regional settings",
           "tooltip": "Regional date format"
         },
         "Currency": {
-          "label": "Currency",
+          "label": "Regional settings",
           "tooltip": "Default currency"
         },
         "DecimalSeparator": {
-          "label": "Decimal separator",
+          "label": "Regional settings",
           "tooltip": "Decimal symbol"
         },
         "ThousandSeparator": {
-          "label": "Thousands separator",
-          "tooltip": "Thousands symbol"
+          "label": "Regional settings",
+          "tooltip": "Thousands separator symbol"
+        },
+        "AffiliationCost": {
+          "label": "Affiliation cost",
+          "tooltip": "Required field"
+        },
+        "OrdinaryCapitalPercentage": {
+          "label": "Affiliation settings",
+          "tooltip": "Required field"
+        },
+        "OtherDeferredIncomePercentage": {
+          "label": "Affiliation settings",
+          "tooltip": "Required field"
         },
         "SmtpHost": {
-          "label": "SMTP server",
+          "label": "SMTP configuration",
           "tooltip": "SMTP server host"
         },
         "SmtpPort": {
-          "label": "Port",
+          "label": "SMTP configuration",
           "tooltip": "SMTP port"
         },
         "SmtpFrom": {
-          "label": "Sender email",
-          "tooltip": "Sender email address"
+          "label": "SMTP configuration",
+          "tooltip": "Sending email"
         },
         "SmtpUsername": {
-          "label": "SMTP username",
-          "tooltip": "SMTP login username"
+          "label": "SMTP configuration",
+          "tooltip": "SMTP access username"
         },
         "SmtpPassword": {
-          "label": "SMTP password",
-          "tooltip": "SMTP login password"
+          "label": "SMTP configuration",
+          "tooltip": "SMTP access password"
         },
         "TwoFactorCodeExpirationMinutes": {
-          "label": "2FA code expiration",
+          "label": "System security",
           "tooltip": "Expiration in minutes"
         },
         "PasswordResetExpirationMinutes": {
-          "label": "Password reset",
+          "label": "System security",
           "tooltip": "Expiration in minutes"
         },
         "JwtExpiresMinutes": {
-          "label": "JWT expiration",
+          "label": "System security",
           "tooltip": "Expiration in minutes"
         },
         "RefreshExpiresMinutes": {
-          "label": "Refresh token",
+          "label": "System security",
           "tooltip": "Expiration in minutes"
         },
         "TrustedDeviceExpirationDays": {
-          "label": "Trusted device expiration",
+          "label": "System security",
           "tooltip": "Number of days a trusted device remains valid"
         },
         "LoginLockMinutes": {
-          "label": "Lock time after failed attempts",
-          "tooltip": "Number of minutes the lock will last"
+          "label": "System security",
+          "tooltip": "Number of minutes the lockout will last"
         }
       },
       "validations": {
@@ -360,7 +382,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Email address is required"
+              "msj": "Email is required"
             },
             "2": {
               "rule": "EMAIL",
@@ -441,6 +463,48 @@
             }
           }
         },
+        "AffiliationCost": {
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": "The affiliation amount must be greater than or equal to 0"
+            }
+          }
+        },
+        "OrdinaryCapitalPercentage": {
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": "The ordinary capital percentage must be greater than or equal to 0"
+            },
+            "2": {
+              "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
+              "value": "100",
+              "when": "",
+              "msj": "The ordinary capital percentage and other deferred income percentage must total 100"
+            }
+          }
+        },
+        "OtherDeferredIncomePercentage": {
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": "The other deferred income percentage must be greater than or equal to 0"
+            },
+            "2": {
+              "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
+              "value": "100",
+              "when": "",
+              "msj": "The ordinary capital percentage and other deferred income percentage must total 100"
+            }
+          }
+        },
         "SmtpHost": {
           "data": {
             "1": {
@@ -502,7 +566,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "The 2FA code expiration time is required"
+              "msj": "2FA code expiration time is required"
             },
             "2": {
               "rule": "NUM>=",
@@ -517,7 +581,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "The password reset time is required"
+              "msj": "Password reset time is required"
             },
             "2": {
               "rule": "NUM>=",
@@ -532,7 +596,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "The JWT expiration time is required"
+              "msj": "JWT expiration time is required"
             },
             "2": {
               "rule": "NUM>=",
@@ -547,7 +611,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "The refresh token time is required"
+              "msj": "Refresh token time is required"
             },
             "2": {
               "rule": "NUM>=",
@@ -562,7 +626,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "The trusted device expiration is required"
+              "msj": "Trusted device validity is required"
             },
             "2": {
               "rule": "NUM>=",
@@ -577,7 +641,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "The lock time is required"
+              "msj": "Lockout time is required"
             },
             "2": {
               "rule": "NUM>=",
