@@ -18,29 +18,39 @@ import { NotificationService } from '../../../../core/services/notification.serv
 import { TableFilterService } from '../../../../core/services/table-filter.service';
 import { PermissionService } from '../../../../core/services/permission.service';
 
+interface SocioMovimientoRow {
+  fecha?: string | null;
+  descripcion?: string | null;
+  ahorro?: number | null;
+  credito?: number | null;
+  saldo?: number | null;
+}
+
+interface SocioDashboardRow {
+  totalAhorro: number;
+  creditoPendiente: number;
+  proximoRetiro: number;
+  aprobacionesPendientes: number;
+  ultimosMovimientos: SocioMovimientoRow[];
+}
 
 interface SocioRow {
   id: string;
-  codigoSocio : string;
+  codigoSocio: string;
   nombreCompleto: string;
   nombrePublico: string;
   numeroIdentificacion: string;
   correo: string;
   telefono: string;
   celular: string;
+  direccionDomiciliar?: string | null;
+  fechaIngreso?: string | null;
   activo: boolean;
   createdAtUtc?: string | null;
   updatedAtUtc?: string | null;
   createdBy?: string | null;
   updatedBy?: string | null;
-}
-
-interface SocioActivityRow {
-  id: string;
-  nombreCompleto: string;
-  tipo: 'new' | 'updated';
-  fecha: string | null;
-  usuario?: string | null;
+  dashboard?: SocioDashboardRow | null;
 }
 
 @Component({
@@ -58,22 +68,26 @@ interface SocioActivityRow {
 export class SociosListComponent implements OnInit, OnDestroy {
   @ViewChild('excelFileInput') excelFileInputRef?: ElementRef<HTMLInputElement>;
 
-  
   private readonly sociosService = inject(SociosService);
   private readonly notify = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly filterSvc = inject(TableFilterService);
   private readonly translate = inject(TranslateService);
-  public readonly permissionService = inject(PermissionService)
+  public readonly permissionService = inject(PermissionService);
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'socios';
-    public importingExcel = false;
 
+  public importingExcel = false;
   sociosAll: SocioRow[] = [];
   socios: SocioRow[] = [];
   loading = false;
   currentTerm = '';
+  selectedSocio: SocioRow | null = null;
+
+  currentPage = 1;
+  pageSize = 10;
+  readonly pageSizeOptions = [10, 20, 50];
 
   breadcrumbs = [
     { label: '', url: '' },
@@ -89,18 +103,13 @@ export class SociosListComponent implements OnInit, OnDestroy {
       })
     );
 
-
     this.subs.add(
       this.translate.onLangChange.subscribe(() => {
         this.breadcrumbs = this.translate.instant('socios.breadcrumbs.list') || [];
-
-
       })
     );
 
     this.breadcrumbs = this.translate.instant('socios.breadcrumbs.list') || [];
-
-
     this.loadData();
   }
 
@@ -109,15 +118,14 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   loadData(): void {
-
-
     this.loading = true;
 
     this.sociosService.getAll()
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (res: any) => {
-          this.sociosAll = res?.data?.socios ?? [];
+          const raw = Array.isArray(res?.data?.socios) ? res.data.socios : [];
+          this.sociosAll = raw.map((item: any) => this.normalizeSocio(item));
           this.applyFilter();
         },
         error: (err: any) => {
@@ -132,26 +140,45 @@ export class SociosListComponent implements OnInit, OnDestroy {
     this.socios = !term
       ? [...this.sociosAll]
       : this.sociosAll.filter((socio) =>
-        [
-          socio.nombreCompleto ?? '',
-          socio.nombrePublico ?? '',
-          socio.numeroIdentificacion ?? '',
-          socio.correo ?? '',
-          socio.telefono ?? '',
-          socio.celular ?? '',
-          socio.activo ? 'activo' : 'inactivo'
-        ]
-          .join(' ')
-          .toLowerCase()
-          .includes(term)
-      );
+          [
+            socio.codigoSocio ?? '',
+            socio.nombreCompleto ?? '',
+            socio.nombrePublico ?? '',
+            socio.numeroIdentificacion ?? '',
+            socio.correo ?? '',
+            socio.telefono ?? '',
+            socio.celular ?? '',
+            socio.direccionDomiciliar ?? '',
+            socio.activo ? 'activo' : 'inactivo'
+          ]
+            .join(' ')
+            .toLowerCase()
+            .includes(term)
+        );
+
+    this.currentPage = 1;
+
+    if (!this.socios.length) {
+      this.selectedSocio = null;
+      return;
+    }
+
+    if (!this.selectedSocio) {
+      this.selectedSocio = this.pagedSocios[0] ?? this.socios[0];
+      return;
+    }
+
+    const selected = this.socios.find(x => x.id === this.selectedSocio?.id);
+    this.selectedSocio = selected ?? this.pagedSocios[0] ?? this.socios[0];
+  }
+
+  selectSocio(item: SocioRow): void {
+    this.selectedSocio = item;
   }
 
   onCreate(): void {
     this.router.navigate(['/socios/new']);
   }
-
-
 
   onEdit(id: string): void {
     if (this.permissionService.has('edit', '/socios')) {
@@ -196,108 +223,6 @@ export class SociosListComponent implements OnInit, OnDestroy {
     });
 
     this.subs.add(deleteSub);
-  }
-
-  getInitials(value: string): string {
-    if (!value) return 'SO';
-
-    const parts = value.trim().split(/\s+/).filter(Boolean);
-
-    if (parts.length === 1) {
-      return parts[0].substring(0, 2).toUpperCase();
-    }
-
-    return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
-  }
-
-  get totalSocios(): number {
-    return this.sociosAll.length;
-  }
-
-  get activeCount(): number {
-    return this.sociosAll.filter(x => x.activo).length;
-  }
-
-  get inactiveCount(): number {
-    return this.sociosAll.filter(x => !x.activo).length;
-  }
-
-  get activePercent(): number {
-    if (!this.totalSocios) return 0;
-    return Math.round((this.activeCount / this.totalSocios) * 100);
-  }
-
-  get inactivePercent(): number {
-    if (!this.totalSocios) return 0;
-    return Math.round((this.inactiveCount / this.totalSocios) * 100);
-  }
-
-  get latestActivity(): SocioActivityRow[] {
-    const added: SocioActivityRow[] = this.sociosAll
-      .filter(x => !!x.createdAtUtc)
-      .map(x => ({
-        id: x.id,
-        nombreCompleto: x.nombreCompleto,
-        tipo: 'new' as const,
-        fecha: x.createdAtUtc ?? null,
-        usuario: x.createdBy ?? null
-      }));
-
-    const updated: SocioActivityRow[] = this.sociosAll
-      .filter(x => !!x.updatedAtUtc)
-      .map(x => ({
-        id: x.id,
-        nombreCompleto: x.nombreCompleto,
-        tipo: 'updated' as const,
-        fecha: x.updatedAtUtc ?? null,
-        usuario: x.updatedBy ?? null
-      }));
-
-    return [...added, ...updated]
-      .sort((a, b) => new Date(b.fecha || 0).getTime() - new Date(a.fecha || 0).getTime())
-      .slice(0, 6);
-  }
-
-  formatActivityLabel(value?: string | null): string {
-    if (!value) {
-      return this.translate.instant('common.noDate');
-    }
-
-    const date = new Date(value);
-    if (isNaN(date.getTime())) {
-      return this.translate.instant('common.noDate');
-    }
-
-    return date.toLocaleDateString('es-NI', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit'
-    });
-  }
-
-  trackBySocioId(_: number, item: SocioRow): string {
-    return item.id;
-  }
-
-  trackByActivityId(_: number, item: SocioActivityRow): string {
-    return `${item.tipo}-${item.id}-${item.fecha ?? ''}`;
-  }
-
-
-  isDarkTheme(): boolean {
-    return document.documentElement.getAttribute('data-theme') === 'dark';
-  }
-
-  getAvatarStyle(): Record<string, string> {
-    if (this.isDarkTheme()) {
-      return {};
-    }
-
-    return {
-      background: '#1e3a8a',
-      color: '#ffffff',
-      border: '1px solid #1d4ed8'
-    };
   }
 
   onToggleStatus(item: SocioRow): void {
@@ -350,104 +275,262 @@ export class SociosListComponent implements OnInit, OnDestroy {
     this.subs.add(sub);
   }
 
+  getInitials(value: string): string {
+    if (!value) return 'SO';
 
-  
-onExcelImportClick(): void {
+    const parts = value.trim().split(/\s+/).filter(Boolean);
 
-  this.excelFileInputRef?.nativeElement?.click();
-}
+    if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
 
-onExcelFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement | null;
-  const file = input?.files?.[0];
-
-  if (!file) {
-    return;
+    return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
   }
 
-  const fileName = (file.name || '').toLowerCase();
-  if (!fileName.endsWith('.xlsx')) {
-    this.notify.show?.(
-      this.translate.instant('socios.import.invalidFile'),
-      this.translate.instant('socios.import.title'),
-      'warning'
-    );
-
-    input.value = '';
-    return;
+  isDarkTheme(): boolean {
+    return document.documentElement.getAttribute('data-theme') === 'dark';
   }
 
-  this.importExcel(file);
-  input.value = '';
-}
+  getAvatarStyle(): Record<string, string> {
+    if (this.isDarkTheme()) {
+      return {};
+    }
+
+    return {
+      background: '#1e3a8a',
+      color: '#ffffff',
+      border: '1px solid #1d4ed8'
+    };
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.socios.length / this.pageSize));
+  }
+
+  get pagedSocios(): SocioRow[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.socios.slice(start, start + this.pageSize);
+  }
 
 
-private importExcel(file: File): void {
-  this.importingExcel = true;
-  this.notify.close?.();
 
-  this.sociosService.importExcel(file)
-    .pipe(finalize(() => (this.importingExcel = false)))
-    .subscribe({
-      next: (res: any) => {
-        const errors: string[] = Array.isArray(res?.errors)
-          ? res.errors
-          : Array.isArray(res?.data?.errors)
-            ? res.data.errors
-            : [];
+  get visibleStart(): number {
+    if (!this.socios.length) return 0;
+    return (this.currentPage - 1) * this.pageSize + 1;
+  }
 
-        if (errors.length > 0) {
-          this.showExcelImportErrors(res);
-          return;
-        }
+  get visibleEnd(): number {
+    return Math.min(this.currentPage * this.pageSize, this.socios.length);
+  }
 
-        this.notify.showFromApiResponse?.(res, 'success');
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) return;
+    this.currentPage = page;
 
-        this.loadData();
-      },
-      error: (err: any) => {
-        this.showExcelImportErrors(err?.error ?? err);
-      }
+    if (this.selectedSocio && !this.pagedSocios.some(x => x.id === this.selectedSocio?.id)) {
+      this.selectedSocio = this.pagedSocios[0] ?? null;
+    }
+  }
+
+  changePageSize(event: Event): void {
+    const size = Number((event.target as HTMLSelectElement).value || 10);
+    this.pageSize = size;
+    this.currentPage = 1;
+    this.selectedSocio = this.pagedSocios[0] ?? this.socios[0] ?? null;
+  }
+
+  formatDate(value?: string | null): string {
+    if (!value) {
+      return this.translate.instant('common.noDate');
+    }
+
+    const date = new Date(value);
+    if (isNaN(date.getTime())) {
+      return this.translate.instant('common.noDate');
+    }
+
+    return date.toLocaleDateString('es-NI', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit'
     });
-}
-
-private showExcelImportErrors(payload: any): void {
-  console.log('payload error', payload);
-
-  const message =
-    payload?.mensaje ||
-    payload?.message ||
-    this.translate.instant('socios.import.errorMessage');
-
-  const rawErrors =
-    payload?.data?.errors ??
-    payload?.errors ??
-    [];
-
-  if (!Array.isArray(rawErrors) || !rawErrors.length) {
-    this.notify.showFromApiResponse?.(payload, 'error');
-    return;
   }
 
-  const detail = rawErrors
-    .map((x: any) => {
-      const row = x?.row ? `Fila ${x.row}` : '';
-      const col = x?.columnLetter ? `Col ${x.columnLetter}` : '';
-      const field = x?.field ? `(${x.field})` : '';
-      const msg = x?.message || '';
+  formatCurrency(value?: number | null): string {
+    const amount = Number(value ?? 0);
+    return amount.toLocaleString('es-NI', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
 
-      return `• ${row} ${col} ${field}: ${msg}`.trim();
-    })
-    .join('\n');
+  onExcelImportClick(): void {
+    this.excelFileInputRef?.nativeElement?.click();
+  }
 
-  const fullMessage = `${message}\n\n${detail}`;
+  onExcelFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const file = input?.files?.[0];
 
-  this.notify.show?.(
-    fullMessage,
-    this.translate.instant('socios.import.errorTitle'),
-    'error'
-  );
+    if (!file) {
+      return;
+    }
+
+    const fileName = (file.name || '').toLowerCase();
+    if (!fileName.endsWith('.xlsx')) {
+      this.notify.show?.(
+        this.translate.instant('socios.import.invalidFile'),
+        this.translate.instant('socios.import.title'),
+        'warning'
+      );
+
+      input.value = '';
+      return;
+    }
+
+    this.importExcel(file);
+    input.value = '';
+  }
+
+  private importExcel(file: File): void {
+    this.importingExcel = true;
+    this.notify.close?.();
+
+    this.sociosService.importExcel(file)
+      .pipe(finalize(() => (this.importingExcel = false)))
+      .subscribe({
+        next: (res: any) => {
+          const errors: string[] = Array.isArray(res?.errors)
+            ? res.errors
+            : Array.isArray(res?.data?.errors)
+              ? res.data.errors
+              : [];
+
+          if (errors.length > 0) {
+            this.showExcelImportErrors(res);
+            return;
+          }
+
+          this.notify.showFromApiResponse?.(res, 'success');
+          this.loadData();
+        },
+        error: (err: any) => {
+          this.showExcelImportErrors(err?.error ?? err);
+        }
+      });
+  }
+
+  private showExcelImportErrors(payload: any): void {
+    const message =
+      payload?.mensaje ||
+      payload?.message ||
+      this.translate.instant('socios.import.errorMessage');
+
+    const rawErrors = payload?.data?.errors ?? payload?.errors ?? [];
+
+    if (!Array.isArray(rawErrors) || !rawErrors.length) {
+      this.notify.showFromApiResponse?.(payload, 'error');
+      return;
+    }
+
+    const detail = rawErrors
+      .map((x: any) => {
+        const row = x?.row ? `Fila ${x.row}` : '';
+        const col = x?.columnLetter ? `Col ${x.columnLetter}` : '';
+        const field = x?.field ? `(${x.field})` : '';
+        const msg = x?.message || '';
+
+        return `• ${row} ${col} ${field}: ${msg}`.trim();
+      })
+      .join('\n');
+
+    const fullMessage = `${message}\n\n${detail}`;
+
+    this.notify.show?.(
+      fullMessage,
+      this.translate.instant('socios.import.errorTitle'),
+      'error'
+    );
+  }
+
+  private normalizeSocio(item: any): SocioRow {
+    return {
+      id: item?.id ?? '',
+      codigoSocio: item?.codigoSocio ?? '',
+      nombreCompleto: item?.nombreCompleto ?? '',
+      nombrePublico: item?.nombrePublico ?? '',
+      numeroIdentificacion: item?.numeroIdentificacion ?? '',
+      correo: item?.correo ?? '',
+      telefono: item?.telefono ?? '',
+      celular: item?.celular ?? '',
+      direccionDomiciliar: item?.direccionDomiciliar ?? null,
+      fechaIngreso: item?.fechaIngreso ?? null,
+      activo: !!item?.activo,
+      createdAtUtc: item?.createdAtUtc ?? null,
+      updatedAtUtc: item?.updatedAtUtc ?? null,
+      createdBy: item?.createdBy ?? null,
+      updatedBy: item?.updatedBy ?? null,
+      dashboard: {
+        totalAhorro: Number(item?.dashboard?.totalAhorro ?? 0),
+        creditoPendiente: Number(item?.dashboard?.creditoPendiente ?? 0),
+        proximoRetiro: Number(item?.dashboard?.proximoRetiro ?? 0),
+        aprobacionesPendientes: Number(item?.dashboard?.aprobacionesPendientes ?? 0),
+        ultimosMovimientos: Array.isArray(item?.dashboard?.ultimosMovimientos)
+          ? item.dashboard.ultimosMovimientos.map((mov: any) => ({
+              fecha: mov?.fecha ?? null,
+              descripcion: mov?.descripcion ?? null,
+              ahorro: Number(mov?.ahorro ?? 0),
+              credito: Number(mov?.credito ?? 0),
+              saldo: Number(mov?.saldo ?? 0)
+            }))
+          : []
+      }
+    };
+  }
+
+  get pageNumbers(): (number | string)[] {
+  const total = this.totalPages;
+
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const pages: (number | string)[] = [];
+
+  pages.push(1);
+
+  if (this.currentPage > 3) {
+    pages.push('...');
+  }
+
+  const start = Math.max(2, this.currentPage - 1);
+  const end = Math.min(total - 1, this.currentPage + 1);
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i);
+  }
+
+  if (this.currentPage < total - 2) {
+    pages.push('...');
+  }
+
+  pages.push(total);
+
+  return pages;
 }
 
+onNuevoAhorro(id: string): void {
+  if (!id) return;
+  console.log('Nuevo ahorro para socio:', id);
+}
 
+onNuevoCredito(id: string): void {
+  if (!id) return;
+  console.log('Nuevo crédito para socio:', id);
+}
+
+onMore(id: string): void {
+  if (!id) return;
+  console.log('Más acciones para socio:', id);
+}
 }

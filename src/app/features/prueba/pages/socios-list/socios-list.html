@@ -1,204 +1,336 @@
 <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
 
 <section class="section">
-  <div class="row g-4">
-    <div class="col-xl-8">
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <div class="main-content page-dashboard-finance">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">{{ 'socios.list.title' | translate }}</h1>
+        <p class="text-muted mb-0">{{ 'socios.list.subtitle' | translate }}</p>
+      </div>
+
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <button type="button" class="btn btn-outline-success btn-sm" (click)="onExcelImportClick()"
+          [disabled]="importingExcel" [appPermission]="['new', 'edit']" permissionRoute="/socios">
+          <i class="bi bi-file-earmark-excel me-1"></i>
+          {{ 'socios.import.button' | translate }}
+        </button>
+
+        <input #excelFileInput type="file" accept=".xlsx" class="d-none" (change)="onExcelFileSelected($event)" />
+
+        <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']" permissionRoute="/socios"
+          (click)="onCreate()">
+          <i class="bi bi-plus-lg me-1"></i>
+          {{ 'socios.list.newButton' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div class="dashboard-grid dashboard-grid-4 mb-4">
+      <div class="card widget-stat">
+        <div class="widget-stat-header">
           <div>
-            <h5 class="card-title">{{ 'socios.list.title' | translate }}</h5>
-            <p class="card-subtitle">{{ 'socios.list.subtitle' | translate }}</p>
+            <div class="widget-stat-value">C$ {{ formatCurrency(selectedSocio?.dashboard?.totalAhorro) }}</div>
+            <div class="widget-stat-label">Total ahorro</div>
           </div>
-
-          
-              <button type="button" class="btn btn-outline-success btn-sm" (click)="onExcelImportClick()"
-                [disabled]="importingExcel" [appPermission]="['new', 'edit']">
-                <i class="bi bi-file-earmark-excel me-1"></i>
-                {{ 'socios.import.button' | translate }}
-              </button>
-
-              <input #excelFileInput type="file" accept=".xlsx" class="d-none" (change)="onExcelFileSelected($event)" />
-
-
-          <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']" permissionRoute="/socios"
-            (click)="onCreate()">
-            <i class="bi bi-plus-lg me-1"></i>
-            {{ 'socios.list.newButton' | translate }}
-          </button>
+          <div class="widget-stat-icon success">
+            <i class="bi bi-piggy-bank"></i>
+          </div>
         </div>
+        <div class="widget-stat-change neutral">
+          <i class="bi bi-wallet2"></i> Dato listo para API
+        </div>
+      </div>
 
-        <div class="card-body">
-          @if (loading) {
-          <div class="py-4 text-center text-muted">
-            {{ 'socios.list.loading' | translate }}
+      <div class="card widget-stat">
+        <div class="widget-stat-header">
+          <div>
+            <div class="widget-stat-value">C$ {{ formatCurrency(selectedSocio?.dashboard?.creditoPendiente) }}</div>
+            <div class="widget-stat-label">Crédito pendiente</div>
           </div>
-          } @else {
-          @if (socios.length > 0) {
-          <table class="table">
-            <thead>
-              <tr>
-                <th>{{ 'socios.list.columns.member' | translate }}</th>
-                <th>{{ 'socios.list.columns.identification' | translate }}</th>
-                <th>{{ 'socios.list.columns.email' | translate }}</th>
-                <th>{{ 'socios.list.columns.status' | translate }}</th>
-                <th>{{ 'socios.list.columns.phone' | translate }}</th>
-                <th>{{ 'socios.list.columns.actions' | translate }}</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              @for (item of socios; track item.id) {
-              <tr>
-                <td [attr.data-sort]="item.nombreCompleto">
-                  <div class="table-user">
-                    <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
-                      {{ getInitials(item.nombreCompleto) }}
-                    </div>
-
-                    <div>
-                      <div class="table-user-name">
-                        {{ item.nombreCompleto || '-' }}
-                         
-                      </div>
-                      <div class="table-user-email">
-                        {{ item.codigoSocio || '-' }}
-                        <!--{{ item.nombrePublico || ('socios.list.noPublicName' | translate) }}-->
-                      </div>
-                    </div>
-                  </div>
-                </td>
-
-                <td>{{ item.numeroIdentificacion || '-' }}</td>
-                <td>{{ item.correo || '-' }}</td>
-
-                <td>
-                  <span class="badge" [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
-                    {{ item.activo ? ('common.status.active' | translate) : ('common.status.inactive' | translate) }}
-                  </span>
-                </td>
-
-                <td>{{ item.telefono || item.celular || '-' }}</td>
-
-                <td>
-                  <div class="table-actions">
-                    <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['view', 'edit']"
-                      permissionRoute="/socios" [title]="'common.actions.edit' | translate" (click)="onEdit(item.id)">
-                      <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['delete']"
-                      permissionRoute="/socios" [title]="item.activo
-    ? ('socios.statusActions.deactivateButton' | translate)
-    : ('socios.statusActions.activateButton' | translate)" (click)="onToggleStatus(item)">
-                      <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'">
-                      </i>
-                    </button>
-
-                    <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['delete']"
-                      permissionRoute="/socios" [title]="'common.actions.delete' | translate" (click)="onDelete(item)">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
-          } @else {
-          <div class="py-4 text-center text-muted">
-            {{ 'socios.list.empty' | translate }}
+          <div class="widget-stat-icon danger">
+            <i class="bi bi-credit-card-2-front"></i>
           </div>
-          }
-          }
+        </div>
+        <div class="widget-stat-change neutral">
+          <i class="bi bi-bank"></i> Dato listo para API
+        </div>
+      </div>
+
+      <div class="card widget-stat">
+        <div class="widget-stat-header">
+          <div>
+            <div class="widget-stat-value">{{ selectedSocio?.dashboard?.proximoRetiro ?? 0 }}</div>
+            <div class="widget-stat-label">Próximo retiro</div>
+          </div>
+          <div class="widget-stat-icon warning">
+            <i class="bi bi-calendar-event"></i>
+          </div>
+        </div>
+        <div class="widget-stat-change neutral">
+          <i class="bi bi-clock-history"></i> Dato listo para API
+        </div>
+      </div>
+
+      <div class="card widget-stat">
+        <div class="widget-stat-header">
+          <div>
+            <div class="widget-stat-value">{{ selectedSocio?.dashboard?.aprobacionesPendientes ?? 0 }}</div>
+            <div class="widget-stat-label">Aprobaciones pendientes</div>
+          </div>
+          <div class="widget-stat-icon info">
+            <i class="bi bi-clipboard-check"></i>
+          </div>
+        </div>
+        <div class="widget-stat-change neutral">
+          <i class="bi bi-hourglass-split"></i> Dato listo para API
         </div>
       </div>
     </div>
 
-    <div class="col-xl-4">
-      <div class="card mb-3">
-        <div class="card-header">
-          <h5 class="card-title mb-0">{{ 'socios.stats.title' | translate }}</h5>
-        </div>
-
-        <div class="card-body">
-          <div class="d-flex flex-column gap-3">
+    <div class="two-column-layout">
+      <div>
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="d-flex align-items-center gap-2">
-                  <span class="stats-dot bg-success"></span>
-                  <span>{{ 'socios.stats.active' | translate }}</span>
-                </div>
-                <strong>{{ activePercent }}%</strong>
-              </div>
+              <h5 class="card-title">{{ 'socios.list.title' | translate }}</h5>
+              <p class="card-subtitle mb-0">Seleccioná un socio para ver su ficha lateral y sus movimientos.</p>
+            </div>
+          </div>
 
-              <div class="stats-progress">
-                <div class="stats-progress-bar bg-success" [style.width.%]="activePercent"></div>
-              </div>
+          <div class="card-body p-0">
+            @if (loading) {
+            <div class="py-4 text-center text-muted">
+              {{ 'socios.list.loading' | translate }}
+            </div>
+            } @else {
+            @if (socios.length > 0) {
+            <div class="table-responsive">
+              <table class="table socios-table mb-0">
+                <thead>
+                  <tr>
+                    <th>{{ 'socios.list.columns.member' | translate }}</th>
+                    <th>{{ 'socios.list.columns.identification' | translate }}</th>
+                    <th>{{ 'socios.list.columns.email' | translate }}</th>
+                    <th>Ahorro total</th>
+                    <th>{{ 'socios.list.columns.status' | translate }}</th>
+                    <th>{{ 'socios.list.columns.phone' | translate }}</th>
+                    <th class="text-end">{{ 'socios.list.columns.actions' | translate }}</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @for (item of pagedSocios; track item.id) {
+                  <tr class="socios-click-row" [class.socios-row-selected]="selectedSocio?.id === item.id"
+                    (click)="selectSocio(item)">
+                    <td [attr.data-sort]="item.nombreCompleto">
+                      <div class="table-user">
+                        <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
+                          {{ getInitials(item.nombreCompleto) }}
+                        </div>
+
+                        <div>
+                          <div class="table-user-name">{{ item.nombreCompleto || '-' }}</div>
+                          <div class="table-user-email">{{ item.codigoSocio || '-' }}</div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td>{{ item.numeroIdentificacion || '-' }}</td>
+                    <td>{{ item.correo || '-' }}</td>
+                    <td>C$ {{ formatCurrency(item.dashboard?.totalAhorro) }}</td>
+
+                    <td>
+                      <span class="badge" [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                        {{ item.activo ? ('common.status.active' | translate) : ('common.status.inactive' | translate)
+                        }}
+                      </span>
+                    </td>
+
+                    <td>{{ item.telefono || item.celular || '-' }}</td>
+
+                    <td class="text-end">
+                      <div class="table-actions" (click)="$event.stopPropagation()">
+                        <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['view', 'edit']"
+                          permissionRoute="/socios" [title]="'common.actions.edit' | translate"
+                          (click)="onEdit(item.id)">
+                          <i class="bi"
+                            [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['delete']"
+                          permissionRoute="/socios"
+                          [title]="item.activo ? ('socios.statusActions.deactivateButton' | translate) : ('socios.statusActions.activateButton' | translate)"
+                          (click)="onToggleStatus(item)">
+                          <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['delete']"
+                          permissionRoute="/socios" [title]="'common.actions.delete' | translate"
+                          (click)="onDelete(item)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
             </div>
 
-            <div>
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="d-flex align-items-center gap-2">
-                  <span class="stats-dot bg-danger"></span>
-                  <span>{{ 'socios.stats.inactive' | translate }}</span>
-                </div>
-                <strong>{{ inactivePercent }}%</strong>
+
+            <div class="users-pagination d-flex justify-content-between align-items-center flex-wrap gap-2 p-3">
+              <div class="users-pagination-info">
+                Showing <strong>{{ visibleStart }}-{{ visibleEnd }}</strong> of <strong>{{ socios.length }}</strong>
+                users
               </div>
 
-              <div class="stats-progress">
-                <div class="stats-progress-bar bg-danger" [style.width.%]="inactivePercent"></div>
-              </div>
+              <nav>
+                <ul class="pagination pagination-sm mb-0">
+                  <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage - 1)">
+                      <i class="bi bi-chevron-left"></i>
+                    </a>
+                  </li>
+
+                  @for (page of pageNumbers; track page) {
+                  @if (page === '...') {
+                  <li class="page-item disabled">
+                    <a class="page-link" href="javascript:void(0)">...</a>
+                  </li>
+                  } @else {
+                  <li class="page-item" [class.active]="page === currentPage">
+                    <a class="page-link" href="javascript:void(0)" (click)="goToPage(+page)">
+                      {{ page }}
+                    </a>
+                  </li>
+                  }
+                  }
+
+                  <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage + 1)">
+                      <i class="bi bi-chevron-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
             </div>
+
+            } @else {
+            <div class="py-4 text-center text-muted">
+              {{ 'socios.list.empty' | translate }}
+            </div>
+            }
+            }
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title mb-0">{{ 'socios.activity.title' | translate }}</h5>
-        </div>
-
-        <div class="card-body p-0 activity-card-body">
-          @if (latestActivity.length === 0) {
-          <div class="px-3 py-2 text-muted small">
-            {{ 'socios.activity.empty' | translate }}
-          </div>
-          } @else {
-          @for (item of latestActivity; track item.id + '-' + item.tipo + '-' + item.fecha) {
-          <div class="recent-list-item d-flex align-items-center gap-2 px-2 py-2 border-top">
-            <div class="letter-avatar" [ngStyle]="getAvatarStyle()">
-              {{ getInitials(item.nombreCompleto) }}
-            </div>
-
-            <div class="flex-grow-1 min-w-0">
-              <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
-                <strong class="text-truncate small mb-0">
-                  {{ item.nombreCompleto }}
-                </strong>
-
-                <span class="badge badge-xs" [ngClass]="item.tipo === 'new' ? 'badge-soft-success' : 'badge-soft-info'">
-                  {{ item.tipo === 'new'
-                  ? ('socios.activity.new' | translate)
-                  : ('socios.activity.updated' | translate) }}
-                </span>
+      <div>
+        @if (selectedSocio) {
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="table-user-avatar table-user-avatar-text socios-profile-avatar" [ngStyle]="getAvatarStyle()">
+                {{ getInitials(selectedSocio.nombreCompleto) }}
               </div>
-
-              <div class="text-muted xs-text">
-                {{ formatActivityLabel(item.fecha) }}
-              </div>
-
-              <div class="text-muted xs-text">
-                {{
-                'socios.activity.byUser' | translate:{
-                usuario: item.usuario || ('socios.activity.unknownUser' | translate)
-                }
-                }}
+              <div class="min-w-0">
+                <h5 class="card-title mb-1 text-truncate">{{ selectedSocio.nombreCompleto || '-' }}</h5>
+                <div class="text-muted small">{{ selectedSocio.codigoSocio || '-' }}</div>
+                <div class="text-muted small">Socio desde {{ formatDate(selectedSocio.createdAtUtc) }}</div>
               </div>
             </div>
+
+            <div class="socios-summary-strip socios-summary-strip--ahorro mb-3">
+              <div class="socios-summary-strip__label">Total ahorro</div>
+              <div class="socios-summary-strip__value">
+                C$ {{ formatCurrency(selectedSocio.dashboard?.totalAhorro) }}
+              </div>
+            </div>
+
+            <div class="socios-summary-strip socios-summary-strip--credito mb-3">
+              <div class="socios-summary-strip__label">Crédito pendiente</div>
+              <div class="socios-summary-strip__value">
+                C$ {{ formatCurrency(selectedSocio.dashboard?.creditoPendiente) }}
+              </div>
+            </div>
+
+            <div class="list-group list-group-flush socios-info-list">
+              <div class="list-group-item">
+                <i class="bi bi-telephone"></i>
+                <span>{{ selectedSocio.telefono || selectedSocio.celular || '-' }}</span>
+              </div>
+              <div class="list-group-item">
+                <i class="bi bi-envelope"></i>
+                <span>{{ selectedSocio.correo || '-' }}</span>
+              </div>
+              <div class="list-group-item">
+                <i class="bi bi-credit-card"></i>
+                <span>{{ selectedSocio.numeroIdentificacion || '-' }}</span>
+              </div>
+              <div class="list-group-item">
+                <i class="bi bi-geo-alt"></i>
+                <span>{{ selectedSocio.direccionDomiciliar || '-' }}</span>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3 flex-wrap">
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoAhorro(selectedSocio.id)">
+                <i class="bi bi-plus-circle me-1"></i>
+                Nuevo ahorro
+              </button>
+
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoCredito(selectedSocio.id)">
+                <i class="bi bi-plus-circle me-1"></i>
+                Nuevo crédito
+              </button>
+
+              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="onMore(selectedSocio.id)">
+                Más
+                <i class="bi bi-chevron-down ms-1"></i>
+              </button>
+            </div>
           </div>
-          }
-          }
         </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Últimos movimientos</h5>
+          </div>
+
+          <div class="card-body p-0">
+            @if ((selectedSocio.dashboard?.ultimosMovimientos ?? []).length === 0) {
+            <div class="px-3 py-3 text-muted small text-center">
+              No hay movimientos configurados todavía para este socio.
+            </div>
+            } @else {
+            <div class="table-responsive">
+              <table class="table mb-0 movimientos-table">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                    <th>Ahorro</th>
+                    <th>Crédito</th>
+                    <th>Saldo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (mov of (selectedSocio.dashboard?.ultimosMovimientos ?? []); track $index) {
+                  <tr>
+                    <td>{{ formatDate(mov.fecha) }}</td>
+                    <td>{{ mov.descripcion || '-' }}</td>
+                    <td>{{ formatCurrency(mov.ahorro) }}</td>
+                    <td>{{ formatCurrency(mov.credito) }}</td>
+                    <td>{{ formatCurrency(mov.saldo) }}</td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            }
+          </div>
+        </div>
+        }
       </div>
     </div>
   </div>
