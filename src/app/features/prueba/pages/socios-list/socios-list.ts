@@ -17,11 +17,13 @@ import { SociosService } from '../../services/socios.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { TableFilterService } from '../../../../core/services/table-filter.service';
 import { PermissionService } from '../../../../core/services/permission.service';
+import { AppConfigService } from '../../../../core/services/app-config.service';
+
 
 interface SocioMovimientoRow {
   fecha?: string | null;
   descripcion?: string | null;
-  ahorro?: number | null;
+  debito?: number | null;
   credito?: number | null;
   saldo?: number | null;
 }
@@ -74,6 +76,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
   private readonly filterSvc = inject(TableFilterService);
   private readonly translate = inject(TranslateService);
   public readonly permissionService = inject(PermissionService);
+  public appConfigService = inject(AppConfigService);
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'socios';
@@ -84,6 +87,22 @@ export class SociosListComponent implements OnInit, OnDestroy {
   loading = false;
   currentTerm = '';
   selectedSocio: SocioRow | null = null;
+
+  globalDashboard: SocioDashboardRow = {
+  totalAhorro: 0,
+  creditoPendiente: 0,
+  proximoRetiro: 0,
+  aprobacionesPendientes: 0,
+  ultimosMovimientos: []
+};
+
+
+globalDashboardGobal: any = {
+  totalAhorro: 0,
+  creditoPendiente: 0,
+  proximoRetiro: 0,
+  aprobacionesPendientes: 0
+};
 
   currentPage = 1;
   pageSize = 10;
@@ -110,12 +129,37 @@ export class SociosListComponent implements OnInit, OnDestroy {
     );
 
     this.breadcrumbs = this.translate.instant('socios.breadcrumbs.list') || [];
+    this.loadGlobalDashboard();
     this.loadData();
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
   }
+
+  loadGlobalDashboard(): void {
+  this.sociosService.getDashboard().subscribe({
+    next: (res: any) => {
+      const data = res?.data ?? {};
+
+      this.globalDashboardGobal = {
+        totalAhorro: Number(data?.totalAhorro ?? 0),
+        creditoPendiente: Number(data?.creditoPendiente ?? 0),
+        proximoRetiro: Number(data?.proximoRetiro ?? 0),
+        aprobacionesPendientes: Number(data?.aprobacionesPendientes ?? 0)
+      };
+    },
+    error: () => {
+      this.globalDashboardGobal = {
+        totalAhorro: 0,
+        creditoPendiente: 0,
+        proximoRetiro: 0,
+        aprobacionesPendientes: 0
+      };
+    }
+  });
+}
+
 
   loadData(): void {
     this.loading = true;
@@ -479,7 +523,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
           ? item.dashboard.ultimosMovimientos.map((mov: any) => ({
               fecha: mov?.fecha ?? null,
               descripcion: mov?.descripcion ?? null,
-              ahorro: Number(mov?.ahorro ?? 0),
+              debito: Number(mov?.debito ?? 0),
               credito: Number(mov?.credito ?? 0),
               saldo: Number(mov?.saldo ?? 0)
             }))

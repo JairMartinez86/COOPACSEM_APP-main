@@ -18,6 +18,13 @@ export class SociosService extends BrowserApiService {
     super(platformId);
   }
 
+  getDashboard(): Observable<any> {
+    return this.browserOnly(() =>
+      this.http.get<any>(`${this.api.baseUrl}/socios/dashboard`, { withCredentials: true })
+    );
+  }
+
+
   getAll(): Observable<any> {
     return this.browserOnly(() =>
       this.http.get<any>(`${this.api.baseUrl}/socios`, { withCredentials: true })

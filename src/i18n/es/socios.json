@@ -1150,25 +1150,56 @@
       }
     },
     "list": {
-      "title": "Socios",
-      "subtitle": "Administra los socios con estado, contacto y acciones",
-      "newButton": "Nuevo socio",
-      "loading": "Cargando socios...",
-      "empty": "No se encontraron socios.",
-      "noPublicName": "Sin nombre público",
-      "columns": {
-        "member": "Socio",
-        "identification": "Identificación",
-        "email": "Correo",
-        "status": "Estado",
-        "phone": "Teléfono",
-        "actions": "Acciones"
-      }
-    },
+  "title": "Socios",
+  "subtitle": "Gestiona socios con ahorro, crédito, estado y acciones",
+  "tableSubtitle": "Seleccioná un socio para ver su ficha lateral y sus movimientos.",
+  "newButton": "Nuevo socio",
+  "loading": "Cargando socios...",
+  "empty": "No se encontraron socios.",
+  "columns": {
+    "member": "Socio",
+    "code": "Código",
+    "saving": "Ahorro total",
+    "status": "Estado",
+    "date": "Fecha",
+    "actions": "Acciones"
+  },
+  "pagination": {
+    "showing": "Mostrando",
+    "of": "de",
+    "users": "socios"
+  }
+},
+
+"dashboard": {
+  "totalSaving": "Total ahorro",
+  "pendingCredit": "Crédito pendiente",
+  "nextWithdrawal": "Próximo retiro",
+  "pendingApprovals": "Aprobaciones pendientes"
+},
+
+"profile": {
+  "memberSince": "Socio desde",
+  "newSaving": "Nuevo ahorro",
+  "newCredit": "Nuevo crédito",
+  "more": "Más"
+},
+
+"movements": {
+  "title": "Últimos movimientos",
+  "empty": "No hay movimientos configurados todavía para este socio.",
+  "columns": {
+    "date": "Fecha",
+    "description": "Descripción",
+    "debit": "Débito",
+    "credit": "Crédito",
+    "balance": "Saldo"
+  }
+},
     "stats": {
       "title": "Estado de socios",
-      "active": "Activos",
-      "inactive": "Inactivos"
+      "active": "Activo",
+      "inactive": "Inactivo"
     },
     "activity": {
       "title": "Actividad reciente",

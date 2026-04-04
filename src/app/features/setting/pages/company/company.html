@@ -337,7 +337,7 @@
                     <div class="input-group">
                       <input #AffiliationCost class="form-control" id="AffiliationCost" name="AffiliationCost"
                         [(ngModel)]="company.AffiliationCost" engineSync="AffiliationCost" autoFocusNext
-                        [next]="OrdinaryCapitalPercentage" numberFormat [decimals]="2" type="text"
+                        [next]="OrdinaryCapitalPercentage" numberFormat [decimals]="4" type="text"
                         [decimalSeparator]="company.DecimalSeparator" [thousandSeparator]="company.ThousandSeparator"
                         placeholder="0.00">
                       <span class="input-group-text">{{ company.Currency}}</span>

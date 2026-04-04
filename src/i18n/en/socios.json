@@ -1149,22 +1149,55 @@
         }
       }
     },
-    "list": {
-      "title": "Members",
-      "subtitle": "Manage members with status, contact, and actions",
-      "newButton": "New member",
-      "loading": "Loading members...",
-      "empty": "No members found.",
-      "noPublicName": "No public name",
-      "columns": {
-        "member": "Member",
-        "identification": "Identification",
-        "email": "Email",
-        "status": "Status",
-        "phone": "Phone",
-        "actions": "Actions"
-      }
+
+  "list": {
+    "title": "Members",
+    "subtitle": "Manage members with savings, credit, status, and actions",
+    "tableSubtitle": "Select a member to view the side profile and recent movements.",
+    "newButton": "New member",
+    "loading": "Loading members...",
+    "empty": "No members found.",
+    "columns": {
+      "member": "Member",
+      "code": "Code",
+      "saving": "Total savings",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions"
     },
+    "pagination": {
+      "showing": "Showing",
+      "of": "of",
+      "users": "members"
+    }
+  },
+
+  "dashboard": {
+    "totalSaving": "Total savings",
+    "pendingCredit": "Pending credit",
+    "nextWithdrawal": "Next withdrawal",
+    "pendingApprovals": "Pending approvals"
+  },
+
+  "profile": {
+    "memberSince": "Member since",
+    "newSaving": "New savings",
+    "newCredit": "New credit",
+    "more": "More"
+  },
+
+  "movements": {
+    "title": "Recent movements",
+    "empty": "There are no movements configured for this member yet.",
+    "columns": {
+      "date": "Date",
+      "description": "Description",
+      "debit": "Debit",
+      "credit": "Credit",
+      "balance": "Balance"
+    }
+  },
+
     "stats": {
       "title": "Member status",
       "active": "Active",

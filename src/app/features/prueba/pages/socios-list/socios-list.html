@@ -9,83 +9,100 @@
       </div>
 
       <div class="d-flex align-items-center gap-2 flex-wrap">
-        <button type="button" class="btn btn-outline-success btn-sm" (click)="onExcelImportClick()"
-          [disabled]="importingExcel" [appPermission]="['new', 'edit']" permissionRoute="/socios">
+        <button
+          type="button"
+          class="btn btn-outline-success btn-sm"
+          (click)="onExcelImportClick()"
+          [disabled]="importingExcel"
+          [appPermission]="['new', 'edit']"
+          permissionRoute="/socios"
+        >
           <i class="bi bi-file-earmark-excel me-1"></i>
           {{ 'socios.import.button' | translate }}
         </button>
 
         <input #excelFileInput type="file" accept=".xlsx" class="d-none" (change)="onExcelFileSelected($event)" />
 
-        <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']" permissionRoute="/socios"
-          (click)="onCreate()">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          [appPermission]="['new']"
+          permissionRoute="/socios"
+          (click)="onCreate()"
+        >
           <i class="bi bi-plus-lg me-1"></i>
           {{ 'socios.list.newButton' | translate }}
         </button>
       </div>
     </div>
 
-    <div class="dashboard-grid dashboard-grid-4 mb-4">
-      <div class="card widget-stat">
-        <div class="widget-stat-header">
-          <div>
-            <div class="widget-stat-value">C$ {{ formatCurrency(selectedSocio?.dashboard?.totalAhorro) }}</div>
-            <div class="widget-stat-label">Total ahorro</div>
-          </div>
-          <div class="widget-stat-icon success">
-            <i class="bi bi-piggy-bank"></i>
-          </div>
+   <div class="dashboard-grid dashboard-grid-4 mb-4">
+  <div class="card widget-stat">
+    <div class="widget-stat-header">
+      <div>
+        <div class="widget-stat-value">
+          {{ appConfigService.getCurrentSettings().currency }}
+          {{ formatCurrency(globalDashboard.totalAhorro) }}
         </div>
-        <div class="widget-stat-change neutral">
-          <i class="bi bi-wallet2"></i> Dato listo para API
+        <div class="widget-stat-label">
+          {{ 'socios.dashboard.totalSaving' | translate }}
         </div>
       </div>
-
-      <div class="card widget-stat">
-        <div class="widget-stat-header">
-          <div>
-            <div class="widget-stat-value">C$ {{ formatCurrency(selectedSocio?.dashboard?.creditoPendiente) }}</div>
-            <div class="widget-stat-label">Crédito pendiente</div>
-          </div>
-          <div class="widget-stat-icon danger">
-            <i class="bi bi-credit-card-2-front"></i>
-          </div>
-        </div>
-        <div class="widget-stat-change neutral">
-          <i class="bi bi-bank"></i> Dato listo para API
-        </div>
-      </div>
-
-      <div class="card widget-stat">
-        <div class="widget-stat-header">
-          <div>
-            <div class="widget-stat-value">{{ selectedSocio?.dashboard?.proximoRetiro ?? 0 }}</div>
-            <div class="widget-stat-label">Próximo retiro</div>
-          </div>
-          <div class="widget-stat-icon warning">
-            <i class="bi bi-calendar-event"></i>
-          </div>
-        </div>
-        <div class="widget-stat-change neutral">
-          <i class="bi bi-clock-history"></i> Dato listo para API
-        </div>
-      </div>
-
-      <div class="card widget-stat">
-        <div class="widget-stat-header">
-          <div>
-            <div class="widget-stat-value">{{ selectedSocio?.dashboard?.aprobacionesPendientes ?? 0 }}</div>
-            <div class="widget-stat-label">Aprobaciones pendientes</div>
-          </div>
-          <div class="widget-stat-icon info">
-            <i class="bi bi-clipboard-check"></i>
-          </div>
-        </div>
-        <div class="widget-stat-change neutral">
-          <i class="bi bi-hourglass-split"></i> Dato listo para API
-        </div>
+      <div class="widget-stat-icon success">
+        <i class="bi bi-piggy-bank"></i>
       </div>
     </div>
+  </div>
+
+  <div class="card widget-stat">
+    <div class="widget-stat-header">
+      <div>
+        <div class="widget-stat-value">
+          {{ appConfigService.getCurrentSettings().currency }}
+          {{ formatCurrency(globalDashboard.creditoPendiente) }}
+        </div>
+        <div class="widget-stat-label">
+          {{ 'socios.dashboard.pendingCredit' | translate }}
+        </div>
+      </div>
+      <div class="widget-stat-icon danger">
+        <i class="bi bi-credit-card-2-front"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="card widget-stat">
+    <div class="widget-stat-header">
+      <div>
+        <div class="widget-stat-value">
+          {{ globalDashboard.proximoRetiro }}
+        </div>
+        <div class="widget-stat-label">
+          {{ 'socios.dashboard.nextWithdrawal' | translate }}
+        </div>
+      </div>
+      <div class="widget-stat-icon warning">
+        <i class="bi bi-calendar-event"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="card widget-stat">
+    <div class="widget-stat-header">
+      <div>
+        <div class="widget-stat-value">
+          {{ globalDashboard.aprobacionesPendientes }}
+        </div>
+        <div class="widget-stat-label">
+          {{ 'socios.dashboard.pendingApprovals' | translate }}
+        </div>
+      </div>
+      <div class="widget-stat-icon info">
+        <i class="bi bi-clipboard-check"></i>
+      </div>
+    </div>
+  </div>
+</div>
 
     <div class="two-column-layout">
       <div>
@@ -93,133 +110,142 @@
           <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
               <h5 class="card-title">{{ 'socios.list.title' | translate }}</h5>
-              <p class="card-subtitle mb-0">Seleccioná un socio para ver su ficha lateral y sus movimientos.</p>
+              <p class="card-subtitle mb-0">{{ 'socios.list.tableSubtitle' | translate }}</p>
             </div>
           </div>
 
           <div class="card-body p-0">
             @if (loading) {
-            <div class="py-4 text-center text-muted">
-              {{ 'socios.list.loading' | translate }}
-            </div>
-            } @else {
-            @if (socios.length > 0) {
-            <div class="table-responsive">
-              <table class="table socios-table mb-0">
-                <thead>
-                  <tr>
-                    <th>{{ 'socios.list.columns.member' | translate }}</th>
-                    <th>{{ 'socios.list.columns.identification' | translate }}</th>
-                    <th>{{ 'socios.list.columns.email' | translate }}</th>
-                    <th>Ahorro total</th>
-                    <th>{{ 'socios.list.columns.status' | translate }}</th>
-                    <th>{{ 'socios.list.columns.phone' | translate }}</th>
-                    <th class="text-end">{{ 'socios.list.columns.actions' | translate }}</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  @for (item of pagedSocios; track item.id) {
-                  <tr class="socios-click-row" [class.socios-row-selected]="selectedSocio?.id === item.id"
-                    (click)="selectSocio(item)">
-                    <td [attr.data-sort]="item.nombreCompleto">
-                      <div class="table-user">
-                        <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
-                          {{ getInitials(item.nombreCompleto) }}
-                        </div>
-
-                        <div>
-                          <div class="table-user-name">{{ item.nombreCompleto || '-' }}</div>
-                          <div class="table-user-email">{{ item.codigoSocio || '-' }}</div>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td>{{ item.numeroIdentificacion || '-' }}</td>
-                    <td>{{ item.correo || '-' }}</td>
-                    <td>C$ {{ formatCurrency(item.dashboard?.totalAhorro) }}</td>
-
-                    <td>
-                      <span class="badge" [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
-                        {{ item.activo ? ('common.status.active' | translate) : ('common.status.inactive' | translate)
-                        }}
-                      </span>
-                    </td>
-
-                    <td>{{ item.telefono || item.celular || '-' }}</td>
-
-                    <td class="text-end">
-                      <div class="table-actions" (click)="$event.stopPropagation()">
-                        <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['view', 'edit']"
-                          permissionRoute="/socios" [title]="'common.actions.edit' | translate"
-                          (click)="onEdit(item.id)">
-                          <i class="bi"
-                            [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
-                        </button>
-
-                        <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['delete']"
-                          permissionRoute="/socios"
-                          [title]="item.activo ? ('socios.statusActions.deactivateButton' | translate) : ('socios.statusActions.activateButton' | translate)"
-                          (click)="onToggleStatus(item)">
-                          <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'"></i>
-                        </button>
-
-                        <button type="button" class="btn btn-icon btn-sm btn-light" [appPermission]="['delete']"
-                          permissionRoute="/socios" [title]="'common.actions.delete' | translate"
-                          (click)="onDelete(item)">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-
-
-            <div class="users-pagination d-flex justify-content-between align-items-center flex-wrap gap-2 p-3">
-              <div class="users-pagination-info">
-                Showing <strong>{{ visibleStart }}-{{ visibleEnd }}</strong> of <strong>{{ socios.length }}</strong>
-                users
+              <div class="py-4 text-center text-muted">
+                {{ 'socios.list.loading' | translate }}
               </div>
-
-              <nav>
-                <ul class="pagination pagination-sm mb-0">
-                  <li class="page-item" [class.disabled]="currentPage === 1">
-                    <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage - 1)">
-                      <i class="bi bi-chevron-left"></i>
-                    </a>
-                  </li>
-
-                  @for (page of pageNumbers; track page) {
-                  @if (page === '...') {
-                  <li class="page-item disabled">
-                    <a class="page-link" href="javascript:void(0)">...</a>
-                  </li>
-                  } @else {
-                  <li class="page-item" [class.active]="page === currentPage">
-                    <a class="page-link" href="javascript:void(0)" (click)="goToPage(+page)">
-                      {{ page }}
-                    </a>
-                  </li>
-                  }
-                  }
-
-                  <li class="page-item" [class.disabled]="currentPage === totalPages">
-                    <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage + 1)">
-                      <i class="bi bi-chevron-right"></i>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-
             } @else {
-            <div class="py-4 text-center text-muted">
-              {{ 'socios.list.empty' | translate }}
-            </div>
-            }
+              @if (socios.length > 0) {
+                <div class="table-responsive">
+                  <table class="table table-sm socios-table mb-0">
+                    <thead>
+                      <tr>
+                        <th>{{ 'socios.list.columns.member' | translate }}</th>
+                        <th>{{ 'socios.list.columns.code' | translate }}</th>
+                        <th>{{ 'socios.list.columns.saving' | translate }}</th>
+                        <th>{{ 'socios.list.columns.status' | translate }}</th>
+                        <th>{{ 'socios.list.columns.date' | translate }}</th>
+                        <th>{{ 'socios.list.columns.actions' | translate }}</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      @for (item of pagedSocios; track item.id) {
+                        <tr
+                          class="socios-click-row"
+                          [class.socios-row-selected]="selectedSocio?.id === item.id"
+                          (click)="selectSocio(item)"
+                        >
+                          <td>
+                            <div class="table-user">
+                              <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
+                                {{ getInitials(item.nombreCompleto) }}
+                              </div>
+
+                              <div>
+                                <div class="table-user-name">{{ item.nombreCompleto || '-' }}</div>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td>{{ item.codigoSocio || '-' }}</td>
+
+                          <td>{{ appConfigService.getCurrentSettings().currency }} {{ formatCurrency(item.dashboard?.totalAhorro) }}</td>
+
+                          <td>
+                            <span class="badge" [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                              {{
+                                item.activo
+                                  ? ('socios.stats.active' | translate)
+                                  : ('socios.stats.inactive' | translate)
+                              }}
+                            </span>
+                          </td>
+
+                          <td>{{ formatDate(item.createdAtUtc) }}</td>
+
+                          <td class="text-end">
+                            <div class="table-actions" (click)="$event.stopPropagation()">
+                              <button
+                                type="button"
+                                class="btn btn-icon btn-sm btn-light"
+                                (click)="onEdit(item.id)"
+                              >
+                                <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
+                              </button>
+
+                              <button
+                                type="button"
+                                class="btn btn-icon btn-sm btn-light"
+                                (click)="onToggleStatus(item)"
+                              >
+                                <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'"></i>
+                              </button>
+
+                              <button
+                                type="button"
+                                class="btn btn-icon btn-sm btn-light"
+                                (click)="onDelete(item)"
+                              >
+                                <i class="bi bi-trash"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="users-pagination d-flex justify-content-between align-items-center flex-wrap gap-2 p-3">
+                  <div class="users-pagination-info">
+                    {{ 'socios.list.pagination.showing' | translate }}
+                    <strong>{{ visibleStart }}-{{ visibleEnd }}</strong>
+                    {{ 'socios.list.pagination.of' | translate }}
+                    <strong>{{ socios.length }}</strong>
+                    {{ 'socios.list.pagination.users' | translate }}
+                  </div>
+
+                  <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                      <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage - 1)">
+                          <i class="bi bi-chevron-left"></i>
+                        </a>
+                      </li>
+
+                      @for (page of pageNumbers; track page) {
+                        @if (page === '...') {
+                          <li class="page-item disabled">
+                            <a class="page-link" href="javascript:void(0)">...</a>
+                          </li>
+                        } @else {
+                          <li class="page-item" [class.active]="page === currentPage">
+                            <a class="page-link" href="javascript:void(0)" (click)="goToPage(+page)">
+                              {{ page }}
+                            </a>
+                          </li>
+                        }
+                      }
+
+                      <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage + 1)">
+                          <i class="bi bi-chevron-right"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              } @else {
+                <div class="py-4 text-center text-muted">
+                  {{ 'socios.list.empty' | translate }}
+                </div>
+              }
             }
           </div>
         </div>
@@ -227,109 +253,111 @@
 
       <div>
         @if (selectedSocio) {
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <div class="table-user-avatar table-user-avatar-text socios-profile-avatar" [ngStyle]="getAvatarStyle()">
-                {{ getInitials(selectedSocio.nombreCompleto) }}
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="table-user-avatar table-user-avatar-text socios-profile-avatar" [ngStyle]="getAvatarStyle()">
+                  {{ getInitials(selectedSocio.nombreCompleto) }}
+                </div>
+                <div class="min-w-0">
+                  <h5 class="card-title mb-1 text-truncate">{{ selectedSocio.nombreCompleto || '-' }}</h5>
+                  <div class="text-muted small">{{ selectedSocio.codigoSocio || '-' }}</div>
+                  <div class="text-muted small">
+                    {{ 'socios.profile.memberSince' | translate }} {{ formatDate(selectedSocio.createdAtUtc) }}
+                  </div>
+                </div>
               </div>
-              <div class="min-w-0">
-                <h5 class="card-title mb-1 text-truncate">{{ selectedSocio.nombreCompleto || '-' }}</h5>
-                <div class="text-muted small">{{ selectedSocio.codigoSocio || '-' }}</div>
-                <div class="text-muted small">Socio desde {{ formatDate(selectedSocio.createdAtUtc) }}</div>
-              </div>
-            </div>
 
-            <div class="socios-summary-strip socios-summary-strip--ahorro mb-3">
-              <div class="socios-summary-strip__label">Total ahorro</div>
-              <div class="socios-summary-strip__value">
-                C$ {{ formatCurrency(selectedSocio.dashboard?.totalAhorro) }}
+              <div class="socios-summary-strip socios-summary-strip--ahorro mb-3">
+                <div class="socios-summary-strip__label">{{ 'socios.dashboard.totalSaving' | translate }}</div>
+                <div class="socios-summary-strip__value">
+                  {{ appConfigService.getCurrentSettings().currency }} {{ formatCurrency(selectedSocio.dashboard?.totalAhorro) }}
+                </div>
               </div>
-            </div>
 
-            <div class="socios-summary-strip socios-summary-strip--credito mb-3">
-              <div class="socios-summary-strip__label">Crédito pendiente</div>
-              <div class="socios-summary-strip__value">
-                C$ {{ formatCurrency(selectedSocio.dashboard?.creditoPendiente) }}
+              <div class="socios-summary-strip socios-summary-strip--credito mb-3">
+                <div class="socios-summary-strip__label">{{ 'socios.dashboard.pendingCredit' | translate }}</div>
+                <div class="socios-summary-strip__value">
+                  {{ appConfigService.getCurrentSettings().currency }} {{ formatCurrency(selectedSocio.dashboard?.creditoPendiente) }}
+                </div>
               </div>
-            </div>
 
-            <div class="list-group list-group-flush socios-info-list">
-              <div class="list-group-item">
-                <i class="bi bi-telephone"></i>
-                <span>{{ selectedSocio.telefono || selectedSocio.celular || '-' }}</span>
+              <div class="list-group list-group-flush socios-info-list">
+                <div class="list-group-item">
+                  <i class="bi bi-telephone"></i>
+                  <span>{{ selectedSocio.telefono || selectedSocio.celular || '-' }}</span>
+                </div>
+                <div class="list-group-item">
+                  <i class="bi bi-envelope"></i>
+                  <span>{{ selectedSocio.correo || '-' }}</span>
+                </div>
+                <div class="list-group-item">
+                  <i class="bi bi-credit-card"></i>
+                  <span>{{ selectedSocio.numeroIdentificacion || '-' }}</span>
+                </div>
+                <div class="list-group-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>{{ selectedSocio.direccionDomiciliar || '-' }}</span>
+                </div>
               </div>
-              <div class="list-group-item">
-                <i class="bi bi-envelope"></i>
-                <span>{{ selectedSocio.correo || '-' }}</span>
-              </div>
-              <div class="list-group-item">
-                <i class="bi bi-credit-card"></i>
-                <span>{{ selectedSocio.numeroIdentificacion || '-' }}</span>
-              </div>
-              <div class="list-group-item">
-                <i class="bi bi-geo-alt"></i>
-                <span>{{ selectedSocio.direccionDomiciliar || '-' }}</span>
-              </div>
-            </div>
 
-            <div class="d-flex gap-2 mt-3 flex-wrap">
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoAhorro(selectedSocio.id)">
-                <i class="bi bi-plus-circle me-1"></i>
-                Nuevo ahorro
-              </button>
+              <div class="d-flex gap-2 mt-3 flex-wrap">
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoAhorro(selectedSocio.id)">
+                  <i class="bi bi-plus-circle me-1"></i>
+                  {{ 'socios.profile.newSaving' | translate }}
+                </button>
 
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoCredito(selectedSocio.id)">
-                <i class="bi bi-plus-circle me-1"></i>
-                Nuevo crédito
-              </button>
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoCredito(selectedSocio.id)">
+                  <i class="bi bi-plus-circle me-1"></i>
+                  {{ 'socios.profile.newCredit' | translate }}
+                </button>
 
-              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="onMore(selectedSocio.id)">
-                Más
-                <i class="bi bi-chevron-down ms-1"></i>
-              </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="onMore(selectedSocio.id)">
+                  {{ 'socios.profile.more' | translate }}
+                  <i class="bi bi-chevron-down ms-1"></i>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h5 class="card-title mb-0">Últimos movimientos</h5>
-          </div>
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">{{ 'socios.movements.title' | translate }}</h5>
+            </div>
 
-          <div class="card-body p-0">
-            @if ((selectedSocio.dashboard?.ultimosMovimientos ?? []).length === 0) {
-            <div class="px-3 py-3 text-muted small text-center">
-              No hay movimientos configurados todavía para este socio.
+            <div class="card-body p-0">
+              @if ((selectedSocio.dashboard?.ultimosMovimientos ?? []).length === 0) {
+                <div class="px-3 py-3 text-muted small text-center">
+                  {{ 'socios.movements.empty' | translate }}
+                </div>
+              } @else {
+                <div class="table-responsive">
+                  <table class="table mb-0 movimientos-table">
+                    <thead>
+                      <tr>
+                        <th>{{ 'socios.movements.columns.date' | translate }}</th>
+                        <th>{{ 'socios.movements.columns.description' | translate }}</th>
+                        <th>{{ 'socios.movements.columns.debit' | translate }}</th>
+                        <th>{{ 'socios.movements.columns.credit' | translate }}</th>
+                        <!--<th>{{ 'socios.movements.columns.balance' | translate }}</th>-->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (mov of (selectedSocio.dashboard?.ultimosMovimientos ?? []); track $index) {
+                        <tr>
+                          <td>{{ formatDate(mov.fecha) }}</td>
+                          <td>{{ mov.descripcion || '-' }}</td>
+                          <td>{{ formatCurrency(mov.debito) }}</td>
+                          <td>{{ formatCurrency(mov.credito) }}</td>
+                          <!--<td>{{ formatCurrency(mov.saldo) }}</td>-->
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              }
             </div>
-            } @else {
-            <div class="table-responsive">
-              <table class="table mb-0 movimientos-table">
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Descripción</th>
-                    <th>Ahorro</th>
-                    <th>Crédito</th>
-                    <th>Saldo</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (mov of (selectedSocio.dashboard?.ultimosMovimientos ?? []); track $index) {
-                  <tr>
-                    <td>{{ formatDate(mov.fecha) }}</td>
-                    <td>{{ mov.descripcion || '-' }}</td>
-                    <td>{{ formatCurrency(mov.ahorro) }}</td>
-                    <td>{{ formatCurrency(mov.credito) }}</td>
-                    <td>{{ formatCurrency(mov.saldo) }}</td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-            }
           </div>
-        </div>
         }
       </div>
     </div>
