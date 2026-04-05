@@ -311,7 +311,7 @@
     {{ 'socios.profile.newCredit' | translate }}
   </button>
 
-  <!-- Historial -->
+  <!-- Mas -->
   <div class="dropdown profile-history-dropdown">
     <button
       class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1"
@@ -320,16 +320,24 @@
       data-bs-display="static"
       aria-expanded="false">
 
-      <i class="fa-duotone fa-clock-rotate-left"></i>
-      {{ 'socios.profile.history' | translate }}
+      <i class="fa-sharp fa-solid fa-angle-down"></i>
+      {{ 'socios.profile.more' | translate }}
     </button>
 
     <ul class="dropdown-menu dropdown-menu-end">
       <li>
         <button class="dropdown-item d-flex align-items-center gap-2"
           (click)="onHistorialAhorro(selectedSocio.id)">
-          <i class="fa-duotone fa-piggy-bank"></i>
-          {{ 'socios.profile.savings' | translate }}
+          <i class="fa-sharp fa-solid fa-arrow-trend-up"></i>
+          {{ 'socios.profile.increaseSavings' | translate }}
+        </button>
+      </li>
+
+      <li>
+        <button class="dropdown-item d-flex align-items-center gap-2"
+          (click)="onHistorialAhorro(selectedSocio.id)">
+          <i class="fa-sharp fa-solid fa-arrow-trend-down"></i>
+          {{ 'socios.profile.decreaseSavings' | translate }}
         </button>
       </li>
 
