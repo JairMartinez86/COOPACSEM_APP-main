@@ -88,21 +88,15 @@ export class SociosListComponent implements OnInit, OnDestroy {
   currentTerm = '';
   selectedSocio: SocioRow | null = null;
 
-  globalDashboard: SocioDashboardRow = {
-    totalAhorro: 0,
-    creditoPendiente: 0,
-    proximoRetiro: 0,
-    aprobacionesPendientes: 0,
-    ultimosMovimientos: []
-  };
-
-
-  globalDashboardGobal: any = {
+  globalDashboard: any = {
     totalAhorro: 0,
     creditoPendiente: 0,
     proximoRetiro: 0,
     aprobacionesPendientes: 0
   };
+
+
+
 
   currentPage = 1;
   pageSize = 10;
@@ -142,15 +136,16 @@ export class SociosListComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         const data = res?.data ?? {};
 
-        this.globalDashboardGobal = {
+        this.globalDashboard = {
           totalAhorro: Number(data?.totalAhorro ?? 0),
           creditoPendiente: Number(data?.creditoPendiente ?? 0),
           proximoRetiro: Number(data?.proximoRetiro ?? 0),
           aprobacionesPendientes: Number(data?.aprobacionesPendientes ?? 0)
         };
+
       },
       error: () => {
-        this.globalDashboardGobal = {
+        this.globalDashboard = {
           totalAhorro: 0,
           creditoPendiente: 0,
           proximoRetiro: 0,
