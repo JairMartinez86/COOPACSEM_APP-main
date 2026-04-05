@@ -91,7 +91,7 @@
             </div>
 
             <div class="d-flex align-items-center gap-2 flex-wrap">
-              <button type="button" class="btn btn-outline-success btn-sm" (click)="onExcelImportClick()"
+              <button type="button" class="btn btn-success btn-sm" (click)="onExcelImportClick()"
                 [disabled]="importingExcel" [appPermission]="['new', 'edit']" permissionRoute="/socios">
                 <i class="bi bi-file-earmark-excel me-1"></i>
                 {{ 'socios.import.button' | translate }}
