@@ -1182,7 +1182,9 @@
   "memberSince": "Socio desde",
   "newSaving": "Nuevo ahorro",
   "newCredit": "Nuevo crédito",
-  "more": "Más"
+  "history": "Historial",
+  "savings": "Ahorro",
+  "credits": "Créditos"
 },
 
 "movements": {

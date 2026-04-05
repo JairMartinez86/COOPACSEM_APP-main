@@ -196,3 +196,55 @@
 .movimientos-table td {
   white-space: nowrap;
 }
+
+
+
+//BOTONES SOCIO AHORRO, CREDITO, HISTORIAL
+.profile-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+.profile-actions > .btn,
+.profile-actions > .dropdown {
+  min-width: 0;
+}
+
+.profile-actions .btn,
+.profile-actions .dropdown-toggle {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.72rem;
+}
+
+.profile-actions .btn i,
+.profile-actions .dropdown-toggle i,
+.profile-actions .dropdown-item i {
+  font-size: 0.8rem;
+}
+
+.profile-history-dropdown {
+  grid-column: 1 / -1;
+  position: relative;
+}
+
+.profile-history-dropdown .dropdown-menu {
+  width: 100%;
+  min-width: 100%;
+  right: 0;
+  left: auto;
+  z-index: 1055;
+}
+
+.card,
+.card-body,
+.two-column-layout,
+.two-column-layout > div {
+  overflow: visible !important;
+}

@@ -170,6 +170,7 @@
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(item.id)">
                           <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'">
                           </i>
+
                         </button>
 
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onToggleStatus(item)">
@@ -289,22 +290,61 @@
               </div>
             </div>
 
-            <div class="d-flex gap-2 mt-3 flex-wrap">
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoAhorro(selectedSocio.id)">
-                <i class="bi bi-plus-circle me-1"></i>
-                {{ 'socios.profile.newSaving' | translate }}
-              </button>
+            
+            <div class="profile-actions mt-3">
 
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoCredito(selectedSocio.id)">
-                <i class="bi bi-plus-circle me-1"></i>
-                {{ 'socios.profile.newCredit' | translate }}
-              </button>
+  <!-- Ahorro -->
+  <button
+    type="button"
+    class="btn btn-sm btn-outline-primary"
+    (click)="onNuevoAhorro(selectedSocio.id)">
+    <i class="fa-duotone fa-piggy-bank me-1"></i>
+    {{ 'socios.profile.newSaving' | translate }}
+  </button>
 
-              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="onMore(selectedSocio.id)">
-                {{ 'socios.profile.more' | translate }}
-                <i class="bi bi-chevron-down ms-1"></i>
-              </button>
-            </div>
+  <!-- Crédito -->
+  <button
+    type="button"
+    class="btn btn-sm btn-outline-primary"
+    (click)="onNuevoCredito(selectedSocio.id)">
+    <i class="fa-duotone fa-credit-card me-1"></i>
+    {{ 'socios.profile.newCredit' | translate }}
+  </button>
+
+  <!-- Historial -->
+  <div class="dropdown profile-history-dropdown">
+    <button
+      class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1"
+      type="button"
+      data-bs-toggle="dropdown"
+      data-bs-display="static"
+      aria-expanded="false">
+
+      <i class="fa-duotone fa-clock-rotate-left"></i>
+      {{ 'socios.profile.history' | translate }}
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end">
+      <li>
+        <button class="dropdown-item d-flex align-items-center gap-2"
+          (click)="onHistorialAhorro(selectedSocio.id)">
+          <i class="fa-duotone fa-piggy-bank"></i>
+          {{ 'socios.profile.savings' | translate }}
+        </button>
+      </li>
+
+      <li>
+        <button class="dropdown-item d-flex align-items-center gap-2"
+          (click)="onHistorialCredito(selectedSocio.id)">
+          <i class="fa-duotone fa-credit-card"></i>
+          {{ 'socios.profile.credits' | translate }}
+        </button>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
           </div>
         </div>
 

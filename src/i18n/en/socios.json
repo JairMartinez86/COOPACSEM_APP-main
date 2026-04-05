@@ -1183,7 +1183,9 @@
     "memberSince": "Member since",
     "newSaving": "New savings",
     "newCredit": "New credit",
-    "more": "More"
+    "history": "History",
+    "savings": "Savings",
+    "credits": "Credits"
   },
 
   "movements": {

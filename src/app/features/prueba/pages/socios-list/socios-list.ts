@@ -585,8 +585,12 @@ export class SociosListComponent implements OnInit, OnDestroy {
     console.log('Nuevo crédito para socio:', id);
   }
 
-  onMore(id: string): void {
-    if (!id) return;
-    console.log('Más acciones para socio:', id);
+  onHistorialAhorro(id: string) {
+    console.log('Historial ahorro', id);
+    // navegar o abrir modal
+  }
+
+  onHistorialCredito(id: string) {
+    console.log('Historial crédito', id);
   }
 }
