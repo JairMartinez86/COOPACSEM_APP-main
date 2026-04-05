@@ -1160,7 +1160,7 @@
     "columns": {
       "member": "Member",
       "code": "Code",
-      "saving": "Total savings",
+      "saving": "Savings",
       "status": "Status",
       "date": "Date",
       "actions": "Actions"

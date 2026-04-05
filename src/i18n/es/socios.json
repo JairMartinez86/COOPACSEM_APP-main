@@ -1159,7 +1159,7 @@
   "columns": {
     "member": "Socio",
     "code": "Código",
-    "saving": "Ahorro total",
+    "saving": "Ahorro",
     "status": "Estado",
     "date": "Fecha",
     "actions": "Acciones"

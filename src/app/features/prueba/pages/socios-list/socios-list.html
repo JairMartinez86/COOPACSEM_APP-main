@@ -125,8 +125,8 @@
                   <table class="table table-sm socios-table mb-0">
                     <thead>
                       <tr>
-                        <th>{{ 'socios.list.columns.member' | translate }}</th>
                         <th>{{ 'socios.list.columns.code' | translate }}</th>
+                        <th>{{ 'socios.list.columns.member' | translate }}</th>
                         <th>{{ 'socios.list.columns.saving' | translate }}</th>
                         <th>{{ 'socios.list.columns.status' | translate }}</th>
                         <th>{{ 'socios.list.columns.date' | translate }}</th>
@@ -143,17 +143,20 @@
                         >
                           <td>
                             <div class="table-user">
+                              
+
                               <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
                                 {{ getInitials(item.nombreCompleto) }}
                               </div>
 
                               <div>
-                                <div class="table-user-name">{{ item.nombreCompleto || '-' }}</div>
+                                {{ item.codigoSocio || '-' }}
+                                
                               </div>
                             </div>
                           </td>
-
-                          <td>{{ item.codigoSocio || '-' }}</td>
+                       
+                            <td><div class="table-user-name">{{ item.nombreCompleto || '-' }}</div></td>
 
                           <td>{{ appConfigService.getCurrentSettings().currency }} {{ formatCurrency(item.dashboard?.totalAhorro) }}</td>
 
