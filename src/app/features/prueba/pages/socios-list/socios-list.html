@@ -9,89 +9,80 @@
       </div>
     </div>
 
+    <!-- CARDS ARRIBA -->
+    <div class="dashboard-grid dashboard-grid-4 mb-2">
+      <div class="card widget-stat">
+        <div class="widget-stat-header">
+          <div>
 
-
-
-
-    <div class="two-column-layout">
-
-      <div>
-
-        <div class="dashboard-grid dashboard-grid-4 mb-2">
-          <div class="card widget-stat">
-            <div class="widget-stat-header">
-              <div>
-                 <div class="widget-stat-label">
-                  {{ appConfigService.getCurrentSettings().currency }}
-                </div>
-                <div class="widget-stat-value">
-                  {{ formatCurrency(globalDashboard.totalAhorro) }}
-                </div>
-                <div class="widget-stat-label">
-                  {{ 'socios.dashboard.totalSaving' | translate }}
-                </div>
-              </div>
-              <div class="widget-stat-icon success">
-               <i class="fa-sharp fa-thin fa-piggy-bank fa-2xl"></i>
-              </div>
-              
+            <div class="widget-stat-value">
+              {{ appConfigService.getCurrentSettings().currency }} {{ formatCurrency(globalDashboard.totalAhorro) }}
+            </div>
+            <div class="widget-stat-label">
+              {{ 'socios.dashboard.totalSaving' | translate }}
             </div>
           </div>
-
-          <div class="card widget-stat">
-            <div class="widget-stat-header">
-              <div>
-                 <div class="widget-stat-label">
-                  {{ appConfigService.getCurrentSettings().currency }}
-                </div>
-                <div class="widget-stat-value">
-                  {{ formatCurrency(globalDashboard.creditoPendiente) }}
-                </div>
-                <div class="widget-stat-label">
-                  {{ 'socios.dashboard.pendingCredit' | translate }}
-                </div>
-                
-              </div>
-              <div class="widget-stat-icon danger">
-               <i class="fa-sharp fa-thin fa-credit-card-front fa-2xl"></i>
-              </div>
-            </div>
-          </div>
-
-          <div class="card widget-stat">
-            <div class="widget-stat-header">
-              <div>
-                <div class="widget-stat-value">
-                  {{ globalDashboard.proximoRetiro }}
-                </div>
-                <div class="widget-stat-label">
-                  {{ 'socios.dashboard.nextWithdrawal' | translate }}
-                </div>
-              </div>
-              <div class="widget-stat-icon warning">
-              <i class="fa-duotone fa-thin fa-calendar fa-2xl"></i>
-              </div>
-            </div>
-          </div>
-
-          <div class="card widget-stat">
-            <div class="widget-stat-header">
-              <div>
-                <div class="widget-stat-value">
-                  {{ globalDashboard.aprobacionesPendientes }}
-                </div>
-                <div class="widget-stat-label">
-                  {{ 'socios.dashboard.pendingApprovals' | translate }}
-                </div>
-              </div>
-              <div class="widget-stat-icon info">
-                <i class="fa-sharp fa-thin fa-clipboard-check fa-2xl"></i>
-              </div>
-            </div>
+          <div class="widget-stat-icon success">
+            <i class="fa-sharp fa-thin fa-piggy-bank fa-2xl"></i>
           </div>
         </div>
+      </div>
 
+      <div class="card widget-stat">
+        <div class="widget-stat-header">
+          <div>
 
+            <div class="widget-stat-value">
+              {{ appConfigService.getCurrentSettings().currency }} {{ formatCurrency(globalDashboard.creditoPendiente)
+              }}
+            </div>
+            <div class="widget-stat-label">
+              {{ 'socios.dashboard.pendingCredit' | translate }}
+            </div>
+          </div>
+          <div class="widget-stat-icon danger">
+            <i class="fa-sharp fa-thin fa-credit-card-front fa-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="card widget-stat">
+        <div class="widget-stat-header">
+          <div>
+            <div class="widget-stat-value">
+              {{ globalDashboard.proximoRetiro }}
+            </div>
+            <div class="widget-stat-label">
+              {{ 'socios.dashboard.nextWithdrawal' | translate }}
+            </div>
+          </div>
+          <div class="widget-stat-icon warning">
+            <i class="fa-duotone fa-thin fa-calendar fa-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="card widget-stat">
+        <div class="widget-stat-header">
+          <div>
+            <div class="widget-stat-value">
+              {{ globalDashboard.aprobacionesPendientes }}
+            </div>
+            <div class="widget-stat-label">
+              {{ 'socios.dashboard.pendingApprovals' | translate }}
+            </div>
+          </div>
+          <div class="widget-stat-icon info">
+            <i class="fa-sharp fa-thin fa-clipboard-check fa-2xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLA + PERFIL EN 2 COLUMNAS -->
+    <div class="two-column-layout">
+      <!-- IZQUIERDA -->
+      <div>
         <div class="card">
           <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
@@ -140,17 +131,15 @@
                   @for (item of pagedSocios; track item.id) {
                   <tr class="socios-click-row" [class.socios-row-selected]="selectedSocio?.id === item.id"
                     (click)="selectSocio(item)">
+
                     <td>
                       <div class="table-user">
-
-
                         <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
                           {{ getInitials(item.nombreCompleto) }}
                         </div>
 
                         <div>
                           {{ item.codigoSocio || '-' }}
-
                         </div>
                       </div>
                     </td>
@@ -159,8 +148,10 @@
                       <div class="table-user-name">{{ item.nombreCompleto || '-' }}</div>
                     </td>
 
-                    <td>{{ appConfigService.getCurrentSettings().currency }} {{
-                      formatCurrency(item.dashboard?.totalAhorro) }}</td>
+                    <td>
+                      {{ appConfigService.getCurrentSettings().currency }}
+                      {{ formatCurrency(item.dashboard?.totalAhorro) }}
+                    </td>
 
                     <td>
                       <span class="badge" [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
@@ -177,8 +168,8 @@
                     <td class="text-end">
                       <div class="table-actions" (click)="$event.stopPropagation()">
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(item.id)">
-                          <i class="bi"
-                            [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
+                          <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'">
+                          </i>
                         </button>
 
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onToggleStatus(item)">
@@ -243,10 +234,9 @@
             }
           </div>
         </div>
-
       </div>
 
-
+      <!-- DERECHA -->
       <div>
         @if (selectedSocio) {
         <div class="card mb-3">
@@ -267,16 +257,16 @@
             <div class="socios-summary-strip socios-summary-strip--ahorro mb-3">
               <div class="socios-summary-strip__label">{{ 'socios.dashboard.totalSaving' | translate }}</div>
               <div class="socios-summary-strip__value">
-                {{ appConfigService.getCurrentSettings().currency }} {{
-                formatCurrency(selectedSocio.dashboard?.totalAhorro) }}
+                {{ appConfigService.getCurrentSettings().currency }}
+                {{ formatCurrency(selectedSocio.dashboard?.totalAhorro) }}
               </div>
             </div>
 
             <div class="socios-summary-strip socios-summary-strip--credito mb-3">
               <div class="socios-summary-strip__label">{{ 'socios.dashboard.pendingCredit' | translate }}</div>
               <div class="socios-summary-strip__value">
-                {{ appConfigService.getCurrentSettings().currency }} {{
-                formatCurrency(selectedSocio.dashboard?.creditoPendiente) }}
+                {{ appConfigService.getCurrentSettings().currency }}
+                {{ formatCurrency(selectedSocio.dashboard?.creditoPendiente) }}
               </div>
             </div>
 
@@ -337,7 +327,6 @@
                     <th>{{ 'socios.movements.columns.description' | translate }}</th>
                     <th>{{ 'socios.movements.columns.debit' | translate }}</th>
                     <th>{{ 'socios.movements.columns.credit' | translate }}</th>
-                    <!--<th>{{ 'socios.movements.columns.balance' | translate }}</th>-->
                   </tr>
                 </thead>
                 <tbody>
@@ -347,7 +336,6 @@
                     <td>{{ mov.descripcion || '-' }}</td>
                     <td>{{ formatCurrency(mov.debito) }}</td>
                     <td>{{ formatCurrency(mov.credito) }}</td>
-                    <!--<td>{{ formatCurrency(mov.saldo) }}</td>-->
                   </tr>
                   }
                 </tbody>
@@ -358,14 +346,6 @@
         </div>
         }
       </div>
-
     </div>
-
-
-
-
-
-
-
   </div>
 </section>
