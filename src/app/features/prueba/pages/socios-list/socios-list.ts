@@ -89,20 +89,20 @@ export class SociosListComponent implements OnInit, OnDestroy {
   selectedSocio: SocioRow | null = null;
 
   globalDashboard: SocioDashboardRow = {
-  totalAhorro: 0,
-  creditoPendiente: 0,
-  proximoRetiro: 0,
-  aprobacionesPendientes: 0,
-  ultimosMovimientos: []
-};
+    totalAhorro: 0,
+    creditoPendiente: 0,
+    proximoRetiro: 0,
+    aprobacionesPendientes: 0,
+    ultimosMovimientos: []
+  };
 
 
-globalDashboardGobal: any = {
-  totalAhorro: 0,
-  creditoPendiente: 0,
-  proximoRetiro: 0,
-  aprobacionesPendientes: 0
-};
+  globalDashboardGobal: any = {
+    totalAhorro: 0,
+    creditoPendiente: 0,
+    proximoRetiro: 0,
+    aprobacionesPendientes: 0
+  };
 
   currentPage = 1;
   pageSize = 10;
@@ -138,27 +138,27 @@ globalDashboardGobal: any = {
   }
 
   loadGlobalDashboard(): void {
-  this.sociosService.getDashboard().subscribe({
-    next: (res: any) => {
-      const data = res?.data ?? {};
+    this.sociosService.getDashboard().subscribe({
+      next: (res: any) => {
+        const data = res?.data ?? {};
 
-      this.globalDashboardGobal = {
-        totalAhorro: Number(data?.totalAhorro ?? 0),
-        creditoPendiente: Number(data?.creditoPendiente ?? 0),
-        proximoRetiro: Number(data?.proximoRetiro ?? 0),
-        aprobacionesPendientes: Number(data?.aprobacionesPendientes ?? 0)
-      };
-    },
-    error: () => {
-      this.globalDashboardGobal = {
-        totalAhorro: 0,
-        creditoPendiente: 0,
-        proximoRetiro: 0,
-        aprobacionesPendientes: 0
-      };
-    }
-  });
-}
+        this.globalDashboardGobal = {
+          totalAhorro: Number(data?.totalAhorro ?? 0),
+          creditoPendiente: Number(data?.creditoPendiente ?? 0),
+          proximoRetiro: Number(data?.proximoRetiro ?? 0),
+          aprobacionesPendientes: Number(data?.aprobacionesPendientes ?? 0)
+        };
+      },
+      error: () => {
+        this.globalDashboardGobal = {
+          totalAhorro: 0,
+          creditoPendiente: 0,
+          proximoRetiro: 0,
+          aprobacionesPendientes: 0
+        };
+      }
+    });
+  }
 
 
   loadData(): void {
@@ -184,21 +184,21 @@ globalDashboardGobal: any = {
     this.socios = !term
       ? [...this.sociosAll]
       : this.sociosAll.filter((socio) =>
-          [
-            socio.codigoSocio ?? '',
-            socio.nombreCompleto ?? '',
-            socio.nombrePublico ?? '',
-            socio.numeroIdentificacion ?? '',
-            socio.correo ?? '',
-            socio.telefono ?? '',
-            socio.celular ?? '',
-            socio.direccionDomiciliar ?? '',
-            socio.activo ? 'activo' : 'inactivo'
-          ]
-            .join(' ')
-            .toLowerCase()
-            .includes(term)
-        );
+        [
+          socio.codigoSocio ?? '',
+          socio.nombreCompleto ?? '',
+          socio.nombrePublico ?? '',
+          socio.numeroIdentificacion ?? '',
+          socio.correo ?? '',
+          socio.telefono ?? '',
+          socio.celular ?? '',
+          socio.direccionDomiciliar ?? '',
+          socio.activo ? 'activo' : 'inactivo'
+        ]
+          .join(' ')
+          .toLowerCase()
+          .includes(term)
+      );
 
     this.currentPage = 1;
 
@@ -402,10 +402,22 @@ globalDashboardGobal: any = {
 
   formatCurrency(value?: number | null): string {
     const amount = Number(value ?? 0);
-    return amount.toLocaleString('es-NI', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+
+    const settings = this.appConfigService.getCurrentSettings();
+
+    const decimalSeparator = settings.decimalSeparator || '.';
+    const thousandSeparator = settings.thousandSeparator || ',';
+
+    const fixed = amount.toFixed(2);
+
+    const parts = fixed.split('.');
+    let integerPart = parts[0];
+    const decimalPart = parts[1];
+
+    // agregar separador de miles manual
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+
+    return `${integerPart}${decimalSeparator}${decimalPart}`;
   }
 
   onExcelImportClick(): void {
@@ -521,60 +533,60 @@ globalDashboardGobal: any = {
         aprobacionesPendientes: Number(item?.dashboard?.aprobacionesPendientes ?? 0),
         ultimosMovimientos: Array.isArray(item?.dashboard?.ultimosMovimientos)
           ? item.dashboard.ultimosMovimientos.map((mov: any) => ({
-              fecha: mov?.fecha ?? null,
-              descripcion: mov?.descripcion ?? null,
-              debito: Number(mov?.debito ?? 0),
-              credito: Number(mov?.credito ?? 0),
-              saldo: Number(mov?.saldo ?? 0)
-            }))
+            fecha: mov?.fecha ?? null,
+            descripcion: mov?.descripcion ?? null,
+            debito: Number(mov?.debito ?? 0),
+            credito: Number(mov?.credito ?? 0),
+            saldo: Number(mov?.saldo ?? 0)
+          }))
           : []
       }
     };
   }
 
   get pageNumbers(): (number | string)[] {
-  const total = this.totalPages;
+    const total = this.totalPages;
 
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, i) => i + 1);
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages: (number | string)[] = [];
+
+    pages.push(1);
+
+    if (this.currentPage > 3) {
+      pages.push('...');
+    }
+
+    const start = Math.max(2, this.currentPage - 1);
+    const end = Math.min(total - 1, this.currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (this.currentPage < total - 2) {
+      pages.push('...');
+    }
+
+    pages.push(total);
+
+    return pages;
   }
 
-  const pages: (number | string)[] = [];
-
-  pages.push(1);
-
-  if (this.currentPage > 3) {
-    pages.push('...');
+  onNuevoAhorro(id: string): void {
+    if (!id) return;
+    console.log('Nuevo ahorro para socio:', id);
   }
 
-  const start = Math.max(2, this.currentPage - 1);
-  const end = Math.min(total - 1, this.currentPage + 1);
-
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
+  onNuevoCredito(id: string): void {
+    if (!id) return;
+    console.log('Nuevo crédito para socio:', id);
   }
 
-  if (this.currentPage < total - 2) {
-    pages.push('...');
+  onMore(id: string): void {
+    if (!id) return;
+    console.log('Más acciones para socio:', id);
   }
-
-  pages.push(total);
-
-  return pages;
-}
-
-onNuevoAhorro(id: string): void {
-  if (!id) return;
-  console.log('Nuevo ahorro para socio:', id);
-}
-
-onNuevoCredito(id: string): void {
-  if (!id) return;
-  console.log('Nuevo crédito para socio:', id);
-}
-
-onMore(id: string): void {
-  if (!id) return;
-  console.log('Más acciones para socio:', id);
-}
 }
