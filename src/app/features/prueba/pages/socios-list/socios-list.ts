@@ -579,12 +579,11 @@ export class SociosListComponent implements OnInit, OnDestroy {
     console.log('Nuevo crédito para socio:', id);
   }
 
-  onHistorialAhorro(id: string) {
-    console.log('Historial ahorro', id);
-    // navegar o abrir modal
+  onIncrementoCuota(idSocio : string) {
+    this.router.navigate(['/cambio-cuota/new', idSocio, 'incremento']);
   }
 
-  onHistorialCredito(id: string) {
-    console.log('Historial crédito', id);
+  onDiminucionCuota(idSocio : string) {
+    this.router.navigate(['/cambio-cuota/new', idSocio, 'disminucion']);
   }
 }

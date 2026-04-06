@@ -1,0 +1,234 @@
+{
+  "socioCambioCuota": {
+    "title": "Cambio de cuota",
+    "subtitle": "Gestión de incremento y disminución de cuotas de ahorro",
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/"
+      },
+      {
+        "label": "Socios",
+        "url": "/socios"
+      },
+      {
+        "label": "Cambio de cuota"
+      }
+    ],
+    "sections": {
+      "socio": "Datos del socio",
+      "detail": "Configuración del movimiento",
+      "authorization": "Autorización",
+      "chart": "Historial de movimientos",
+      "accountType": "Tipo de cuenta",
+      "vigencia": "Vigencia"
+    },
+    "fields": {
+      "codigo": "Código:",
+      "nombres": "Nombres:",
+      "cedula": "Cédula:",
+      "empresa": "Empresa:",
+      "empleadoDesde": "Empleado desde:",
+      "tipoMovimiento": {
+        "label": "Tipo de movimiento"
+      },
+      "cuotaActual": {
+        "label": "Cuota actual"
+      },
+      "nuevaCuota": {
+        "label": "Nueva cuota"
+      },
+      "diferencia": {
+        "label": "Diferencia"
+      },
+      "vigencia": {
+        "label": "Fecha de inicio"
+      },
+      "aplicaDesde": {
+        "label": "Aplicar desde"
+      },
+      "observacion": {
+        "label": "Observación",
+        "placeholder": "Ingrese una observación"
+      }
+    },
+    "options": {
+      "corriente": "Ahorro corriente",
+      "navideno": "Ahorro navideño",
+      "incremento": "Incremento",
+      "disminucion": "Disminución",
+      "quincena": "Próxima quincena",
+      "inmediato": "Inmediato",
+      "afiliacion": "Afiliación"
+    },
+    "actions": {
+      "apply": "Aplicar movimiento",
+      "approve": "Aprobar",
+      "cancel": "Cancelar"
+    },
+    "states": {
+      "emptyAuthorization": "No hay movimientos registrados."
+    },
+    "messages": {
+      "warningCuota": "La nueva cuota debe ser mayor a la actual."
+    },
+    "authorization": {
+      "columns": {
+        "fecha": "Fecha",
+        "tipo": "Tipo",
+        "cuotaActual": "Cuota anterior",
+        "nuevaCuota": "Nueva cuota",
+        "diferencia": "Diferencia",
+        "estado": "Estado"
+      }
+    },
+    "history": {
+      "pagination": {
+        "showing": "Mostrando",
+        "of": "de",
+        "records": "registros"
+      }
+    },
+    "chart": {
+      "ahorro": "Ahorro disponible",
+      "retiro": "Depósitos mensuales",
+      "intereses": "Intereses acumulados"
+    },
+    "form": {
+      "fieldMeta": {
+        "TipoCuenta": {
+          "label": "Tipo de cuenta",
+          "tooltip": "Campo requerido"
+        },
+        "TipoMovimiento": {
+          "label": "Tipo de movimiento",
+          "tooltip": "Campo requerido"
+        },
+        "CuotaActual": {
+          "label": "Cuota actual",
+          "tooltip": "Campo requerido"
+        },
+        "NuevaCuota": {
+          "label": "Nueva cuota",
+          "tooltip": "Campo requerido"
+        },
+        "Diferencia": {
+          "label": "Diferencia",
+          "tooltip": "Campo calculado"
+        },
+        "Vigencia": {
+          "label": "Fecha de inicio",
+          "tooltip": "Campo requerido"
+        },
+        "AplicaDesde": {
+          "label": "Aplicar desde",
+          "tooltip": "Campo requerido"
+        },
+        "Observacion": {
+          "label": "Observación",
+          "tooltip": "Campo opcional"
+        }
+      },
+      "validations": {
+        "TipoCuenta": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione el tipo de cuenta"
+            }
+          }
+        },
+        "FechaServidor":{
+           "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        "TipoMovimiento": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione el tipo de movimiento"
+            }
+          }
+        },
+        "CuotaActual": {
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        "NuevaCuota": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "La nueva cuota debe ser mayor a 0"
+            },
+            "2": {
+              "rule": "NUM>",
+              "value": "{CuotaActual}",
+              "when": "{TipoMovimiento}=incremento",
+              "msj": "La nueva cuota debe ser mayor a la actual"
+            },
+            "3": {
+              "rule": "NUM<",
+              "value": "{CuotaActual}",
+              "when": "{TipoMovimiento}=disminucion",
+              "msj": "La nueva cuota debe ser menor a la actual"
+            }
+          }
+        },
+        "Vigencia": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": "Ingrese la fecha de inicio"
+            },
+             "2": {
+              "rule": "DATE>=",
+              "value": "{FechaServidor}",
+              "when": "",
+              "msj": "La fecha debe de ser mayor o igual a la del sistema"
+            }
+          }
+        },
+        "AplicaDesde": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione cuándo aplicar el movimiento"
+            }
+          }
+        },
+        "Observacion": {
+          "data": {
+            "1": {
+              "rule": "LEN<=",
+              "value": "500",
+              "when": "",
+              "msj": "Las observaciones no deben exceder {value} caracteres"
+            }
+          }
+        }
+      }
+    }
+  }
+}

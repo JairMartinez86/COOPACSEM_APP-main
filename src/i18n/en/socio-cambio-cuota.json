@@ -1,0 +1,234 @@
+{
+  "socioCambioCuota": {
+    "title": "Quota Change",
+    "subtitle": "Manage increases and decreases of savings quotas",
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Members",
+        "url": "/socios"
+      },
+      {
+        "label": "Quota Change"
+      }
+    ],
+    "sections": {
+      "socio": "Member Information",
+      "detail": "Movement Configuration",
+      "authorization": "Authorization",
+      "chart": "Movement History",
+      "accountType": "Account Type",
+      "vigencia": "Effective Date"
+    },
+    "fields": {
+      "codigo": "Code:",
+      "nombres": "Full Name:",
+      "cedula": "Identification:",
+      "empresa": "Company:",
+      "empleadoDesde": "Employee since:",
+      "tipoMovimiento": {
+        "label": "Movement Type"
+      },
+      "cuotaActual": {
+        "label": "Current Quota"
+      },
+      "nuevaCuota": {
+        "label": "New Quota"
+      },
+      "diferencia": {
+        "label": "Difference"
+      },
+      "vigencia": {
+        "label": "Start Date"
+      },
+      "aplicaDesde": {
+        "label": "Apply From"
+      },
+      "observacion": {
+        "label": "Observation",
+        "placeholder": "Enter an observation"
+      }
+    },
+    "options": {
+      "corriente": "Current Savings",
+      "navideno": "Christmas Savings",
+      "incremento": "Increase",
+      "disminucion": "Decrease",
+      "quincena": "Next payroll period",
+      "inmediato": "Immediate",
+      "afiliacion": "Affiliation"
+    },
+    "actions": {
+      "apply": "Apply Movement",
+      "approve": "Approve",
+      "cancel": "Cancel"
+    },
+    "states": {
+      "emptyAuthorization": "No movements registered."
+    },
+    "messages": {
+      "warningCuota": "The new quota must be greater than the current one."
+    },
+    "authorization": {
+      "columns": {
+        "fecha": "Date",
+        "tipo": "Type",
+        "cuotaActual": "Previous Quota",
+        "nuevaCuota": "New Quota",
+        "diferencia": "Difference",
+        "estado": "Status"
+      }
+    },
+    "history": {
+      "pagination": {
+        "showing": "Showing",
+        "of": "of",
+        "records": "records"
+      }
+    },
+    "chart": {
+      "ahorro": "Available Savings",
+      "retiro": "Monthly Deposits",
+      "intereses": "Accumulated Interests"
+    },
+    "form": {
+      "fieldMeta": {
+        "TipoCuenta": {
+          "label": "Account Type",
+          "tooltip": "Required field"
+        },
+        "TipoMovimiento": {
+          "label": "Movement Type",
+          "tooltip": "Required field"
+        },
+        "CuotaActual": {
+          "label": "Current Quota",
+          "tooltip": "Required field"
+        },
+        "NuevaCuota": {
+          "label": "New Quota",
+          "tooltip": "Required field"
+        },
+        "Diferencia": {
+          "label": "Difference",
+          "tooltip": "Calculated field"
+        },
+        "Vigencia": {
+          "label": "Start Date",
+          "tooltip": "Required field"
+        },
+        "AplicaDesde": {
+          "label": "Apply From",
+          "tooltip": "Required field"
+        },
+        "Observacion": {
+          "label": "Observation",
+          "tooltip": "Optional field"
+        }
+      },
+      "validations": {
+        "TipoCuenta": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Select the account type"
+            }
+          }
+        },
+        "FechaServidor": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        "TipoMovimiento": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Select the movement type"
+            }
+          }
+        },
+        "CuotaActual": {
+          "data": {
+            "1": {
+              "rule": "NUM>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
+        "NuevaCuota": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "The new quota must be greater than 0"
+            },
+            "2": {
+              "rule": "NUM>",
+              "value": "{CuotaActual}",
+              "when": "{TipoMovimiento}=incremento",
+              "msj": "The new quota must be greater than the current one"
+            },
+            "3": {
+              "rule": "NUM<",
+              "value": "{CuotaActual}",
+              "when": "{TipoMovimiento}=disminucion",
+              "msj": "The new quota must be less than the current one"
+            }
+          }
+        },
+        "Vigencia": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": "Enter the start date"
+            },
+            "2": {
+              "rule": "DATE>=",
+              "value": "{FechaServidor}",
+              "when": "",
+              "msj": "The date must be greater than or equal to the system date"
+            }
+          }
+        },
+        "AplicaDesde": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Select when to apply the movement"
+            }
+          }
+        },
+        "Observacion": {
+          "data": {
+            "1": {
+              "rule": "LEN<=",
+              "value": "500",
+              "when": "",
+              "msj": "Observations must not exceed {value} characters"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -14,6 +14,7 @@ export interface AppRegionalConfig {
   affiliationCost: number;
   ordinaryCapitalPercentage: number;
   otherDeferredIncomePercentage: number;
+  fechaServidor : string
 }
 
 export interface PublicSettingsResponse {
@@ -37,7 +38,8 @@ export class AppConfigService {
     thousandSeparator: ',',
     affiliationCost: 0,
     ordinaryCapitalPercentage: 0,
-    otherDeferredIncomePercentage: 0
+    otherDeferredIncomePercentage: 0,
+    fechaServidor: '',
   };
 
   getPublicSettings(): Observable<PublicSettingsResponse> {

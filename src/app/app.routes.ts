@@ -179,6 +179,14 @@ export const routes: Routes = [
         canDeactivate: [pendingChangesGuard],
       },
 
+      {
+        path: 'cambio-cuota/new/:socioId/:tipoMovimiento',
+        loadComponent: () =>
+          import('./features/prueba/pages/socio-cambio-cuota/socio-cambio-cuota').then(m => m.SocioCambioCuotaComponent),
+        data: { permission: '/cambio-cuota', action: ['view', 'create'], tableFilterKey: 'socio-cambio-cuota' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
 
 
       // PROVEEDORES

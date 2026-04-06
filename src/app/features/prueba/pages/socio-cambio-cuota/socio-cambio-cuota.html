@@ -1,0 +1,468 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+  <div class="main-content page-dashboard-finance">
+
+    <div class="page-header mb-2">
+      <div>
+        <h1 class="page-title d-flex align-items-center gap-2">
+          <i [class]="tipoMovimiento === 'incremento'
+          ? 'bi bi-arrow-up-circle-fill text-success'
+          : 'bi bi-arrow-down-circle-fill text-danger'">
+          </i>
+
+          {{ 'socioCambioCuota.title' | translate }}
+          ({{ tipoMovimiento === 'incremento'
+          ? ('socioCambioCuota.options.incremento' | translate)
+          : ('socioCambioCuota.options.disminucion' | translate) }})
+        </h1>
+
+        <p class="text-muted mb-0">
+          {{ 'socioCambioCuota.subtitle' | translate }}
+        </p>
+      </div>
+    </div>
+
+    <div class="two-column-layout">
+
+      <!-- IZQUIERDA -->
+      <div>
+
+        <!-- DATOS SOCIO -->
+        <div class="card mb-2">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              {{ 'socioCambioCuota.sections.socio' | translate }}
+            </h5>
+          </div>
+
+          <div class="card-body">
+            <div class="row g-2">
+
+              <div class="col-md-6">
+                <div class="d-flex gap-2">
+                  <small class="text-muted d-flex gap-1 mb-0">
+                    <i class="bi bi-hash"></i>
+                    {{ 'socioCambioCuota.fields.codigo' | translate }}
+                  </small>
+                  <strong>{{ socio?.codigoSocio || '-' }}</strong>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="d-flex align-items-center gap-1">
+                  <small class="text-muted d-flex gap-1 mb-0">
+                    <i class="bi bi-person"></i>
+                    {{ 'socioCambioCuota.fields.nombres' | translate }}
+                  </small>
+                  <strong>{{ socio?.nombreCompleto || '-' }}</strong>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="d-flex gap-1">
+                  <small class="text-muted d-flex gap-1 mb-0">
+                    <i class="bi bi-card-text"></i>
+                    {{ 'socioCambioCuota.fields.cedula' | translate }}
+                  </small>
+                  <strong>{{ socio?.numeroIdentificacion || '-' }}</strong>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="d-flex gap-1">
+                  <small class="text-muted d-flex gap-1 mb-0">
+                    <i class="bi bi-building"></i>
+                    {{ 'socioCambioCuota.fields.empresa' | translate }}
+                  </small>
+                  <strong>{{ socio?.sociedadLabora || '-' }}</strong>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- DETALLE -->
+        <div class="card mb-2">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              {{ 'socioCambioCuota.sections.detail' | translate }}
+            </h5>
+          </div>
+
+          <form autocomplete="off" novalidate>
+            <div class="card-body">
+              <div class="row g-2">
+
+                <div class="col-md-4" error-notify="TipoMovimiento" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioCambioCuota.fields.tipoMovimiento.label' | translate }}
+                  </label>
+
+                  <select #TipoMovimiento class="form-select" [(ngModel)]="form.tipoMovimiento" id="TipoMovimiento"
+                    name="TipoMovimiento" engineSync="TipoMovimiento" autoFocusNext [next]="CuotaActual"
+                    [disabled]="true">
+
+                    <option value="incremento">
+                      {{ 'socioCambioCuota.options.incremento' | translate }}
+                    </option>
+                    <option value="disminucion">
+                      {{ 'socioCambioCuota.options.disminucion' | translate }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="col-md-4" error-notify="CuotaActual" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioCambioCuota.fields.cuotaActual.label' | translate }}
+                  </label>
+
+                  <input #CuotaActual type="text" class="form-control text-end" [(ngModel)]="form.cuotaActual"
+                    id="CuotaActual" name="CuotaActual" engineSync="CuotaActual" numberFormat [decimals]="2"
+                    [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                    [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
+                    [next]="NuevaCuota" disabled />
+                </div>
+
+                <div class="col-md-4" error-notify="NuevaCuota" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioCambioCuota.fields.nuevaCuota.label' | translate }}
+                  </label>
+
+                  <input #NuevaCuota type="text" class="form-control text-end" [(ngModel)]="form.nuevaCuota"
+                    id="NuevaCuota" name="NuevaCuota" engineSync="NuevaCuota" numberFormat [decimals]="2"
+                    [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                    [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
+                    [next]="Vigencia" JmartAutoFocus />
+                </div>
+
+                <div class="col-md-4" error-notify="Diferencia" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioCambioCuota.fields.diferencia.label' | translate }}
+                  </label>
+
+                  <input #Diferencia type="text" class="form-control text-end" [ngModel]="getDiferencia()"
+                    id="Diferencia" name="Diferencia" engineSync="Diferencia" numberFormat [decimals]="2"
+                    [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                    [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
+                    [next]="Vigencia" disabled />
+                </div>
+
+                <div class="col-md-4" error-notify="Vigencia" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioCambioCuota.fields.vigencia.label' | translate }}
+                  </label>
+
+                  <input #Vigencia type="text" class="form-control" [(ngModel)]="form.vigencia" id="Vigencia"
+                    name="Vigencia" engineSync="Vigencia"
+                    [dateFormat]="appConfigService.getCurrentSettings().dateFormat" autoFocusNext
+                    [next]="AplicaDesde" />
+                </div>
+
+                <div class="col-md-4" error-notify="AplicaDesde" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioCambioCuota.fields.aplicaDesde.label' | translate }}
+                  </label>
+
+                  <select #AplicaDesde class="form-select" [(ngModel)]="form.aplicaDesde" id="AplicaDesde"
+                    name="AplicaDesde" engineSync="AplicaDesde" autoFocusNext [next]="Observacion">
+
+                    <option value="quincena">
+                      {{ 'socioCambioCuota.options.quincena' | translate }}
+                    </option>
+                    <option value="inmediato">
+                      {{ 'socioCambioCuota.options.inmediato' | translate }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="col-12" error-notify="Observacion" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioCambioCuota.fields.observacion.label' | translate }}
+                  </label>
+
+                  <textarea #Observacion class="form-control" [(ngModel)]="form.observacion" id="Observacion"
+                    name="Observacion" engineSync="Observacion" rows="2"
+                    [attr.placeholder]="'socioCambioCuota.fields.observacion.placeholder' | translate"></textarea>
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- AUTORIZACION -->
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center gap-2 flex-wrap">
+            <h5 class="card-title mb-0">
+              {{ 'socioCambioCuota.sections.authorization' | translate }}
+            </h5>
+
+            <input type="text" class="form-control form-control-sm" style="max-width: 220px;"
+              [ngModel]="historialCurrentTerm" (ngModelChange)="historialCurrentTerm = $event; applyFilter()"
+              placeholder="{{ 'common.search' | translate }}" />
+          </div>
+
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>{{ 'socioCambioCuota.authorization.columns.fecha' | translate }}</th>
+                    <th>{{ 'socioCambioCuota.authorization.columns.tipo' | translate }}</th>
+                    <th>{{ 'socioCambioCuota.authorization.columns.cuotaActual' | translate }}</th>
+                    <th>{{ 'socioCambioCuota.authorization.columns.nuevaCuota' | translate }}</th>
+                    <th>{{ 'socioCambioCuota.authorization.columns.diferencia' | translate }}</th>
+                    <th>{{ 'socioCambioCuota.authorization.columns.estado' | translate }}</th>
+
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @if (pagedHistorial.length === 0) {
+                  <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">
+                      {{ 'socioCambioCuota.states.emptyAuthorization' | translate }}
+                    </td>
+                  </tr>
+                  }
+
+                  @for (item of pagedHistorial; track item.id) {
+                  <tr>
+                    <td>{{ formatDate(item.fecha) }}</td>
+
+                    <td>
+                      <span class="badge" [ngClass]="
+      item.tipo.toLowerCase() === 'incremento'
+        ? 'badge-soft-success'
+        : item.tipo.toLowerCase() === 'disminucion'
+          ? 'badge-soft-danger'
+          : item.tipo.toLowerCase() === 'afiliacion'
+            ? 'badge-soft-primary'
+            : 'badge-soft-secondary'
+    ">
+                        {{
+                        item.tipo.toLowerCase() === 'incremento'
+                        ? ('socioCambioCuota.options.incremento' | translate)
+                        : item.tipo.toLowerCase() === 'disminucion'
+                        ? ('socioCambioCuota.options.disminucion' | translate)
+                        : item.tipo.toLowerCase() === 'afiliacion'
+                        ? ('socioCambioCuota.options.afiliacion' | translate)
+                        : item.tipo
+                        }}
+                      </span>
+                    </td>
+
+                    <td>
+                      {{ appConfigService.getCurrentSettings().currency }}
+                      {{ formatCurrency(item.cuotaActual) }}
+                    </td>
+
+                    <td>
+                      {{ appConfigService.getCurrentSettings().currency }}
+                      {{ formatCurrency(item.nuevaCuota) }}
+                    </td>
+
+                    <td>
+                      {{ appConfigService.getCurrentSettings().currency }}
+                      {{ formatCurrency(item.diferencia) }}
+                    </td>
+
+                    <td>
+                      <span class="badge"
+                        [ngClass]="item.estado === 'Aprobado' ? 'badge-soft-success' : 'badge-soft-warning'">
+                        {{ item.estado }}
+                      </span>
+                    </td>
+
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            @if (historial.length > 0) {
+            <div class="users-pagination d-flex justify-content-between align-items-center flex-wrap gap-2 p-3">
+              <div class="users-pagination-info">
+                {{ 'socioCambioCuota.history.pagination.showing' | translate }}
+                <strong>{{ historialVisibleStart }}-{{ historialVisibleEnd }}</strong>
+                {{ 'socioCambioCuota.history.pagination.of' | translate }}
+                <strong>{{ historial.length }}</strong>
+                {{ 'socioCambioCuota.history.pagination.records' | translate }}
+              </div>
+
+              <nav>
+                <ul class="pagination pagination-sm mb-0">
+                  <li class="page-item" [class.disabled]="historialCurrentPage === 1">
+                    <a class="page-link" href="javascript:void(0)"
+                      (click)="goToHistorialPage(historialCurrentPage - 1)">
+                      <i class="bi bi-chevron-left"></i>
+                    </a>
+                  </li>
+
+                  @for (page of historialPageNumbers; track page) {
+                  @if (page === '...') {
+                  <li class="page-item disabled">
+                    <a class="page-link" href="javascript:void(0)">...</a>
+                  </li>
+                  } @else {
+                  <li class="page-item" [class.active]="page === historialCurrentPage">
+                    <a class="page-link" href="javascript:void(0)" (click)="goToHistorialPage(+page)">
+                      {{ page }}
+                    </a>
+                  </li>
+                  }
+                  }
+
+                  <li class="page-item" [class.disabled]="historialCurrentPage === historialTotalPages">
+                    <a class="page-link" href="javascript:void(0)"
+                      (click)="goToHistorialPage(historialCurrentPage + 1)">
+                      <i class="bi bi-chevron-right"></i>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            }
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DERECHA -->
+      <div>
+
+        <!-- TIPO DE CUENTA -->
+        <div class="card mb-2">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              {{ 'socioCambioCuota.sections.accountType' | translate }}
+            </h5>
+          </div>
+
+          <div class="card-body">
+            <div class="d-flex flex-column gap-2">
+
+              <div class="form-check">
+                <input #TipoCuentaCorriente class="form-check-input" type="radio" name="TipoCuenta"
+                  id="TipoCuentaCorriente" value="corriente" [(ngModel)]="form.tipoCuenta"
+                  (ngModelChange)="updateCuotaActual()" engineSync="TipoCuenta" />
+
+                <label class="form-check-label" for="TipoCuentaCorriente">
+                  {{ 'socioCambioCuota.options.corriente' | translate }}
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="TipoCuenta" id="TipoCuentaNavideno" value="navideno"
+                  [(ngModel)]="form.tipoCuenta" (ngModelChange)="updateCuotaActual()" engineSync="TipoCuenta" />
+
+                <label class="form-check-label" for="TipoCuentaNavideno">
+                  {{ 'socioCambioCuota.options.navideno' | translate }}
+                </label>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- RESUMEN ARRIBA DEL GRAFICO -->
+        <div class="card mb-2">
+          <div class="card-body p-2">
+
+            <div class="row g-2">
+
+              <div class="col-12">
+                <div class="summary-stat-card summary-stat-card--success">
+                  <div class="summary-stat-card__icon">
+                    <i class="fa-duotone fa-piggy-bank me-2 fa-2xl"></i>
+                  </div>
+                  <div class="summary-stat-card__body">
+                    <div class="summary-stat-card__label">
+                      {{ 'socioCambioCuota.chart.ahorro' | translate }}
+                    </div>
+                    <div class="summary-stat-card__value">
+                      {{ appConfigService.getCurrentSettings().currency }}
+                      {{ formatCurrency(chartTotals.ahorro) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="summary-stat-card summary-stat-card--warning">
+                  <div class="summary-stat-card__icon">
+                    <i class="bi bi-arrow-up-right-circle fa-2xl"></i>
+                  </div>
+                  <div class="summary-stat-card__body">
+                    <div class="summary-stat-card__label">
+                      {{ 'socioCambioCuota.chart.retiro' | translate }}
+                    </div>
+                    <div class="summary-stat-card__value">
+                      {{ appConfigService.getCurrentSettings().currency }}
+                      {{ formatCurrency(chartTotals.retiro) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="summary-stat-card summary-stat-card--info">
+                  <div class="summary-stat-card__icon">
+                    <i class="bi bi-graph-up-arrow fa-2xl"></i>
+                  </div>
+                  <div class="summary-stat-card__body">
+                    <div class="summary-stat-card__label">
+                      {{ 'socioCambioCuota.chart.intereses' | translate }}
+                    </div>
+                    <div class="summary-stat-card__value">
+                      {{ appConfigService.getCurrentSettings().currency }}
+                      {{ formatCurrency(chartTotals.intereses) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- PIE CHART -->
+        <div class="card mb-2">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              {{ 'socioCambioCuota.sections.chart' | translate }}
+            </h5>
+          </div>
+
+          <div class="card-body">
+            <apx-chart [series]="pieSeries" [chart]="pieChart" [labels]="pieLabels" [legend]="pieLegend"
+              [dataLabels]="pieDataLabels" [responsive]="pieResponsive">
+            </apx-chart>
+          </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="card">
+          <div class="card-body">
+            <button #saveButton type="button" class="btn btn-primary w-100 mb-2" (click)="onSave()"
+              [permissionRoute]="'/socios'" [appPermission]="['create']" autoFocusNext [disableClickButton]="true"
+              [unlockOn]="notify.closed$" [disabled]="saving">
+              <i class="bi bi-arrow-left-right me-1"></i>
+              {{ 'socioCambioCuota.actions.apply' | translate }}
+            </button>
+
+            <button type="button" class="btn btn-outline-secondary w-100" (click)="onCancel()"
+              [permissionRoute]="'/socios'" [appPermission]="['create']">
+              {{ 'socioCambioCuota.actions.cancel' | translate }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>

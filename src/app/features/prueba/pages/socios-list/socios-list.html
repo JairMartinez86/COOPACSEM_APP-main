@@ -328,7 +328,7 @@
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li>
                     <button class="dropdown-item d-flex align-items-center gap-2"
-                      (click)="onHistorialAhorro(selectedSocio.id)">
+                       (click)="onIncrementoCuota(selectedSocio.id)">
                       <i class="fa-sharp fa-solid fa-arrow-trend-up"></i>
                       {{ 'socios.profile.increaseSavings' | translate }}
                     </button>
@@ -336,7 +336,7 @@
 
                   <li>
                     <button class="dropdown-item d-flex align-items-center gap-2"
-                      (click)="onHistorialAhorro(selectedSocio.id)">
+                     (click)="onDiminucionCuota(selectedSocio.id)">
                       <i class="fa-sharp fa-solid fa-arrow-trend-down"></i>
                       {{ 'socios.profile.decreaseSavings' | translate }}
                     </button>
@@ -344,7 +344,7 @@
 
                   <li>
                     <button class="dropdown-item d-flex align-items-center gap-2"
-                      (click)="onHistorialCredito(selectedSocio.id)">
+                      >
                       <i class="fa-duotone fa-credit-card"></i>
                       {{ 'socios.profile.credits' | translate }}
                     </button>
