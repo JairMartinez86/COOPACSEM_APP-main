@@ -38,7 +38,7 @@ interface SocioResumen {
     celular?: string;
     correo?: string;
     direccionDomiciliar?: string;
-    createdAtUtc?: string | null;
+    FechaIngreso?: string | null;
     dashboard?: SocioDashboard | null;
 }
 
@@ -289,7 +289,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                         celular: data?.celular ?? '',
                         correo: data?.correo ?? '',
                         direccionDomiciliar: data?.direccionDomiciliar ?? '',
-                        createdAtUtc: data?.createdAtUtc ?? null,
+                        FechaIngreso: data?.fechaIngreso ?? null,
                         dashboard: {
                             totalAhorro: Number(data?.dashboard?.totalAhorro ?? 0),
                             ahorroNavideno: Number(data?.dashboard?.ahorroNavideno ?? 0),
@@ -455,29 +455,24 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
     return `${integerPart}${decimalSeparator}${decimalPart}`;
   }
 
-    formatDate(value?: string | null): string {
-        if (!value) return '-';
-
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) return value;
-
-        return new Intl.DateTimeFormat('es-NI', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        }).format(date);
+ formatDate(value?: string | null): string {
+    if (!value) {
+      return this.translate.instant('common.noDate');
     }
 
-    getInitials(fullName?: string | null): string {
-        if (!fullName) return '--';
-
-        return fullName
-            .split(' ')
-            .filter(Boolean)
-            .slice(0, 2)
-            .map(x => x[0]?.toUpperCase())
-            .join('');
+    const date = new Date(value);
+    if (isNaN(date.getTime())) {
+      return this.translate.instant('common.noDate');
     }
+
+    return date.toLocaleDateString('es-NI', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit'
+    });
+  }
+
+
 
     get historialTotalPages(): number {
         return Math.max(1, Math.ceil(this.historial.length / this.historialPageSize));

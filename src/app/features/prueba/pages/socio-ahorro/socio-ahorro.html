@@ -31,28 +31,57 @@
                         <div class="row g-2">
 
                             <div class="col-md-6">
-                                <small class="text-muted d-block">Código</small>
-                                <strong>{{ socio?.codigoSocio || '-' }}</strong>
+                                <div class="d-flex gap-2">
+                                    <small class="text-muted d-flex  gap-1 mb-0">
+                                        <i class="bi bi-hash"></i>
+                                        {{ 'socioAhorro.fields.codigo' | translate }}
+                                    </small>
+                                    <strong>{{ socio?.codigoSocio || '-' }}</strong>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
-                                <small class="text-muted d-block">Nombres</small>
-                                <strong>{{ socio?.nombreCompleto || '-' }}</strong>
+                                <div class="d-flex align-items-center gap-1">
+                                    <small class="text-muted d-flex  gap-1 mb-0">
+                                        <i class="bi bi-person"></i>
+                                        {{ 'socioAhorro.fields.nombres' | translate }}
+                                    </small>
+                                    <strong>{{ socio?.nombreCompleto || '-' }}</strong>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
-                                <small class="text-muted d-block">Cédula</small>
-                                <strong>{{ socio?.numeroIdentificacion || '-' }}</strong>
+                                <div class="d-flex gap-1">
+                                    <small class="text-muted d-flex  gap-1 mb-0">
+                                        <i class="bi bi-card-text"></i>
+                                        {{ 'socioAhorro.fields.cedula' | translate }}
+                                    </small>
+                                    <strong>{{ socio?.numeroIdentificacion || '-' }}</strong>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
-                                <small class="text-muted d-block">Empresa</small>
-                                <strong>{{ socio?.sociedadLabora || '-' }}</strong>
+                                <div class="d-flex gap-1">
+                                    <small class="text-muted d-flex  gap-1 mb-0">
+                                        <i class="bi bi-building"></i>
+                                        {{ 'socioAhorro.fields.empresa' | translate }}
+                                    </small>
+                                    <strong>{{ socio?.sociedadLabora || '-' }}</strong>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
-                                <small class="text-muted d-block">Estado</small>
-                                <span class="badge badge-soft-success">Activo</span>
+                                <div class="d-flex gap-1">
+                                    <small class="text-muted d-flex align-items-center gap-1 mb-0">
+                                        <i class="bi bi-check-circle"></i>
+                                        {{ 'socioAhorro.fields.estado' | translate }}
+                                    </small>
+
+                                    <span class="badge badge-soft-success d-flex align-items-center gap-1">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        {{ 'socioAhorro.status.activo' | translate }}
+                                    </span>
+                                </div>
                             </div>
 
                         </div>
@@ -164,8 +193,8 @@
 
                                 <textarea #Observacion class="form-control" rows="2" style="resize: none;"
                                     placeholder="{{ 'socioAhorro.fields.observacion.placeholder' | translate }}"
-                                    [(ngModel)]="ahorro.observacion" id="Observacion" name="Observacion" engineSync="Observacion"
-                                    autoFocusNext [next]="btn"></textarea>
+                                    [(ngModel)]="ahorro.observacion" id="Observacion" name="Observacion"
+                                    engineSync="Observacion" autoFocusNext [next]="btn"></textarea>
                             </div>
 
                         </div>
@@ -195,7 +224,7 @@
                                         <th>{{ 'socioAhorro.history.columns.amount' | translate }}</th>
                                         <th>{{ 'socioAhorro.history.columns.destination' | translate }}</th>
                                         <th>{{ 'socioAhorro.history.columns.status' | translate }}</th>
-   
+
                                     </tr>
                                 </thead>
 
@@ -226,7 +255,7 @@
                                             </span>
                                         </td>
 
-                                        
+
                                     </tr>
                                     }
                                 </tbody>
@@ -289,15 +318,32 @@
 
                 <div class="card mb-2">
                     <div class="card-body">
-                        <h6 class="mb-1">{{ socio?.nombreCompleto }}</h6>
-                        <small class="text-muted d-block mb-2">
+
+                        <h6 class="mb-1 d-flex align-items-center gap-2">
+                            <i class="bi bi-person-fill text-primary"></i>
+                            {{ socio?.nombreCompleto }}
+                        </h6>
+
+                        <small class="text-muted d-block mb-2 d-flex align-items-center gap-2">
+                            <i class="bi bi-hash"></i>
                             {{ socio?.codigoSocio }}
                         </small>
 
                         <div class="small text-muted">
-                            <div>{{ socio?.numeroIdentificacion }}</div>
-                            <div>{{ formatDate(socio?.createdAtUtc) }}</div>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-card-text"></i>
+                                {{ socio?.numeroIdentificacion }}
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-calendar-event"></i>
+                                {{ 'socioAhorro.fields.empleadoDesde' | translate }} {{ formatDate(socio?.FechaIngreso)
+                                }}
+                            </div>
+
                         </div>
+
                     </div>
                 </div>
 

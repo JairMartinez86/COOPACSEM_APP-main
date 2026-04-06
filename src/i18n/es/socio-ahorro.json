@@ -20,7 +20,16 @@
       "detail": "Detalle del depósito",
       "history": "Historial de depósitos"
     },
+     "status": {
+    "activo": "Activo"
+  },
     "fields": {
+      "codigo": "Código",
+      "nombres": "Nombres",
+      "cedula": "Cédula",
+      "empresa": "Empresa",
+      "estado": "Estado",
+      "empleadoDesde": "Empleado desde",
       "monto": {
         "label": "Monto"
       },

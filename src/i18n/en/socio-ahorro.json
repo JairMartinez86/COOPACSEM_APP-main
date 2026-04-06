@@ -2,6 +2,7 @@
   "socioAhorro": {
     "title": "Savings deposit",
     "subtitle": "Register member extra deposits",
+    "empleadoDesde": "Employee since",
     "breadcrumbs": [
       {
         "label": "Home",
@@ -20,7 +21,16 @@
       "detail": "Deposit details",
       "history": "Deposit history"
     },
+    "status": {
+      "activo": "Active"
+    },
     "fields": {
+      "codigo": "Code",
+      "nombres": "Full name",
+      "cedula": "ID",
+      "empresa": "Company",
+      "estado": "Status",
+      "empleadoDesde": "Employee since",
       "monto": {
         "label": "Amount"
       },
@@ -134,10 +144,10 @@
         "Observacion": {
           "data": {
             "1": {
-            "rule": "LEN>",
-            "value": "0",
-            "msj": "Enter a note"
-          }
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Enter a note"
+            }
           }
         }
       }
