@@ -33,7 +33,7 @@ interface SocioResumen {
     codigoSocio: string;
     nombreCompleto: string;
     numeroIdentificacion: string;
-    empresa?: string;
+    sociedadLabora?: string;
     telefono?: string;
     celular?: string;
     correo?: string;
@@ -284,7 +284,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                         codigoSocio: data?.codigoSocio ?? '',
                         nombreCompleto: data?.nombreCompleto ?? '',
                         numeroIdentificacion: data?.numeroIdentificacion ?? '',
-                        empresa: data?.empresa ?? '',
+                        sociedadLabora: data?.sociedadLabora ?? '',
                         telefono: data?.telefono ?? '',
                         celular: data?.celular ?? '',
                         correo: data?.correo ?? '',

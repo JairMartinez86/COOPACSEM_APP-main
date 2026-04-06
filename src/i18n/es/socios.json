@@ -1287,11 +1287,6 @@
           "pasaporte": "Pasaporte",
           "residencia": "Residencia",
           "otro": "Otro"
-        },
-        "sociedadLabora": {
-          "gmg_comercial": "GMG Comercial",
-          "gmg_servicios": "GMG Servicios",
-          "gmg_zona_franca": "GMG Zona Franca"
         }
       }
     },
