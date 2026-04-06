@@ -16,5 +16,6 @@ import activity from './en/activity.json';
 import userlist from './en/userlist.json';
 import socios from './en/socios.json';
 import proveedor from './en/proveedores.json';
+import socio_ahorro from './en/socio-ahorro.json';
 
-export const en = Object.assign({}, interceptor, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor,  draft);
+export const en = Object.assign({}, interceptor, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, socio_ahorro, socio_ahorro,  draft);

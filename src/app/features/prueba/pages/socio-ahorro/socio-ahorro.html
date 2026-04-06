@@ -1,0 +1,355 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+    <div class="main-content page-dashboard-finance">
+
+        <div class="page-header mb-2">
+            <div>
+                <h1 class="page-title">
+                    {{ 'socioAhorro.title' | translate }}
+                </h1>
+                <p class="text-muted mb-0">
+                    {{ 'socioAhorro.subtitle' | translate }}
+                </p>
+            </div>
+        </div>
+
+        <div class="two-column-layout">
+
+            <!-- IZQUIERDA -->
+            <div>
+
+                <!-- DATOS SOCIO -->
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            {{ 'socioAhorro.sections.socio' | translate }}
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row g-2">
+
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Código</small>
+                                <strong>{{ socio?.codigoSocio || '-' }}</strong>
+                            </div>
+
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Nombres</small>
+                                <strong>{{ socio?.nombreCompleto || '-' }}</strong>
+                            </div>
+
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Cédula</small>
+                                <strong>{{ socio?.numeroIdentificacion || '-' }}</strong>
+                            </div>
+
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Empresa</small>
+                                <strong>{{ socio?.empresa || '-' }}</strong>
+                            </div>
+
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Estado</small>
+                                <span class="badge badge-soft-success">Activo</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DETALLE -->
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            {{ 'socioAhorro.sections.detail' | translate }}
+                        </h5>
+                    </div>
+
+                    <form autocomplete="off" novalidate>
+                        <div class="card-body">
+
+                            <!-- MONTO -->
+                            <div class="d-flex justify-content-center mb-2" error-notify="Monto" error-display="inline">
+                                <div class="input-group input-group-sm" style="max-width: 340px;">
+                                    <span class="input-group-text">
+                                        {{ 'socioAhorro.fields.monto.label' | translate }}
+                                    </span>
+
+                                    <span class="input-group-text">
+                                        {{ appConfigService.getCurrentSettings().currency }}
+                                    </span>
+
+                                    <input #Monto type="text" class="form-control text-center"
+                                        [(ngModel)]="ahorro.monto" id="Monto" name="Monto" engineSync="Monto"
+                                        autoFocusNext [next]="BancoCodigo" numberFormat [decimals]="2"
+                                        [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                                        JmartAutoFocus />
+                                </div>
+                            </div>
+
+                            <!-- DESTINO -->
+                            <div class="d-flex justify-content-center flex-wrap gap-3 mb-2">
+                                @for (item of destinos; track item.value; let i = $index) {
+                                <div class="form-check">
+                                    <input #DestinoAhorroCorriente class="form-check-input" type="radio" name="Destino"
+                                        [id]="'destino_' + item.value" [value]="item.value" [(ngModel)]="ahorro.destino"
+                                        engineSync="Destino" autoFocusNext [next]="BancoCodigo" />
+
+                                    <label class="form-check-label" [for]="'destino_' + item.value">
+                                        {{ item.labelKey | translate }}
+                                    </label>
+                                </div>
+                                }
+                            </div>
+
+                            <div class="row g-2">
+
+                                <div class="col-md-4" error-notify="BancoCodigo" error-display="inline">
+                                    <label class="form-label">
+                                        {{ 'socioAhorro.fields.banco.label' | translate }}
+                                    </label>
+
+                                    <select #BancoCodigo class="form-select" [(ngModel)]="ahorro.bancoCodigo"
+                                        id="BancoCodigo" name="BancoCodigo" engineSync="BancoCodigo" autoFocusNext
+                                        [next]="NoDeposito">
+
+                                        <option value="">
+                                            {{ 'socioAhorro.fields.banco.placeholder' | translate }}
+                                        </option>
+
+                                        @for (banco of bancos; track banco.codigo) {
+                                        @if (banco.activo) {
+                                        <option [value]="banco.codigo">
+                                            {{ banco.nombreBanco }}
+                                        </option>
+                                        }
+                                        }
+                                    </select>
+                                </div>
+
+
+
+                                <div class="col-md-4" error-notify="NoDeposito" error-display="inline">
+                                    <label class="form-label">
+                                        {{ 'socioAhorro.fields.noDeposito.label' | translate }}
+                                    </label>
+
+                                    <input #NoDeposito type="text" class="form-control" [(ngModel)]="ahorro.noDeposito"
+                                        id="NoDeposito" name="NoDeposito" engineSync="NoDeposito" autoFocusNext
+                                        [next]="FechaDeposito" />
+                                </div>
+
+                                <div class="col-md-4" error-notify="FechaDeposito" error-display="inline">
+                                    <label class="form-label">
+                                        {{ 'socioAhorro.fields.fechaDeposito.label' | translate }}
+                                    </label>
+
+                                    <input #FechaDeposito type="text" class="form-control"
+                                        [(ngModel)]="ahorro.fechaDeposito" id="FechaDeposito" name="FechaDeposito"
+                                        engineSync="FechaDeposito" autoFocusNext [next]="Observacion"
+                                        [dateFormat]="appConfigService.getCurrentSettings().dateFormat" />
+                                </div>
+
+                            </div>
+
+
+                            <!-- OBSERVACION -->
+                            <div class="mt-2" error-notify="Observacion" error-display="inline">
+                                <label class="form-label">
+                                    {{ 'socioAhorro.fields.observacion.label' | translate }}
+                                </label>
+
+                                <textarea #Observacion class="form-control" rows="2" style="resize: none;"
+                                    placeholder="{{ 'socioAhorro.fields.observacion.placeholder' | translate }}"
+                                    [(ngModel)]="ahorro.observacion" id="Observacion" name="Observacion" engineSync="Observacion"
+                                    autoFocusNext [next]="btn"></textarea>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+
+                <!-- HISTORIAL -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                        <h5 class="card-title mb-0">
+                            {{ 'socioAhorro.sections.history' | translate }}
+                        </h5>
+
+                        <input type="text" class="form-control form-control-sm" style="max-width: 220px;"
+                            [ngModel]="historialCurrentTerm"
+                            (ngModelChange)="historialCurrentTerm = $event; applyFilter()"
+                            placeholder="{{ 'common.search' | translate }}" />
+                    </div>
+
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>{{ 'socioAhorro.history.columns.date' | translate }}</th>
+                                        <th>{{ 'socioAhorro.history.columns.amount' | translate }}</th>
+                                        <th>{{ 'socioAhorro.history.columns.destination' | translate }}</th>
+                                        <th>{{ 'socioAhorro.history.columns.status' | translate }}</th>
+   
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @if (pagedHistorial.length === 0) {
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-muted">
+                                            {{ 'socioAhorro.states.historyPending' | translate }}
+                                        </td>
+                                    </tr>
+                                    }
+
+                                    @for (item of pagedHistorial; track item.id) {
+                                    <tr>
+                                        <td>{{ formatDate(item.fecha) }}</td>
+
+                                        <td>
+                                            {{ appConfigService.getCurrentSettings().currency }}
+                                            {{ formatCurrency(item.monto) }}
+                                        </td>
+
+                                        <td>{{ item.destino }}</td>
+
+                                        <td>
+                                            <span class="badge"
+                                                [ngClass]="item.estado === 'Aplicado' ? 'badge-soft-success' : 'badge-soft-warning'">
+                                                {{ item.estado }}
+                                            </span>
+                                        </td>
+
+                                        
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @if (historial.length > 0) {
+                        <div
+                            class="users-pagination d-flex justify-content-between align-items-center flex-wrap gap-2 p-3">
+                            <div class="users-pagination-info">
+                                {{ 'socioAhorro.history.pagination.showing' | translate }}
+                                <strong>{{ historialVisibleStart }}-{{ historialVisibleEnd }}</strong>
+                                {{ 'socioAhorro.history.pagination.of' | translate }}
+                                <strong>{{ historial.length }}</strong>
+                                {{ 'socioAhorro.history.pagination.records' | translate }}
+                            </div>
+
+                            <nav>
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item" [class.disabled]="historialCurrentPage === 1">
+                                        <a class="page-link" href="javascript:void(0)"
+                                            (click)="goToHistorialPage(historialCurrentPage - 1)">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </a>
+                                    </li>
+
+                                    @for (page of historialPageNumbers; track page) {
+                                    @if (page === '...') {
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="javascript:void(0)">...</a>
+                                    </li>
+                                    } @else {
+                                    <li class="page-item" [class.active]="page === historialCurrentPage">
+                                        <a class="page-link" href="javascript:void(0)"
+                                            (click)="goToHistorialPage(+page)">
+                                            {{ page }}
+                                        </a>
+                                    </li>
+                                    }
+                                    }
+
+                                    <li class="page-item"
+                                        [class.disabled]="historialCurrentPage === historialTotalPages">
+                                        <a class="page-link" href="javascript:void(0)"
+                                            (click)="goToHistorialPage(historialCurrentPage + 1)">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- DERECHA -->
+            <div>
+
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h6 class="mb-1">{{ socio?.nombreCompleto }}</h6>
+                        <small class="text-muted d-block mb-2">
+                            {{ socio?.codigoSocio }}
+                        </small>
+
+                        <div class="small text-muted">
+                            <div>{{ socio?.numeroIdentificacion }}</div>
+                            <div>{{ formatDate(socio?.createdAtUtc) }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="socios-summary-strip socios-summary-strip--corriente mb-2">
+                    <div class="socios-summary-strip__label">
+                        {{ 'socioAhorro.summary.currentSaving' | translate }}
+                    </div>
+                    <div class="socios-summary-strip__value">
+                        {{ appConfigService.getCurrentSettings().currency }}
+                        {{ formatCurrency(socio?.dashboard?.totalAhorro) }}
+                    </div>
+                </div>
+
+                <div class="socios-summary-strip socios-summary-strip--navidad mb-2">
+                    <div class="socios-summary-strip__label">
+                        {{ 'socioAhorro.summary.christmasSaving' | translate }}
+                    </div>
+                    <div class="socios-summary-strip__value">
+                        {{ appConfigService.getCurrentSettings().currency }}
+                        {{ formatCurrency(socio?.dashboard?.ahorroNavideno ?? 0) }}
+                    </div>
+                </div>
+
+                <div class="socios-summary-strip socios-summary-strip--credito mb-2">
+                    <div class="socios-summary-strip__label">
+                        {{ 'socioAhorro.summary.activeCredit' | translate }}
+                    </div>
+                    <div class="socios-summary-strip__value">
+                        {{ appConfigService.getCurrentSettings().currency }}
+                        {{ formatCurrency(socio?.dashboard?.creditoPendiente) }}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <button #btn type="button" class="btn btn-success w-100 mb-2" (click)="onSave()"
+                            [permissionRoute]="'/socios'" [appPermission]="['create']" autoFocusNext
+                            [disableClickButton]="true" [unlockOn]="notify.closed$">
+
+                            <i class="bi bi-plus-circle me-1"></i>
+                            {{ 'socioAhorro.actions.save' | translate }}
+                        </button>
+
+                        <button type="button" class="btn btn-outline-secondary w-100" (click)="onCancel()"
+                            [permissionRoute]="'/socios'" [appPermission]="['create']">
+                            {{ 'socioAhorro.actions.cancel' | translate }}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>

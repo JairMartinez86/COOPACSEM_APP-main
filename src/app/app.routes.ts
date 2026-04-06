@@ -99,7 +99,7 @@ export const routes: Routes = [
           import('./features/setting/pages/user-setting/user-setting')
             .then(m => m.UserSettingComponent),
         canActivate: [permissionGuard],
-        data: { permission: '/user-setting'},
+        data: { permission: '/user-setting' },
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },
@@ -170,9 +170,18 @@ export const routes: Routes = [
         canDeactivate: [pendingChangesGuard],
       },
 
+      {
+        path: 'socio-ahorro/new/:socioId',
+        loadComponent: () =>
+          import('./features/prueba/pages/socio-ahorro/socio-ahorro').then(m => m.SocioAhorroComponent),
+        data: { permission: '/socio-ahorro', action: ['view', 'create'], tableFilterKey: 'socio-ahorro' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
 
 
-            // PROVEEDORES
+
+      // PROVEEDORES
       {
         path: 'proveedores',
         loadComponent: () =>

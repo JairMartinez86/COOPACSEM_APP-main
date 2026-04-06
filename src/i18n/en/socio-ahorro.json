@@ -1,0 +1,146 @@
+{
+  "socioAhorro": {
+    "title": "Savings deposit",
+    "subtitle": "Register member extra deposits",
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Members",
+        "url": "/socios"
+      },
+      {
+        "label": "Savings deposit"
+      }
+    ],
+    "sections": {
+      "socio": "Member information",
+      "detail": "Deposit details",
+      "history": "Deposit history"
+    },
+    "fields": {
+      "monto": {
+        "label": "Amount"
+      },
+      "banco": {
+        "label": "Bank",
+        "placeholder": "Select bank"
+      },
+      "noDeposito": {
+        "label": "Deposit No.",
+        "placeholder": "Enter number"
+      },
+      "fechaDeposito": {
+        "label": "Deposit date"
+      },
+      "observacion": {
+        "label": "Observation",
+        "placeholder": "Enter observation"
+      }
+    },
+    "destinos": {
+      "ahorroCorriente": "Current savings",
+      "ahorroNavideno": "Christmas savings",
+      "creditoActivo": "Apply to credit"
+    },
+    "summary": {
+      "currentSaving": "Current savings",
+      "christmasSaving": "Christmas savings",
+      "activeCredit": "Active credit"
+    },
+    "history": {
+      "columns": {
+        "date": "Date",
+        "amount": "Amount",
+        "destination": "Destination",
+        "status": "Status"
+      },
+      "pagination": {
+        "showing": "Showing",
+        "of": "of",
+        "records": "records"
+      }
+    },
+    "states": {
+      "historyPending": "No deposits found"
+    },
+    "actions": {
+      "save": "Save deposit",
+      "cancel": "Cancel"
+    },
+    "form": {
+      "fieldMeta": {
+        "Monto": {
+          "label": "Deposit details",
+          "tooltip": "Required field"
+        },
+        "BancoCodigo": {
+          "label": "Deposit details",
+          "tooltip": "Required field"
+        },
+        "NoDeposito": {
+          "label": "Deposit details",
+          "tooltip": "Required field"
+        },
+        "FechaDeposito": {
+          "label": "Deposit details",
+          "tooltip": "Required field"
+        },
+        "Observacion": {
+          "label": "Deposit details",
+          "tooltip": "Required field"
+        }
+      },
+      "validations": {
+        "Monto": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "msj": "Enter an amount greater than 0"
+            }
+          }
+        },
+        "BancoCodigo": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Select a bank"
+            }
+          }
+        },
+        "NoDeposito": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^[0-9]+$",
+              "msj": "Enter the deposit number"
+            }
+          }
+        },
+        "FechaDeposito": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": "Enter a valid date"
+            }
+          }
+        },
+        "Observacion": {
+          "data": {
+            "1": {
+            "rule": "LEN>",
+            "value": "0",
+            "msj": "Enter a note"
+          }
+          }
+        }
+      }
+    }
+  }
+}

@@ -570,10 +570,9 @@ export class SociosListComponent implements OnInit, OnDestroy {
     return pages;
   }
 
-  onNuevoAhorro(id: string): void {
-    if (!id) return;
-    console.log('Nuevo ahorro para socio:', id);
-  }
+ onNuevoAhorro(idSocio: string): void {
+  this.router.navigate(['/socio-ahorro/new', idSocio]);
+}
 
   onNuevoCredito(id: string): void {
     if (!id) return;

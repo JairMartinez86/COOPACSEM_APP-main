@@ -65,9 +65,9 @@ type DraftRef<T> = {
     JMartEngineSyncDirective,
     JMartAutoFocusDirective,
     AppPermissionDirective,
-    Breadcrumb,
     JMartDateFormatDirective,
     JMartNumberFormatDirective,
+    Breadcrumb,
     BeneficiarioModalComponent
   ],
   templateUrl: './socios.html',

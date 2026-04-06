@@ -128,6 +128,15 @@
                 </thead>
 
                 <tbody>
+
+                  @if (pagedSocios.length === 0) {
+                  <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">
+                      {{ 'socios.list.empty' | translate }}
+                    </td>
+                  </tr>
+                  }
+
                   @for (item of pagedSocios; track item.id) {
                   <tr class="socios-click-row" [class.socios-row-selected]="selectedSocio?.id === item.id"
                     (click)="selectSocio(item)">
@@ -170,11 +179,11 @@
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(item.id)">
                           <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'">
                           </i>
-
                         </button>
 
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onToggleStatus(item)">
-                          <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'"></i>
+                          <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'">
+                          </i>
                         </button>
 
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onDelete(item)">
@@ -182,8 +191,10 @@
                         </button>
                       </div>
                     </td>
+
                   </tr>
                   }
+
                 </tbody>
               </table>
             </div>
@@ -290,68 +301,58 @@
               </div>
             </div>
 
-            
+
             <div class="profile-actions mt-3">
 
-  <!-- Ahorro -->
-  <button
-    type="button"
-    class="btn btn-sm btn-outline-primary"
-    (click)="onNuevoAhorro(selectedSocio.id)">
-    <i class="fa-duotone fa-piggy-bank me-1"></i>
-    {{ 'socios.profile.newSaving' | translate }}
-  </button>
+              <!-- Ahorro -->
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoAhorro(selectedSocio.id)" [appPermission]="['new']">
+                <i class="fa-duotone fa-piggy-bank me-1"></i>
+                {{ 'socios.profile.newSaving' | translate }}
+              </button>
 
-  <!-- Crédito -->
-  <button
-    type="button"
-    class="btn btn-sm btn-outline-primary"
-    (click)="onNuevoCredito(selectedSocio.id)">
-    <i class="fa-duotone fa-credit-card me-1"></i>
-    {{ 'socios.profile.newCredit' | translate }}
-  </button>
+              <!-- Crédito -->
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoCredito(selectedSocio.id)" [appPermission]="['new']">
+                <i class="fa-duotone fa-credit-card me-1"></i>
+                {{ 'socios.profile.newCredit' | translate }}
+              </button>
 
-  <!-- Mas -->
-  <div class="dropdown profile-history-dropdown">
-    <button
-      class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1"
-      type="button"
-      data-bs-toggle="dropdown"
-      data-bs-display="static"
-      aria-expanded="false">
+              <!-- Mas -->
+              <div class="dropdown profile-history-dropdown" [appPermission]="['new']">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1"
+                  type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
 
-      <i class="fa-sharp fa-solid fa-angle-down"></i>
-      {{ 'socios.profile.more' | translate }}
-    </button>
+                  <i class="fa-sharp fa-solid fa-angle-down"></i>
+                  {{ 'socios.profile.more' | translate }}
+                </button>
 
-    <ul class="dropdown-menu dropdown-menu-end">
-      <li>
-        <button class="dropdown-item d-flex align-items-center gap-2"
-          (click)="onHistorialAhorro(selectedSocio.id)">
-          <i class="fa-sharp fa-solid fa-arrow-trend-up"></i>
-          {{ 'socios.profile.increaseSavings' | translate }}
-        </button>
-      </li>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center gap-2"
+                      (click)="onHistorialAhorro(selectedSocio.id)">
+                      <i class="fa-sharp fa-solid fa-arrow-trend-up"></i>
+                      {{ 'socios.profile.increaseSavings' | translate }}
+                    </button>
+                  </li>
 
-      <li>
-        <button class="dropdown-item d-flex align-items-center gap-2"
-          (click)="onHistorialAhorro(selectedSocio.id)">
-          <i class="fa-sharp fa-solid fa-arrow-trend-down"></i>
-          {{ 'socios.profile.decreaseSavings' | translate }}
-        </button>
-      </li>
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center gap-2"
+                      (click)="onHistorialAhorro(selectedSocio.id)">
+                      <i class="fa-sharp fa-solid fa-arrow-trend-down"></i>
+                      {{ 'socios.profile.decreaseSavings' | translate }}
+                    </button>
+                  </li>
 
-      <li>
-        <button class="dropdown-item d-flex align-items-center gap-2"
-          (click)="onHistorialCredito(selectedSocio.id)">
-          <i class="fa-duotone fa-credit-card"></i>
-          {{ 'socios.profile.credits' | translate }}
-        </button>
-      </li>
-    </ul>
-  </div>
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center gap-2"
+                      (click)="onHistorialCredito(selectedSocio.id)">
+                      <i class="fa-duotone fa-credit-card"></i>
+                      {{ 'socios.profile.credits' | translate }}
+                    </button>
+                  </li>
+                </ul>
+              </div>
 
-</div>
+            </div>
 
           </div>
         </div>

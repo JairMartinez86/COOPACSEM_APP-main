@@ -1,0 +1,146 @@
+{
+  "socioAhorro": {
+    "title": "Depósito de ahorro",
+    "subtitle": "Registrar depósitos extraordinarios del socio",
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/"
+      },
+      {
+        "label": "Socios",
+        "url": "/socios"
+      },
+      {
+        "label": "Depósito de ahorro"
+      }
+    ],
+    "sections": {
+      "socio": "Datos del socio",
+      "detail": "Detalle del depósito",
+      "history": "Historial de depósitos"
+    },
+    "fields": {
+      "monto": {
+        "label": "Monto"
+      },
+      "banco": {
+        "label": "Banco",
+        "placeholder": "Seleccione banco"
+      },
+      "noDeposito": {
+        "label": "No. Depósito",
+        "placeholder": "Ingrese número"
+      },
+      "fechaDeposito": {
+        "label": "Fecha depósito"
+      },
+      "observacion": {
+        "label": "Observación",
+        "placeholder": "Ingrese una observación"
+      }
+    },
+    "destinos": {
+      "ahorroCorriente": "Ahorro corriente",
+      "ahorroNavideno": "Ahorro navideño",
+      "creditoActivo": "Aplicar a crédito"
+    },
+    "summary": {
+      "currentSaving": "Ahorro corriente",
+      "christmasSaving": "Ahorro navideño",
+      "activeCredit": "Crédito activo"
+    },
+    "history": {
+      "columns": {
+        "date": "Fecha",
+        "amount": "Monto",
+        "destination": "Destino",
+        "status": "Estado"
+      },
+      "pagination": {
+        "showing": "Mostrando",
+        "of": "de",
+        "records": "registros"
+      }
+    },
+    "states": {
+      "historyPending": "No hay depósitos registrados"
+    },
+    "actions": {
+      "save": "Registrar depósito",
+      "cancel": "Cancelar"
+    },
+    "form": {
+      "fieldMeta": {
+        "Monto": {
+          "label": "Detalle del depósito",
+          "tooltip": "Campo requerido"
+        },
+        "BancoCodigo": {
+          "label": "Detalle del depósito",
+          "tooltip": "Campo requerido"
+        },
+        "NoDeposito": {
+          "label": "Detalle del depósito",
+          "tooltip": "Campo requerido"
+        },
+        "FechaDeposito": {
+          "label": "Detalle del depósito",
+          "tooltip": "Campo requerido"
+        },
+        "Observacion": {
+          "label": "Detalle del depósito",
+          "tooltip": "Campo requerido"
+        }
+      },
+      "validations": {
+        "Monto": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "msj": "Ingrese un monto mayor a 0"
+            }
+          }
+        },
+        "BancoCodigo": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Seleccione un banco"
+            }
+          }
+        },
+        "NoDeposito": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^[0-9]+$",
+              "msj": "Ingrese el número de depósito"
+            }
+          }
+        },
+        "FechaDeposito": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": "Ingrese una fecha válida"
+            }
+          }
+        },
+        "Observacion": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Ingrese una observación"
+            }
+          }
+        }
+      }
+    }
+  }
+}
