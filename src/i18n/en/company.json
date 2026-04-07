@@ -1,7 +1,7 @@
 {
   "company": {
     "title": "COMPANY",
-    "subtitle": "Defines the corporate information that will be used in documents, reports, and system processes.",
+    "subtitle": "Define the corporate information that will be used in documents, reports, and system processes.",
     "actions": {
       "reset": "Reset",
       "saveAll": "Save all"
@@ -11,7 +11,7 @@
       "visualIdentity": "Visual identity",
       "contact": "Contact information",
       "regional": "Regional settings",
-      "smtp": "SMTP configuration",
+      "smtp": "SMTP settings",
       "security": "System security",
       "affiliation": "Affiliation settings"
     },
@@ -124,9 +124,12 @@
       "otherDeferredIncomeAccount": {
         "label": "Other deferred income account"
       },
+      "affiliationNavidadAccount": {
+        "label": "Christmas affiliation account"
+      },
       "smtpHost": {
         "label": "SMTP server",
-        "placeholder": "E.g.: smtp.gmail.com"
+        "placeholder": "Ex: smtp.gmail.com"
       },
       "smtpPort": {
         "label": "Port",
@@ -170,7 +173,7 @@
         "suffix": "days"
       },
       "loginLockMinutes": {
-        "label": "Lockout after failed attempts",
+        "label": "Lockout for failed attempts",
         "placeholder": "10",
         "suffix": "min"
       },
@@ -220,7 +223,7 @@
         },
         "Email": {
           "label": "Contact information",
-          "tooltip": "Company primary email"
+          "tooltip": "Primary company email"
         },
         "Website": {
           "label": "Contact information",
@@ -252,7 +255,7 @@
         },
         "ThousandSeparator": {
           "label": "Regional settings",
-          "tooltip": "Thousands separator symbol"
+          "tooltip": "Thousands symbol"
         },
         "AffiliationCost": {
           "label": "Affiliation cost",
@@ -270,6 +273,10 @@
           "label": "Affiliation settings",
           "tooltip": "Required field"
         },
+        "AffiliationNavidadAccount": {
+          "label": "Affiliation settings",
+          "tooltip": "Required field"
+        },
         "OrdinaryCapitalAccount": {
           "label": "Affiliation settings",
           "tooltip": "Required field"
@@ -279,40 +286,40 @@
           "tooltip": "Required field"
         },
         "SmtpHost": {
-          "label": "SMTP configuration",
+          "label": "SMTP settings",
           "tooltip": "SMTP server host"
         },
         "SmtpPort": {
-          "label": "SMTP configuration",
+          "label": "SMTP settings",
           "tooltip": "SMTP port"
         },
         "SmtpFrom": {
-          "label": "SMTP configuration",
+          "label": "SMTP settings",
           "tooltip": "Sending email"
         },
         "SmtpUsername": {
-          "label": "SMTP configuration",
+          "label": "SMTP settings",
           "tooltip": "SMTP access username"
         },
         "SmtpPassword": {
-          "label": "SMTP configuration",
+          "label": "SMTP settings",
           "tooltip": "SMTP access password"
         },
         "TwoFactorCodeExpirationMinutes": {
           "label": "System security",
-          "tooltip": "Expiration in minutes"
+          "tooltip": "Expires in minutes"
         },
         "PasswordResetExpirationMinutes": {
           "label": "System security",
-          "tooltip": "Expiration in minutes"
+          "tooltip": "Expires in minutes"
         },
         "JwtExpiresMinutes": {
           "label": "System security",
-          "tooltip": "Expiration in minutes"
+          "tooltip": "Expires in minutes"
         },
         "RefreshExpiresMinutes": {
           "label": "System security",
-          "tooltip": "Expiration in minutes"
+          "tooltip": "Expires in minutes"
         },
         "TrustedDeviceExpirationDays": {
           "label": "System security",
@@ -490,7 +497,7 @@
               "rule": "NUM>=",
               "value": "0",
               "when": "",
-              "msj": "The affiliation amount must be greater than or equal to 0"
+              "msj": "The affiliation amount must be greater than 0"
             }
           }
         },
@@ -506,7 +513,7 @@
               "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
               "value": "100",
               "when": "",
-              "msj": "The ordinary capital percentage and other deferred income percentage must total 100"
+              "msj": "The ordinary capital and other deferred income percentages must total 100"
             }
           }
         },
@@ -522,7 +529,7 @@
               "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
               "value": "100",
               "when": "",
-              "msj": "The ordinary capital percentage and other deferred income percentage must total 100"
+              "msj": "The ordinary capital and other deferred income percentages must total 100"
             }
           }
         },
@@ -531,7 +538,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Enter the accounting account for affiliation"
+              "msj": "Enter the affiliation account"
             }
           }
         },
@@ -549,7 +556,16 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Enter the deferred income account"
+              "msj": "Enter the other deferred income account"
+            }
+          }
+        },
+        "AffiliationNavidadAccount": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Enter the Christmas affiliation account"
             }
           }
         },
