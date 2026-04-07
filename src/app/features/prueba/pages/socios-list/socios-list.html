@@ -123,6 +123,7 @@
                     <th>{{ 'socios.list.columns.saving' | translate }}</th>
                     <th>{{ 'socios.list.columns.status' | translate }}</th>
                     <th>{{ 'socios.list.columns.date' | translate }}</th>
+                    <th>{{ 'socios.list.columns.accounts' | translate }}</th>
                     <th>{{ 'socios.list.columns.actions' | translate }}</th>
                   </tr>
                 </thead>
@@ -173,6 +174,27 @@
                     </td>
 
                     <td>{{ formatDate(item.createdAtUtc) }}</td>
+
+                    <td>
+                      <div class="d-flex flex-wrap gap-1">
+
+                        <span class="badge d-inline-flex align-items-center gap-1"
+                          [ngClass]="item.cuentaCorrienteActiva ? 'badge-soft-success' : 'badge-soft-secondary'">
+                          <i class="bi"
+                            [ngClass]="item.cuentaCorrienteActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'"></i>
+                          {{ 'socios.accounts.current' | translate }}
+                        </span>
+
+                        <span class="badge d-inline-flex align-items-center gap-1"
+                          [ngClass]="item.cuentaNavidenaActiva ? 'badge-soft-warning' : 'badge-soft-secondary'">
+                          <i class="bi"
+                            [ngClass]="item.cuentaNavidenaActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'"></i>
+                          {{ 'socios.accounts.christmas' | translate }}
+                        </span>
+
+                      </div>
+                    </td>
+
 
                     <td class="text-end">
                       <div class="table-actions" (click)="$event.stopPropagation()">
@@ -263,6 +285,28 @@
                 <div class="text-muted small">
                   {{ 'socios.profile.memberSince' | translate }} {{ formatDate(selectedSocio.createdAtUtc) }}
                 </div>
+
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                  <span class="badge d-inline-flex align-items-center gap-1"
+                    [ngClass]="selectedSocio.cuentaCorrienteActiva ? 'badge-soft-success' : 'badge-soft-secondary'">
+
+                    <i class="bi"
+                      [ngClass]="selectedSocio.cuentaCorrienteActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
+                    </i>
+
+                    {{ 'socios.accounts.current' | translate }}
+                  </span>
+
+                  <span class="badge d-inline-flex align-items-center gap-1"
+                    [ngClass]="selectedSocio.cuentaNavidenaActiva ? 'badge-soft-warning' : 'badge-soft-secondary'">
+
+                    <i class="bi"
+                      [ngClass]="selectedSocio.cuentaNavidenaActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
+                    </i>
+
+                    {{ 'socios.accounts.christmas' | translate }}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -305,13 +349,15 @@
             <div class="profile-actions mt-3">
 
               <!-- Ahorro -->
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoAhorro(selectedSocio.id)" [appPermission]="['new']">
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoAhorro(selectedSocio.id)"
+                [appPermission]="['new']">
                 <i class="fa-duotone fa-piggy-bank me-1"></i>
                 {{ 'socios.profile.newSaving' | translate }}
               </button>
 
               <!-- Crédito -->
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoCredito(selectedSocio.id)" [appPermission]="['new']">
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoCredito(selectedSocio.id)"
+                [appPermission]="['new']">
                 <i class="fa-duotone fa-credit-card me-1"></i>
                 {{ 'socios.profile.newCredit' | translate }}
               </button>
@@ -328,7 +374,7 @@
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li>
                     <button class="dropdown-item d-flex align-items-center gap-2"
-                       (click)="onIncrementoCuota(selectedSocio.id)">
+                      (click)="onIncrementoCuota(selectedSocio.id)">
                       <i class="fa-sharp fa-solid fa-arrow-trend-up"></i>
                       {{ 'socios.profile.increaseSavings' | translate }}
                     </button>
@@ -336,15 +382,14 @@
 
                   <li>
                     <button class="dropdown-item d-flex align-items-center gap-2"
-                     (click)="onDiminucionCuota(selectedSocio.id)">
+                      (click)="onDiminucionCuota(selectedSocio.id)">
                       <i class="fa-sharp fa-solid fa-arrow-trend-down"></i>
                       {{ 'socios.profile.decreaseSavings' | translate }}
                     </button>
                   </li>
 
                   <li>
-                    <button class="dropdown-item d-flex align-items-center gap-2"
-                      >
+                    <button class="dropdown-item d-flex align-items-center gap-2">
                       <i class="fa-duotone fa-credit-card"></i>
                       {{ 'socios.profile.credits' | translate }}
                     </button>

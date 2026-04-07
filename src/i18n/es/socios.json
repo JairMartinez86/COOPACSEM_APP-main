@@ -1157,6 +1157,7 @@
     "saving": "Ahorro",
     "status": "Estado",
     "date": "Fecha",
+     "accounts": "Cuentas",
     "actions": "Acciones"
   },
   "pagination": {
@@ -1165,7 +1166,10 @@
     "users": "socios"
   }
 },
-
+ "accounts": {
+    "current": "Corriente",
+    "christmas": "Navideña"
+  },
 "dashboard": {
   "totalSaving": "Total ahorro",
   "pendingCredit": "Crédito pendiente",
@@ -1176,6 +1180,7 @@
 "profile": {
   "memberSince": "Socio desde",
   "newSaving": "Nuevo ahorro",
+  "newDeposit": "Nuevo depósito",
   "newCredit": "Nuevo crédito",
   "newWithdrawal": "Nuevo retiro",
   "more": "Mas",

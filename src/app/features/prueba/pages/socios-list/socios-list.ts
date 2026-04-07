@@ -47,6 +47,8 @@ interface SocioRow {
   celular: string;
   direccionDomiciliar?: string | null;
   fechaIngreso?: string | null;
+  cuentaCorrienteActiva : boolean;
+  cuentaNavidenaActiva : boolean;
   activo: boolean;
   createdAtUtc?: string | null;
   updatedAtUtc?: string | null;
@@ -516,6 +518,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
       celular: item?.celular ?? '',
       direccionDomiciliar: item?.direccionDomiciliar ?? null,
       fechaIngreso: item?.fechaIngreso ?? null,
+      cuentaCorrienteActiva: item?.cuentaCorrienteActiva ?? null,
+      cuentaNavidenaActiva: item?.cuentaNavidenaActiva ?? null,
       activo: !!item?.activo,
       createdAtUtc: item?.createdAtUtc ?? null,
       updatedAtUtc: item?.updatedAtUtc ?? null,

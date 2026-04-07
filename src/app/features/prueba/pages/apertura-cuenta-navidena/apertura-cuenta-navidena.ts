@@ -91,6 +91,8 @@ interface PlanItem {
 
 interface AperturaCuentaNavidenaForm {
   socioId: string;
+  FechaServidor: string,
+  yaAperturada: boolean,
   tipoCuenta: string;
   fechaApertura: string;
   montoCuota: number | null;
@@ -149,19 +151,14 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
 
   form: AperturaCuentaNavidenaForm = {
     socioId: '',
+    FechaServidor: '',
+    yaAperturada: false,
     tipoCuenta: 'Cuenta Navidena',
     fechaApertura: '',
     montoCuota: null,
     observacion: ''
   };
 
-  copy: AperturaCuentaNavidenaForm = {
-    socioId: '',
-    tipoCuenta: 'Cuenta Navidena',
-    fechaApertura: '',
-    montoCuota: null,
-    observacion: ''
-  };
 
   movimientos: MovimientoPlanItem[] = [];
   movimientosAll: MovimientoPlanItem[] = [];
@@ -257,11 +254,20 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     this.loadConfig();
     this.loadChartLabels();
 
+    this.engine.addControl('FechaServidor');
+    this.engine.addControl('yaAperturada');
+
+    this.engine.setControlValue('FechaServidor',this.appConfigService.getCurrentSettings().fechaServidor);
+    this.engine.setControlValue('yaAperturada', this.yaAperturada);
+
+    (this.form as any).fechaApertura = this.formatDate(this.appConfigService.getCurrentSettings().fechaServidor) ;
+    (this.form as any).FechaServidor = this.appConfigService.getCurrentSettings().fechaServidor;
+   
+
     this.subs.add(
       this.route.paramMap.subscribe(params => {
         this.socioId = params.get('socioId') ?? '';
         this.form.socioId = this.socioId;
-        this.copy.socioId = this.socioId;
 
         if (!this.socioId) {
           this.onCancel();
@@ -336,6 +342,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
           this.socio = data?.socio ?? null;
           this.apertura = data?.apertura ?? null;
           this.yaAperturada = !!data?.yaAperturada;
+          (this.form as any).yaAperturada = this.yaAperturada;
 
           this.resumen = {
             ahorroActual: Number(data?.resumen?.ahorroActual ?? 0),
@@ -348,36 +355,36 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
 
           this.retiros = Array.isArray(data?.retiros)
             ? data.retiros.map((x: any) => ({
-                id: String(x?.id ?? ''),
-                fecha: String(x?.fecha ?? ''),
-                descripcion: String(x?.descripcion ?? ''),
-                monto: Number(x?.monto ?? 0)
-              }))
+              id: String(x?.id ?? ''),
+              fecha: String(x?.fecha ?? ''),
+              descripcion: String(x?.descripcion ?? ''),
+              monto: Number(x?.monto ?? 0)
+            }))
             : [];
 
           this.movimientosAll = Array.isArray(data?.movimientos)
             ? data.movimientos.map((x: any) => ({
-                id: String(x?.id ?? ''),
-                fecha: String(x?.fecha ?? ''),
-                descripcion: String(x?.descripcion ?? ''),
-                monto: Number(x?.monto ?? 0),
-                estado: String(x?.estado ?? ''),
-                referencia: x?.referencia ?? null,
-                fechaPago: x?.fechaPago ?? null,
-                tipoMovimiento: String(x?.tipoMovimiento ?? '')
-              }))
+              id: String(x?.id ?? ''),
+              fecha: String(x?.fecha ?? ''),
+              descripcion: String(x?.descripcion ?? ''),
+              monto: Number(x?.monto ?? 0),
+              estado: String(x?.estado ?? ''),
+              referencia: x?.referencia ?? null,
+              fechaPago: x?.fechaPago ?? null,
+              tipoMovimiento: String(x?.tipoMovimiento ?? '')
+            }))
             : [];
 
           this.plan = Array.isArray(data?.plan)
             ? data.plan.map((x: any) => ({
-                id: String(x?.id ?? `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`),
-                fechaProgramada: String(x?.fechaProgramada ?? ''),
-                montoCuota: Number(x?.montoCuota ?? 0),
-                estado: String(x?.estado ?? ''),
-                pagado: !!x?.pagado || String(x?.estado ?? '').toLowerCase() === 'pagada',
-                fechaPago: x?.fechaPago ?? null,
-                usuarioPago: x?.usuarioPago ?? null
-              }))
+              id: String(x?.id ?? `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`),
+              fechaProgramada: String(x?.fechaProgramada ?? ''),
+              montoCuota: Number(x?.montoCuota ?? 0),
+              estado: String(x?.estado ?? ''),
+              pagado: !!x?.pagado || String(x?.estado ?? '').toLowerCase() === 'pagada',
+              fechaPago: x?.fechaPago ?? null,
+              usuarioPago: x?.usuarioPago ?? null
+            }))
             : [];
 
           this.movimientos = [...this.movimientosAll];
@@ -393,7 +400,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
             this.form.observacion = this.form.observacion || '';
           }
 
-          this.copy = { ...this.form };
+
 
           if (!this.yaAperturada) {
             this.buildPreviewPlan();
@@ -531,7 +538,6 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           this.notify.showFromApiResponse?.(res, 'success');
-          this.copy = { ...this.form };
           this.engine.clearErrors?.();
           this.loadData();
         },
@@ -544,9 +550,6 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   onCancel(): void {
     this.notify.close?.();
 
-    this.form = {
-      ...this.copy
-    };
 
     this.engine.clearErrors?.();
     this.router.navigate(['/socios']);
@@ -599,6 +602,8 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   private normalizeForm(data: AperturaCuentaNavidenaForm): AperturaCuentaNavidenaForm {
     return {
       socioId: data?.socioId ?? '',
+      FechaServidor: data?.FechaServidor ?? '',
+      yaAperturada:  data?.yaAperturada ?? false,
       tipoCuenta: data?.tipoCuenta ?? 'Cuenta Navidena',
       fechaApertura: data?.fechaApertura ?? '',
       montoCuota: data?.montoCuota == null ? null : Number(data.montoCuota),

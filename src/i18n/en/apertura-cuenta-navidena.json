@@ -80,7 +80,6 @@
         "fechaPago": "Payment date"
       }
     },
-
     "states": {
       "emptyMovements": "No movements found",
       "emptyPlan": "No scheduled installments found"
@@ -113,13 +112,29 @@
         }
       },
       "validations": {
+        "FechaServidor": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": ""
+            }
+          }
+        },
         "FechaApertura": {
           "data": {
             "1": {
-              "rule": "LEN>",
-              "value": "0",
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
               "when": "",
               "msj": "Enter the opening date"
+            },
+            "2": {
+              "rule": "DATE>=",
+              "value": "{FechaServidor}",
+              "when": "{yaAperturada}=false",
+              "msj": "The date must be greater than or equal to the system date"
             }
           }
         },
@@ -151,10 +166,10 @@
         }
       }
     },
-      "types": {
-    "plan": "Payroll",
-    "extraordinario": "Extraordinary"
-  }
+    "types": {
+      "plan": "Payroll",
+      "extraordinario": "Extraordinary"
+    }
   },
   "common": {
     "search": "Search",

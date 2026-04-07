@@ -1144,59 +1144,60 @@
         }
       }
     },
-
-  "list": {
-    "title": "Members",
-    "subtitle": "Manage members with savings, credit, status, and actions",
-    "tableSubtitle": "Select a member to view the side profile and recent movements.",
-    "newButton": "New member",
-    "loading": "Loading members...",
-    "empty": "No members found.",
-    "columns": {
-      "member": "Member",
-      "code": "Code",
-      "saving": "Savings",
-      "status": "Status",
-      "date": "Date",
-      "actions": "Actions"
+    "list": {
+      "title": "Members",
+      "subtitle": "Manage members with savings, credit, status, and actions",
+      "tableSubtitle": "Select a member to view the side profile and recent movements.",
+      "newButton": "New member",
+      "loading": "Loading members...",
+      "empty": "No members found.",
+      "columns": {
+        "member": "Member",
+        "code": "Code",
+        "saving": "Savings",
+        "status": "Status",
+        "date": "Date",
+        "accounts": "Accounts",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "showing": "Showing",
+        "of": "of",
+        "users": "members"
+      }
     },
-    "pagination": {
-      "showing": "Showing",
-      "of": "of",
-      "users": "members"
-    }
+    "accounts": {
+    "current": "Checking",
+    "christmas": "Christmas"
   },
-
-  "dashboard": {
-    "totalSaving": "Total savings",
-    "pendingCredit": "Pending credit",
-    "nextWithdrawal": "Next withdrawal",
-    "pendingApprovals": "Pending approvals"
-  },
-
-  "profile": {
-    "memberSince": "Member since",
-    "newSaving": "New savings",
-    "newCredit": "New credit",
-    "newWithdrawal": "New withdrawal",
-    "more": "More",
-    "increaseSavings": "Increase savings",
-    "decreaseSavings": "Decrease savings",
-    "credits": "Credits"
-  },
-
-  "movements": {
-    "title": "Recent movements",
-    "empty": "There are no movements configured for this member yet.",
-    "columns": {
-      "date": "Date",
-      "description": "Description",
-      "debit": "Debit",
-      "credit": "Credit",
-      "balance": "Balance"
-    }
-  },
-
+    "dashboard": {
+      "totalSaving": "Total savings",
+      "pendingCredit": "Pending credit",
+      "nextWithdrawal": "Next withdrawal",
+      "pendingApprovals": "Pending approvals"
+    },
+    "profile": {
+      "memberSince": "Member since",
+      "newSaving": "New savings",
+      "newDeposit": "New deposit",
+      "newCredit": "New credit",
+      "newWithdrawal": "New withdrawal",
+      "more": "More",
+      "increaseSavings": "Increase savings",
+      "decreaseSavings": "Decrease savings",
+      "credits": "Credits"
+    },
+    "movements": {
+      "title": "Recent movements",
+      "empty": "There are no movements configured for this member yet.",
+      "columns": {
+        "date": "Date",
+        "description": "Description",
+        "debit": "Debit",
+        "credit": "Credit",
+        "balance": "Balance"
+      }
+    },
     "stats": {
       "title": "Member status",
       "active": "Active",
