@@ -28,15 +28,11 @@
             <div class="users-toolbar-left">
               <div class="users-filter-tabs">
                 @for (tab of statusTabs; track tab.value) {
-                  <button
-                    class="users-filter-tab"
-                    [class.active]="selectedStatus === tab.value"
-                    [attr.data-filter]="tab.value"
-                    type="button"
-                    (click)="setStatusFilter(tab.value)">
-                    {{ tab.titleKey | translate }}
-                    <span class="users-filter-count">{{ getStatusCount(tab.value) }}</span>
-                  </button>
+                <button class="users-filter-tab" [class.active]="selectedStatus === tab.value"
+                  [attr.data-filter]="tab.value" type="button" (click)="setStatusFilter(tab.value)">
+                  {{ tab.titleKey | translate }}
+                  <span class="users-filter-count">{{ getStatusCount(tab.value) }}</span>
+                </button>
                 }
               </div>
             </div>
@@ -44,12 +40,10 @@
             <div class="users-toolbar-right">
               <div class="users-search">
                 <i class="bi bi-search"></i>
-                <input
-                  type="text"
-                  [placeholder]="'userlist.filters.searchPlaceholder' | translate"
-                  autocomplete="off"
-                  [(ngModel)]="searchTerm"
-                  (ngModelChange)="applyFilters()">
+                <input type="text" class="form-control form-control-sm"
+                  [placeholder]="'userlist.filters.searchPlaceholder' | translate" autocomplete="off"
+                  [(ngModel)]="currentTerm"
+                  (ngModelChange)="currentTerm = ($event || '').trim().toLowerCase(); searchTerm = currentTerm; applyFilter()">
               </div>
 
               <div class="dropdown">
@@ -66,11 +60,11 @@
                   </li>
 
                   @for (role of roles; track role.key + '-' + $index) {
-                    <li>
-                      <a class="dropdown-item" href="javascript:void(0)" (click)="setRoleFilter(role.key)">
-                        {{ role.name }}
-                      </a>
-                    </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0)" (click)="setRoleFilter(role.key)">
+                      {{ role.name }}
+                    </a>
+                  </li>
                   }
                 </ul>
               </div>
@@ -83,11 +77,7 @@
                 <tr>
                   <th class="users-th-check">
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="selectAll"
-                        [checked]="allVisibleSelected"
+                      <input class="form-check-input" type="checkbox" id="selectAll" [checked]="allVisibleSelected"
                         (change)="toggleAll($any($event.target).checked)">
                     </div>
                   </th>
@@ -102,117 +92,111 @@
 
               <tbody>
                 @if (pagedUsers.length > 0) {
-                  @for (item of pagedUsers; track item.user) {
-                    <tr>
-                      <td>
-                        <div class="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            [checked]="isSelected(item.user)"
-                            (change)="toggleSelection(item.user, $any($event.target).checked)">
-                        </div>
-                      </td>
+                @for (item of pagedUsers; track item.user) {
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" [checked]="isSelected(item.user)"
+                        (change)="toggleSelection(item.user, $any($event.target).checked)">
+                    </div>
+                  </td>
 
-                      <td>
-                        <div class="users-user">
-                          <div class="users-avatar-wrap">
-                            <!--
+                  <td>
+                    <div class="users-user">
+                      <div class="users-avatar-wrap">
+                        <!--
                             <img [src]="getAvatarByGender(item)" [alt]="item.fullName" class="users-avatar">
                             -->
-                            <span class="users-avatar-status" [ngClass]="getPresenceClass(item.presence)"></span>
-                          </div>
+                        <span class="users-avatar-status" [ngClass]="getPresenceClass(item.presence)"></span>
+                      </div>
 
-                          <div class="users-user-info">
-                            <a href="javascript:void(0)" class="users-user-name">{{ item.fullName }}</a>
-                            <span class="users-user-email">{{ item.email }}</span>
-                            <span class="users-user-email">{{ item.user }}</span>
-                          </div>
-                        </div>
-                      </td>
+                      <div class="users-user-info">
+                        <a href="javascript:void(0)" class="users-user-name">{{ item.fullName }}</a>
+                        <span class="users-user-email">{{ item.email }}</span>
+                        <span class="users-user-email">{{ item.user }}</span>
+                      </div>
+                    </div>
+                  </td>
 
-                      <td>
-                        <span class="users-role" [ngClass]="getRoleClass(item.roleKey)">
-                          <i class="bi" [ngClass]="getRoleIcon(item.roleKey)"></i>
-                          {{ item.roleName }}
-                        </span>
-                      </td>
+                  <td>
+                    <span class="users-role" [ngClass]="getRoleClass(item.roleKey)">
+                      <i class="bi" [ngClass]="getRoleIcon(item.roleKey)"></i>
+                      {{ item.roleName }}
+                    </span>
+                  </td>
 
-                      <td>
-                        <span class="users-status" [ngClass]="getStatusClass(item.status)">
-                          <span class="users-status-dot"></span>
-                          {{ ('userlist.status.' + item.status) | translate }}
-                        </span>
-                      </td>
+                  <td>
+                    <span class="users-status" [ngClass]="getStatusClass(item.status)">
+                      <span class="users-status-dot"></span>
+                      {{ ('userlist.status.' + item.status) | translate }}
+                    </span>
+                  </td>
 
-                      <td class="users-meta">
-                        <div class="d-flex flex-column">
-                          <span
-                            [ngClass]="{
+                  <td class="users-meta">
+                    <div class="d-flex flex-column">
+                      <span [ngClass]="{
                               'text-success': getPresenceClass(item.presence) === 'online',
                               'text-warning': getPresenceClass(item.presence) === 'away',
                               'text-muted': getPresenceClass(item.presence) === 'offline'
                             }">
-                            {{ ('userlist.presence.' + (item.presence || 'never')) | translate }}
-                          </span>
+                        {{ ('userlist.presence.' + (item.presence || 'never')) | translate }}
+                      </span>
 
-                          <small class="text-muted">
-                            {{ formatLastActive(item.lastActiveAtUtc) }}
-                          </small>
-                        </div>
-                      </td>
+                      <small class="text-muted">
+                        {{ formatLastActive(item.lastActiveAtUtc) }}
+                      </small>
+                    </div>
+                  </td>
 
-                      <td class="users-meta">{{ formatDate(item.joinedAtUtc) }}</td>
+                  <td class="users-meta">{{ formatDate(item.joinedAtUtc) }}</td>
 
-                      <td>
-                        <div class="users-actions">
-                          <a class="users-action-btn"
-                            [routerLink]="['/activity-history/', item.user]"
-                            [title]="'userlist.actions.view' | translate">
-                            <i class="bi bi-eye"></i>
-                          </a>
+                  <td>
+                    <div class="users-actions">
+                      <a class="users-action-btn" [routerLink]="['/activity-history/', item.user]"
+                        [title]="'userlist.actions.view' | translate">
+                        <i class="bi bi-eye"></i>
+                      </a>
 
-                          <a class="users-action-btn"
-                            [title]="'userlist.actions.edit' | translate"
-                            (click)="openEditModal(item)" appPermission="edit">
-                            <i class="bi bi-pencil"></i>
-                          </a>
+                      <a class="users-action-btn" [title]="'userlist.actions.edit' | translate"
+                        (click)="openEditModal(item)" appPermission="edit">
+                        <i class="bi bi-pencil"></i>
+                      </a>
 
-                          <div class="dropdown">
-                            <button class="users-action-btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-                              <i class="bi bi-three-dots"></i>
-                            </button>
+                      <div class="dropdown">
+                        <button class="users-action-btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+                          <i class="bi bi-three-dots"></i>
+                        </button>
 
-                            <ul class="dropdown-menu dropdown-menu-end">
-                              <li>
-                                <a class="dropdown-item" (click)="resetPassword(item)">
-                                  <i class="bi bi-key me-2"></i>
-                                  {{ 'userlist.actions.resetPassword' | translate }}
-                                </a>
-                              </li>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <a class="dropdown-item" (click)="resetPassword(item)">
+                              <i class="bi bi-key me-2"></i>
+                              {{ 'userlist.actions.resetPassword' | translate }}
+                            </a>
+                          </li>
 
-                              <li>
-                                <hr class="dropdown-divider">
-                              </li>
+                          <li>
+                            <hr class="dropdown-divider">
+                          </li>
 
-                              <li>
-                                <a class="dropdown-item text-danger" (click)="deleteUser(item)" appPermission="delete">
-                                  <i class="bi bi-trash me-2"></i>
-                                  {{ 'userlist.actions.delete' | translate }}
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  }
+                          <li>
+                            <a class="dropdown-item text-danger" (click)="deleteUser(item)" appPermission="delete">
+                              <i class="bi bi-trash me-2"></i>
+                              {{ 'userlist.actions.delete' | translate }}
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                }
                 } @else {
-                  <tr>
-                    <td colspan="7" class="text-center py-4">
-                      {{ 'userlist.table.empty' | translate }}
-                    </td>
-                  </tr>
+                <tr>
+                  <td colspan="7" class="text-center py-4">
+                    {{ 'userlist.table.empty' | translate }}
+                  </td>
+                </tr>
                 }
               </tbody>
             </table>
@@ -236,11 +220,11 @@
                 </li>
 
                 @for (pageNumber of pageNumbers; track pageNumber) {
-                  <li class="page-item" [class.active]="page === pageNumber">
-                    <a class="page-link" href="javascript:void(0)" (click)="goToPage(pageNumber)">
-                      {{ pageNumber }}
-                    </a>
-                  </li>
+                <li class="page-item" [class.active]="page === pageNumber">
+                  <a class="page-link" href="javascript:void(0)" (click)="goToPage(pageNumber)">
+                    {{ pageNumber }}
+                  </a>
+                </li>
                 }
 
                 <li class="page-item" [class.disabled]="page >= totalPages">
@@ -288,22 +272,20 @@
           </div>
           <div class="card-body">
             @for (role of roleDistribution; track role.key) {
-              <div class="users-lab-role">
-                <div class="users-lab-role-head">
-                  <span>{{ role.label }}</span>
-                  <strong>{{ role.count }}</strong>
-                </div>
-                <div class="progress">
-                  <div class="progress-bar"
-                    [ngClass]="{
+            <div class="users-lab-role">
+              <div class="users-lab-role-head">
+                <span>{{ role.label }}</span>
+                <strong>{{ role.count }}</strong>
+              </div>
+              <div class="progress">
+                <div class="progress-bar" [ngClass]="{
                       'bg-danger': getRoleClass(role.key) === 'admin',
                       'bg-warning': getRoleClass(role.key) === 'manager',
                       'bg-primary': getRoleClass(role.key) === 'user'
-                    }"
-                    [style.width.%]="role.percent">
-                  </div>
+                    }" [style.width.%]="role.percent">
                 </div>
               </div>
+            </div>
             }
           </div>
         </div>
@@ -318,15 +300,15 @@
 
           <div class="card-body">
             @for (item of recentUsers; track item.user) {
-              <div class="users-lab-recent-item">
-                <!--
+            <div class="users-lab-recent-item">
+              <!--
                 <img [src]="getAvatarByGender(item)" [alt]="item.fullName">
                 -->
-                <div>
-                  <strong>{{ item.fullName }}</strong>
-                  <span>{{ getRecentText(item) }}</span>
-                </div>
+              <div>
+                <strong>{{ item.fullName }}</strong>
+                <span>{{ getRecentText(item) }}</span>
               </div>
+            </div>
             }
           </div>
         </div>
@@ -349,113 +331,59 @@
               <div class="row g-3">
                 <div class="col-sm-6" error-notify="firstName" error-display="inline">
                   <label class="form-label required">{{ 'userlist.modal.firstName' | translate }}</label>
-                  <input
-                    #firstName
-                    type="text"
-                    class="form-control"
-                    id="firstName"
-                    name="firstName"
-                    [(ngModel)]="formModel.firstName"
-                    engineSync="firstName"
-                    [placeholder]="'userlist.modal.firstNamePlaceholder' | translate"
-                    autoFocusNext
-                    [next]="lastName"
+                  <input #firstName type="text" class="form-control" id="firstName" name="firstName"
+                    [(ngModel)]="formModel.firstName" engineSync="firstName"
+                    [placeholder]="'userlist.modal.firstNamePlaceholder' | translate" autoFocusNext [next]="lastName"
                     required>
                 </div>
 
                 <div class="col-sm-6" error-notify="lastName" error-display="inline">
                   <label class="form-label required">{{ 'userlist.modal.lastName' | translate }}</label>
-                  <input
-                    #lastName
-                    type="text"
-                    class="form-control"
-                    id="lastName"
-                    name="lastName"
-                    [(ngModel)]="formModel.lastName"
-                    engineSync="lastName"
-                    [placeholder]="'userlist.modal.lastNamePlaceholder' | translate"
-                    autoFocusNext
-                    [next]="email"
+                  <input #lastName type="text" class="form-control" id="lastName" name="lastName"
+                    [(ngModel)]="formModel.lastName" engineSync="lastName"
+                    [placeholder]="'userlist.modal.lastNamePlaceholder' | translate" autoFocusNext [next]="email"
                     required>
                 </div>
 
                 <div class="col-12" error-notify="email" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.email' | translate }}</label>
-                  <input
-                    #email
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    name="email"
-                    [(ngModel)]="formModel.email"
-                    engineSync="email"
-                    [placeholder]="'userlist.modal.emailPlaceholder' | translate"
-                    autoFocusNext
-                    [next]="role"
-                    required>
+                  <input #email type="email" class="form-control" id="email" name="email" [(ngModel)]="formModel.email"
+                    engineSync="email" [placeholder]="'userlist.modal.emailPlaceholder' | translate" autoFocusNext
+                    [next]="role" required>
                 </div>
 
                 <div class="col-12" error-notify="role" error-display="inline">
                   <label class="form-label required">{{ 'userlist.modal.role' | translate }}</label>
-                  <select
-                    #role
-                    class="form-select"
-                    id="role"
-                    name="role"
-                    [(ngModel)]="formModel.role"
-                    engineSync="role"
-                    autoFocusNext
-                    [next]="password">
+                  <select #role class="form-select" id="role" name="role" [(ngModel)]="formModel.role" engineSync="role"
+                    autoFocusNext [next]="password">
                     <option value="">{{ 'userlist.modal.rolePlaceholder' | translate }}</option>
                     @for (role of roles; track role.key + '-' + $index) {
-                      <option [value]="role.key">{{ role.name }}</option>
+                    <option [value]="role.key">{{ role.name }}</option>
                     }
                   </select>
                 </div>
 
                 <div class="col-sm-6" error-notify="password" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.password' | translate }}</label>
-                  <input
-                    #password
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    name="password"
-                    [(ngModel)]="formModel.password"
-                    engineSync="password"
-                    [placeholder]="'userlist.modal.passwordPlaceholder' | translate"
-                    autoFocusNext
+                  <input #password type="password" class="form-control" id="password" name="password"
+                    [(ngModel)]="formModel.password" engineSync="password"
+                    [placeholder]="'userlist.modal.passwordPlaceholder' | translate" autoFocusNext
                     [next]="confirmPassword">
                 </div>
 
                 <div class="col-sm-6" error-notify="confirmPassword" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.confirmPassword' | translate }}</label>
-                  <input
-                    #confirmPassword
-                    type="password"
-                    class="form-control"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    [(ngModel)]="formModel.confirmPassword"
-                    engineSync="confirmPassword"
-                    [placeholder]="'userlist.modal.confirmPasswordPlaceholder' | translate"
-                    autoFocusNext
+                  <input #confirmPassword type="password" class="form-control" id="confirmPassword"
+                    name="confirmPassword" [(ngModel)]="formModel.confirmPassword" engineSync="confirmPassword"
+                    [placeholder]="'userlist.modal.confirmPasswordPlaceholder' | translate" autoFocusNext
                     [next]="gender">
                 </div>
 
                 <div class="col-sm-6" error-notify="gender" error-display="inline">
                   <label class="form-label required">{{ 'userlist.modal.gender.label' | translate }}</label>
 
-                  <select
-                    #gender
-                    id="gender"
-                    name="gender"
-                    class="form-select"
-                    [(ngModel)]="formModel.gender"
-                    engineSync="gender"
-                    autoFocusNext
-                    [next]="mobile"
-                    required>
+                  <select #gender id="gender" name="gender" class="form-select" [(ngModel)]="formModel.gender"
+                    engineSync="gender" autoFocusNext [next]="mobile" required>
                     <option value="male">{{ 'userlist.modal.gender.male' | translate }}</option>
                     <option value="female">{{ 'userlist.modal.gender.female' | translate }}</option>
                   </select>
@@ -463,45 +391,22 @@
 
                 <div class="col-sm-6" error-notify="mobile" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.mobile' | translate }}</label>
-                  <input
-                    #mobile
-                    type="text"
-                    class="form-control"
-                    id="mobile"
-                    name="mobile"
-                    [(ngModel)]="formModel.mobile"
-                    engineSync="mobile"
-                    [placeholder]="'userlist.modal.mobilePlaceholder' | translate"
-                    autoFocusNext
-                    [next]="phoneNumber">
+                  <input #mobile type="text" class="form-control" id="mobile" name="mobile"
+                    [(ngModel)]="formModel.mobile" engineSync="mobile"
+                    [placeholder]="'userlist.modal.mobilePlaceholder' | translate" autoFocusNext [next]="phoneNumber">
                 </div>
 
                 <div class="col-sm-6" error-notify="phoneNumber" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.phoneNumber' | translate }}</label>
-                  <input
-                    #phoneNumber
-                    type="text"
-                    class="form-control"
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    [(ngModel)]="formModel.phoneNumber"
-                    engineSync="phoneNumber"
-                    [placeholder]="'userlist.modal.phoneNumberPlaceholder' | translate"
-                    autoFocusNext
-                    [next]="language">
+                  <input #phoneNumber type="text" class="form-control" id="phoneNumber" name="phoneNumber"
+                    [(ngModel)]="formModel.phoneNumber" engineSync="phoneNumber"
+                    [placeholder]="'userlist.modal.phoneNumberPlaceholder' | translate" autoFocusNext [next]="language">
                 </div>
 
                 <div class="col-sm-6" error-notify="language" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.language' | translate }}</label>
-                  <select
-                    #language
-                    class="form-select"
-                    id="language"
-                    name="language"
-                    [(ngModel)]="formModel.language"
-                    engineSync="language"
-                    autoFocusNext
-                    [next]="address">
+                  <select #language class="form-select" id="language" name="language" [(ngModel)]="formModel.language"
+                    engineSync="language" autoFocusNext [next]="address">
                     <option value="es">{{ 'userlist.modal.languages.es' | translate }}</option>
                     <option value="en">{{ 'userlist.modal.languages.en' | translate }}</option>
                   </select>
@@ -509,30 +414,15 @@
 
                 <div class="col-12" error-notify="address" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.address' | translate }}</label>
-                  <input
-                    #address
-                    type="text"
-                    class="form-control"
-                    id="address"
-                    name="address"
-                    [(ngModel)]="formModel.address"
-                    engineSync="address"
-                    [placeholder]="'userlist.modal.addressPlaceholder' | translate"
-                    autoFocusNext
-                    [next]="theme">
+                  <input #address type="text" class="form-control" id="address" name="address"
+                    [(ngModel)]="formModel.address" engineSync="address"
+                    [placeholder]="'userlist.modal.addressPlaceholder' | translate" autoFocusNext [next]="theme">
                 </div>
 
                 <div class="col-sm-6" error-notify="theme" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.theme' | translate }}</label>
-                  <select
-                    #theme
-                    class="form-select"
-                    id="theme"
-                    name="theme"
-                    [(ngModel)]="formModel.theme"
-                    engineSync="theme"
-                    autoFocusNext
-                    [next]="maxSessions">
+                  <select #theme class="form-select" id="theme" name="theme" [(ngModel)]="formModel.theme"
+                    engineSync="theme" autoFocusNext [next]="maxSessions">
                     <option value="dark">{{ 'userlist.modal.themes.dark' | translate }}</option>
                     <option value="light">{{ 'userlist.modal.themes.light' | translate }}</option>
                   </select>
@@ -540,46 +430,22 @@
 
                 <div class="col-sm-6" error-notify="maxSessions" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.maxSessions' | translate }}</label>
-                  <input
-                    #maxSessions
-                    type="number"
-                    class="form-control"
-                    id="maxSessions"
-                    name="maxSessions"
-                    [(ngModel)]="formModel.maxSessions"
-                    engineSync="maxSessions"
-                    autoFocusNext
-                    [next]="saveBtn"
-                    [disableClickButton]="true"
-                    [unlockOn]="notify.closed$"
-                    required
-                    numberFormat
-                    [decimals]="0">
+                  <input #maxSessions type="number" class="form-control" id="maxSessions" name="maxSessions"
+                    [(ngModel)]="formModel.maxSessions" engineSync="maxSessions" autoFocusNext [next]="saveBtn"
+                    [disableClickButton]="true" [unlockOn]="notify.closed$" required numberFormat [decimals]="0">
                 </div>
 
                 <div class="col-12" error-notify="defaultLandingPage" error-display="inline">
                   <label class="form-label">{{ 'userlist.modal.defaultLandingPage' | translate }}</label>
-                  <input
-                    #defaultLandingPage
-                    type="text"
-                    class="form-control"
-                    id="defaultLandingPage"
-                    name="defaultLandingPage"
-                    [(ngModel)]="formModel.defaultLandingPage"
-                    engineSync="defaultLandingPage"
-                    [placeholder]="'userlist.modal.defaultLandingPagePlaceholder' | translate"
-                    disabled>
+                  <input #defaultLandingPage type="text" class="form-control" id="defaultLandingPage"
+                    name="defaultLandingPage" [(ngModel)]="formModel.defaultLandingPage" engineSync="defaultLandingPage"
+                    [placeholder]="'userlist.modal.defaultLandingPagePlaceholder' | translate" disabled>
                 </div>
 
                 <div class="col-12">
                   <div class="form-check">
-                    <input
-                      #activeUser
-                      class="form-check-input"
-                      type="checkbox"
-                      id="activeUser"
-                      [(ngModel)]="formModel.active"
-                      name="active">
+                    <input #activeUser class="form-check-input" type="checkbox" id="activeUser"
+                      [(ngModel)]="formModel.active" name="active">
                     <label class="form-check-label" for="activeUser">
                       {{ 'userlist.modal.active' | translate }}
                     </label>
@@ -588,15 +454,9 @@
 
                 <div class="col-12">
                   <div class="form-check">
-                    <input
-                      #enableTwoFactor
-                      class="form-check-input"
-                      type="checkbox"
-                      id="enableTwoFactorLogin"
-                      name="enableTwoFactorLogin"
-                      [(ngModel)]="formModel.enableTwoFactorLogin"
-                      engineSync="enableTwoFactorLogin"
-                      autoFocusNext
+                    <input #enableTwoFactor class="form-check-input" type="checkbox" id="enableTwoFactorLogin"
+                      name="enableTwoFactorLogin" [(ngModel)]="formModel.enableTwoFactorLogin"
+                      engineSync="enableTwoFactorLogin" autoFocusNext
                       (change)="engine.requestValidation('enableTwoFactorLogin')">
 
                     <label class="form-check-label" for="enableTwoFactorLogin">
@@ -607,12 +467,8 @@
 
                 <div class="col-12">
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="enableAuditEmailNotifications"
-                      name="enableAuditEmailNotifications"
-                      [(ngModel)]="formModel.enableAuditEmailNotifications"
+                    <input class="form-check-input" type="checkbox" id="enableAuditEmailNotifications"
+                      name="enableAuditEmailNotifications" [(ngModel)]="formModel.enableAuditEmailNotifications"
                       engineSync="enableAuditEmailNotifications"
                       (change)="engine.requestValidation('enableAuditEmailNotifications')">
 
@@ -630,15 +486,8 @@
               {{ 'userlist.buttons.cancel' | translate }}
             </button>
 
-            <button
-              #saveBtn
-              type="button"
-              class="btn btn-primary"
-              [disabled]="saving"
-              (click)="saveUser()"
-              autoFocusNext
-              [disableClickButton]="true"
-              [unlockOn]="notify.closed$">
+            <button #saveBtn type="button" class="btn btn-primary" [disabled]="saving" (click)="saveUser()"
+              autoFocusNext [disableClickButton]="true" [unlockOn]="notify.closed$">
               {{ editingUser ? ('userlist.buttons.save' | translate) : ('userlist.buttons.addUser' | translate) }}
             </button>
           </div>

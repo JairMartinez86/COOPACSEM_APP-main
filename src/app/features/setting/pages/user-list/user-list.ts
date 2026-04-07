@@ -1,8 +1,8 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Component, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { finalize, map, Observable, of } from 'rxjs';
+import { finalize, map, Observable, of, Subscription } from 'rxjs';
 import { NotificationService } from '../../../../core/services/notification.service';
 import {
   CreateUserRequest,
@@ -23,6 +23,7 @@ import { RouterLink } from '@angular/router';
 import { DraftFormService, DraftManagerRef } from '../../../../core/services/draft-manager-options.service';
 import { CanComponentDeactivate } from '../../../../core/guards/pending-changes.guard';
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
+import { TableFilterService } from '../../../../core/services/table-filter.service';
 
 declare const bootstrap: any;
 
@@ -68,7 +69,7 @@ interface UserDraftMeta {
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss'
 })
-export class UserList implements OnInit, AfterViewInit, CanComponentDeactivate {
+export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentDeactivate {
   @ViewChild('userFormRef') userFormRef!: NgForm;
   draftRef?: DraftManagerRef;
 
@@ -77,6 +78,7 @@ export class UserList implements OnInit, AfterViewInit, CanComponentDeactivate {
   private readonly tr = inject(TranslateService);
   private readonly draftService = inject(DraftFormService);
   public readonly engine = inject(JMartMassiveValidationService);
+  private readonly filterSvc = inject(TableFilterService);
 
   constructor(@Inject(PLATFORM_ID) private readonly platformId: object) { }
 
@@ -91,6 +93,12 @@ export class UserList implements OnInit, AfterViewInit, CanComponentDeactivate {
   users: UserSummaryDto[] = [];
   filteredUsers: UserSummaryDto[] = [];
   pagedUsers: UserSummaryDto[] = [];
+
+
+  private readonly subs = new Subscription();
+  private readonly filterKey = 'user-list';
+
+  currentTerm = '';
 
   breadcrumbs = [
     { label: '', url: '' },
@@ -124,7 +132,20 @@ export class UserList implements OnInit, AfterViewInit, CanComponentDeactivate {
       return;
     }
 
+
+    this.subs.add(
+      this.filterSvc.query$(this.filterKey).subscribe(query => {
+        this.currentTerm = (query || '').trim().toLowerCase();
+        this.searchTerm = this.currentTerm;
+        this.applyFilter();
+      })
+    );
+
     this.loadPageData();
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -381,7 +402,7 @@ export class UserList implements OnInit, AfterViewInit, CanComponentDeactivate {
         next: (res: any) => {
           this.roles = res.data?.roles ?? [];
           this.users = res.data?.users ?? [];
-          this.applyFilters();
+          this.applyFilter();
           this.loadUserListConfig();
 
           this.dataReady = true;
@@ -431,49 +452,49 @@ export class UserList implements OnInit, AfterViewInit, CanComponentDeactivate {
 
   setStatusFilter(value: string): void {
     this.selectedStatus = value;
-    this.applyFilters();
+    this.applyFilter();
   }
 
   setRoleFilter(value: string): void {
     this.selectedRole = value;
-    this.applyFilters();
+    this.applyFilter();
   }
 
-  applyFilters(): void {
-    const term = (this.searchTerm || '').trim().toLowerCase();
+applyFilter(): void {
+  const term = (this.currentTerm || '').trim().toLowerCase();
 
-    this.filteredUsers = this.users.filter(user => {
-      const matchesStatus =
-        this.selectedStatus === 'all' ||
-        user.status === this.selectedStatus;
+  this.filteredUsers = this.users.filter(user => {
+    const matchesStatus =
+      this.selectedStatus === 'all' ||
+      user.status === this.selectedStatus;
 
-      const matchesRole =
-        !this.selectedRole ||
-        user.roleKey === this.selectedRole ||
-        user.roleName === this.selectedRole;
+    const matchesRole =
+      !this.selectedRole ||
+      user.roleKey === this.selectedRole ||
+      user.roleName === this.selectedRole;
 
-      const haystack = [
-        user.fullName,
-        user.email,
-        user.user,
-        user.roleName,
-        user.roleKey,
-        user.mobile,
-        user.phoneNumber
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase();
+    const haystack = [
+      user.fullName ?? '',
+      user.email ?? '',
+      user.user ?? '',
+      user.roleName ?? '',
+      user.roleKey ?? '',
+      user.mobile ?? '',
+      user.phoneNumber ?? ''
+    ]
+      .join(' ')
+      .toLowerCase();
 
-      const matchesSearch = !term || haystack.includes(term);
+    const matchesSearch = !term || haystack.includes(term);
 
-      return matchesStatus && matchesRole && matchesSearch;
-    });
+    return matchesStatus && matchesRole && matchesSearch;
+  });
 
-    this.page = 1;
-    this.rebuildPagination();
-    this.syncSelection();
-  }
+  this.page = 1;
+  this.rebuildPagination();
+  this.syncSelection();
+}
+
 
   rebuildPagination(): void {
     this.totalPages = Math.max(1, Math.ceil(this.filteredUsers.length / this.pageSize));
@@ -657,7 +678,7 @@ export class UserList implements OnInit, AfterViewInit, CanComponentDeactivate {
           const created = res.data?.user;
           if (created) {
             this.users = [created, ...this.users];
-            this.applyFilters();
+            this.applyFilter();
           }
 
           this.hideModal();
@@ -709,7 +730,7 @@ export class UserList implements OnInit, AfterViewInit, CanComponentDeactivate {
             if (index >= 0) {
               this.users[index] = updated;
               this.users = [...this.users];
-              this.applyFilters();
+              this.applyFilter();
             }
           }
 
@@ -749,7 +770,7 @@ export class UserList implements OnInit, AfterViewInit, CanComponentDeactivate {
           .subscribe({
             next: (res: any) => {
               this.users = this.users.filter(x => x.user !== user.user);
-              this.applyFilters();
+              this.applyFilter();
               this.notify.showFromApiResponse(res, 'success');
             },
             error: (err: any) => {

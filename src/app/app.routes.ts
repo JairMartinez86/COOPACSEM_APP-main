@@ -84,7 +84,7 @@ export const routes: Routes = [
           import('./features/setting/pages/user-list/user-list')
             .then(m => m.UserList),
         canActivate: [permissionGuard],
-        data: { permission: '/user-list' },
+        data: { permission: '/user-list',  tableFilterKey: 'user-list' },
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },
