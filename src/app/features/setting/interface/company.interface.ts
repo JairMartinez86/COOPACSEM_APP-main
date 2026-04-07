@@ -26,7 +26,8 @@ export interface CompanyRequest {
   OrdinaryCapitalPercentage: number;
   OtherDeferredIncomePercentage: number;
   AffiliationAccount?: string;
-  AffiliationNavidadAccount?: string;
+  CurrentAccount?: string;
+  ChristmasAccount?: string;
   OrdinaryCapitalAccount?: string;
   OtherDeferredIncomeAccount?: string;
 
@@ -72,7 +73,8 @@ export const EMPTY_COMPANY: CompanyRequest = {
   OrdinaryCapitalPercentage: 0,
   OtherDeferredIncomePercentage: 0,
   AffiliationAccount: '',
-  AffiliationNavidadAccount: '',
+  CurrentAccount: '',
+  ChristmasAccount: '',
   OrdinaryCapitalAccount: '',
   OtherDeferredIncomeAccount: '',
 

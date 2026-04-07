@@ -408,24 +408,35 @@
                     </label>
                     <input #OtherDeferredIncomeAccount type="text" class="form-control" id="OtherDeferredIncomeAccount"
                       name="OtherDeferredIncomeAccount" [(ngModel)]="company.OtherDeferredIncomeAccount"
-                      engineSync="OtherDeferredIncomeAccount" autoFocusNext [next]="AffiliationNavidadAccount" />
+                      engineSync="OtherDeferredIncomeAccount" autoFocusNext [next]="CurrentAccount" />
                   </div>
                 </div>
               </div>
 
-                 <div class="row g-3 mt-1">
+              <div class="row g-3 mt-1">
                 <div class="col-md-4">
-                  <div error-notify="AffiliationNavidadAccount" error-display="inline">
-                    <label for="AffiliationNavidadAccount" class="form-label">
-                      {{ 'company.fields.affiliationNavidadAccount.label' | translate }}
+                  <div error-notify="CurrentAccount" error-display="inline">
+                    <label for="CurrentAccount" class="form-label">
+                      {{ 'company.fields.currentAccount.label' | translate }}
                     </label>
-                    <input #AffiliationNavidadAccount type="text" class="form-control" id="AffiliationNavidadAccount"
-                      name="AffiliationNavidadAccount" [(ngModel)]="company.AffiliationNavidadAccount" engineSync="AffiliationNavidadAccount"
-                      autoFocusNext [next]="SmtpHost" />
+                    <input #CurrentAccount type="text" class="form-control" id="CurrentAccount"
+                      name="CurrentAccount" [(ngModel)]="company.CurrentAccount"
+                      engineSync="CurrentAccount" autoFocusNext [next]="ChristmasAccount" />
                   </div>
                 </div>
 
-         
+                <div class="col-md-4">
+                  <div error-notify="ChristmasAccount" error-display="inline">
+                    <label for="ChristmasAccount" class="form-label">
+                      {{ 'company.fields.christmasAccount.label' | translate }}
+                    </label>
+                    <input #ChristmasAccount type="text" class="form-control" id="ChristmasAccount"
+                      name="ChristmasAccount" [(ngModel)]="company.ChristmasAccount"
+                      engineSync="ChristmasAccount" autoFocusNext [next]="SmtpHost" />
+                  </div>
+                </div>
+
+
               </div>
 
 

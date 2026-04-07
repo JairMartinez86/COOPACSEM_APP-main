@@ -124,8 +124,11 @@
       "otherDeferredIncomeAccount": {
         "label": "Cuenta contable de otros ingresos diferidos"
       },
-      "affiliationNavidadAccount": {
-        "label": "Cuenta contable de afiliación navideña"
+      "currentAccount": {
+        "label": "Cuenta contable corriente"
+      },
+      "christmasAccount": {
+        "label": "Cuenta contable navideña"
       },
       
       "smtpHost": {
@@ -274,7 +277,11 @@
           "label": "Configuración de afiliación",
           "tooltip": "Campo requerido"
         },
-        "AffiliationNavidadAccount": {
+        "CurrentAccount": {
+          "label": "Configuración de afiliación",
+          "tooltip": "Campo requerido"
+        },
+         "ChristmasAccount": {
           "label": "Configuración de afiliación",
           "tooltip": "Campo requerido"
         },
@@ -561,12 +568,23 @@
             }
           }
         },
-         "AffiliationNavidadAccount":{
+
+         "CurrentAccount":{
           "data": {
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Ingrese la cuenta contable de afiliación navideña"
+              "msj": "Ingrese la cuenta contable corriente"
+            }
+          }
+        },
+
+         "ChristmasAccount":{
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Ingrese la cuenta contable navideña"
             }
           }
         },

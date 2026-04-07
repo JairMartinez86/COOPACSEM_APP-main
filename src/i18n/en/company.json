@@ -11,7 +11,7 @@
       "visualIdentity": "Visual identity",
       "contact": "Contact information",
       "regional": "Regional settings",
-      "smtp": "SMTP settings",
+      "smtp": "SMTP configuration",
       "security": "System security",
       "affiliation": "Affiliation settings"
     },
@@ -25,7 +25,7 @@
         "placeholder": "Enter the trade name"
       },
       "ruc": {
-        "label": "RUC",
+        "label": "Tax ID (RUC)",
         "placeholder": "Enter the RUC"
       },
       "businessType": {
@@ -116,16 +116,19 @@
         }
       },
       "affiliationAccount": {
-        "label": "Affiliation account"
+        "label": "Affiliation ledger account"
       },
       "ordinaryCapitalAccount": {
-        "label": "Ordinary capital account"
+        "label": "Ordinary capital ledger account"
       },
       "otherDeferredIncomeAccount": {
-        "label": "Other deferred income account"
+        "label": "Other deferred income ledger account"
       },
-      "affiliationNavidadAccount": {
-        "label": "Christmas affiliation account"
+      "currentAccount": {
+        "label": "Current ledger account"
+      },
+      "christmasAccount": {
+        "label": "Christmas ledger account"
       },
       "smtpHost": {
         "label": "SMTP server",
@@ -173,7 +176,7 @@
         "suffix": "days"
       },
       "loginLockMinutes": {
-        "label": "Lockout for failed attempts",
+        "label": "Lockout after failed attempts",
         "placeholder": "10",
         "suffix": "min"
       },
@@ -273,7 +276,11 @@
           "label": "Affiliation settings",
           "tooltip": "Required field"
         },
-        "AffiliationNavidadAccount": {
+        "CurrentAccount": {
+          "label": "Affiliation settings",
+          "tooltip": "Required field"
+        },
+        "ChristmasAccount": {
           "label": "Affiliation settings",
           "tooltip": "Required field"
         },
@@ -286,40 +293,40 @@
           "tooltip": "Required field"
         },
         "SmtpHost": {
-          "label": "SMTP settings",
+          "label": "SMTP configuration",
           "tooltip": "SMTP server host"
         },
         "SmtpPort": {
-          "label": "SMTP settings",
+          "label": "SMTP configuration",
           "tooltip": "SMTP port"
         },
         "SmtpFrom": {
-          "label": "SMTP settings",
-          "tooltip": "Sending email"
+          "label": "SMTP configuration",
+          "tooltip": "Sending email address"
         },
         "SmtpUsername": {
-          "label": "SMTP settings",
-          "tooltip": "SMTP access username"
+          "label": "SMTP configuration",
+          "tooltip": "SMTP login username"
         },
         "SmtpPassword": {
-          "label": "SMTP settings",
-          "tooltip": "SMTP access password"
+          "label": "SMTP configuration",
+          "tooltip": "SMTP login password"
         },
         "TwoFactorCodeExpirationMinutes": {
           "label": "System security",
-          "tooltip": "Expires in minutes"
+          "tooltip": "Expiration in minutes"
         },
         "PasswordResetExpirationMinutes": {
           "label": "System security",
-          "tooltip": "Expires in minutes"
+          "tooltip": "Expiration in minutes"
         },
         "JwtExpiresMinutes": {
           "label": "System security",
-          "tooltip": "Expires in minutes"
+          "tooltip": "Expiration in minutes"
         },
         "RefreshExpiresMinutes": {
           "label": "System security",
-          "tooltip": "Expires in minutes"
+          "tooltip": "Expiration in minutes"
         },
         "TrustedDeviceExpirationDays": {
           "label": "System security",
@@ -354,7 +361,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "RUC is required"
+              "msj": "Tax ID (RUC) is required"
             }
           }
         },
@@ -513,7 +520,7 @@
               "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
               "value": "100",
               "when": "",
-              "msj": "The ordinary capital and other deferred income percentages must total 100"
+              "msj": "The ordinary capital percentage and other deferred income must add up to 100"
             }
           }
         },
@@ -529,7 +536,7 @@
               "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
               "value": "100",
               "when": "",
-              "msj": "The ordinary capital and other deferred income percentages must total 100"
+              "msj": "The ordinary capital percentage and other deferred income must add up to 100"
             }
           }
         },
@@ -538,7 +545,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Enter the affiliation account"
+              "msj": "Enter the affiliation ledger account"
             }
           }
         },
@@ -547,7 +554,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Enter the ordinary capital account"
+              "msj": "Enter the ordinary capital ledger account"
             }
           }
         },
@@ -560,12 +567,21 @@
             }
           }
         },
-        "AffiliationNavidadAccount": {
+        "CurrentAccount": {
           "data": {
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Enter the Christmas affiliation account"
+              "msj": "Enter the current ledger account"
+            }
+          }
+        },
+        "ChristmasAccount": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "msj": "Enter the Christmas ledger account"
             }
           }
         },
@@ -603,7 +619,7 @@
             "2": {
               "rule": "EMAIL",
               "when": "{SmtpFrom}!=''",
-              "msj": "Enter a valid sender email"
+              "msj": "Enter a valid sender email address"
             }
           }
         },
@@ -630,7 +646,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "2FA code expiration time is required"
+              "msj": "The 2FA code expiration time is required"
             },
             "2": {
               "rule": "NUM>=",
@@ -645,7 +661,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Password reset time is required"
+              "msj": "The password reset time is required"
             },
             "2": {
               "rule": "NUM>=",
@@ -660,7 +676,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "JWT expiration time is required"
+              "msj": "The JWT expiration time is required"
             },
             "2": {
               "rule": "NUM>=",
@@ -675,7 +691,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Refresh token time is required"
+              "msj": "The refresh token time is required"
             },
             "2": {
               "rule": "NUM>=",
@@ -705,7 +721,7 @@
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "msj": "Lockout time is required"
+              "msj": "The lockout time is required"
             },
             "2": {
               "rule": "NUM>=",
