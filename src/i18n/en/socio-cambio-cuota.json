@@ -59,7 +59,8 @@
       "disminucion": "Decrease",
       "quincena": "Next payroll period",
       "inmediato": "Immediate",
-      "afiliacion": "Affiliation"
+      "afiliacionCorriente": "Current Savings Enrollment",
+    "afiliacionNavidena": "Christmas Savings Enrollment"
     },
     "actions": {
       "apply": "Apply Movement",
@@ -91,7 +92,7 @@
     },
     "chart": {
       "ahorro": "Available Savings",
-      "retiro": "Monthly Deposits",
+      "deposito": "Monthly Deposits",
       "intereses": "Accumulated Interests"
     },
     "form": {

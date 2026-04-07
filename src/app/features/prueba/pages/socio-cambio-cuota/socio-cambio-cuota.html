@@ -114,15 +114,22 @@
                 </div>
 
                 <div class="col-md-4" error-notify="CuotaActual" error-display="inline">
+
                   <label class="form-label">
                     {{ 'socioCambioCuota.fields.cuotaActual.label' | translate }}
                   </label>
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      {{ appConfigService.getCurrentSettings().currency }}
+                    </span>
 
-                  <input #CuotaActual type="text" class="form-control text-end" [(ngModel)]="form.cuotaActual"
-                    id="CuotaActual" name="CuotaActual" engineSync="CuotaActual" numberFormat [decimals]="2"
-                    [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                    [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
-                    [next]="NuevaCuota" disabled />
+                    <input #CuotaActual type="text" class="form-control text-end" [(ngModel)]="form.cuotaActual"
+                      id="CuotaActual" name="CuotaActual" engineSync="CuotaActual" numberFormat [decimals]="2"
+                      [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                      [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
+                      [next]="NuevaCuota" disabled />
+                  </div>
+
                 </div>
 
                 <div class="col-md-4" error-notify="NuevaCuota" error-display="inline">
@@ -130,11 +137,18 @@
                     {{ 'socioCambioCuota.fields.nuevaCuota.label' | translate }}
                   </label>
 
-                  <input #NuevaCuota type="text" class="form-control text-end" [(ngModel)]="form.nuevaCuota"
-                    id="NuevaCuota" name="NuevaCuota" engineSync="NuevaCuota" numberFormat [decimals]="2"
-                    [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                    [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
-                    [next]="Vigencia" JmartAutoFocus />
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      {{ appConfigService.getCurrentSettings().currency }}
+                    </span>
+                    <input #NuevaCuota type="text" class="form-control text-end" [(ngModel)]="form.nuevaCuota"
+                      id="NuevaCuota" name="NuevaCuota" engineSync="NuevaCuota" numberFormat [decimals]="2"
+                      [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                      [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
+                      [next]="Vigencia" JmartAutoFocus />
+                  </div>
+
+
                 </div>
 
                 <div class="col-md-4" error-notify="Diferencia" error-display="inline">
@@ -142,11 +156,17 @@
                     {{ 'socioCambioCuota.fields.diferencia.label' | translate }}
                   </label>
 
-                  <input #Diferencia type="text" class="form-control text-end" [ngModel]="getDiferencia()"
-                    id="Diferencia" name="Diferencia" engineSync="Diferencia" numberFormat [decimals]="2"
-                    [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                    [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
-                    [next]="Vigencia" disabled />
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      {{ appConfigService.getCurrentSettings().currency }}
+                    </span>
+                    <input #Diferencia type="text" class="form-control text-end" [ngModel]="getDiferencia()"
+                      id="Diferencia" name="Diferencia" engineSync="Diferencia" numberFormat [decimals]="2"
+                      [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                      [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
+                      [next]="Vigencia" disabled />
+                  </div>
+
                 </div>
 
                 <div class="col-md-4" error-notify="Vigencia" error-display="inline">
@@ -233,24 +253,8 @@
                     <td>{{ formatDate(item.fecha) }}</td>
 
                     <td>
-                      <span class="badge" [ngClass]="
-      item.tipo.toLowerCase() === 'incremento'
-        ? 'badge-soft-success'
-        : item.tipo.toLowerCase() === 'disminucion'
-          ? 'badge-soft-danger'
-          : item.tipo.toLowerCase() === 'afiliacion'
-            ? 'badge-soft-primary'
-            : 'badge-soft-secondary'
-    ">
-                        {{
-                        item.tipo.toLowerCase() === 'incremento'
-                        ? ('socioCambioCuota.options.incremento' | translate)
-                        : item.tipo.toLowerCase() === 'disminucion'
-                        ? ('socioCambioCuota.options.disminucion' | translate)
-                        : item.tipo.toLowerCase() === 'afiliacion'
-                        ? ('socioCambioCuota.options.afiliacion' | translate)
-                        : item.tipo
-                        }}
+                      <span class="badge" [ngClass]="getTipoClass(item.tipo)">
+                        {{ getTipoLabel(item.tipo) }}
                       </span>
                     </td>
 
@@ -384,7 +388,7 @@
                     </div>
                     <div class="summary-stat-card__value">
                       {{ appConfigService.getCurrentSettings().currency }}
-                      {{ formatCurrency(chartTotals.ahorro) }}
+                      {{ formatCurrency(dashboard.ahorro) }}
                     </div>
                   </div>
                 </div>
@@ -397,11 +401,11 @@
                   </div>
                   <div class="summary-stat-card__body">
                     <div class="summary-stat-card__label">
-                      {{ 'socioCambioCuota.chart.retiro' | translate }}
+                      {{ 'socioCambioCuota.chart.deposito' | translate }}
                     </div>
                     <div class="summary-stat-card__value">
                       {{ appConfigService.getCurrentSettings().currency }}
-                      {{ formatCurrency(chartTotals.retiro) }}
+                      {{ formatCurrency(dashboard.deposito) }}
                     </div>
                   </div>
                 </div>
@@ -439,7 +443,7 @@
 
           <div class="card-body">
             <apx-chart [series]="pieSeries" [chart]="pieChart" [labels]="pieLabels" [legend]="pieLegend"
-              [dataLabels]="pieDataLabels" [responsive]="pieResponsive">
+              [dataLabels]="pieDataLabels" [responsive]="pieResponsive" [tooltip]="pieOptions.tooltip">
             </apx-chart>
           </div>
         </div>

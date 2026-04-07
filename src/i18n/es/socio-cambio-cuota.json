@@ -59,7 +59,8 @@
       "disminucion": "Disminución",
       "quincena": "Próxima quincena",
       "inmediato": "Inmediato",
-      "afiliacion": "Afiliación"
+      "afiliacionCorriente": "Afiliación Corriente",
+      "afiliacionNavidena": "Afiliación Navideña"
     },
     "actions": {
       "apply": "Aplicar movimiento",
@@ -91,7 +92,7 @@
     },
     "chart": {
       "ahorro": "Ahorro disponible",
-      "retiro": "Depósitos mensuales",
+      "deposito": "Depósitos mensuales",
       "intereses": "Intereses acumulados"
     },
     "form": {
@@ -140,8 +141,8 @@
             }
           }
         },
-        "FechaServidor":{
-           "data": {
+        "FechaServidor": {
+          "data": {
             "1": {
               "rule": "REGEX",
               "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
@@ -200,7 +201,7 @@
               "when": "",
               "msj": "Ingrese la fecha de inicio"
             },
-             "2": {
+            "2": {
               "rule": "DATE>=",
               "value": "{FechaServidor}",
               "when": "",

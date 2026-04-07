@@ -298,7 +298,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                     };
                 },
                 error: (err) => {
-                    console.error('Error loading socio', err);
+                   this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
                     this.socio = null;
                 }
             });
@@ -323,7 +323,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                         : [];
                 },
                 error: (err) => {
-                    console.error('Error loading bancos', err);
+                   this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
                     this.bancos = [];
                 }
             });
@@ -353,7 +353,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                     this.applyFilter();
                 },
                 error: (err) => {
-                    console.error('Error loading historial', err);
+                    this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
                     this.historialAll = [];
                     this.historial = [];
                     this.historialCurrentPage = 1;

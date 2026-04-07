@@ -127,6 +127,12 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
     intereses: 0
   };
 
+  dashboard = {
+    ahorro: 0,
+    deposito: 0,
+    intereses: 0
+  }
+
   historialCurrentPage = 1;
   historialPageSize = 5;
   historialCurrentTerm = '';
@@ -158,13 +164,33 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
     type: 'pie',
     height: 300
   };
+
+  public pieOptions = {
+    tooltip: {
+      y: {
+        formatter: (value: number) => {
+          const currency = this.appConfigService.getCurrentSettings().currency;
+          return `${currency} ${this.formatCurrency(value)}`;
+        }
+      }
+    }
+  };
+
   public pieLabels: string[] = [];
   public pieLegend: ApexLegend = {
     position: 'bottom'
   };
+
   public pieDataLabels: ApexDataLabels = {
-    enabled: true
+    enabled: true,
+    formatter: (_val: number, opts?: any) => {
+      const value = opts?.w?.config?.series?.[opts.seriesIndex] ?? 0;
+      const currency = this.appConfigService.getCurrentSettings().currency;
+
+      return `${currency} ${this.formatCurrency(value)}`;
+    }
   };
+
   public pieResponsive: ApexResponsive[] = [
     {
       breakpoint: 576,
@@ -174,12 +200,13 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
       }
     }
   ];
-
   constructor(
     @Inject(PLATFORM_ID) private platformId: object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
+
+
 
 
   ngOnInit(): void {
@@ -331,15 +358,33 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
               this.translate.instant('socioCambioCuota.chart.intereses')
             ];
 
-          this.pieSeries = Array.isArray(data?.chart?.series)
-            ? data.chart.series.map((x: any) => Number(x ?? 0))
-            : [0, 0, 0];
+
+          const seriesObj = data?.chart?.series;
+
+          const s = data?.chart?.series ?? {};
+
+          this.pieSeries = [
+            Number(s.ahorro ?? 0),
+            Number(s.retiro ?? 0),
+            Number(s.intereses ?? 0)
+          ];
+
+
+
+          this.dashboard = {
+            ahorro: Number(s.ahorro ?? 0),
+            deposito: Number(s.deposito ?? 0),
+            intereses: Number(s.intereses ?? 0)
+          };
+
+
 
           this.chartTotals = {
             ahorro: Number(this.pieSeries[0] ?? 0),
             retiro: Number(this.pieSeries[1] ?? 0),
             intereses: Number(this.pieSeries[2] ?? 0)
           };
+
 
           if (!this.form.tipoCuenta) {
             this.form.tipoCuenta = 'corriente';
@@ -547,4 +592,37 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
     if (page < 1 || page > this.historialTotalPages) return;
     this.historialCurrentPage = page;
   }
+
+
+  getTipoLabel(tipo: string): string {
+    const t = (tipo || '').toLowerCase();
+
+    if (t === 'incremento') {
+      return this.translate.instant('socioCambioCuota.options.incremento');
+    }
+
+    if (t === 'disminucion') {
+      return this.translate.instant('socioCambioCuota.options.disminucion');
+    }
+
+    if (t === 'afiliacion corriente') {
+      return this.translate.instant('socioCambioCuota.options.afiliacionCorriente');
+    }
+
+    if (t === 'afiliacion navideña' || t === 'afiliacion navidena') {
+      return this.translate.instant('socioCambioCuota.options.afiliacionNavidena');
+    }
+
+    return tipo;
+  }
+
+  getTipoClass(tipo: string): string {
+  const t = (tipo || '').toLowerCase();
+
+  if (t === 'incremento') return 'badge-soft-success';
+  if (t === 'disminucion') return 'badge-soft-danger';
+  if (t.includes('afiliacion')) return 'badge-soft-primary';
+
+  return 'badge-soft-secondary';
+}
 }
