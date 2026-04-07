@@ -1,0 +1,171 @@
+{
+  "aperturaCuentaNavidena": {
+    "title": "Ahorro Navideño",
+    "subtitle": "Administra y gestiona tu plan de ahorro navideño",
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/"
+      },
+      {
+        "label": "Socios",
+        "url": "/socios"
+      },
+      {
+        "label": "Ahorro Navideño"
+      }
+    ],
+    "actions": {
+      "openAccount": "Aperturar cuenta",
+      "viewPlan": "Ver plan"
+    },
+    "kpis": {
+      "currentSaving": "Ahorro actual",
+      "goalSaving": "Meta de ahorro",
+      "pendingSaving": "Pendiente por completar"
+    },
+    "sections": {
+      "openingDetail": "Detalle de apertura",
+      "movements": "Movimientos del plan",
+      "memberData": "Datos del socio",
+      "planSummary": "Resumen del plan",
+       "summary": "Resumen"
+    },
+    "fields": {
+      "fechaApertura": {
+        "label": "Fecha de apertura",
+        "placeholder": "Seleccione la fecha de apertura"
+      },
+      "montoCuota": {
+        "label": "Monto de cuota",
+        "placeholder": "Ingrese el monto de la cuota"
+      },
+      "observacion": {
+        "label": "Observación",
+        "placeholder": "Ingrese una observación (opcional)"
+      }
+    },
+    "summary": {
+      "startDate": "Fecha inicio",
+      "quotaAmount": "Monto cuota",
+      "totalInstallments": "Total cuotas",
+      "completed": "completado",
+      "installments": "cuotas"
+    },
+    "movements": {
+      "columns": {
+        "fecha": "Fecha",
+        "descripcion": "Descripción",
+        "monto": "Monto",
+        "estado": "Estado"
+      }
+    },
+    "withdrawals": {
+      "title": "Historial de retiro",
+      "columns": {
+        "fecha": "Fecha",
+        "descripcion": "Descripción",
+        "monto": "Monto"
+      },
+      "empty": "No hay retiros registrados"
+    },
+    "modal": {
+      "title": "Plan de ahorro",
+      "subtitle": "Detalle completo de las cuotas programadas",
+      "columns": {
+        "noCuota": "No. Cuota",
+        "fecha": "Fecha",
+        "cuota": "Cuota",
+        "estado": "Estado",
+        "fechaPago": "Fecha pago"
+      }
+    },
+    "states": {
+      "emptyMovements": "No hay movimientos registrados",
+      "emptyPlan": "No hay cuotas programadas"
+    },
+    "chart": {
+      "currentSaving": "Ahorro actual",
+      "goalSaving": "Meta",
+      "pendingSaving": "Pendiente"
+    },
+    "profile": {
+      "company": "Empresa",
+      "joinDate": "Fecha ingreso"
+    },
+    "form": {
+      "fieldMeta": {
+        "FechaApertura": {
+          "label": "Fecha de apertura",
+          "tooltip": "Fecha en que se aperturará la cuenta navideña",
+          "tooltipIconClass": "bi bi-info-circle"
+        },
+        "MontoCuota": {
+          "label": "Monto de cuota",
+          "tooltip": "Monto que se programará en cada cuota del plan",
+          "tooltipIconClass": "bi bi-info-circle"
+        },
+        "Observacion": {
+          "label": "Observación",
+          "tooltip": "Comentario opcional para la apertura de la cuenta",
+          "tooltipIconClass": "bi bi-info-circle"
+        }
+      },
+      "validations": {
+        "FechaApertura": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese la fecha de apertura"
+            }
+          }
+        },
+        "MontoCuota": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el monto de cuota"
+            },
+            "2": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "El monto de cuota debe ser mayor a 0"
+            }
+          }
+        },
+        "Observacion": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        }
+      }
+    },
+     "types": {
+    "plan": "Nómina",
+    "extraordinario": "Extraordinario"
+  }
+  },
+  "common": {
+    "search": "Buscar",
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "yes": "Sí",
+    "no": "No",
+    "showing": "Mostrando",
+    "of": "de"
+  },
+  "draft": {
+    "leavePageTitle": "Advertencia",
+    "leavePageMessage": "Tienes cambios sin guardar. Si sales de esta página se perderán. ¿Deseas continuar?"
+  }
+}

@@ -18,5 +18,6 @@ import socios from './es/socios.json';
 import proveedor from './es/proveedores.json';
 import socio_ahorro from './es/socio-ahorro.json';
 import socio_cambio_cuota from './es/socio-cambio-cuota.json';
+import socio_apertura_nav from './es/apertura-cuenta-navidena.json';
 
-export const es = Object.assign({}, interceptor, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, socio_ahorro, socio_cambio_cuota, draft);
+export const es = Object.assign({}, interceptor, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, socio_ahorro, socio_cambio_cuota, socio_apertura_nav, draft);

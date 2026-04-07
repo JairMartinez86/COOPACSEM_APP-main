@@ -570,20 +570,21 @@ export class SociosListComponent implements OnInit, OnDestroy {
     return pages;
   }
 
- onNuevoAhorro(idSocio: string): void {
-  this.router.navigate(['/socio-ahorro/new', idSocio]);
-}
+  onNuevoAhorro(idSocio: string): void {
+    //this.router.navigate(['/socio-ahorro/new', idSocio]);
+    this.router.navigate(['/apertura-cuenta-navidena', idSocio]);
+  }
 
   onNuevoCredito(id: string): void {
     if (!id) return;
     console.log('Nuevo crédito para socio:', id);
   }
 
-  onIncrementoCuota(idSocio : string) {
+  onIncrementoCuota(idSocio: string) {
     this.router.navigate(['/cambio-cuota/new', idSocio, 'incremento']);
   }
 
-  onDiminucionCuota(idSocio : string) {
+  onDiminucionCuota(idSocio: string) {
     this.router.navigate(['/cambio-cuota/new', idSocio, 'disminucion']);
   }
 }

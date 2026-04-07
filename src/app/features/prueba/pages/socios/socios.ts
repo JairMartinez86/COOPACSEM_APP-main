@@ -976,7 +976,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.socio.cuentaCorrienteActiva) {
       this.socio.cuentaCorrienteFechaInicioDeduccion = null;
       this.socio.cuentaCorrienteMontoCuota = null;
-      this.socio.cuentaCorrienteEsMensual = false;
     }
   }
 
@@ -984,7 +983,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.socio.cuentaNavidenaActiva) {
       this.socio.cuentaNavidenaFechaInicioDeduccion = null;
       this.socio.cuentaNavidenaMontoCuota = null;
-      this.socio.cuentaNavidenaEsMensual = false;
     }
   }
 

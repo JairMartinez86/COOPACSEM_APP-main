@@ -300,11 +300,6 @@
         "label": "Installment amount",
         "placeholder": "0.00"
       },
-      "frecuencia": {
-        "label": "Frequency",
-        "mensual": "Monthly",
-        "quincenal": "Biweekly"
-      },
       "afiliacionActiva": {
         "label": "Membership",
         "help": "Enable this option to register the member affiliation."
@@ -1183,6 +1178,7 @@
     "memberSince": "Member since",
     "newSaving": "New savings",
     "newCredit": "New credit",
+    "newWithdrawal": "New withdrawal",
     "more": "More",
     "increaseSavings": "Increase savings",
     "decreaseSavings": "Decrease savings",

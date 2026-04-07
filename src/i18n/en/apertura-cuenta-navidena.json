@@ -1,0 +1,172 @@
+{
+  "aperturaCuentaNavidena": {
+    "title": "Christmas Savings",
+    "subtitle": "Manage and track your Christmas savings plan",
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Members",
+        "url": "/socios"
+      },
+      {
+        "label": "Christmas Savings"
+      }
+    ],
+    "actions": {
+      "openAccount": "Open account",
+      "viewPlan": "View plan"
+    },
+    "kpis": {
+      "currentSaving": "Current savings",
+      "goalSaving": "Savings goal",
+      "pendingSaving": "Remaining amount"
+    },
+    "sections": {
+      "openingDetail": "Opening details",
+      "movements": "Plan movements",
+      "memberData": "Member information",
+      "planSummary": "Plan summary",
+      "summary": "Summary"
+    },
+    "fields": {
+      "fechaApertura": {
+        "label": "Opening date",
+        "placeholder": "Select the opening date"
+      },
+      "montoCuota": {
+        "label": "Installment amount",
+        "placeholder": "Enter the installment amount"
+      },
+      "observacion": {
+        "label": "Observation",
+        "placeholder": "Enter a note (optional)"
+      }
+    },
+    "summary": {
+      "startDate": "Start date",
+      "quotaAmount": "Installment amount",
+      "totalInstallments": "Total installments",
+      "completed": "completed",
+      "installments": "installments"
+    },
+    "movements": {
+      "columns": {
+        "fecha": "Date",
+        "descripcion": "Description",
+        "monto": "Amount",
+        "estado": "Status"
+      }
+    },
+    "withdrawals": {
+      "title": "Withdrawal history",
+      "columns": {
+        "fecha": "Date",
+        "descripcion": "Description",
+        "monto": "Amount"
+      },
+      "empty": "No withdrawals found"
+    },
+    "modal": {
+      "title": "Savings plan",
+      "subtitle": "Full detail of the scheduled installments",
+      "columns": {
+        "noCuota": "Installment No.",
+        "fecha": "Date",
+        "cuota": "Installment",
+        "estado": "Status",
+        "fechaPago": "Payment date"
+      }
+    },
+
+    "states": {
+      "emptyMovements": "No movements found",
+      "emptyPlan": "No scheduled installments found"
+    },
+    "chart": {
+      "currentSaving": "Current savings",
+      "goalSaving": "Goal",
+      "pendingSaving": "Pending"
+    },
+    "profile": {
+      "company": "Company",
+      "joinDate": "Join date"
+    },
+    "form": {
+      "fieldMeta": {
+        "FechaApertura": {
+          "label": "Opening date",
+          "tooltip": "Date when the Christmas account will be opened",
+          "tooltipIconClass": "bi bi-info-circle"
+        },
+        "MontoCuota": {
+          "label": "Installment amount",
+          "tooltip": "Amount scheduled for each installment in the plan",
+          "tooltipIconClass": "bi bi-info-circle"
+        },
+        "Observacion": {
+          "label": "Observation",
+          "tooltip": "Optional note for the account opening",
+          "tooltipIconClass": "bi bi-info-circle"
+        }
+      },
+      "validations": {
+        "FechaApertura": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Enter the opening date"
+            }
+          }
+        },
+        "MontoCuota": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Enter the installment amount"
+            },
+            "2": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "The installment amount must be greater than 0"
+            }
+          }
+        },
+        "Observacion": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            }
+          }
+        }
+      }
+    },
+      "types": {
+    "plan": "Payroll",
+    "extraordinario": "Extraordinary"
+  }
+  },
+  "common": {
+    "search": "Search",
+    "close": "Close",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No",
+    "showing": "Showing",
+    "of": "of"
+  },
+  "draft": {
+    "leavePageTitle": "Warning",
+    "leavePageMessage": "You have unsaved changes. If you leave this page, they will be lost. Do you want to continue?"
+  }
+}

@@ -57,12 +57,12 @@ export interface SocioForm {
   cuentaCorrienteActiva: boolean;
   cuentaCorrienteFechaInicioDeduccion: string | null;
   cuentaCorrienteMontoCuota: number | null;
-  cuentaCorrienteEsMensual: boolean;
+
 
   cuentaNavidenaActiva: boolean;
   cuentaNavidenaFechaInicioDeduccion: string | null;
   cuentaNavidenaMontoCuota: number | null;
-  cuentaNavidenaEsMensual: boolean;
+
 
   beneficiarios: BeneficiarioForm[];
   activo: boolean;
@@ -128,12 +128,12 @@ export const EMPTY_SOCIO: SocioForm = {
   cuentaCorrienteActiva: false,
   cuentaCorrienteFechaInicioDeduccion: null,
   cuentaCorrienteMontoCuota: null,
-  cuentaCorrienteEsMensual: false,
+
 
   cuentaNavidenaActiva: false,
   cuentaNavidenaFechaInicioDeduccion: null,
   cuentaNavidenaMontoCuota: null,
-  cuentaNavidenaEsMensual: false,
+
 
   beneficiarios: [],
   activo: true,

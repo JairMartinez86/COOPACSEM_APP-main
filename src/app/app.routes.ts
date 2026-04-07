@@ -188,6 +188,21 @@ export const routes: Routes = [
         canDeactivate: [pendingChangesGuard],
       },
 
+      {
+        path: 'apertura-cuenta-navidena/:socioId',
+        loadComponent: () =>
+          import('./features/prueba/pages/apertura-cuenta-navidena/apertura-cuenta-navidena')
+            .then(m => m.AperturaCuentaNavidenaComponent),
+        data: {
+          permission: '/apertura-cuenta-navidena',
+          action: ['view', 'create'],
+          tableFilterKey: 'apertura-cuenta-navidena'
+        },
+        providers: [JMartMassiveValidationService],
+         canDeactivate: [pendingChangesGuard],
+      },
+
+
 
       // PROVEEDORES
       {

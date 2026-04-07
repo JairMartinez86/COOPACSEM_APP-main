@@ -520,18 +520,7 @@
                           <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                         </div>
                       </div>
-                      <div class="col-md-2 col-lg-2">
-                        <label for="cuentaCorrienteEsMensual" class="form-label d-block">{{
-                          'socios.fields.frecuencia.label' | translate }}</label>
-                        <div class="form-check form-switch pt-2">
-                          <input #cuentaCorrienteEsMensual id="cuentaCorrienteEsMensual" name="cuentaCorrienteEsMensual"
-                            class="form-check-input" type="checkbox" [(ngModel)]="socio.cuentaCorrienteEsMensual"
-                            [disabled]="!socio.cuentaCorrienteActiva" />
-                          <label class="form-check-label ms-2" for="cuentaCorrienteEsMensual">{{
-                            socio.cuentaCorrienteEsMensual ? ('socios.fields.frecuencia.mensual' | translate) :
-                            ('socios.fields.frecuencia.quincenal' | translate) }}</label>
-                        </div>
-                      </div>
+              
                     </div>
                   </div>
                   <div class="col-12">
@@ -570,18 +559,7 @@
                           <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                         </div>
                       </div>
-                      <div class="col-md-2 col-lg-2">
-                        <label for="cuentaNavidenaEsMensual" class="form-label d-block">{{
-                          'socios.fields.frecuencia.label' | translate }}</label>
-                        <div class="form-check form-switch pt-2">
-                          <input #cuentaNavidenaEsMensual id="cuentaNavidenaEsMensual" name="cuentaNavidenaEsMensual"
-                            class="form-check-input" type="checkbox" [(ngModel)]="socio.cuentaNavidenaEsMensual"
-                            [disabled]="!socio.cuentaNavidenaActiva" />
-                          <label class="form-check-label ms-2" for="cuentaNavidenaEsMensual">{{
-                            socio.cuentaNavidenaEsMensual ? ('socios.fields.frecuencia.mensual' | translate) :
-                            ('socios.fields.frecuencia.quincenal' | translate) }}</label>
-                        </div>
-                      </div>
+ 
                     </div>
                   </div>
                 </div>
@@ -602,7 +580,7 @@
                     <select #sociedadLabora id="sociedadLabora" name="sociedadLabora" [(ngModel)]="socio.sociedadLabora"
                       engineSync="sociedadLabora" autoFocusNext [next]="area" class="form-select required">
                       <option value="">{{ 'socios.common.selectOption' | translate }}</option>
-                      <option value="GMG Commercial">GMG Commercial
+                      <option value="GMG Comercial">GMG Comercial
                       </option>
                       <option value="GMG Servicios">GMG Servicios
                       </option>

@@ -300,11 +300,6 @@
         "label": "Monto de cuota",
         "placeholder": "0.00"
       },
-      "frecuencia": {
-        "label": "Frecuencia",
-        "mensual": "Mensual",
-        "quincenal": "Quincenal"
-      },
       "afiliacionActiva": {
         "label": "Afiliación",
         "help": "Activa esta opción para registrar la afiliación del socio."
@@ -1182,6 +1177,7 @@
   "memberSince": "Socio desde",
   "newSaving": "Nuevo ahorro",
   "newCredit": "Nuevo crédito",
+  "newWithdrawal": "Nuevo retiro",
   "more": "Mas",
   "increaseSavings": "Aumentar ahorro",
   "decreaseSavings": "Disminuir ahorro",
