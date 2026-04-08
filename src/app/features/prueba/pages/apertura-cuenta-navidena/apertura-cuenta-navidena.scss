@@ -3,3 +3,49 @@
     border-radius: .75rem;
   }
 }
+.navidad-hero {
+  position: relative;
+  width: 100%;
+  height: clamp(120px, 18vw, 200px);
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
+
+.navidad-hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 60%;
+  display: block;
+}
+
+.navidad-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.10),
+    rgba(0, 0, 0, 0.35)
+  );
+}
+
+.navidad-hero__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 1rem;
+  text-align: center;
+}
+
+.navidad-hero__content h3 {
+  font-size: clamp(1rem, 2vw, 1.8rem);
+}
+
+.navidad-hero__content p {
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
+}
+
+

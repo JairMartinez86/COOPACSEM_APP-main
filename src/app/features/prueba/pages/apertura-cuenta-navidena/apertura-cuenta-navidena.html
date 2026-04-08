@@ -9,12 +9,27 @@
       <div class="col-xxl-8 col-xl-8">
 
         <!-- HEADER -->
-        <div class="card mb-3">
-          <div class="card-body text-center">
-            <h3 class="mb-1">{{ 'aperturaCuentaNavidena.title' | translate }}</h3>
-            <p class="text-muted mb-0">{{ 'aperturaCuentaNavidena.subtitle' | translate }}</p>
-          </div>
-        </div>
+         <div class="card mb-3 overflow-hidden border-0">
+  <div class="navidad-hero">
+
+    <img
+      src="assets/img/navidad-banner.png"
+      class="navidad-hero__img" />
+
+    <div class="navidad-hero__overlay"></div>
+
+    <div class="navidad-hero__content text-center text-white">
+      <h3 class="mb-1 fw-bold">
+        {{ 'aperturaCuentaNavidena.title' | translate }}
+      </h3>
+      <p class="mb-0">
+        {{ 'aperturaCuentaNavidena.subtitle' | translate }}
+      </p>
+    </div>
+
+  </div>
+</div>
+      
 
         <!-- KPIs DENTRO DE LA PRIMERA COLUMNA -->
         <div class="card mb-3">
@@ -50,7 +65,7 @@
                 <div class="card widget-color-stat info h-100 mb-0">
                   <div class="card-body">
                     <div class="widget-color-stat-icon">
-                     <i class="fa-duotone fa-thin fa-bullseye-arrow"></i>
+                      <i class="fa-duotone fa-thin fa-bullseye-arrow"></i>
                     </div>
                     <div class="widget-color-stat-content">
                       <div class="widget-color-stat-value">

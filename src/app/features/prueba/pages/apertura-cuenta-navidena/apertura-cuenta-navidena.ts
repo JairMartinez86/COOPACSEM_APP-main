@@ -1,10 +1,12 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   Component,
+  DOCUMENT,
   Inject,
   OnDestroy,
   OnInit,
   PLATFORM_ID,
+  Renderer2,
   ViewChild,
   inject
 } from '@angular/core';
@@ -127,6 +129,8 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   private readonly translate = inject(TranslateService);
   private readonly service = inject(SocioAperturaCuentaNavidenaService);
   private readonly filterSvc = inject(TableFilterService);
+  private renderer = inject(Renderer2);
+  private document = inject(DOCUMENT);
 
   public appConfigService = inject(AppConfigService);
   public notify = inject(NotificationService);
@@ -135,6 +139,10 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   private readonly subs = new Subscription();
   private readonly filterKey = 'apertura-cuenta-navidena';
   private readonly isBrowser: boolean;
+
+  private snowHost?: HTMLElement;
+private snowStyle?: HTMLStyleElement;
+private snowInterval?: number;
 
   socioId = '';
   loading = false;
@@ -232,6 +240,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.startSnow();
     this.breadcrumbs =
       this.translate.instant('aperturaCuentaNavidena.breadcrumbs') || this.breadcrumbs;
 
@@ -280,8 +289,120 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.stopSnow();
     this.subs.unsubscribe();
   }
+
+  private startSnow(): void {
+  if (!this.isBrowser || this.snowHost) return;
+
+  const style = this.renderer.createElement('style') as HTMLStyleElement;
+  style.innerHTML = `
+    .oai-snow-host {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 999999;
+    }
+
+    .oai-snowflake {
+      position: absolute;
+      top: -24px;
+      color: #fff;
+      user-select: none;
+      pointer-events: none;
+      text-shadow: 0 0 10px rgba(255,255,255,.9);
+      animation-name: oai-fall-snow;
+      animation-timing-function: linear;
+      animation-iteration-count: 1;
+      will-change: transform, opacity;
+    }
+
+    @keyframes oai-fall-snow {
+      0% {
+        transform: translate3d(0, -20px, 0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: .95;
+      }
+      100% {
+        transform: translate3d(40px, 110vh, 0) rotate(360deg);
+        opacity: .15;
+      }
+    }
+  `;
+  this.renderer.appendChild(this.document.head, style);
+  this.snowStyle = style;
+
+  const host = this.renderer.createElement('div');
+  host.className = 'oai-snow-host';
+  this.renderer.appendChild(this.document.body, host);
+  this.snowHost = host;
+
+  const createFlake = () => {
+    if (!this.snowHost) return;
+
+    const flake = this.renderer.createElement('span');
+    flake.className = 'oai-snowflake';
+    flake.textContent = '❄';
+
+    const left = Math.random() * 100;
+    const size = 8 + Math.random() * 22;
+    const duration = 5 + Math.random() * 7;
+    const drift = -80 + Math.random() * 160;
+
+    this.renderer.setStyle(flake, 'left', `${left}vw`);
+    this.renderer.setStyle(flake, 'font-size', `${size}px`);
+    this.renderer.setStyle(flake, 'animation-duration', `${duration}s`);
+    this.renderer.setStyle(flake, 'transform', `translate3d(0,0,0)`);
+    this.renderer.setStyle(flake, '--drift', `${drift}px`);
+
+    flake.animate(
+      [
+        { transform: 'translate3d(0, -20px, 0) rotate(0deg)', opacity: 0 },
+        { transform: `translate3d(${drift * 0.25}px, 10vh, 0) rotate(90deg)`, opacity: 0.95, offset: 0.15 },
+        { transform: `translate3d(${drift}px, 110vh, 0) rotate(360deg)`, opacity: 0.15 }
+      ],
+      {
+        duration: duration * 1000,
+        easing: 'linear',
+        fill: 'forwards'
+      }
+    );
+
+    this.renderer.appendChild(this.snowHost, flake);
+
+    window.setTimeout(() => {
+      flake.remove();
+    }, duration * 1000 + 300);
+  };
+
+  for (let i = 0; i < 25; i++) {
+    window.setTimeout(createFlake, i * 180);
+  }
+
+ this.snowInterval = window.setInterval(createFlake, 220);
+}
+
+private stopSnow(): void {
+  if (this.snowInterval) {
+    window.clearInterval(this.snowInterval);
+    this.snowInterval = undefined;
+  }
+
+  if (this.snowHost) {
+    this.snowHost.remove();
+    this.snowHost = undefined;
+  }
+
+  if (this.snowStyle) {
+    this.snowStyle.remove();
+    this.snowStyle = undefined;
+  }
+}
+
 
   loadConfig(): void {
     this.engine.resetRules?.();
