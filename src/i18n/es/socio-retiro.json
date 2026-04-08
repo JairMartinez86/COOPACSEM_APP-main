@@ -1,0 +1,177 @@
+{
+  "socioRetiro": {
+    "title": "Retiro de ahorro",
+    "subtitle": "Gestiona retiros de ahorro del socio",
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/"
+      },
+      {
+        "label": "Socios",
+        "url": "/socios"
+      },
+      {
+        "label": "Retiro de ahorro"
+      }
+    ],
+    "sections": {
+      "socio": "Datos del socio",
+      "detail": "Detalle del retiro",
+      "history": "Historial de retiros"
+    },
+    "fields": {
+      "codigo": "Código",
+      "nombres": "Nombres",
+      "cedula": "Cédula",
+      "empresa": "Empresa",
+      "estado": "Estado",
+      "empleadoDesde": "Empleado desde",
+      "monto": {
+        "label": "Monto"
+      },
+      "banco": {
+        "label": "Banco",
+        "placeholder": "Seleccione un banco"
+      },
+      "noRetiro": {
+        "label": "No. retiro"
+      },
+      "fechaRetiro": {
+        "label": "Fecha de retiro"
+      },
+      "observacion": {
+        "label": "Observación",
+        "placeholder": "Ingrese una observación"
+      }
+    },
+    "status": {
+      "activo": "Activo"
+    },
+    "destinos": {
+      "ahorroCorriente": "Ahorro corriente",
+      "ahorroNavideno": "Ahorro navideño",
+      "creditoActivo": "Crédito activo"
+    },
+    "summary": {
+      "currentSaving": "Ahorro corriente",
+      "christmasSaving": "Ahorro navideño",
+      "activeCredit": "Crédito activo"
+    },
+    "history": {
+      "columns": {
+        "date": "Fecha",
+        "amount": "Monto",
+        "destination": "Destino",
+        "status": "Estado"
+      },
+      "pagination": {
+        "showing": "Mostrando",
+        "of": "de",
+        "records": "registros"
+      }
+    },
+    "states": {
+      "historyPending": "No hay retiros registrados."
+    },
+    "actions": {
+      "save": "Guardar retiro",
+      "cancel": "Cancelar"
+    },
+    "form": {
+      "fieldMeta": {
+        "Monto": {
+          "label": "Monto",
+          "tooltip": "",
+          "tooltipIconClass": ""
+        },
+        "Destino": {
+          "label": "Destino",
+          "tooltip": "",
+          "tooltipIconClass": ""
+        },
+        "BancoCodigo": {
+          "label": "Banco",
+          "tooltip": "",
+          "tooltipIconClass": ""
+        },
+        "NoRetiro": {
+          "label": "No. retiro",
+          "tooltip": "",
+          "tooltipIconClass": ""
+        },
+        "FechaRetiro": {
+          "label": "Fecha de retiro",
+          "tooltip": "",
+          "tooltipIconClass": ""
+        },
+        "Observacion": {
+          "label": "Observación",
+          "tooltip": "",
+          "tooltipIconClass": ""
+        }
+      },
+      "validations": {
+        "Monto": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el monto"
+            },
+            "2": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "El monto debe ser mayor a 0"
+            }
+          }
+        },
+        "Destino": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione un destino"
+            }
+          }
+        },
+        "BancoCodigo": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione un banco"
+            }
+          }
+        },
+        "NoRetiro": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el número de retiro"
+            }
+          }
+        },
+        "FechaRetiro": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese la fecha de retiro"
+            }
+          }
+        },
+        "Observacion": {
+          "data": {}
+        }
+      }
+    }
+  }
+}

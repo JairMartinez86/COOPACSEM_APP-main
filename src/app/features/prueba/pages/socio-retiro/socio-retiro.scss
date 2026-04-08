@@ -1,0 +1,34 @@
+.socios-summary-strip {
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 72px;
+  justify-content: center;
+}
+
+.socios-summary-strip__label {
+  font-size: 12px;
+  line-height: 1.2;
+  opacity: 0.9;
+}
+
+.socios-summary-strip__value {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.socios-summary-strip--corriente {
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+}
+
+.socios-summary-strip--navidad {
+  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+}
+
+.socios-summary-strip--credito {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}

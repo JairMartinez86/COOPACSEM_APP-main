@@ -575,7 +575,6 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   onNuevoAhorro(idSocio: string): void {
-    //this.router.navigate(['/socio-ahorro/new', idSocio]);
     this.router.navigate(['/apertura-cuenta-navidena', idSocio]);
   }
 

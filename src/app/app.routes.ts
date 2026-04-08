@@ -84,7 +84,7 @@ export const routes: Routes = [
           import('./features/setting/pages/user-list/user-list')
             .then(m => m.UserList),
         canActivate: [permissionGuard],
-        data: { permission: '/user-list',  tableFilterKey: 'user-list' },
+        data: { permission: '/user-list', tableFilterKey: 'user-list' },
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },
@@ -178,6 +178,14 @@ export const routes: Routes = [
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },
+      {
+        path: 'socio-retiro/new/:socioId',
+        loadComponent: () =>
+          import('./features/prueba/pages/socio-retiro/socio-retiro').then(m => m.SocioRetiroComponent),
+        data: { permission: '/socio-retiro', action: ['view', 'create'], tableFilterKey: 'socio-retiro' },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
 
       {
         path: 'cambio-cuota/new/:socioId/:tipoMovimiento',
@@ -199,7 +207,7 @@ export const routes: Routes = [
           tableFilterKey: 'apertura-cuenta-navidena'
         },
         providers: [JMartMassiveValidationService],
-         canDeactivate: [pendingChangesGuard],
+        canDeactivate: [pendingChangesGuard],
       },
 
 

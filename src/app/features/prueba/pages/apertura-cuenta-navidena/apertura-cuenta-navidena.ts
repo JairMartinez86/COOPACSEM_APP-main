@@ -604,36 +604,36 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
 
           this.retiros = Array.isArray(data?.retiros)
             ? data.retiros.map((x: any) => ({
-                id: String(x?.id ?? ''),
-                fecha: String(x?.fecha ?? ''),
-                descripcion: String(x?.descripcion ?? ''),
-                monto: Number(x?.monto ?? 0)
-              }))
+              id: String(x?.id ?? ''),
+              fecha: String(x?.fecha ?? ''),
+              descripcion: String(x?.descripcion ?? ''),
+              monto: Number(x?.monto ?? 0)
+            }))
             : [];
 
           this.movimientosAll = Array.isArray(data?.movimientos)
             ? data.movimientos.map((x: any) => ({
-                id: String(x?.id ?? ''),
-                fecha: String(x?.fecha ?? ''),
-                descripcion: String(x?.descripcion ?? ''),
-                monto: Number(x?.monto ?? 0),
-                estado: String(x?.estado ?? ''),
-                referencia: x?.referencia ?? null,
-                fechaPago: x?.fechaPago ?? null,
-                tipoMovimiento: String(x?.tipoMovimiento ?? '')
-              }))
+              id: String(x?.id ?? ''),
+              fecha: String(x?.fecha ?? ''),
+              descripcion: String(x?.descripcion ?? ''),
+              monto: Number(x?.monto ?? 0),
+              estado: String(x?.estado ?? ''),
+              referencia: x?.referencia ?? null,
+              fechaPago: x?.fechaPago ?? null,
+              tipoMovimiento: String(x?.tipoMovimiento ?? '')
+            }))
             : [];
 
           this.plan = Array.isArray(data?.plan)
             ? data.plan.map((x: any) => ({
-                id: String(x?.id ?? `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`),
-                fechaProgramada: String(x?.fechaProgramada ?? ''),
-                montoCuota: Number(x?.montoCuota ?? 0),
-                estado: String(x?.estado ?? ''),
-                pagado: !!x?.pagado || String(x?.estado ?? '').toLowerCase() === 'pagada',
-                fechaPago: x?.fechaPago ?? null,
-                usuarioPago: x?.usuarioPago ?? null
-              }))
+              id: String(x?.id ?? `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`),
+              fechaProgramada: String(x?.fechaProgramada ?? ''),
+              montoCuota: Number(x?.montoCuota ?? 0),
+              estado: String(x?.estado ?? ''),
+              pagado: !!x?.pagado || String(x?.estado ?? '').toLowerCase() === 'pagada',
+              fechaPago: x?.fechaPago ?? null,
+              usuarioPago: x?.usuarioPago ?? null
+            }))
             : [];
 
           this.movimientos = [...this.movimientosAll];
@@ -1167,6 +1167,6 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
    * Placeholder para retiro futuro.
    */
   onNuevoRetiro(): void {
-
+    this.router.navigate(['/socio-retiro/new', this.socioId]);
   }
 }
