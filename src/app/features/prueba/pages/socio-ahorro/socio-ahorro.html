@@ -247,7 +247,15 @@
                                             {{ formatCurrency(item.monto) }}
                                         </td>
 
-                                        <td>{{ item.destino }}</td>
+                                         <td>
+                                            {{
+                                            item.destino === 'Ahorro Corriente'
+                                            ? ('socioAhorro.destinos.ahorroCorriente' | translate)
+                                            : item.destino === 'Ahorro Nav'
+                                            ? ('socioAhorro.destinos.ahorroNavideno' | translate)
+                                            : item.destino
+                                            }}
+                                        </td>
 
                                         <td>
                                             <span class="badge"

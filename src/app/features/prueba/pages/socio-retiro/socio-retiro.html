@@ -26,67 +26,176 @@
                         <h5 class="card-title mb-0">
                             {{ 'socioRetiro.sections.socio' | translate }}
                         </h5>
+                         <!-- estado -->
+                                   <div class="d-flex justify-content-end gap-1">
+                                             <small class="text-muted d-flex align-items-center gap-1 mb-0">
+                                                <i class="bi bi-check-circle"></i>
+                                                {{ 'socioRetiro.fields.estado' | translate }}
+                                            </small>
+
+                                            <span class="badge badge-soft-success d-flex align-items-center gap-1">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                                {{ 'socioRetiro.status.activo' | translate }}
+                                            </span>
+                                        </div>
                     </div>
+
+
 
                     <div class="card-body">
                         <div class="row g-2">
 
-                            <div class="col-md-6">
-                                <div class="d-flex gap-2">
-                                    <small class="text-muted d-flex gap-1 mb-0">
-                                        <i class="bi bi-hash"></i>
-                                        {{ 'socioRetiro.fields.codigo' | translate }}
-                                    </small>
-                                    <strong>{{ socio?.codigoSocio || '-' }}</strong>
+                            <!-- Línea 1 -->
+                            <div class="col-md-12">
+                                <div class="row g-2">
+
+                                    <!-- empresa -->
+                                  <div class="d-flex justify-content-center gap-1">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-building"></i>
+                                                {{ 'socioRetiro.fields.empresa' | translate }}
+                                            </small>
+                                            <strong>{{ socio?.sociedadLabora || '-' }}</strong>
+                                        </div>
+
+                                   
+
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center gap-1">
-                                    <small class="text-muted d-flex gap-1 mb-0">
-                                        <i class="bi bi-person"></i>
-                                        {{ 'socioRetiro.fields.nombres' | translate }}
-                                    </small>
-                                    <strong>{{ socio?.nombreCompleto || '-' }}</strong>
+                            <!-- Línea 2 -->
+                            <div class="col-md-12">
+                                <div class="row g-2">
+
+                                    <!-- código -->
+                                    <div class="col-md-4">
+                                        <div class="d-flex gap-1">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-hash"></i>
+                                                {{ 'socioRetiro.fields.codigo' | translate }}
+                                            </small>
+                                            <strong>{{ socio?.codigoSocio || '-' }}</strong>
+                                        </div>
+                                    </div>
+
+                                    <!-- nombre -->
+                                    <div class="col-md-4">
+                                        <div class="d-flex gap-1">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-person"></i>
+                                                {{ 'socioRetiro.fields.nombres' | translate }}
+                                            </small>
+                                            <strong>{{ socio?.nombreCompleto || '-' }}</strong>
+                                        </div>
+                                    </div>
+
+                                    <!-- cédula -->
+                                    <div class="col-md-4">
+                                        <div class="d-flex gap-1">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-card-text"></i>
+                                                {{ 'socioRetiro.fields.cedula' | translate }}
+                                            </small>
+                                            <strong>{{ socio?.numeroIdentificacion || '-' }}</strong>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="d-flex gap-1">
-                                    <small class="text-muted d-flex gap-1 mb-0">
-                                        <i class="bi bi-card-text"></i>
-                                        {{ 'socioRetiro.fields.cedula' | translate }}
-                                    </small>
-                                    <strong>{{ socio?.numeroIdentificacion || '-' }}</strong>
-                                </div>
-                            </div>
+                    
 
-                            <div class="col-md-6">
-                                <div class="d-flex gap-1">
-                                    <small class="text-muted d-flex gap-1 mb-0">
-                                        <i class="bi bi-building"></i>
-                                        {{ 'socioRetiro.fields.empresa' | translate }}
-                                    </small>
-                                    <strong>{{ socio?.sociedadLabora || '-' }}</strong>
-                                </div>
-                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer bg-transparent">
 
-                            <div class="col-md-6">
-                                <div class="d-flex gap-1">
-                                    <small class="text-muted d-flex align-items-center gap-1 mb-0">
-                                        <i class="bi bi-check-circle"></i>
-                                        {{ 'socioRetiro.fields.estado' | translate }}
-                                    </small>
+                        <div class="row g-2">
+                              <div class="col-md-12">
+                                <div class="row g-2">
 
-                                    <span class="badge badge-soft-success d-flex align-items-center gap-1">
-                                        <i class="bi bi-check-circle-fill"></i>
-                                        {{ 'socioRetiro.status.activo' | translate }}
-                                    </span>
+                                    <!-- Columna izquierda -->
+                                    <div class="col-md-6">
+
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-cash-stack"></i>
+                                                {{ 'socioRetiro.fields.salarioMensual' | translate }}
+                                            </small>
+                                            <strong>
+                                                {{ appConfigService.getCurrentSettings().currency }}
+                                                {{ formatCurrency(socio?.salarioMensual ?? 0) }}
+                                            </strong>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-calendar2-check"></i>
+                                                {{ 'socioRetiro.fields.cuotaActual' | translate }}
+                                            </small>
+                                            <strong>
+                                                {{ appConfigService.getCurrentSettings().currency }}
+                                                {{ formatCurrency(socio?.cuotaActual ?? 0) }}
+                                            </strong>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-shield-check"></i>
+                                                {{ 'socioRetiro.fields.indemnizacionEstimada' | translate }}
+                                            </small>
+                                            <strong>
+                                                {{ appConfigService.getCurrentSettings().currency }}
+                                                {{ formatCurrency(socio?.indemnizacionEstimada ?? 0) }}
+                                            </strong>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Columna derecha -->
+                                    <div class="col-md-6">
+
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-piggy-bank"></i>
+                                                {{ 'socioRetiro.fields.totalAhorrado' | translate }}
+                                            </small>
+                                            <strong>
+                                                {{ appConfigService.getCurrentSettings().currency }}
+                                                {{ formatCurrency(socio?.totalAhorrado ?? 0) }}
+                                            </strong>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-cash-coin"></i>
+                                                {{ 'socioRetiro.fields.totalRetirado' | translate }}
+                                            </small>
+                                            <strong>
+                                                {{ appConfigService.getCurrentSettings().currency }}
+                                                {{ formatCurrency(socio?.totalRetirado ?? 0) }}
+                                            </strong>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted d-flex gap-1 mb-0">
+                                                <i class="bi bi-wallet2"></i>
+                                                {{ 'socioRetiro.fields.saldoActual' | translate }}
+                                            </small>
+                                            <strong>
+                                                {{ appConfigService.getCurrentSettings().currency }}
+                                                {{ formatCurrency(socio?.saldoActual ?? 0) }}
+                                            </strong>
+                                        </div>
+
+                                    </div>
+
                                 </div>
                             </div>
 
                         </div>
                     </div>
+
                 </div>
 
                 <!-- DETALLE -->
@@ -197,6 +306,7 @@
                             </div>
 
                         </div>
+                        
                     </form>
 
                 </div>

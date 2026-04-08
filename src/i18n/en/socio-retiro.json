@@ -27,6 +27,12 @@
       "empresa": "Company",
       "estado": "Status",
       "empleadoDesde": "Employee since",
+      "salarioMensual": "Monthly Salary",
+      "cuotaActual": "Current Installment",
+      "totalAhorrado": "Total Saved",
+      "totalRetirado": "Total Withdrawn",
+      "saldoActual": "Current Balance",
+      "indemnizacionEstimada": "Estimated Severance",
       "monto": {
         "label": "Amount"
       },
@@ -151,7 +157,7 @@
         "NoRetiro": {
           "data": {
             "1": {
-               "rule": "REGEX",
+              "rule": "REGEX",
               "value": "^[0-9]+$",
               "when": "",
               "msj": "Enter the withdrawal number"

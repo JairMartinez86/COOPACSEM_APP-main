@@ -51,9 +51,9 @@
       }
     },
     "destinos": {
-      "ahorroCorriente": "Current savings",
-      "ahorroNavideno": "Christmas savings",
-      "creditoActivo": "Apply to credit"
+      "ahorroCorriente": "Deposit to Current Savings",
+      "ahorroNavideno": "Deposit to Christmas Savings",
+      "creditoActivo": "Apply to Credit"
     },
     "summary": {
       "availability": "Availability",

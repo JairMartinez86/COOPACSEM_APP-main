@@ -49,6 +49,12 @@ interface SocioResumen {
     correo?: string;
     direccionDomiciliar?: string;
     FechaIngreso?: string | null;
+    salarioMensual?: number;
+    cuotaActual?: number;
+    totalAhorrado?: number;
+    totalRetirado?: number;
+    saldoActual?: number;
+    indemnizacionEstimada?: number;
     dashboard?: SocioDashboard | null;
 }
 
@@ -292,6 +298,14 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
                         correo: data?.correo ?? '',
                         direccionDomiciliar: data?.direccionDomiciliar ?? '',
                         FechaIngreso: data?.fechaIngreso ?? null,
+
+                        salarioMensual: Number(data?.salarioMensual ?? 0),
+                        cuotaActual: Number(data?.cuotaActual ?? 0),
+                        totalAhorrado: Number(data?.totalAhorrado ?? 0),
+                        totalRetirado: Number(data?.totalRetirado ?? 0),
+                        saldoActual: Number(data?.saldoActual ?? 0),
+                        indemnizacionEstimada: Number(data?.indemnizacionEstimada ?? 0),
+
                         dashboard: {
                             totalAhorro: Number(data?.dashboard?.totalAhorro ?? 0),
                             ahorroNavideno: Number(data?.dashboard?.ahorroNavideno ?? 0),
