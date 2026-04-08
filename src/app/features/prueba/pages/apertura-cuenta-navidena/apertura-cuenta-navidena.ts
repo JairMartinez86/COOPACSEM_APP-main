@@ -590,14 +590,21 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
 
 
           this.socio = data?.socio ?? null;
-          console.log(this.socio);
           this.apertura = data?.apertura ?? null;
           this.yaAperturada = !!data?.yaAperturada;
           this.tieneMovimiento = !!data?.tieneMovimiento;
 
 
-          (this.form as any).yaAperturada = this.yaAperturada;
-          this.engine.setControlValue('yaAperturada', this.yaAperturada);
+          this.engine.patchValues?.({
+            FechaInicio: this.normalizeDate(this.form.fechaInicio) ?? '',
+            MontoCuota: this.form.montoCuota ?? null,
+            Observacion: this.form.observacion ?? '',
+            yaAperturada: this.yaAperturada
+          });
+
+          this.engine.clearErrors?.();
+
+
 
           this.resumen = {
             ahorroActual: Number(data?.resumen?.ahorroActual ?? 0),
@@ -668,6 +675,8 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
           }
 
           this.loadChartSeries();
+
+
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -842,38 +851,38 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   }
 
   onDelete(): void {
-  const message = this.translate.instant('aperturaCuentaNavidena.delete.message', {
-    nombre: this.socio?.nombreCompleto || '',
-    identificacion: this.socio?.numeroIdentificacion || ''
-  });
-
-  const warning = this.translate.instant('aperturaCuentaNavidena.delete.warning');
-  const title = this.translate.instant('aperturaCuentaNavidena.delete.title');
-
-  const ref = this.notify.confirm?.(
-    `${message}\n\n${warning}`,
-    title,
-    'warning'
-  );
-
-  if (!ref) return;
-
-  const deleteSub = ref.subscribe((result: number) => {
-    if (result !== 1) return;
-
-    this.service.delete(this.socioId).subscribe({
-      next: (res: any) => {
-        this.notify.showFromApiResponse?.(res, 'success');
-        this.loadData();
-      },
-      error: (err: any) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      }
+    const message = this.translate.instant('aperturaCuentaNavidena.delete.message', {
+      nombre: this.socio?.nombreCompleto || '',
+      identificacion: this.socio?.numeroIdentificacion || ''
     });
-  });
 
-  this.subs.add(deleteSub);
-}
+    const warning = this.translate.instant('aperturaCuentaNavidena.delete.warning');
+    const title = this.translate.instant('aperturaCuentaNavidena.delete.title');
+
+    const ref = this.notify.confirm?.(
+      `${message}\n\n${warning}`,
+      title,
+      'warning'
+    );
+
+    if (!ref) return;
+
+    const deleteSub = ref.subscribe((result: number) => {
+      if (result !== 1) return;
+
+      this.service.delete(this.socioId).subscribe({
+        next: (res: any) => {
+          this.notify.showFromApiResponse?.(res, 'success');
+          this.loadData();
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        }
+      });
+    });
+
+    this.subs.add(deleteSub);
+  }
   /**
    * Cancela la operación y vuelve a la lista de socios.
    */

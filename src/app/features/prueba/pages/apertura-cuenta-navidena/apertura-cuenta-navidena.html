@@ -141,8 +141,7 @@
                   </label>
 
                   <input #FechaInicio type="text" class="form-control" id="FechaInicio" name="FechaInicio"
-                    [placeholder]="'aperturaCuentaNavidena.fields.fechaInicio.placeholder' | translate"
-                    [ngModel]="form.fechaInicio" (ngModelChange)="onFechaAperturaChange($event)"
+                    [(ngModel)]="form.fechaInicio" (ngModelChange)="onFechaAperturaChange($event)"
                     engineSync="FechaInicio" [dateFormat]="appConfigService.getCurrentSettings().dateFormat"
                     autoFocusNext [next]="MontoCuota" required JmartAutoFocus [disabled]="tieneMovimiento" />
                 </div>
@@ -158,8 +157,7 @@
                     </span>
 
                     <input #MontoCuota type="text" class="form-control text-end" id="MontoCuota" name="MontoCuota"
-                      [placeholder]="'aperturaCuentaNavidena.fields.montoCuota.placeholder' | translate"
-                      [ngModel]="form.montoCuota" (ngModelChange)="onMontoCuotaChange($event)" engineSync="MontoCuota"
+                      [(ngModel)]="form.montoCuota" (ngModelChange)="onMontoCuotaChange($event)" engineSync="MontoCuota"
                       numberFormat [decimals]="2"
                       [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                       [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
