@@ -52,11 +52,12 @@ interface SocioResumen {
   numeroIdentificacion: string;
   sociedadLabora?: string | null;
   fechaIngreso?: string | null;
+  fechaAperturaNavidena?: string | null;
 }
 
 interface AperturaResumen {
   id: string;
-  fechaApertura: string;
+  fechaInicio: string;
   montoCuota: number;
   activa: boolean;
   usuarioCrea?: string | null;
@@ -97,7 +98,7 @@ interface PlanItem {
 interface AperturaCuentaNavidenaForm {
   socioId: string;
   tipoCuenta: string;
-  fechaApertura: string;
+  fechaInicio: string;
   montoCuota: number | null;
   observacion: string;
 }
@@ -163,13 +164,14 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
 
   previewPlan: PlanItem[] = [];
   yaAperturada = false;
+  tieneMovimiento = false;
 
   retiros: any[] = [];
 
   form: AperturaCuentaNavidenaForm = {
     socioId: '',
     tipoCuenta: 'Cuenta Navidena',
-    fechaApertura: '',
+    fechaInicio: '',
     montoCuota: null,
     observacion: ''
   };
@@ -586,9 +588,13 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           const data = res?.data ?? {};
 
+
           this.socio = data?.socio ?? null;
+          console.log(this.socio);
           this.apertura = data?.apertura ?? null;
           this.yaAperturada = !!data?.yaAperturada;
+          this.tieneMovimiento = !!data?.tieneMovimiento;
+
 
           (this.form as any).yaAperturada = this.yaAperturada;
           this.engine.setControlValue('yaAperturada', this.yaAperturada);
@@ -640,11 +646,11 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
           this.applyMovimientosFilter();
 
           if (this.apertura) {
-            this.form.fechaApertura = this.toDateInput(this.apertura.fechaApertura);
+            this.form.fechaInicio = this.toDateInput(this.apertura.fechaInicio);
             this.form.montoCuota = Number(this.apertura.montoCuota ?? 0);
             this.form.observacion = this.apertura.observacion ?? '';
           } else {
-            this.form.fechaApertura = this.form.fechaApertura || '';
+            this.form.fechaInicio = this.form.fechaInicio || '';
             this.form.montoCuota = this.form.montoCuota ?? null;
             this.form.observacion = this.form.observacion || '';
           }
@@ -653,7 +659,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
             this.buildPreviewPlan();
           } else if (
             (!this.plan || this.plan.length === 0) &&
-            this.form.fechaApertura &&
+            this.form.fechaInicio &&
             Number(this.form.montoCuota ?? 0) > 0
           ) {
             this.buildPreviewPlan();
@@ -814,7 +820,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     const payload = {
       SocioId: this.socioId,
       TipoCuenta: 'Cuenta Navidena',
-      FechaApertura: this.normalizeDate(this.form.fechaApertura) ?? '',
+      FechaInicio: this.normalizeDate(this.form.fechaInicio) ?? '',
       MontoCuota: Number(this.form.montoCuota ?? 0),
       Observacion: this.form.observacion?.trim() ?? ''
     };
@@ -835,6 +841,39 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
       });
   }
 
+  onDelete(): void {
+  const message = this.translate.instant('aperturaCuentaNavidena.delete.message', {
+    nombre: this.socio?.nombreCompleto || '',
+    identificacion: this.socio?.numeroIdentificacion || ''
+  });
+
+  const warning = this.translate.instant('aperturaCuentaNavidena.delete.warning');
+  const title = this.translate.instant('aperturaCuentaNavidena.delete.title');
+
+  const ref = this.notify.confirm?.(
+    `${message}\n\n${warning}`,
+    title,
+    'warning'
+  );
+
+  if (!ref) return;
+
+  const deleteSub = ref.subscribe((result: number) => {
+    if (result !== 1) return;
+
+    this.service.delete(this.socioId).subscribe({
+      next: (res: any) => {
+        this.notify.showFromApiResponse?.(res, 'success');
+        this.loadData();
+      },
+      error: (err: any) => {
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      }
+    });
+  });
+
+  this.subs.add(deleteSub);
+}
   /**
    * Cancela la operación y vuelve a la lista de socios.
    */
@@ -888,6 +927,51 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
       .replace('yyyy', yyyy);
   }
 
+
+  formatFechaLarga(value: string | Date | null | undefined): string {
+    if (!value) return '';
+
+    let year = 0;
+    let month = 0;
+    let day = 0;
+
+    if (value instanceof Date) {
+      year = value.getFullYear();
+      month = value.getMonth();
+      day = value.getDate();
+    } else {
+      const raw = String(value).trim();
+      const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+      if (match) {
+        year = Number(match[1]);
+        month = Number(match[2]) - 1;
+        day = Number(match[3]);
+      } else {
+        const fecha = new Date(raw);
+        if (isNaN(fecha.getTime())) return '';
+        year = fecha.getFullYear();
+        month = fecha.getMonth();
+        day = fecha.getDate();
+      }
+    }
+
+    const lang = this.translate.getCurrentLang() || 'es';
+
+    const meses: any = {
+      es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    };
+
+    const mes = meses[lang]?.[month] ?? '';
+
+    if (lang === 'en') {
+      return `${mes} ${String(day).padStart(2, '0')}, ${year}`;
+    }
+
+    return `${String(day).padStart(2, '0')} ${mes} del ${year}`;
+  }
+
   /**
    * Obtiene iniciales de un nombre para avatar.
    */
@@ -915,7 +999,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     return {
       socioId: data?.socioId ?? '',
       tipoCuenta: data?.tipoCuenta ?? 'Cuenta Navidena',
-      fechaApertura: data?.fechaApertura ?? '',
+      fechaInicio: data?.fechaInicio ?? '',
       montoCuota: data?.montoCuota == null ? null : Number(data.montoCuota),
       observacion: data?.observacion?.trim() ?? ''
     };
@@ -992,7 +1076,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
    * Maneja cambios en la fecha de apertura y reconstruye preview.
    */
   onFechaAperturaChange(value: string): void {
-    this.form.fechaApertura = value;
+    this.form.fechaInicio = value;
     this.buildPreviewPlan();
   }
 
@@ -1012,7 +1096,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
    * Construye un plan preliminar de cuotas quincenales hasta noviembre.
    */
   private buildPreviewPlan(): void {
-    const fecha = this.normalizeDate(this.form.fechaApertura);
+    const fecha = this.normalizeDate(this.form.fechaInicio);
     const monto = Number(this.form.montoCuota ?? 0) / 2;
 
     if (!fecha || monto <= 0) {

@@ -9,27 +9,25 @@
       <div class="col-xxl-8 col-xl-8">
 
         <!-- HEADER -->
-         <div class="card mb-3 overflow-hidden border-0">
-  <div class="navidad-hero">
+        <div class="card mb-3 overflow-hidden border-0">
+          <div class="navidad-hero">
 
-    <img
-      src="assets/img/navidad-banner.png"
-      class="navidad-hero__img" />
+            <img src="assets/img/navidad-banner.png" class="navidad-hero__img" />
 
-    <div class="navidad-hero__overlay"></div>
+            <div class="navidad-hero__overlay"></div>
 
-    <div class="navidad-hero__content text-center text-white">
-      <h3 class="mb-1 fw-bold">
-        {{ 'aperturaCuentaNavidena.title' | translate }}
-      </h3>
-      <p class="mb-0">
-        {{ 'aperturaCuentaNavidena.subtitle' | translate }}
-      </p>
-    </div>
+            <div class="navidad-hero__content text-center text-white">
+              <h3 class="mb-1 fw-bold">
+                {{ 'aperturaCuentaNavidena.title' | translate }}
+              </h3>
+              <p class="mb-0">
+                {{ 'aperturaCuentaNavidena.subtitle' | translate }}
+              </p>
+            </div>
 
-  </div>
-</div>
-      
+          </div>
+        </div>
+
 
         <!-- KPIs DENTRO DE LA PRIMERA COLUMNA -->
         <div class="card mb-3">
@@ -128,7 +126,8 @@
         <div class="card mb-3">
           <div class="card-header">
             <h5 class="card-title mb-0">
-              {{ 'aperturaCuentaNavidena.sections.openingDetail' | translate }}
+              {{ 'aperturaCuentaNavidena.sections.openedAtDate' | translate }}
+              {{ formatFechaLarga(socio?.fechaAperturaNavidena)}}
             </h5>
           </div>
 
@@ -136,16 +135,16 @@
             <div class="card-body">
               <div class="row g-3">
 
-                <div class="col-md-6" error-notify="FechaApertura" error-display="inline">
-                  <label for="FechaApertura" class="form-label">
-                    {{ 'aperturaCuentaNavidena.fields.fechaApertura.label' | translate }}
+                <div class="col-md-6" error-notify="FechaInicio" error-display="inline">
+                  <label for="fechaInicio" class="form-label">
+                    {{ 'aperturaCuentaNavidena.fields.fechaInicio.label' | translate }}
                   </label>
 
-                  <input #FechaApertura type="text" class="form-control" id="FechaApertura" name="FechaApertura"
-                    [placeholder]="'aperturaCuentaNavidena.fields.fechaApertura.placeholder' | translate"
-                    [ngModel]="form.fechaApertura" (ngModelChange)="onFechaAperturaChange($event)"
-                    engineSync="FechaApertura" [dateFormat]="appConfigService.getCurrentSettings().dateFormat"
-                    autoFocusNext [next]="MontoCuota" required JmartAutoFocus [disabled]="yaAperturada" />
+                  <input #FechaInicio type="text" class="form-control" id="FechaInicio" name="FechaInicio"
+                    [placeholder]="'aperturaCuentaNavidena.fields.fechaInicio.placeholder' | translate"
+                    [ngModel]="form.fechaInicio" (ngModelChange)="onFechaAperturaChange($event)"
+                    engineSync="FechaInicio" [dateFormat]="appConfigService.getCurrentSettings().dateFormat"
+                    autoFocusNext [next]="MontoCuota" required JmartAutoFocus [disabled]="tieneMovimiento" />
                 </div>
 
                 <div class="col-md-6" error-notify="MontoCuota" error-display="inline">
@@ -164,7 +163,7 @@
                       numberFormat [decimals]="2"
                       [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                       [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" autoFocusNext
-                      [next]="Observacion" required [disabled]="yaAperturada" />
+                      [next]="Observacion" required [disabled]="tieneMovimiento" />
                   </div>
                 </div>
 
@@ -175,7 +174,7 @@
 
                   <textarea #Observacion class="form-control" rows="3" id="Observacion" name="Observacion"
                     [placeholder]="'aperturaCuentaNavidena.fields.observacion.placeholder' | translate"
-                    [(ngModel)]="form.observacion" engineSync="Observacion" [disabled]="yaAperturada"></textarea>
+                    [(ngModel)]="form.observacion" engineSync="Observacion" [disabled]="tieneMovimiento"></textarea>
                 </div>
 
               </div>
@@ -189,13 +188,29 @@
                   {{ 'common.cancel' | translate }}
                 </button>
 
-                @if (!yaAperturada) {
+                @if (!tieneMovimiento) {
                 <button #saveButton type="button" class="btn btn-primary" (click)="onSave()"
                   [permissionRoute]="'/socios'" [appPermission]="['create']" autoFocusNext [disableClickButton]="true"
                   [unlockOn]="notify.closed$">
-                  {{ 'aperturaCuentaNavidena.actions.openAccount' | translate }}
+
+                  {{
+                  yaAperturada
+                  ? ('aperturaCuentaNavidena.actions.updatePlan' | translate)
+                  : ('aperturaCuentaNavidena.actions.openAccount' | translate)
+                  }}
+
                 </button>
                 }
+
+                @if (yaAperturada && !tieneMovimiento) {
+                <button type="button" class="btn btn-outline-danger" (click)="onDelete()" [permissionRoute]="'/socios'"
+                  [appPermission]="['delete']">
+
+                  <i class="fa-thin fa-trash me-1"></i>
+                  {{ 'aperturaCuentaNavidena.actions.delete' | translate }}
+                </button>
+                }
+
 
                 <button type="button" class="btn btn-outline-primary" (click)="openPlanModal()"
                   [permissionRoute]="'/socios'" [appPermission]="['view', 'create']">

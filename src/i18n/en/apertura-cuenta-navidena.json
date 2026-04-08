@@ -17,7 +17,9 @@
     ],
     "actions": {
       "openAccount": "Open account",
-      "viewPlan": "View plan"
+      "viewPlan": "View plan",
+      "delete": "Delete",
+      "updatePlan": "Modify plan"
     },
     "kpis": {
       "currentSaving": "Current savings",
@@ -25,15 +27,21 @@
       "pendingSaving": "Remaining amount"
     },
     "sections": {
+      "openedAtDate": "Opened on:",
       "openingDetail": "Opening details",
       "movements": "Plan movements",
       "memberData": "Member information",
       "planSummary": "Plan summary",
       "summary": "Summary"
     },
+    "delete": {
+      "title": "Delete Christmas account",
+      "message": "The Christmas account for {nombre} ({identificacion}) will be deleted.",
+      "warning": "This action will remove the opening and the plan if there are no movements."
+    },
     "fields": {
-      "fechaApertura": {
-        "label": "Opening date",
+      "fechaInicio": {
+        "label": "Deduction start date",
         "placeholder": "Select the opening date"
       },
       "montoCuota": {
@@ -95,9 +103,9 @@
     },
     "form": {
       "fieldMeta": {
-        "FechaApertura": {
-          "label": "Opening date",
-          "tooltip": "Date when the Christmas account will be opened",
+        "FechaInicio": {
+          "label": "Deduction date",
+          "tooltip": "Date when the Christmas account deduction will be applied",
           "tooltipIconClass": "bi bi-info-circle"
         },
         "MontoCuota": {
@@ -122,13 +130,13 @@
             }
           }
         },
-        "FechaApertura": {
+        "FechaInicio": {
           "data": {
             "1": {
               "rule": "REGEX",
               "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
               "when": "",
-              "msj": "Enter the opening date"
+              "msj": "Enter the deduction date"
             },
             "2": {
               "rule": "DATE>=",

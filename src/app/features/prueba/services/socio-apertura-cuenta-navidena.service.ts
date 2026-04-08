@@ -32,4 +32,11 @@ export class SocioAperturaCuentaNavidenaService extends BrowserApiService {
       { withCredentials: true }
     );
   }
+
+  delete(socioId: string): Observable<any> {
+    return this.http.delete<any>(
+      `${this.api.baseUrl}/socios/${socioId}/apertura-cuenta-navidena`,
+      { withCredentials: true }
+    );
+  }
 }
