@@ -1,7 +1,6 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   Component,
-  DOCUMENT,
   Inject,
   OnDestroy,
   OnInit,
@@ -41,6 +40,10 @@ import {
 } from 'ng-apexcharts';
 
 import { SocioAperturaCuentaNavidenaService } from '../../services/socio-apertura-cuenta-navidena.service';
+
+/* =========================================================
+ * MODELOS / INTERFACES
+ * ========================================================= */
 
 interface SocioResumen {
   id: string;
@@ -93,13 +96,15 @@ interface PlanItem {
 
 interface AperturaCuentaNavidenaForm {
   socioId: string;
-  FechaServidor: string,
-  yaAperturada: boolean,
   tipoCuenta: string;
   fechaApertura: string;
   montoCuota: number | null;
   observacion: string;
 }
+
+/* =========================================================
+ * COMPONENTE
+ * ========================================================= */
 
 @Component({
   selector: 'app-apertura-cuenta-navidena',
@@ -124,25 +129,29 @@ interface AperturaCuentaNavidenaForm {
 export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   @ViewChild('formRef') formRef?: NgForm;
 
+  /* =========================================================
+   * INYECCIÓN DE DEPENDENCIAS
+   * ========================================================= */
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
   private readonly service = inject(SocioAperturaCuentaNavidenaService);
   private readonly filterSvc = inject(TableFilterService);
-  private renderer = inject(Renderer2);
-  private document = inject(DOCUMENT);
+  private readonly renderer = inject(Renderer2);
+  private readonly document = inject(DOCUMENT);
 
-  public appConfigService = inject(AppConfigService);
-  public notify = inject(NotificationService);
-  private engine = inject(JMartMassiveValidationService);
+  public readonly appConfigService = inject(AppConfigService);
+  public readonly notify = inject(NotificationService);
+  private readonly engine = inject(JMartMassiveValidationService);
+
+  /* =========================================================
+   * ESTADO GENERAL
+   * ========================================================= */
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'apertura-cuenta-navidena';
   private readonly isBrowser: boolean;
-
-  private snowHost?: HTMLElement;
-private snowStyle?: HTMLStyleElement;
-private snowInterval?: number;
 
   socioId = '';
   loading = false;
@@ -159,14 +168,15 @@ private snowInterval?: number;
 
   form: AperturaCuentaNavidenaForm = {
     socioId: '',
-    FechaServidor: '',
-    yaAperturada: false,
     tipoCuenta: 'Cuenta Navidena',
     fechaApertura: '',
     montoCuota: null,
     observacion: ''
   };
 
+  /* =========================================================
+   * HISTORIAL / MOVIMIENTOS
+   * ========================================================= */
 
   movimientos: MovimientoPlanItem[] = [];
   movimientosAll: MovimientoPlanItem[] = [];
@@ -175,8 +185,16 @@ private snowInterval?: number;
   movimientosPageSize = 5;
   movimientosCurrentTerm = '';
 
+  /* =========================================================
+   * PLAN
+   * ========================================================= */
+
   plan: PlanItem[] = [];
   showPlanModal = false;
+
+  /* =========================================================
+   * BREADCRUMBS
+   * ========================================================= */
 
   breadcrumbs: any[] = [
     { label: '', url: '/' },
@@ -184,13 +202,19 @@ private snowInterval?: number;
     { label: '' }
   ];
 
+  /* =========================================================
+   * CONFIGURACIÓN DEL CHART
+   * ========================================================= */
+
   public pieSeries: ApexNonAxisChartSeries = [0, 0, 0];
+
   public pieChart: ApexChart = {
     type: 'donut',
     height: 290
   };
 
   public pieLabels: string[] = [];
+
   public pieLegend: ApexLegend = {
     position: 'bottom',
     fontSize: '13px'
@@ -235,12 +259,38 @@ private snowInterval?: number;
     }
   };
 
+  /* =========================================================
+   * EFECTO DE NIEVE
+   * ========================================================= */
+
+  private snowHost?: HTMLElement;
+  private snowStyle?: HTMLStyleElement;
+  private snowInterval?: number;
+
+  /* =========================================================
+   * CONSTRUCTOR
+   * ========================================================= */
+
   constructor(@Inject(PLATFORM_ID) private platformId: object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
+  /* =========================================================
+   * CICLO DE VIDA
+   * ========================================================= */
+
+  /**
+   * Inicializa el componente:
+   * - activa el efecto nieve
+   * - carga breadcrumbs
+   * - configura traducciones y filtros
+   * - prepara validaciones
+   * - toma el socioId de la ruta
+   * - carga la información principal
+   */
   ngOnInit(): void {
     this.startSnow();
+
     this.breadcrumbs =
       this.translate.instant('aperturaCuentaNavidena.breadcrumbs') || this.breadcrumbs;
 
@@ -263,15 +313,23 @@ private snowInterval?: number;
     this.loadConfig();
     this.loadChartLabels();
 
+    // Controles auxiliares del motor de validación
     this.engine.addControl('FechaServidor');
     this.engine.addControl('yaAperturada');
 
-    this.engine.setControlValue('FechaServidor',this.appConfigService.getCurrentSettings().fechaServidor);
+    this.engine.setControlValue(
+      'FechaServidor',
+      this.appConfigService.getCurrentSettings().fechaServidor
+    );
+
     this.engine.setControlValue('yaAperturada', this.yaAperturada);
 
-    (this.form as any).fechaApertura = this.formatDate(this.appConfigService.getCurrentSettings().fechaServidor) ;
-    (this.form as any).FechaServidor = this.appConfigService.getCurrentSettings().fechaServidor;
-   
+    // Valores iniciales del formulario
+    (this.form as any).fechaApertura =
+      this.formatDate(this.appConfigService.getCurrentSettings().fechaServidor);
+
+    (this.form as any).FechaServidor =
+      this.appConfigService.getCurrentSettings().fechaServidor;
 
     this.subs.add(
       this.route.paramMap.subscribe(params => {
@@ -288,122 +346,159 @@ private snowInterval?: number;
     );
   }
 
+  /**
+   * Limpia recursos del componente:
+   * - detiene nieve
+   * - libera suscripciones
+   */
   ngOnDestroy(): void {
     this.stopSnow();
     this.subs.unsubscribe();
   }
 
+  /* =========================================================
+   * EFECTO NIEVE
+   * ========================================================= */
+
+  /**
+   * Inicia el efecto de nieve:
+   * - inserta estilos dinámicos en <head>
+   * - crea un host en <body>
+   * - genera copos aleatorios en intervalos
+   */
   private startSnow(): void {
-  if (!this.isBrowser || this.snowHost) return;
+    if (!this.isBrowser || this.snowHost) return;
 
-  const style = this.renderer.createElement('style') as HTMLStyleElement;
-  style.innerHTML = `
-    .oai-snow-host {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 999999;
+    const style = this.renderer.createElement('style') as HTMLStyleElement;
+    style.innerHTML = `
+      .oai-snow-host {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 999999;
+      }
+
+      .oai-snowflake {
+        position: absolute;
+        top: -24px;
+        color: #fff;
+        user-select: none;
+        pointer-events: none;
+        text-shadow: 0 0 10px rgba(255,255,255,.9);
+        animation-name: oai-fall-snow;
+        animation-timing-function: linear;
+        animation-iteration-count: 1;
+        will-change: transform, opacity;
+      }
+
+      @keyframes oai-fall-snow {
+        0% {
+          transform: translate3d(0, -20px, 0) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: .95;
+        }
+        100% {
+          transform: translate3d(40px, 110vh, 0) rotate(360deg);
+          opacity: .15;
+        }
+      }
+    `;
+
+    this.renderer.appendChild(this.document.head, style);
+    this.snowStyle = style;
+
+    const host = this.renderer.createElement('div');
+    host.className = 'oai-snow-host';
+    this.renderer.appendChild(this.document.body, host);
+    this.snowHost = host;
+
+    const createFlake = () => {
+      if (!this.snowHost) return;
+
+      const flake = this.renderer.createElement('span');
+      flake.className = 'oai-snowflake';
+      flake.textContent = '❄';
+
+      const left = Math.random() * 100;
+      const size = 8 + Math.random() * 10;
+      const duration = 5 + Math.random() * 7;
+      const drift = -80 + Math.random() * 160;
+
+      this.renderer.setStyle(flake, 'left', `${left}vw`);
+      this.renderer.setStyle(flake, 'font-size', `${size}px`);
+      this.renderer.setStyle(flake, 'animation-duration', `${duration}s`);
+      this.renderer.setStyle(flake, 'transform', `translate3d(0,0,0)`);
+      this.renderer.setStyle(flake, '--drift', `${drift}px`);
+
+      flake.animate(
+        [
+          { transform: 'translate3d(0, -20px, 0) rotate(0deg)', opacity: 0 },
+          {
+            transform: `translate3d(${drift * 0.25}px, 10vh, 0) rotate(90deg)`,
+            opacity: 0.95,
+            offset: 0.15
+          },
+          {
+            transform: `translate3d(${drift}px, 110vh, 0) rotate(360deg)`,
+            opacity: 0.15
+          }
+        ],
+        {
+          duration: duration * 1000,
+          easing: 'linear',
+          fill: 'forwards'
+        }
+      );
+
+      this.renderer.appendChild(this.snowHost, flake);
+
+      window.setTimeout(() => {
+        flake.remove();
+      }, duration * 1000 + 300);
+    };
+
+    // ráfaga inicial
+    for (let i = 0; i < 10; i++) {
+      window.setTimeout(createFlake, i * 180);
     }
 
-    .oai-snowflake {
-      position: absolute;
-      top: -24px;
-      color: #fff;
-      user-select: none;
-      pointer-events: none;
-      text-shadow: 0 0 10px rgba(255,255,255,.9);
-      animation-name: oai-fall-snow;
-      animation-timing-function: linear;
-      animation-iteration-count: 1;
-      will-change: transform, opacity;
+    // generación continua
+    this.snowInterval = window.setInterval(createFlake, 800);
+  }
+
+  /**
+   * Detiene el efecto nieve:
+   * - limpia el intervalo
+   * - elimina el host
+   * - elimina los estilos dinámicos
+   */
+  private stopSnow(): void {
+    if (this.snowInterval) {
+      window.clearInterval(this.snowInterval);
+      this.snowInterval = undefined;
     }
 
-    @keyframes oai-fall-snow {
-      0% {
-        transform: translate3d(0, -20px, 0) rotate(0deg);
-        opacity: 0;
-      }
-      10% {
-        opacity: .95;
-      }
-      100% {
-        transform: translate3d(40px, 110vh, 0) rotate(360deg);
-        opacity: .15;
-      }
+    if (this.snowHost) {
+      this.snowHost.remove();
+      this.snowHost = undefined;
     }
-  `;
-  this.renderer.appendChild(this.document.head, style);
-  this.snowStyle = style;
 
-  const host = this.renderer.createElement('div');
-  host.className = 'oai-snow-host';
-  this.renderer.appendChild(this.document.body, host);
-  this.snowHost = host;
-
-  const createFlake = () => {
-    if (!this.snowHost) return;
-
-    const flake = this.renderer.createElement('span');
-    flake.className = 'oai-snowflake';
-    flake.textContent = '❄';
-
-    const left = Math.random() * 100;
-    const size = 8 + Math.random() * 22;
-    const duration = 5 + Math.random() * 7;
-    const drift = -80 + Math.random() * 160;
-
-    this.renderer.setStyle(flake, 'left', `${left}vw`);
-    this.renderer.setStyle(flake, 'font-size', `${size}px`);
-    this.renderer.setStyle(flake, 'animation-duration', `${duration}s`);
-    this.renderer.setStyle(flake, 'transform', `translate3d(0,0,0)`);
-    this.renderer.setStyle(flake, '--drift', `${drift}px`);
-
-    flake.animate(
-      [
-        { transform: 'translate3d(0, -20px, 0) rotate(0deg)', opacity: 0 },
-        { transform: `translate3d(${drift * 0.25}px, 10vh, 0) rotate(90deg)`, opacity: 0.95, offset: 0.15 },
-        { transform: `translate3d(${drift}px, 110vh, 0) rotate(360deg)`, opacity: 0.15 }
-      ],
-      {
-        duration: duration * 1000,
-        easing: 'linear',
-        fill: 'forwards'
-      }
-    );
-
-    this.renderer.appendChild(this.snowHost, flake);
-
-    window.setTimeout(() => {
-      flake.remove();
-    }, duration * 1000 + 300);
-  };
-
-  for (let i = 0; i < 25; i++) {
-    window.setTimeout(createFlake, i * 180);
+    if (this.snowStyle) {
+      this.snowStyle.remove();
+      this.snowStyle = undefined;
+    }
   }
 
- this.snowInterval = window.setInterval(createFlake, 220);
-}
+  /* =========================================================
+   * CONFIGURACIÓN DE VALIDACIONES
+   * ========================================================= */
 
-private stopSnow(): void {
-  if (this.snowInterval) {
-    window.clearInterval(this.snowInterval);
-    this.snowInterval = undefined;
-  }
-
-  if (this.snowHost) {
-    this.snowHost.remove();
-    this.snowHost = undefined;
-  }
-
-  if (this.snowStyle) {
-    this.snowStyle.remove();
-    this.snowStyle = undefined;
-  }
-}
-
-
+  /**
+   * Carga metadatos y reglas del motor de validación desde traducciones.
+   */
   loadConfig(): void {
     this.engine.resetRules?.();
     this.engine.clearFieldsMeta?.();
@@ -443,6 +538,13 @@ private stopSnow(): void {
     this.engine.clearErrors?.();
   }
 
+  /* =========================================================
+   * CHART
+   * ========================================================= */
+
+  /**
+   * Carga labels traducidos para el gráfico donut.
+   */
   loadChartLabels(): void {
     this.pieLabels = [
       this.translate.instant('aperturaCuentaNavidena.chart.currentSaving'),
@@ -451,6 +553,30 @@ private stopSnow(): void {
     ];
   }
 
+  /**
+   * Actualiza la serie principal del chart con los datos del resumen.
+   */
+  loadChartSeries(): void {
+    const ahorroActual = Number(this.resumen?.ahorroActual ?? 0);
+    const meta = Number(this.resumen?.meta ?? 0);
+    const faltante = Number(this.resumen?.faltante ?? 0);
+
+    this.pieSeries = [ahorroActual, meta, faltante];
+  }
+
+  /* =========================================================
+   * CARGA DE DATOS
+   * ========================================================= */
+
+  /**
+   * Carga todos los datos de la pantalla:
+   * - socio
+   * - apertura existente
+   * - resumen
+   * - retiros
+   * - movimientos
+   * - plan
+   */
   loadData(): void {
     this.loading = true;
 
@@ -463,7 +589,9 @@ private stopSnow(): void {
           this.socio = data?.socio ?? null;
           this.apertura = data?.apertura ?? null;
           this.yaAperturada = !!data?.yaAperturada;
+
           (this.form as any).yaAperturada = this.yaAperturada;
+          this.engine.setControlValue('yaAperturada', this.yaAperturada);
 
           this.resumen = {
             ahorroActual: Number(data?.resumen?.ahorroActual ?? 0),
@@ -476,36 +604,36 @@ private stopSnow(): void {
 
           this.retiros = Array.isArray(data?.retiros)
             ? data.retiros.map((x: any) => ({
-              id: String(x?.id ?? ''),
-              fecha: String(x?.fecha ?? ''),
-              descripcion: String(x?.descripcion ?? ''),
-              monto: Number(x?.monto ?? 0)
-            }))
+                id: String(x?.id ?? ''),
+                fecha: String(x?.fecha ?? ''),
+                descripcion: String(x?.descripcion ?? ''),
+                monto: Number(x?.monto ?? 0)
+              }))
             : [];
 
           this.movimientosAll = Array.isArray(data?.movimientos)
             ? data.movimientos.map((x: any) => ({
-              id: String(x?.id ?? ''),
-              fecha: String(x?.fecha ?? ''),
-              descripcion: String(x?.descripcion ?? ''),
-              monto: Number(x?.monto ?? 0),
-              estado: String(x?.estado ?? ''),
-              referencia: x?.referencia ?? null,
-              fechaPago: x?.fechaPago ?? null,
-              tipoMovimiento: String(x?.tipoMovimiento ?? '')
-            }))
+                id: String(x?.id ?? ''),
+                fecha: String(x?.fecha ?? ''),
+                descripcion: String(x?.descripcion ?? ''),
+                monto: Number(x?.monto ?? 0),
+                estado: String(x?.estado ?? ''),
+                referencia: x?.referencia ?? null,
+                fechaPago: x?.fechaPago ?? null,
+                tipoMovimiento: String(x?.tipoMovimiento ?? '')
+              }))
             : [];
 
           this.plan = Array.isArray(data?.plan)
             ? data.plan.map((x: any) => ({
-              id: String(x?.id ?? `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`),
-              fechaProgramada: String(x?.fechaProgramada ?? ''),
-              montoCuota: Number(x?.montoCuota ?? 0),
-              estado: String(x?.estado ?? ''),
-              pagado: !!x?.pagado || String(x?.estado ?? '').toLowerCase() === 'pagada',
-              fechaPago: x?.fechaPago ?? null,
-              usuarioPago: x?.usuarioPago ?? null
-            }))
+                id: String(x?.id ?? `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`),
+                fechaProgramada: String(x?.fechaProgramada ?? ''),
+                montoCuota: Number(x?.montoCuota ?? 0),
+                estado: String(x?.estado ?? ''),
+                pagado: !!x?.pagado || String(x?.estado ?? '').toLowerCase() === 'pagada',
+                fechaPago: x?.fechaPago ?? null,
+                usuarioPago: x?.usuarioPago ?? null
+              }))
             : [];
 
           this.movimientos = [...this.movimientosAll];
@@ -521,11 +649,13 @@ private stopSnow(): void {
             this.form.observacion = this.form.observacion || '';
           }
 
-
-
           if (!this.yaAperturada) {
             this.buildPreviewPlan();
-          } else if ((!this.plan || this.plan.length === 0) && this.form.fechaApertura && Number(this.form.montoCuota ?? 0) > 0) {
+          } else if (
+            (!this.plan || this.plan.length === 0) &&
+            this.form.fechaApertura &&
+            Number(this.form.montoCuota ?? 0) > 0
+          ) {
             this.buildPreviewPlan();
           } else {
             this.previewPlan = [];
@@ -539,14 +669,13 @@ private stopSnow(): void {
       });
   }
 
-  loadChartSeries(): void {
-    const ahorroActual = Number(this.resumen?.ahorroActual ?? 0);
-    const meta = Number(this.resumen?.meta ?? 0);
-    const faltante = Number(this.resumen?.faltante ?? 0);
+  /* =========================================================
+   * FILTRO Y PAGINACIÓN DE MOVIMIENTOS
+   * ========================================================= */
 
-    this.pieSeries = [ahorroActual, meta, faltante];
-  }
-
+  /**
+   * Aplica el filtro de búsqueda al historial de movimientos.
+   */
   applyMovimientosFilter(): void {
     const term = (this.movimientosCurrentTerm || '').trim().toLowerCase();
 
@@ -570,12 +699,18 @@ private stopSnow(): void {
     this.refreshMovimientosPage();
   }
 
+  /**
+   * Recalcula la página visible del historial.
+   */
   refreshMovimientosPage(): void {
     const start = (this.movimientosCurrentPage - 1) * this.movimientosPageSize;
     const end = start + this.movimientosPageSize;
     this.pagedMovimientos = this.movimientos.slice(start, end);
   }
 
+  /**
+   * Navega a una página específica del historial.
+   */
   goToMovimientosPage(page: number): void {
     const totalPages = this.movimientosTotalPages;
     if (page < 1 || page > totalPages) return;
@@ -584,19 +719,34 @@ private stopSnow(): void {
     this.refreshMovimientosPage();
   }
 
+  /**
+   * Total de páginas del historial.
+   */
   get movimientosTotalPages(): number {
     return Math.max(1, Math.ceil(this.movimientos.length / this.movimientosPageSize));
   }
 
+  /**
+   * Índice inicial visible en paginación.
+   */
   get movimientosVisibleStart(): number {
     if (this.movimientos.length === 0) return 0;
     return (this.movimientosCurrentPage - 1) * this.movimientosPageSize + 1;
   }
 
+  /**
+   * Índice final visible en paginación.
+   */
   get movimientosVisibleEnd(): number {
-    return Math.min(this.movimientosCurrentPage * this.movimientosPageSize, this.movimientos.length);
+    return Math.min(
+      this.movimientosCurrentPage * this.movimientosPageSize,
+      this.movimientos.length
+    );
   }
 
+  /**
+   * Construye los números de página con puntos suspensivos.
+   */
   get movimientosPageNumbers(): (number | string)[] {
     const total = this.movimientosTotalPages;
     const current = this.movimientosCurrentPage;
@@ -625,14 +775,31 @@ private stopSnow(): void {
     return pages;
   }
 
+  /* =========================================================
+   * MODAL DEL PLAN
+   * ========================================================= */
+
+  /**
+   * Abre el modal del plan.
+   */
   openPlanModal(): void {
     this.showPlanModal = true;
   }
 
+  /**
+   * Cierra el modal del plan.
+   */
   closePlanModal(): void {
     this.showPlanModal = false;
   }
 
+  /* =========================================================
+   * ACCIONES DEL FORMULARIO
+   * ========================================================= */
+
+  /**
+   * Valida y guarda la apertura de cuenta navideña.
+   */
   onSave(): void {
     const ok = this.engine.validateAll?.();
 
@@ -668,14 +835,22 @@ private stopSnow(): void {
       });
   }
 
+  /**
+   * Cancela la operación y vuelve a la lista de socios.
+   */
   onCancel(): void {
     this.notify.close?.();
-
-
     this.engine.clearErrors?.();
     this.router.navigate(['/socios']);
   }
 
+  /* =========================================================
+   * FORMATO
+   * ========================================================= */
+
+  /**
+   * Formatea un número decimal usando configuración regional de la empresa.
+   */
   formatCurrency(value?: number | null): string {
     const amount = Number(value ?? 0);
     const settings = this.appConfigService.getCurrentSettings();
@@ -692,6 +867,9 @@ private stopSnow(): void {
     return `${integerPart}${decimalSeparator}${decimalPart}`;
   }
 
+  /**
+   * Formatea una fecha según la configuración regional actual.
+   */
   formatDate(value?: string | null): string {
     if (!value) return '-';
 
@@ -710,21 +888,32 @@ private stopSnow(): void {
       .replace('yyyy', yyyy);
   }
 
+  /**
+   * Obtiene iniciales de un nombre para avatar.
+   */
   getInitials(value?: string | null): string {
     const text = (value ?? '').trim();
     if (!text) return '--';
 
     const parts = text.split(' ').filter(Boolean);
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+
+    if (parts.length === 1) {
+      return parts[0].slice(0, 2).toUpperCase();
+    }
 
     return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
   }
 
+  /* =========================================================
+   * NORMALIZACIÓN DE FORM / FECHAS
+   * ========================================================= */
+
+  /**
+   * Normaliza un objeto de formulario.
+   */
   private normalizeForm(data: AperturaCuentaNavidenaForm): AperturaCuentaNavidenaForm {
     return {
       socioId: data?.socioId ?? '',
-      FechaServidor: data?.FechaServidor ?? '',
-      yaAperturada:  data?.yaAperturada ?? false,
       tipoCuenta: data?.tipoCuenta ?? 'Cuenta Navidena',
       fechaApertura: data?.fechaApertura ?? '',
       montoCuota: data?.montoCuota == null ? null : Number(data.montoCuota),
@@ -732,6 +921,9 @@ private stopSnow(): void {
     };
   }
 
+  /**
+   * Convierte una fecha a formato de input según formato regional.
+   */
   private toDateInput(value?: string | null): string {
     if (!value) return '';
 
@@ -741,6 +933,9 @@ private stopSnow(): void {
     return this.formatDate(this.toIsoDate(date));
   }
 
+  /**
+   * Normaliza una fecha ingresada a formato ISO yyyy-MM-dd.
+   */
   private normalizeDate(value: string | null): string | null {
     if (!value) return null;
 
@@ -750,14 +945,27 @@ private stopSnow(): void {
     return this.toIsoDate(date);
   }
 
+  /* =========================================================
+   * MÉTRICAS DEL PLAN
+   * ========================================================= */
+
+  /**
+   * Total de cuotas del plan mostrado.
+   */
   get totalCuotasPlan(): number {
     return (this.displayedPlan ?? []).length;
   }
 
+  /**
+   * Total de cuotas pagadas del plan mostrado.
+   */
   get cuotasPagadasPlan(): number {
     return (this.displayedPlan ?? []).filter(x => x.pagado === true).length;
   }
 
+  /**
+   * Porcentaje de avance del plan.
+   */
   get porcentajePlan(): number {
     const total = this.totalCuotasPlan;
     if (total <= 0) return 0;
@@ -765,6 +973,9 @@ private stopSnow(): void {
     return Math.round((this.cuotasPagadasPlan / total) * 100);
   }
 
+  /**
+   * Devuelve el plan real o el preview dependiendo del estado.
+   */
   get displayedPlan(): PlanItem[] {
     if (this.yaAperturada && this.plan.length > 0) {
       return this.plan;
@@ -773,16 +984,33 @@ private stopSnow(): void {
     return this.previewPlan;
   }
 
+  /* =========================================================
+   * EVENTOS DE CAMBIO DE FORMULARIO
+   * ========================================================= */
+
+  /**
+   * Maneja cambios en la fecha de apertura y reconstruye preview.
+   */
   onFechaAperturaChange(value: string): void {
     this.form.fechaApertura = value;
     this.buildPreviewPlan();
   }
 
+  /**
+   * Maneja cambios en monto de cuota y reconstruye preview.
+   */
   onMontoCuotaChange(value: any): void {
     this.form.montoCuota = Number(value ?? 0);
     this.buildPreviewPlan();
   }
 
+  /* =========================================================
+   * GENERACIÓN DE PREVIEW DEL PLAN
+   * ========================================================= */
+
+  /**
+   * Construye un plan preliminar de cuotas quincenales hasta noviembre.
+   */
   private buildPreviewPlan(): void {
     const fecha = this.normalizeDate(this.form.fechaApertura);
     const monto = Number(this.form.montoCuota ?? 0) / 2;
@@ -816,6 +1044,17 @@ private stopSnow(): void {
     this.previewPlan = rows;
   }
 
+  /* =========================================================
+   * PARSEO Y UTILIDADES DE FECHAS
+   * ========================================================= */
+
+  /**
+   * Parsea una fecha en diferentes formatos soportados por la app:
+   * - yyyy-MM-dd
+   * - yyyy-MM-ddTHH:mm:ss
+   * - dd/MM/yyyy
+   * - MM/dd/yyyy
+   */
   private parseLocalDate(value: string): Date | null {
     if (!value) return null;
 
@@ -867,6 +1106,10 @@ private stopSnow(): void {
     return null;
   }
 
+  /**
+   * Normaliza una fecha al próximo corte válido del plan:
+   * día 15 o día 30 del mes.
+   */
   private normalizePlanDate(date: Date): Date {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -875,25 +1118,17 @@ private stopSnow(): void {
     const day15 = new Date(year, month, 15);
     const day30 = new Date(year, month, Math.min(30, new Date(year, month + 1, 0).getDate()));
 
-    if (day < 15) {
-      return day15;
-    }
-
-    if (day > 15 && day < 30) {
-      return day30;
-    }
-
-    if (day === 15) {
-      return day15;
-    }
-
-    if (day === 30) {
-      return day30;
-    }
+    if (day < 15) return day15;
+    if (day > 15 && day < 30) return day30;
+    if (day === 15) return day15;
+    if (day === 30) return day30;
 
     return new Date(year, month + 1, 15);
   }
 
+  /**
+   * Obtiene la siguiente fecha quincenal del plan.
+   */
   private getNextBiweeklyDate(current: Date): Date {
     const year = current.getFullYear();
     const month = current.getMonth();
@@ -907,6 +1142,9 @@ private stopSnow(): void {
     return new Date(year, month + 1, 15);
   }
 
+  /**
+   * Convierte una fecha Date a string ISO yyyy-MM-dd.
+   */
   private toIsoDate(date: Date): string {
     const y = date.getFullYear();
     const m = `${date.getMonth() + 1}`.padStart(2, '0');
@@ -914,10 +1152,20 @@ private stopSnow(): void {
     return `${y}-${m}-${d}`;
   }
 
+  /* =========================================================
+   * NAVEGACIÓN
+   * ========================================================= */
+
+  /**
+   * Navega a la pantalla de nuevo depósito.
+   */
   onNuevoDeposito(): void {
     this.router.navigate(['/socio-ahorro/new', this.socioId]);
   }
 
+  /**
+   * Placeholder para retiro futuro.
+   */
   onNuevoRetiro(): void {
 
   }

@@ -1,3 +1,6 @@
+// =============================
+// IMPORTACIONES
+// =============================
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
@@ -50,32 +53,66 @@ import { UserSummaryDto } from '../../services/user-list.service';
   styleUrl: './user-setting.scss',
 })
 export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, CanComponentDeactivate {
+
+  // Motor de validaciones
   public engine = inject(JMartMassiveValidationService);
+
+  // Servicio de notificaciones
   public notify = inject(NotificationService);
+
+  // Servicio de traducciones
   private translate = inject(TranslateService);
+
+  // Servicio de idiomas
   private langService = inject(LanguageService);
+
+  // Servicio API de configuración de usuario
   public userSettingService = inject(UserSettingService);
+
+  // Ruta actual para obtener query params
   private readonly route = inject(ActivatedRoute);
+
+  // Servicio de tema
   private themeService = inject(ThemeService);
+
+  // Servicio de drafts
   private draftService = inject(DraftFormService);
 
+  // Referencia al formulario template-driven
   @ViewChild('userSettingForm') userSettingForm?: NgForm;
 
+  // Subscripción al cambio de idioma
   private langChangeSub?: Subscription;
+
+  // Referencia al draft manager
   private draftRef?: DraftManagerRef;
+
+  // Flags para saber cuándo inicializar el draft manager
   private formReady = false;
   private dataReady = false;
+
+  // Usuario seleccionado desde query param
   selectedUserIdentifier = '';
+
+  // Indica si se está viendo configuración de un usuario externo
   viewingExternalUser = false;
 
+  // Tema actual
   currentTheme: 'light' | 'dark' = 'light';
+
+  // Tiempo transcurrido desde cambio de contraseña
   passwordTime = { part1: '', part2: '', anios: 0, meses: 0, dias: 0 };
 
+  // Modelo actual
   setting: UserSettingRequest = { ...EMPTY_USER_SETTING };
+
+  // Copia base para detectar cambios
   copy: UserSettingRequest = { ...EMPTY_USER_SETTING };
 
+  // Idiomas disponibles
   languages: any[] = [];
 
+  // Breadcrumbs
   breadcrumbs = [
     { label: '', url: '' },
     { label: '', url: '/' },
@@ -84,10 +121,17 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
 
   constructor() { }
 
+  // =============================
+  // CICLO DE VIDA
+  // =============================
   ngOnInit(): void {
+    // Carga idiomas disponibles
     this.languages = this.langService.getAvailableLanguages();
+
+    // Idioma inicial del setting
     this.setting.Language = this.langService.getCurrentLang();
 
+    // Escucha cambios en query params
     this.route.queryParamMap.subscribe(params => {
       this.selectedUserIdentifier = (params.get('user') || '').trim();
       this.viewingExternalUser = this.selectedUserIdentifier.length > 0;
@@ -95,6 +139,7 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
       this.loadUserSettings(this.selectedUserIdentifier || undefined);
     });
 
+    // Escucha cambio de idioma
     this.langChangeSub = this.translate.onLangChange.subscribe(() => {
       this.languages = this.langService.getAvailableLanguages();
       this.reloadLoginConfig();
@@ -102,16 +147,22 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
   }
 
   ngAfterViewInit(): void {
+    // Marca formulario listo e intenta iniciar draft manager
     this.formReady = true;
     this.tryInitDraftManager();
   }
 
   ngOnDestroy(): void {
+    // Limpia subscripción y draft manager
     this.langChangeSub?.unsubscribe();
     this.draftRef?.destroy();
   }
 
+  // =============================
+  // DRAFT MANAGER
+  // =============================
   private tryInitDraftManager(): void {
+    // Solo inicializa si formulario y datos ya están listos
     if (!this.formReady || !this.dataReady || this.draftRef || !this.userSettingForm) {
       return;
     }
@@ -119,18 +170,24 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.draftRef = this.draftService.connect<UserSettingRequest>({
       form: this.userSettingForm,
       routeKey: 'user-setting',
+
+      // Datos actuales para comparar
       currentData: () => ({
         ...this.setting,
         Password: '',
         NewPassword: '',
         ConfirmPassword: ''
       }),
+
+      // Datos guardados como base
       savedData: () => ({
         ...this.copy,
         Password: '',
         NewPassword: '',
         ConfirmPassword: ''
       }),
+
+      // Restaurar draft actual
       restoreData: (data) => {
         this.setting = {
           ...EMPTY_USER_SETTING,
@@ -141,6 +198,8 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
           ConfirmPassword: ''
         };
       },
+
+      // Restaurar copia base
       restoreSavedData: (data) => {
         this.copy = {
           ...EMPTY_USER_SETTING,
@@ -150,6 +209,8 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
           ConfirmPassword: ''
         };
       },
+
+      // Sincroniza draft restaurado con engine y tema
       patchEngine: (data) => {
         this.engine.patchValues(data);
         this.engine.clearErrors();
@@ -158,16 +219,22 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
         this.themeService.setTheme(theme);
         this.setting.Theme = theme;
       },
+
+      // Normalizador para comparar drafts
       normalize: (data) => this.normalizeSetting(data),
+
+      // Claves de advertencia
       warningTitleKey: 'draft.unsavedDataTitle',
       warningMessageKey: 'draft.unsavedDataRestored'
     });
   }
 
+  // Pasa el modelo actual al engine
   private patchEngineFromSetting(): void {
     this.engine.patchValues(this.setting);
   }
 
+  // Recarga metadata/reglas y resincroniza valores
   private reloadLoginConfig(): void {
     this.engine.resetRules();
     this.engine.clearErrors();
@@ -183,6 +250,9 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.passwordTime = tiempo;
   }
 
+  // =============================
+  // CONFIGURACIÓN DEL ENGINE
+  // =============================
   loadLoginConfig(resetData: boolean = false): void {
     this.engine.resetRules();
     this.engine.clearFieldsMeta();
@@ -191,6 +261,7 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     const validations = this.translate.instant('userSettings.form.validations') || {};
     this.breadcrumbs = this.translate.instant('userSettings.breadcrumbs') || [];
 
+    // Reinicia data si se solicita
     if (resetData) {
       this.setting = {
         ...EMPTY_USER_SETTING
@@ -201,6 +272,7 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
       };
     }
 
+    // Agrega metadata por campo
     for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
       this.engine.addFieldMeta({
         id: fieldId,
@@ -210,6 +282,7 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
       });
     }
 
+    // Agrega reglas de validación
     for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
       const rules = fieldConfig?.data || {};
 
@@ -229,6 +302,9 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     }
   }
 
+  // =============================
+  // CARGA DE SETTINGS
+  // =============================
   loadUserSettings(user?: string): void {
     this.userSettingService.getUserSettings(user)
       .pipe(finalize(() => { }))
@@ -236,6 +312,7 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
         next: (res: any) => {
           const apiSetting = res?.data?.setting ?? {};
 
+          // Mapea respuesta API a la copia base
           this.copy = {
             identifier: apiSetting.identifier ?? '',
             FullName: apiSetting.FullName ?? apiSetting.fullName ?? '',
@@ -256,11 +333,14 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
             ConfirmPassword: ''
           };
 
+          // Modelo actual
           this.setting = { ...this.copy };
 
+          // Sincroniza con engine
           this.patchEngineFromSetting();
           this.engine.clearErrors();
 
+          // Calcula tiempo desde el cambio de contraseña
           const tiempo = this.calcularTiempo(
             this.setting.PasswordChangedAtUtc,
             this.langService.getCurrentLang()
@@ -268,10 +348,12 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
 
           this.passwordTime = tiempo;
 
+          // Aplica tema
           const theme = (this.setting.Theme || 'light') as 'light' | 'dark';
           this.themeService.setTheme(theme);
           this.setting.Theme = theme;
 
+          // Marca data lista e inicia draft manager
           this.dataReady = true;
           this.tryInitDraftManager();
         },
@@ -281,6 +363,9 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
       });
   }
 
+  // =============================
+  // UTILIDAD DE TIEMPO
+  // =============================
   calcularTiempo(
     fechaUtc: string | Date,
     lang: string
@@ -323,6 +408,9 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     return { part1, part2, anios, meses, dias };
   }
 
+  // =============================
+  // CAMBIO DE IDIOMA
+  // =============================
   changeLanguage(lang: string, event?: Event): void {
     event?.preventDefault();
 
@@ -337,6 +425,9 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.langService.changeLang(lang as any);
   }
 
+  // =============================
+  // CANCELAR
+  // =============================
   onCancel(): void {
     this.notify.close();
     this.draftRef?.cancel();
@@ -351,12 +442,18 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     this.engine.clearErrors();
   }
 
+  // =============================
+  // CAMBIO DE TEMA
+  // =============================
   changeTheme(theme: 'light' | 'dark'): void {
     this.setting.Theme = theme;
     this.themeService.setTheme(theme);
     this.draftRef?.saveNow();
   }
 
+  // =============================
+  // GUARDAR
+  // =============================
   onSave(): void {
     const ok = this.engine.validateAll();
 
@@ -404,6 +501,9 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
       });
   }
 
+  // =============================
+  // EVENTOS DE VENTANA
+  // =============================
   @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload(event: BeforeUnloadEvent): void {
     if (!this.hasUnsavedChanges()) {
@@ -422,6 +522,9 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     }
   }
 
+  // =============================
+  // NORMALIZADOR
+  // =============================
   private normalizeSetting(
     data: Partial<UserSettingRequest> | null | undefined
   ): Partial<UserSettingRequest> {
@@ -446,6 +549,7 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     };
   }
 
+  // Detecta cambios sin guardar
   private hasUnsavedChanges(): boolean {
     const current = this.normalizeSetting(this.setting);
     const saved = this.normalizeSetting(this.copy);
@@ -453,42 +557,47 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
     return JSON.stringify(current) !== JSON.stringify(saved);
   }
 
- 
+  // =============================
+  // GUARD DE NAVEGACIÓN
+  // =============================
   canDeactivate(): boolean | Observable<boolean> {
-  const forceLogout = sessionStorage.getItem('force-logout') === '1';
-  if (forceLogout) {
-    return true;
+    const forceLogout = sessionStorage.getItem('force-logout') === '1';
+    if (forceLogout) {
+      return true;
+    }
+
+    if (!this.hasUnsavedChanges()) {
+      return true;
+    }
+
+    const title =
+      this.translate.instant('draft.leavePageTitle') || 'Warning';
+
+    const message =
+      this.translate.instant('draft.leavePageMessage') ||
+      'You have unsaved changes. If you leave this page, they will be lost. Do you want to continue?';
+
+    const ref = this.notify.confirm(message, title, 'warning');
+
+    if (!ref) {
+      return of(false);
+    }
+
+    return ref.pipe(
+      map((result: number) => {
+        if (result === 1) {
+          this.draftRef?.clear();
+          return true;
+        }
+
+        return false;
+      })
+    );
   }
 
-  if (!this.hasUnsavedChanges()) {
-    return true;
-  }
-
-  const title =
-    this.translate.instant('draft.leavePageTitle') || 'Warning';
-
-  const message =
-    this.translate.instant('draft.leavePageMessage') ||
-    'You have unsaved changes. If you leave this page, they will be lost. Do you want to continue?';
-
-  const ref = this.notify.confirm(message, title, 'warning');
-
-  if (!ref) {
-    return of(false);
-  }
-
-  return ref.pipe(
-    map((result: number) => {
-      if (result === 1) {
-        this.draftRef?.clear();
-        return true;
-      }
-
-      return false;
-    })
-  );
-}
-
+  // =============================
+  // FORMATO DE ÚLTIMA ACTIVIDAD
+  // =============================
   formatLastActive(user: UserSummaryDto): string {
     const value = user.lastActiveAtUtc;
 

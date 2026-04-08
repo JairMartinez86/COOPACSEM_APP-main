@@ -1,6 +1,5 @@
 export interface SocioCambioCuota {
   socioId: string;
-  FechaServidor : string;
   tipoCuenta: 'corriente' | 'navideno';
   tipoMovimiento: 'incremento' | 'disminucion';
   cuotaActual: number | null;

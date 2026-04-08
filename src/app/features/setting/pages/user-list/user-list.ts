@@ -1,9 +1,14 @@
+// =============================
+// IMPORTACIONES
+// =============================
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, Component, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, map, Observable, of, Subscription } from 'rxjs';
 import { NotificationService } from '../../../../core/services/notification.service';
+
+// Tipos y servicio del módulo de usuarios
 import {
   CreateUserRequest,
   RoleSummaryDto,
@@ -11,6 +16,8 @@ import {
   UserListService,
   UserSummaryDto
 } from '../../services/user-list.service';
+
+// Librería de validaciones
 import {
   JMartAutoFocusNextDirective,
   JMartEngineSyncDirective,
@@ -18,15 +25,26 @@ import {
   JMartMassiveValidationService,
   JMartNumberFormatDirective
 } from '@JairMartinez86/jmartinez-validator';
+
 import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
 import { RouterLink } from '@angular/router';
+
+// Servicio de drafts
 import { DraftFormService, DraftManagerRef } from '../../../../core/services/draft-manager-options.service';
+
+// Guard de cambios pendientes
 import { CanComponentDeactivate } from '../../../../core/guards/pending-changes.guard';
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 import { TableFilterService } from '../../../../core/services/table-filter.service';
 
+// Bootstrap JS
 declare const bootstrap: any;
 
+// =============================
+// INTERFACES
+// =============================
+
+// Modelo del formulario crear/editar usuario
 interface UserFormModel {
   firstName: string;
   lastName: string;
@@ -47,6 +65,7 @@ interface UserFormModel {
   active: boolean;
 }
 
+// Metadata adicional que se guarda junto al draft
 interface UserDraftMeta {
   editingUserId: string | null;
 }
@@ -70,9 +89,16 @@ interface UserDraftMeta {
   styleUrl: './user-list.scss'
 })
 export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentDeactivate {
+
+  // Referencia al formulario template-driven
   @ViewChild('userFormRef') userFormRef!: NgForm;
+
+  // Referencia al draft manager
   draftRef?: DraftManagerRef;
 
+  // =============================
+  // SERVICIOS
+  // =============================
   private readonly usersService = inject(UserListService);
   public readonly notify = inject(NotificationService);
   private readonly tr = inject(TranslateService);
@@ -82,6 +108,9 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
 
   constructor(@Inject(PLATFORM_ID) private readonly platformId: object) { }
 
+  // =============================
+  // ESTADO GENERAL
+  // =============================
   loading = false;
   saving = false;
   processing = false;
@@ -89,23 +118,27 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
   private formReady = false;
   private dataReady = false;
 
+  // Catálogos y data principal
   roles: RoleSummaryDto[] = [];
   users: UserSummaryDto[] = [];
   filteredUsers: UserSummaryDto[] = [];
   pagedUsers: UserSummaryDto[] = [];
 
-
+  // Subscripciones
   private readonly subs = new Subscription();
   private readonly filterKey = 'user-list';
 
+  // Término actual del filtro global
   currentTerm = '';
 
+  // Breadcrumbs
   breadcrumbs = [
     { label: '', url: '' },
     { label: '', url: '/' },
     { label: '' }
   ];
 
+  // Filtros de estado
   statusTabs = [
     { value: 'all', titleKey: 'userlist.filters.all' },
     { value: 'active', titleKey: 'userlist.filters.active' },
@@ -116,23 +149,31 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
   selectedRole = '';
   searchTerm = '';
 
+  // Paginación
   page = 1;
   pageSize = 8;
   totalPages = 1;
 
+  // Selección múltiple
   selectedUsers = new Set<string>();
 
+  // Usuario en edición
   editingUser: UserSummaryDto | null = null;
 
+  // Formulario actual y copia para comparar cambios
   formModel: UserFormModel = this.createEmptyForm();
   Copy: UserFormModel = this.createEmptyForm();
 
+  // =============================
+  // CICLO DE VIDA
+  // =============================
   ngOnInit(): void {
+    // Solo corre en navegador
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
-
+    // Escucha el filtro global de tabla
     this.subs.add(
       this.filterSvc.query$(this.filterKey).subscribe(query => {
         this.currentTerm = (query || '').trim().toLowerCase();
@@ -141,19 +182,26 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
       })
     );
 
+    // Carga inicial
     this.loadPageData();
   }
 
   ngOnDestroy(): void {
+    // Limpia subscripciones
     this.subs.unsubscribe();
   }
 
   ngAfterViewInit(): void {
+    // Marca formulario listo e intenta iniciar draft manager
     this.formReady = true;
     this.tryInitDraftManager();
   }
 
+  // =============================
+  // DRAFT MANAGER
+  // =============================
   private tryInitDraftManager(): void {
+    // Solo inicializa cuando formulario y data están listos
     if (!this.formReady || !this.dataReady || this.draftRef || !this.userFormRef) {
       return;
     }
@@ -161,8 +209,14 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     this.draftRef = this.draftService.connect<UserFormModel, UserDraftMeta>({
       form: this.userFormRef,
       routeKey: 'users-list',
+
+      // Data actual del formulario
       currentData: () => ({ ...this.formModel }),
+
+      // Data "guardada" como base
       savedData: () => ({ ...this.Copy }),
+
+      // Restaurar borrador al modelo actual
       restoreData: (data) => {
         this.formModel = {
           ...this.createEmptyForm(),
@@ -170,29 +224,41 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
           ...data
         };
       },
+
+      // Restaurar copia base
       restoreSavedData: (data) => {
         this.Copy = {
           ...this.createEmptyForm(),
           ...data
         };
       },
+
+      // Metadata actual
       currentMeta: () => ({
         editingUserId: this.editingUser?.user ?? null
       }),
+
+      // Restaurar metadata
       restoreMeta: (meta) => {
         this.editingUser = meta?.editingUserId
           ? this.users.find(x => x.user === meta.editingUserId) ?? null
           : null;
       },
+
+      // Sincroniza valores restaurados con el engine
       patchEngine: (data) => {
         this.engine.patchValues(data);
         this.engine.clearErrors();
       },
+
+      // Al restaurar draft, abre modal
       onDraftRestored: () => {
         setTimeout(() => {
           this.showModal();
         }, 500);
       },
+
+      // Normalizador de data del draft
       normalize: (data) => ({
         firstName: data?.firstName ?? '',
         lastName: data?.lastName ?? '',
@@ -215,6 +281,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     });
   }
 
+  // Muestra el modal de usuario
   private showModal(): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
@@ -229,10 +296,14 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     instance.show();
   }
 
+  // Detecta cambios sin guardar
   private hasUnsavedChanges(): boolean {
     return JSON.stringify(this.formModel) !== JSON.stringify(this.Copy);
   }
 
+  // =============================
+  // GUARD DE SALIDA
+  // =============================
   canDeactivate(): boolean | Observable<boolean> {
     const forceLogout = sessionStorage.getItem('force-logout') === '1';
 
@@ -267,6 +338,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     );
   }
 
+  // Guarda draft antes de cerrar/recargar
   @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload(event: BeforeUnloadEvent): void {
     if (!this.hasUnsavedChanges()) {
@@ -278,6 +350,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     event.returnValue = true;
   }
 
+  // Guarda draft cuando la página se oculta
   @HostListener('window:pagehide')
   handlePageHide(): void {
     if (this.hasUnsavedChanges()) {
@@ -285,10 +358,15 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     }
   }
 
+  // =============================
+  // GETTERS DE VISTA
+  // =============================
+  // Indica si todos los usuarios visibles están seleccionados
   get allVisibleSelected(): boolean {
     return this.pagedUsers.length > 0 && this.pagedUsers.every(x => this.selectedUsers.has(x.user));
   }
 
+  // Rango inicial mostrado en paginación
   get currentFrom(): number {
     if (this.filteredUsers.length === 0) {
       return 0;
@@ -297,10 +375,12 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     return (this.page - 1) * this.pageSize + 1;
   }
 
+  // Rango final mostrado en paginación
   get currentTo(): number {
     return Math.min(this.page * this.pageSize, this.filteredUsers.length);
   }
 
+  // Números de página visibles
   get pageNumbers(): number[] {
     if (this.totalPages <= 1) {
       return [1];
@@ -319,18 +399,22 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     return Array.from(pages).sort((a, b) => a - b);
   }
 
+  // Total usuarios
   get totalUsers(): number {
     return this.users.length;
   }
 
+  // Usuarios activos
   get activeUsers(): number {
     return this.users.filter(x => x.status === 'active').length;
   }
 
+  // Usuarios inactivos
   get inactiveUsers(): number {
     return this.users.filter(x => x.status === 'inactive').length;
   }
 
+  // Usuarios creados este mes
   get joinedThisMonth(): number {
     const now = new Date();
 
@@ -344,6 +428,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     }).length;
   }
 
+  // Porcentaje de engagement basado en usuarios activos
   get engagementPercent(): number {
     if (!this.totalUsers) {
       return 0;
@@ -352,6 +437,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     return Math.round((this.activeUsers * 100) / this.totalUsers);
   }
 
+  // Últimos usuarios agregados
   get recentUsers(): UserSummaryDto[] {
     return [...this.users]
       .sort((a, b) => {
@@ -362,6 +448,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
       .slice(0, 3);
   }
 
+  // Label del rol seleccionado para la UI
   get selectedRoleLabel(): string {
     if (!this.selectedRole) {
       return this.tr.instant('userlist.filters.allRoles');
@@ -371,6 +458,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     return role?.name ?? this.selectedRole;
   }
 
+  // Distribución de usuarios por rol
   get roleDistribution(): Array<{ key: string; label: string; count: number; percent: number }> {
     const map = new Map<string, { key: string; label: string; count: number }>();
 
@@ -393,6 +481,9 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
       }));
   }
 
+  // =============================
+  // CARGA DE DATOS
+  // =============================
   loadPageData(): void {
     this.loading = true;
 
@@ -414,6 +505,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
       });
   }
 
+  // Carga metadata y reglas del engine
   loadUserListConfig(): void {
     this.engine.resetRules();
     this.engine.clearFieldsMeta();
@@ -422,6 +514,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     const validations = this.tr.instant('userlist.form.validations') || {};
     this.breadcrumbs = this.tr.instant('userlist.breadcrumbs') || [];
 
+    // Metadata de campos
     for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
       this.engine.addFieldMeta({
         id: fieldId,
@@ -431,6 +524,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
       });
     }
 
+    // Reglas de validación
     for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
       const rules = fieldConfig?.data || {};
 
@@ -450,6 +544,9 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     }
   }
 
+  // =============================
+  // FILTROS
+  // =============================
   setStatusFilter(value: string): void {
     this.selectedStatus = value;
     this.applyFilter();
@@ -460,42 +557,44 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
     this.applyFilter();
   }
 
-applyFilter(): void {
-  const term = (this.currentTerm || '').trim().toLowerCase();
+  applyFilter(): void {
+    const term = (this.currentTerm || '').trim().toLowerCase();
 
-  this.filteredUsers = this.users.filter(user => {
-    const matchesStatus =
-      this.selectedStatus === 'all' ||
-      user.status === this.selectedStatus;
+    this.filteredUsers = this.users.filter(user => {
+      const matchesStatus =
+        this.selectedStatus === 'all' ||
+        user.status === this.selectedStatus;
 
-    const matchesRole =
-      !this.selectedRole ||
-      user.roleKey === this.selectedRole ||
-      user.roleName === this.selectedRole;
+      const matchesRole =
+        !this.selectedRole ||
+        user.roleKey === this.selectedRole ||
+        user.roleName === this.selectedRole;
 
-    const haystack = [
-      user.fullName ?? '',
-      user.email ?? '',
-      user.user ?? '',
-      user.roleName ?? '',
-      user.roleKey ?? '',
-      user.mobile ?? '',
-      user.phoneNumber ?? ''
-    ]
-      .join(' ')
-      .toLowerCase();
+      const haystack = [
+        user.fullName ?? '',
+        user.email ?? '',
+        user.user ?? '',
+        user.roleName ?? '',
+        user.roleKey ?? '',
+        user.mobile ?? '',
+        user.phoneNumber ?? ''
+      ]
+        .join(' ')
+        .toLowerCase();
 
-    const matchesSearch = !term || haystack.includes(term);
+      const matchesSearch = !term || haystack.includes(term);
 
-    return matchesStatus && matchesRole && matchesSearch;
-  });
+      return matchesStatus && matchesRole && matchesSearch;
+    });
 
-  this.page = 1;
-  this.rebuildPagination();
-  this.syncSelection();
-}
+    this.page = 1;
+    this.rebuildPagination();
+    this.syncSelection();
+  }
 
-
+  // =============================
+  // PAGINACIÓN
+  // =============================
   rebuildPagination(): void {
     this.totalPages = Math.max(1, Math.ceil(this.filteredUsers.length / this.pageSize));
 
@@ -507,6 +606,7 @@ applyFilter(): void {
     this.pagedUsers = this.filteredUsers.slice(start, start + this.pageSize);
   }
 
+  // Sincroniza selección con los usuarios aún disponibles
   syncSelection(): void {
     const available = new Set(this.filteredUsers.map(x => x.user));
 
@@ -534,6 +634,9 @@ applyFilter(): void {
     this.goToPage(this.page + 1);
   }
 
+  // =============================
+  // SELECCIÓN DE USUARIOS
+  // =============================
   toggleAll(checked: boolean): void {
     for (const user of this.pagedUsers) {
       if (checked) {
@@ -556,6 +659,7 @@ applyFilter(): void {
     return this.selectedUsers.has(user);
   }
 
+  // Cuenta usuarios por estado
   getStatusCount(status: string): number {
     if (status === 'all') {
       return this.users.length;
@@ -564,6 +668,9 @@ applyFilter(): void {
     return this.users.filter(x => x.status === status).length;
   }
 
+  // =============================
+  // MODAL CREAR / EDITAR
+  // =============================
   openCreateModal(): void {
     this.editingUser = null;
 
@@ -625,10 +732,12 @@ applyFilter(): void {
     }, 100);
   }
 
+  // Cancela edición/creación
   cancelSave(): void {
     this.draftRef?.cancel();
   }
 
+  // Guarda usuario
   saveUser(): void {
     const ok = this.engine.validateAll();
 
@@ -648,6 +757,9 @@ applyFilter(): void {
     this.createUser();
   }
 
+  // =============================
+  // CREAR USUARIO
+  // =============================
   createUser(): void {
     const body: CreateUserRequest = {
       firstName: this.formModel.firstName.trim(),
@@ -692,6 +804,9 @@ applyFilter(): void {
       });
   }
 
+  // =============================
+  // ACTUALIZAR USUARIO
+  // =============================
   updateUser(): void {
     if (!this.editingUser) {
       return;
@@ -745,6 +860,9 @@ applyFilter(): void {
       });
   }
 
+  // =============================
+  // ELIMINAR USUARIO
+  // =============================
   deleteUser(user: UserSummaryDto): void {
     const title = this.tr.instant('userlist.table.confirmRemoveTitle');
     const message = this.tr.instant('userlist.table.confirmRemoveMessage', {
@@ -781,6 +899,9 @@ applyFilter(): void {
     });
   }
 
+  // =============================
+  // RESET PASSWORD
+  // =============================
   resetPassword(user: UserSummaryDto): void {
     const title = this.tr.instant('userlist.table.confirmResetPassTitle');
     const message = this.tr.instant('userlist.table.confirmResetMessage', {
@@ -815,6 +936,9 @@ applyFilter(): void {
     });
   }
 
+  // =============================
+  // EXPORTAR CSV
+  // =============================
   exportUsers(): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
@@ -851,6 +975,9 @@ applyFilter(): void {
     URL.revokeObjectURL(url);
   }
 
+  // =============================
+  // FORMATOS Y HELPERS DE VISTA
+  // =============================
   formatLastActive(value?: string | null): string {
     const date = this.toDate(value);
 
@@ -968,6 +1095,7 @@ applyFilter(): void {
     return 'pending';
   }
 
+  // Convierte string a Date
   private toDate(value?: string | null): Date | null {
     if (!value) {
       return null;
@@ -977,6 +1105,9 @@ applyFilter(): void {
     return isNaN(date.getTime()) ? null : date;
   }
 
+  // =============================
+  // UTILIDADES DEL FORMULARIO
+  // =============================
   private createEmptyForm(): UserFormModel {
     return {
       firstName: '',
@@ -999,6 +1130,7 @@ applyFilter(): void {
     };
   }
 
+  // Separa nombre completo en firstName y lastName
   private splitName(fullName: string): { firstName: string; lastName: string } {
     const parts = (fullName || '').trim().split(/\s+/);
 
@@ -1015,6 +1147,7 @@ applyFilter(): void {
     };
   }
 
+  // Oculta modal de Bootstrap
   private hideModal(): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
@@ -1029,6 +1162,7 @@ applyFilter(): void {
     instance.hide();
   }
 
+  // Resetea estado del modal
   private resetModalState(): void {
     const empty = this.createEmptyForm();
 
@@ -1041,6 +1175,7 @@ applyFilter(): void {
     this.engine.clearErrors();
   }
 
+  // Obtiene avatar según género y rol
   getAvatarByGender(item: any): string {
     const gender = (item.gender || '').toString().trim().toLowerCase();
     const role = (item.roleName || '').toString().trim().toLowerCase();

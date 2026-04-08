@@ -1,3 +1,6 @@
+// =============================
+// IMPORTACIONES
+// =============================
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
@@ -12,10 +15,13 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, map, Observable, of, Subscription } from 'rxjs';
 
+// Servicios principales
 import { NotificationService } from '../../../../core/services/notification.service';
 import { CompanyRequest, EMPTY_COMPANY } from '../../interface/company.interface';
 import { LanguageService } from '../../../../core/services/languageService';
 import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
+
+// Librería de validaciones
 import {
   JMartAutoFocusDirective,
   JMartAutoFocusNextDirective,
@@ -24,15 +30,20 @@ import {
   JMartMassiveValidationService,
   JMartNumberFormatDirective
 } from '@JairMartinez86/jmartinez-validator';
+
+// Draft manager (guardado automático)
 import {
   DraftFormService,
   DraftManagerRef
 } from '../../../../core/services/draft-manager-options.service';
+
+// Otros servicios
 import { CompanyService } from '../../services/company.service';
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 import { CanComponentDeactivate } from '../../../../core/guards/pending-changes.guard';
 import { ApiConfigService } from '../../../../core/services/ApiConfigService ';
 import { AppConfigService } from '../../../../core/services/app-config.service';
+
 
 @Component({
   selector: 'app-company',
@@ -53,67 +64,98 @@ import { AppConfigService } from '../../../../core/services/app-config.service';
   styleUrl: './company.scss'
 })
 export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanComponentDeactivate {
-  public notify = inject(NotificationService);
-  private companyService = inject(CompanyService);
-  private translate = inject(TranslateService);
-  private langService = inject(LanguageService);
-  private engine = inject(JMartMassiveValidationService);
-  private draftService = inject(DraftFormService);
-  private api = inject(ApiConfigService);
 
+  // =============================
+  // INYECCIÓN DE DEPENDENCIAS
+  // =============================
+  public notify = inject(NotificationService); // Manejo de notificaciones
+  private companyService = inject(CompanyService); // Servicio API company
+  private translate = inject(TranslateService); // Traducciones
+  private langService = inject(LanguageService); // Idiomas
+  private engine = inject(JMartMassiveValidationService); // Motor validaciones
+  private draftService = inject(DraftFormService); // Manejo de draft
+  private api = inject(ApiConfigService); // Configuración API base
 
+  // Referencia al formulario template
   @ViewChild('companyForm') companyForm?: NgForm;
 
-  private langChangeSub?: Subscription;
-  private draftRef?: DraftManagerRef;
-  private formReady = false;
-  private dataReady = false;
+  private langChangeSub?: Subscription; // Subscripción idioma
+  private draftRef?: DraftManagerRef; // Referencia draft
+  private formReady = false; // Flag formulario listo
+  private dataReady = false; // Flag datos cargados
 
+  // Modelos
+  company: CompanyRequest = { ...EMPTY_COMPANY }; // Modelo actual
+  copy: CompanyRequest = { ...EMPTY_COMPANY }; // Copia para detectar cambios
 
-  company: CompanyRequest = { ...EMPTY_COMPANY };
-  copy: CompanyRequest = { ...EMPTY_COMPANY };
-
+  // Logo
   logoPreview: string | null = null;
   uploadingLogo = false;
+
+  // Idiomas
   languages: any[] = [];
+
+  // Breadcrumbs
   breadcrumbs = [
     { label: '', url: '' },
     { label: '', url: '/' },
     { label: '' }
   ];
 
+  // =============================
+  // INICIALIZACIÓN
+  // =============================
   ngOnInit(): void {
+
+    // Carga idiomas disponibles
     this.languages = this.langService.getAvailableLanguages();
 
+    // Carga configuración y datos
     this.loadCompanyConfig();
     this.loadCompany();
 
+    // Escucha cambio de idioma
     this.langChangeSub = this.translate.onLangChange.subscribe(() => {
       this.languages = this.langService.getAvailableLanguages();
       this.reloadCompanyConfig(false);
     });
   }
 
+  // =============================
+  // AFTER VIEW INIT
+  // =============================
   ngAfterViewInit(): void {
-    this.formReady = true;
-    this.tryInitDraftManager();
+    this.formReady = true; // Marca formulario listo
+    this.tryInitDraftManager(); // Intenta iniciar draft
   }
 
+  // =============================
+  // DESTROY
+  // =============================
   ngOnDestroy(): void {
-    this.langChangeSub?.unsubscribe();
-    this.draftRef?.destroy();
+    this.langChangeSub?.unsubscribe(); // Limpia subscripción
+    this.draftRef?.destroy(); // Limpia draft
   }
 
+  // =============================
+  // INICIALIZAR DRAFT
+  // =============================
   private tryInitDraftManager(): void {
+
+    // Validación para evitar inicialización prematura
     if (!this.formReady || !this.dataReady || this.draftRef || !this.companyForm) {
       return;
     }
 
+    // Conecta draft manager
     this.draftRef = this.draftService.connect<CompanyRequest>({
       form: this.companyForm,
       routeKey: 'company',
+
       currentData: () => this.normalizeCompany(this.company) as CompanyRequest,
       savedData: () => this.normalizeCompany(this.copy) as CompanyRequest,
+
+      // Restaurar datos del draft
       restoreData: (data) => {
         this.company = {
           ...EMPTY_COMPANY,
@@ -125,6 +167,8 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
 
         this.logoPreview = this.buildLogoUrl(this.company.LogoUrl);
       },
+
+      // Restaurar copia guardada
       restoreSavedData: (data) => {
         this.copy = {
           ...EMPTY_COMPANY,
@@ -133,21 +177,26 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
           LogoFileName: this.copy.LogoFileName
         };
       },
+
+      // Sincronizar con motor validaciones
       patchEngine: (data) => {
         this.engine.patchValues(data);
         this.engine.clearErrors();
         this.logoPreview = this.buildLogoUrl(this.company.LogoUrl);
       },
+
       normalize: (data) => this.normalizeCompany(data),
       warningTitleKey: 'draft.unsavedDataTitle',
       warningMessageKey: 'draft.unsavedDataRestored'
     });
   }
 
+  // Sincroniza modelo con motor validación
   private patchEngineFromCompany(): void {
     this.engine.patchValues(this.company);
   }
 
+  // Recarga configuración
   private reloadCompanyConfig(resetData: boolean = false): void {
     this.engine.resetRules();
     this.engine.clearErrors();
@@ -155,7 +204,11 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
     this.patchEngineFromCompany();
   }
 
+  // =============================
+  // CONFIGURACIÓN VALIDACIONES
+  // =============================
   loadCompanyConfig(resetData: boolean = false): void {
+
     this.engine.resetRules();
     this.engine.clearFieldsMeta();
 
@@ -163,6 +216,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
     const validations = this.translate.instant('company.form.validations') || {};
     this.breadcrumbs = this.translate.instant('company.breadcrumbs') || this.breadcrumbs;
 
+    // Reset de datos
     if (resetData) {
       this.company = {
         ...EMPTY_COMPANY
@@ -173,6 +227,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
       };
     }
 
+    // Metadata campos
     for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
       this.engine.addFieldMeta({
         id: fieldId,
@@ -182,6 +237,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
       });
     }
 
+    // Reglas validación
     for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
       const rules = fieldConfig?.data || {};
 
@@ -201,6 +257,11 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
     }
   }
 
+  // =============================
+  // UTILIDADES
+  // =============================
+
+  // Construye URL completa del logo
   private buildLogoUrl(path?: string | null): string | null {
     if (!path || !String(path).trim()) return null;
 
@@ -223,6 +284,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
     }
   }
 
+  // Normaliza objeto company (evita nulls)
   private normalizeCompany(
     data: Partial<CompanyRequest> | null | undefined
   ): Partial<CompanyRequest> {
@@ -266,6 +328,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
     };
   }
 
+  // Detecta cambios sin guardar
   private hasUnsavedChanges(): boolean {
     const current = this.normalizeCompany(this.company);
     const saved = this.normalizeCompany(this.copy);
@@ -273,6 +336,9 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
     return JSON.stringify(current) !== JSON.stringify(saved);
   }
 
+  // =============================
+  // API
+  // =============================
   loadCompany(): void {
     this.companyService.getCompany()
       .pipe(finalize(() => { }))
@@ -280,7 +346,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
         next: (res: any) => {
           const apiCompany = res?.data?.company ?? {};
   
-
+          // Mapeo de datos API → modelo
           this.copy = {
             CompanyName: apiCompany.CompanyName ?? apiCompany.companyName ?? '',
             TradeName: apiCompany.TradeName ?? apiCompany.tradeName ?? '',
@@ -367,6 +433,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
       });
   }
 
+  // Cancelar cambios
   onCancel(): void {
     this.notify.close();
     this.draftRef?.cancel();
@@ -375,6 +442,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
     this.engine.clearErrors();
   }
 
+  // Guardar datos
   onSave(): void {
     this.notify.close();
 
@@ -438,6 +506,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
       });
   }
 
+  // Selección de logo
   onLogoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -466,6 +535,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
       });
   }
 
+  // Guard de navegación
   canDeactivate(): boolean | Observable<boolean> {
     const forceLogout = sessionStorage.getItem('force-logout') === '1';
     if (forceLogout) {
@@ -501,6 +571,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
     );
   }
 
+  // Evento cerrar ventana
   @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload(event: BeforeUnloadEvent): void {
     if (!this.hasUnsavedChanges()) {
@@ -512,6 +583,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
     event.returnValue = '';
   }
 
+  // Evento ocultar página
   @HostListener('window:pagehide')
   handlePageHide(): void {
     if (this.hasUnsavedChanges()) {

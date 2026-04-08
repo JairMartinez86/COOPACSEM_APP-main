@@ -29,7 +29,7 @@
       "movements": "Movimientos del plan",
       "memberData": "Datos del socio",
       "planSummary": "Resumen del plan",
-       "summary": "Resumen"
+      "summary": "Resumen"
     },
     "fields": {
       "fechaApertura": {
@@ -112,7 +112,7 @@
         }
       },
       "validations": {
-         "FechaServidor": {
+        "FechaServidor": {
           "data": {
             "1": {
               "rule": "REGEX",
@@ -135,6 +135,12 @@
               "value": "{FechaServidor}",
               "when": "{yaAperturada}=false",
               "msj": "La fecha debe de ser mayor o igual a la del sistema"
+            },
+            "3": {
+              "rule": "YEAR=",
+              "value": "YEAR({FechaServidor})",
+              "when": "{yaAperturada}=false",
+              "msj": "El año debe coincidir con el año del sistema"
             }
           }
         },
@@ -166,10 +172,10 @@
         }
       }
     },
-     "types": {
-    "plan": "Nómina",
-    "extraordinario": "Extraordinario"
-  }
+    "types": {
+      "plan": "Nómina",
+      "extraordinario": "Extraordinario"
+    }
   },
   "common": {
     "search": "Buscar",

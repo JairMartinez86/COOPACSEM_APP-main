@@ -1,3 +1,6 @@
+// =============================
+// IMPORTACIONES
+// =============================
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -5,16 +8,34 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, Subscription } from 'rxjs';
 
+// Componentes y servicios
 import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
 import { AppConfigService } from '../../../../core/services/app-config.service';
 import { SociosService } from '../../services/socios.service';
 import { SocioAhorroService } from '../../services/socio-ahorro.service';
 import { TableFilterService } from '../../../../core/services/table-filter.service';
-import { JMartAutoFocusDirective, JMartAutoFocusNextDirective, JMartDateFormatDirective, JMartEngineSyncDirective, JMartErrorNotifyDirective, JMartMassiveValidationService, JMartNumberFormatDirective } from '@JairMartinez86/jmartinez-validator';
+
+// Librería de validaciones
+import {
+    JMartAutoFocusDirective,
+    JMartAutoFocusNextDirective,
+    JMartDateFormatDirective,
+    JMartEngineSyncDirective,
+    JMartErrorNotifyDirective,
+    JMartMassiveValidationService,
+    JMartNumberFormatDirective
+} from '@JairMartinez86/jmartinez-validator';
+
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { SocioAhorro } from '../../interface/socio.ahorro.model';
 
+
+// =============================
+// INTERFACES
+// =============================
+
+// Modelo de banco
 interface BancoOption {
     codigo: string;
     nombreBanco: string;
@@ -22,12 +43,14 @@ interface BancoOption {
     activo: boolean;
 }
 
+// Dashboard del socio
 interface SocioDashboard {
     totalAhorro?: number;
     ahorroNavideno?: number;
     creditoPendiente?: number;
 }
 
+// Resumen del socio
 interface SocioResumen {
     id: string;
     codigoSocio: string;
@@ -42,6 +65,7 @@ interface SocioResumen {
     dashboard?: SocioDashboard | null;
 }
 
+// Formulario ahorro
 interface SocioAhorroForm {
     socioId: string;
     destino: string;
@@ -53,6 +77,7 @@ interface SocioAhorroForm {
     observacion: string;
 }
 
+// Historial
 interface HistorialItem {
     id: string;
     fecha: string;
@@ -84,23 +109,29 @@ interface HistorialItem {
     styleUrl: './socio-ahorro.scss'
 })
 export class SocioAhorroComponent implements OnInit, OnDestroy {
-    private readonly route = inject(ActivatedRoute);
-    private readonly router = inject(Router);
-    private readonly translate = inject(TranslateService);
-    private readonly sociosService = inject(SociosService);
-    private readonly socioAhorroService = inject(SocioAhorroService);
-    private readonly filterSvc = inject(TableFilterService);
-    public notify = inject(NotificationService);
-    private engine = inject(JMartMassiveValidationService);
+
+    // =============================
+    // DEPENDENCIAS
+    // =============================
+    private readonly route = inject(ActivatedRoute); // Parámetros de URL
+    private readonly router = inject(Router); // Navegación
+    private readonly translate = inject(TranslateService); // Traducciones
+    private readonly sociosService = inject(SociosService); // API socios
+    private readonly socioAhorroService = inject(SocioAhorroService); // API ahorro
+    private readonly filterSvc = inject(TableFilterService); // Filtro global
+    public notify = inject(NotificationService); // Notificaciones
+    private engine = inject(JMartMassiveValidationService); // Motor validaciones
 
     private readonly isBrowser: boolean;
 
-    private readonly subs = new Subscription();
+    private readonly subs = new Subscription(); // Manejo de subscripciones
     private readonly filterKey = 'socio-ahorro';
+
     mode: 'create' | 'view' | 'edit' = 'create';
 
-    public appConfigService = inject(AppConfigService);
+    public appConfigService = inject(AppConfigService); // Config global
 
+    // Breadcrumbs iniciales
     breadcrumbs: any[] = [
         { label: 'Inicio', url: '/' },
         { label: 'Socios', url: '/socios' },
@@ -108,6 +139,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
     ];
 
     socioId = '';
+
     loading = false;
     loadingHistory = false;
     loadingBanks = false;
@@ -121,10 +153,12 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
 
     socio: SocioResumen | null = null;
 
+    // Formulario principal
     ahorro: SocioAhorroForm = this.createEmptyForm();
 
     bancos: BancoOption[] = [];
 
+    // Opciones destino
     destinos = [
         { value: 'ahorroCorriente', labelKey: 'socioAhorro.destinos.ahorroCorriente' },
         { value: 'ahorroNavideno', labelKey: 'socioAhorro.destinos.ahorroNavideno' },
@@ -137,8 +171,12 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
         this.isBrowser = isPlatformBrowser(this.platformId);
     }
 
+    // =============================
+    // INIT
+    // =============================
     ngOnInit(): void {
 
+        // Escuchar filtro global
         this.subs.add(
             this.filterSvc.query$(this.filterKey).subscribe(query => {
                 this.historialCurrentTerm = (query || '').trim().toLowerCase();
@@ -146,6 +184,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             })
         );
 
+        // Cambio de idioma
         this.subs.add(
             this.translate.onLangChange.subscribe(() => {
                 this.breadcrumbs = this.translate.instant('socioAhorro.breadcrumbs') || [];
@@ -153,22 +192,31 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             })
         );
 
+        // Breadcrumbs traducidos
         this.breadcrumbs = this.translate.instant('socioAhorro.breadcrumbs') || [];
 
-
-
+        // Obtener socioId desde ruta
         this.socioId = this.route.snapshot.paramMap.get('socioId') ?? '';
         this.ahorro.socioId = this.socioId;
 
+        // Validación
         if (!this.socioId) {
             this.onCancel();
             return;
         }
 
+        // Registrar fecha servidor
+        this.engine.addControl('FechaServidor');
+
+        this.engine.setControlValue(
+            'FechaServidor',
+            this.appConfigService.getCurrentSettings().fechaServidor
+        );
+
+        // Cargar datos
         this.loadSocio(this.socioId);
         this.loadHistorial(this.socioId);
         this.loadBancos();
-
     }
 
     ngAfterViewInit(): void {
@@ -176,30 +224,37 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
 
         this.loadConfig();
         this.initRouteModeAndLoad();
-
     }
+
     ngOnDestroy(): void {
-        this.subs.unsubscribe();
+        this.subs.unsubscribe(); // Limpia subscripciones
     }
 
-
+    // =============================
+    // MODO
+    // =============================
     private initRouteModeAndLoad(): void {
-        const id = this.route.snapshot.paramMap.get('id');
         const url = this.router.url.toLowerCase();
+
         this.mode = 'view';
+
         if (url.includes('/new')) {
             this.mode = 'create';
         }
-
     }
 
+    // =============================
+    // VALIDACIONES
+    // =============================
     loadConfig(): void {
+
         this.engine.resetRules?.();
         this.engine.clearFieldsMeta?.();
 
         const fieldMeta = this.translate.instant('socioAhorro.form.fieldMeta') || {};
         const validations = this.translate.instant('socioAhorro.form.validations') || {};
 
+        // Metadata
         for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
             this.engine.addFieldMeta?.({
                 id: fieldId,
@@ -209,31 +264,29 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             });
         }
 
+        // Reglas
         for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
             const rules = fieldConfig?.data || {};
 
             for (const rule of Object.values(rules) as any[]) {
-                const value = rule?.value ?? '';
 
                 this.engine.addRule?.({
                     id: fieldId,
                     condition: String(rule?.rule ?? '').trim(),
                     when: String(rule?.when ?? '').trim(),
-                    value,
-                    message: String(rule?.msj ?? '').replace('{value}', String(value ?? '')),
-                    classIconSuccess: rule?.classIconSuccess ?? '',
-                    classIconError: rule?.classIconError ?? '',
+                    value: rule?.value ?? '',
+                    message: String(rule?.msj ?? ''),
                 });
             }
         }
 
         this.engine.validateAll?.();
         this.engine.clearErrors?.();
-
     }
 
-
-
+    // =============================
+    // FORM
+    // =============================
     private createEmptyForm(): SocioAhorroForm {
         return {
             socioId: '',
@@ -247,8 +300,9 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
         };
     }
 
-
-
+    // =============================
+    // FILTRO
+    // =============================
     public applyFilter(): void {
         const term = this.historialCurrentTerm;
 
@@ -270,6 +324,9 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
         this.historialCurrentPage = 1;
     }
 
+    // =============================
+    // API
+    // =============================
     loadSocio(id: string): void {
         this.loading = true;
 
@@ -277,8 +334,10 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             .pipe(finalize(() => (this.loading = false)))
             .subscribe({
                 next: (res: any) => {
+
                     const data = res?.data?.socio ?? res?.data ?? {};
 
+                    // Mapear socio
                     this.socio = {
                         id: data?.id ?? '',
                         codigoSocio: data?.codigoSocio ?? '',
@@ -298,7 +357,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                     };
                 },
                 error: (err) => {
-                   this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+                    this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
                     this.socio = null;
                 }
             });
@@ -311,8 +370,10 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             .pipe(finalize(() => (this.loadingBanks = false)))
             .subscribe({
                 next: (res: any) => {
+
                     const items = res?.data?.bancos ?? res?.data ?? res ?? [];
 
+                    // Mapear bancos
                     this.bancos = Array.isArray(items)
                         ? items.map((x: any) => ({
                             codigo: String(x?.codigo ?? ''),
@@ -323,7 +384,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                         : [];
                 },
                 error: (err) => {
-                   this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+                    this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
                     this.bancos = [];
                 }
             });
@@ -336,8 +397,10 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             .pipe(finalize(() => (this.loadingHistory = false)))
             .subscribe({
                 next: (res: any) => {
+
                     const items = res?.data?.historial ?? res?.historial ?? res ?? [];
 
+                    // Mapear historial
                     this.historialAll = Array.isArray(items)
                         ? items.map((x: any) => ({
                             id: String(x?.id ?? ''),
@@ -361,6 +424,9 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             });
     }
 
+    // =============================
+    // ACCIONES
+    // =============================
     onCancel(): void {
         this.router.navigate(['/socios']);
     }
@@ -371,7 +437,6 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             return;
         }
 
-
         const ok = this.engine.validateAll?.();
 
         if (!ok) {
@@ -379,7 +444,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             return;
         }
 
-
+        // Construir payload
         const payload: SocioAhorro = {
             SocioId: this.ahorro.socioId,
             Destino: this.ahorro.destino,
@@ -391,23 +456,21 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             Observacion: this.ahorro.observacion.trim()
         };
 
-
-
         this.socioAhorroService.create(payload)
-            .pipe(finalize(() => {}))
             .subscribe({
                 next: (res: any) => {
-                    const ahorro = res?.data?.ahorro ?? res?.ahorro ?? res ?? null;
 
+                    // Reset form
                     this.ahorro = {
                         ...this.createEmptyForm(),
                         socioId: this.socioId
                     };
 
+                    // Recargar datos
                     this.loadSocio(this.socioId);
                     this.loadHistorial(this.socioId);
 
-                   this.notify.showFromApiResponse?.(res, 'success');
+                    this.notify.showFromApiResponse?.(res, 'success');
                 },
                 error: (err) => {
                     this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -415,65 +478,60 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
             });
     }
 
-
+    // =============================
+    // UTILIDADES
+    // =============================
     private normalizeDate(value: string | null): string | null {
-    if (!value) return null;
+        if (!value) return null;
 
-    // ya viene yyyy-MM-dd
-    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      return value;
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            return value;
+        }
+
+        const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (match) {
+            const [, dd, mm, yyyy] = match;
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        return value;
     }
-
-    // viene dd/MM/yyyy
-    const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-    if (match) {
-      const [, dd, mm, yyyy] = match;
-      return `${yyyy}-${mm}-${dd}`;
-    }
-
-    return value;
-  }
-
 
     formatCurrency(value?: number | null): string {
-    const amount = Number(value ?? 0);
+        const amount = Number(value ?? 0);
 
-    const settings = this.appConfigService.getCurrentSettings();
+        const settings = this.appConfigService.getCurrentSettings();
 
-    const decimalSeparator = settings.decimalSeparator || '.';
-    const thousandSeparator = settings.thousandSeparator || ',';
+        const decimalSeparator = settings.decimalSeparator || '.';
+        const thousandSeparator = settings.thousandSeparator || ',';
 
-    const fixed = amount.toFixed(2);
+        const fixed = amount.toFixed(2);
 
-    const parts = fixed.split('.');
-    let integerPart = parts[0];
-    const decimalPart = parts[1];
+        const parts = fixed.split('.');
+        let integerPart = parts[0];
+        const decimalPart = parts[1];
 
-    // agregar separador de miles manual
-    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+        integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
 
-    return `${integerPart}${decimalSeparator}${decimalPart}`;
-  }
-
- formatDate(value?: string | null): string {
-    if (!value) {
-      return this.translate.instant('common.noDate');
+        return `${integerPart}${decimalSeparator}${decimalPart}`;
     }
 
-    const date = new Date(value);
-    if (isNaN(date.getTime())) {
-      return this.translate.instant('common.noDate');
+    formatDate(value?: string | null): string {
+        if (!value) return this.translate.instant('common.noDate');
+
+        const date = new Date(value);
+        if (isNaN(date.getTime())) return this.translate.instant('common.noDate');
+
+        return date.toLocaleDateString('es-NI', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit'
+        });
     }
 
-    return date.toLocaleDateString('es-NI', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit'
-    });
-  }
-
-
-
+    // =============================
+    // PAGINACIÓN
+    // =============================
     get historialTotalPages(): number {
         return Math.max(1, Math.ceil(this.historial.length / this.historialPageSize));
     }
@@ -496,17 +554,10 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
         const total = this.historialTotalPages;
         const current = this.historialCurrentPage;
 
-        if (total <= 5) {
-            return Array.from({ length: total }, (_, i) => i + 1);
-        }
+        if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
 
-        if (current <= 3) {
-            return [1, 2, 3, '...', total];
-        }
-
-        if (current >= total - 2) {
-            return [1, '...', total - 2, total - 1, total];
-        }
+        if (current <= 3) return [1, 2, 3, '...', total];
+        if (current >= total - 2) return [1, '...', total - 2, total - 1, total];
 
         return [1, '...', current - 1, current, current + 1, '...', total];
     }

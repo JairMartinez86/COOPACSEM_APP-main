@@ -135,6 +135,12 @@
               "value": "{FechaServidor}",
               "when": "{yaAperturada}=false",
               "msj": "The date must be greater than or equal to the system date"
+            },
+            "3": {
+              "rule": "YEAR=",
+              "value": "YEAR({FechaServidor})",
+              "when": "{yaAperturada}=false",
+              "msj": "The year must match the system year"
             }
           }
         },

@@ -1,9 +1,13 @@
+// =============================
+// IMPORTACIONES
+// =============================
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, Subscription } from 'rxjs';
 
+// Tipos y servicios de roles
 import {
   CreateRoleRequest,
   PermissionKey,
@@ -14,21 +18,32 @@ import {
   UpdateRoleRequest,
   UserWithRolesDto
 } from '../../services/roles.service';
+
+// Configuración del sidebar, usada como base para construir permisos
 import { SIDEBAR_DATA, SidebarItem, SidebarPermissions } from '../../../../layout/main-layout/sidebar/sidebar.config';
+
+// Directivas/servicio de validación
 import {
   JMartEngineSyncDirective,
   JMartErrorNotifyDirective,
   JMartAutoFocusNextDirective,
   JMartMassiveValidationService
 } from '@JairMartinez86/jmartinez-validator';
+
 import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { LanguageService } from '../../../../core/services/languageService';
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 import { PermissionService } from '../../../../core/services/permission.service';
 
+// Bootstrap modal JS
 declare const bootstrap: any;
 
+// =============================
+// INTERFACES DE APOYO PARA LA VISTA
+// =============================
+
+// Representa una fila de permisos en la UI
 interface PermissionRowView {
   titleKey: string;
   router: string;
@@ -36,12 +51,14 @@ interface PermissionRowView {
   templatePermissions: SidebarPermissions;
 }
 
+// Representa un grupo de permisos en la UI
 interface PermissionGroupView {
   titleKey: string;
   iconclass?: string;
   rows: PermissionRowView[];
 }
 
+// Modelo del formulario crear/editar rol
 interface CreateRoleFormModel {
   name: string;
   key: string;
@@ -68,9 +85,13 @@ interface CreateRoleFormModel {
   styleUrl: './roles-permissions.scss'
 })
 export class RolesPermissionsComponent implements OnInit {
+  // Referencia al input del nombre del rol
   @ViewChild('roleNameInput')
   roleNameInput?: ElementRef<HTMLInputElement>;
 
+  // =============================
+  // INYECCIÓN DE SERVICIOS
+  // =============================
   private rolesService = inject(RolesService);
   public notify = inject(NotificationService);
   private engine = inject(JMartMassiveValidationService);
@@ -78,9 +99,15 @@ export class RolesPermissionsComponent implements OnInit {
   private translate = inject(TranslateService);
   private langService = inject(LanguageService);
 
+  // Subscripción al cambio de idioma
   private langChangeSub?: Subscription;
+
+  // Ruta obligatoria que siempre debe tener permiso de view
   private readonly DASHBOARD_ROUTE = '/dashboard';
 
+  // =============================
+  // ESTADO DEL COMPONENTE
+  // =============================
   roles: RoleSummaryDto[] = [];
   usersWithRoles: UserWithRolesDto[] = [];
   selectedRole: RoleSummaryDto | null = null;
@@ -94,6 +121,7 @@ export class RolesPermissionsComponent implements OnInit {
   editingRoleId: string | null = null;
   languages: any[] = [];
 
+  // Formulario del modal
   createForm: CreateRoleFormModel = {
     name: '',
     key: '',
@@ -103,6 +131,7 @@ export class RolesPermissionsComponent implements OnInit {
     active: true
   };
 
+  // Breadcrumbs
   breadcrumbs = [
     { label: '', url: '' },
     { label: '', url: '/' },
@@ -113,20 +142,29 @@ export class RolesPermissionsComponent implements OnInit {
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
+  // =============================
+  // CICLO DE VIDA
+  // =============================
   async ngOnInit(): Promise<void> {
+    // Solo ejecuta en navegador
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
+    // Recarga configuración cuando cambia el idioma
     this.langChangeSub = this.translate.onLangChange.subscribe(() => {
       this.languages = this.langService.getAvailableLanguages();
       this.loadRolEngineConfig();
     });
 
+    // Carga reglas/metadata y luego los datos de la pantalla
     this.loadRolEngineConfig();
     this.loadPageData();
   }
 
+  // =============================
+  // CONFIGURACIÓN DEL MOTOR DE VALIDACIÓN
+  // =============================
   loadRolEngineConfig(): void {
     this.engine.resetRules();
     this.engine.clearFieldsMeta();
@@ -135,6 +173,7 @@ export class RolesPermissionsComponent implements OnInit {
     const validations = this.translate.instant('rolesPermissions.form.validations') || {};
     this.breadcrumbs = this.translate.instant('rolesPermissions.breadcrumbs') || this.breadcrumbs;
 
+    // Carga metadata por campo
     for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
       this.engine.addFieldMeta({
         id: fieldId,
@@ -144,6 +183,7 @@ export class RolesPermissionsComponent implements OnInit {
       });
     }
 
+    // Carga reglas dinámicas por campo
     for (const [fieldId, fieldConfig] of Object.entries(validations as Record<string, any>)) {
       const rules = fieldConfig?.data || {};
 
@@ -162,9 +202,13 @@ export class RolesPermissionsComponent implements OnInit {
       }
     }
 
+    // Sincroniza el estado actual del formulario con el engine
     this.engine.patchValues(this.createForm);
   }
 
+  // =============================
+  // CARGA INICIAL DE LA PÁGINA
+  // =============================
   loadPageData(): void {
     this.loading = true;
 
@@ -176,6 +220,7 @@ export class RolesPermissionsComponent implements OnInit {
             return;
           }
 
+          // Clona roles y fuerza permisos obligatorios
           this.roles = (res.data?.roles ?? []).map((role: RoleSummaryDto) => {
             const cloned = this.cloneRole(role);
             cloned.permissionsByRoute = this.enforceMandatoryPermissionsMap(cloned.permissionsByRoute);
@@ -184,6 +229,7 @@ export class RolesPermissionsComponent implements OnInit {
 
           this.usersWithRoles = res.data?.usersWithRoles ?? [];
 
+          // Selecciona el primer rol por defecto
           this.selectedRole = this.roles.length > 0 ? this.cloneRole(this.roles[0]) : null;
           this.enforceMandatoryPermissionsOnSelectedRole();
           this.rebuildPermissionGroups();
@@ -198,17 +244,23 @@ export class RolesPermissionsComponent implements OnInit {
       });
   }
 
+  // Selecciona un rol en la UI
   selectRole(role: RoleSummaryDto): void {
     this.selectedRole = this.cloneRole(role);
     this.enforceMandatoryPermissionsOnSelectedRole();
     this.rebuildPermissionGroups();
   }
 
+  // Abre modal de edición
   editRole(role: RoleSummaryDto, event: Event): void {
     this.openEditRoleModal(role, event);
   }
 
+  // =============================
+  // MODAL CREAR ROL
+  // =============================
   openCreateRoleModal(): void {
+    // Valida permiso para crear
     if (!this.permissionService.canCreate('/roles-setting')) {
       return;
     }
@@ -219,6 +271,7 @@ export class RolesPermissionsComponent implements OnInit {
 
     const modalEl = document.getElementById('addRoleModal');
 
+    // Hace focus al input del nombre
     setTimeout(() => {
       const input = modalEl?.querySelector<HTMLInputElement>(
         'input[name="roleName"]:not([disabled])'
@@ -228,12 +281,17 @@ export class RolesPermissionsComponent implements OnInit {
     }, 1);
   }
 
+  // =============================
+  // MODAL EDITAR ROL
+  // =============================
   openEditRoleModal(role: RoleSummaryDto, event: Event): void {
+    // Evita que el click del botón seleccione también la tarjeta/fila
     event.stopPropagation();
 
     this.modalMode = 'edit';
     this.editingRoleId = role.id;
 
+    // Carga datos del rol en el formulario
     this.createForm = {
       name: role.name,
       key: role.key,
@@ -248,6 +306,7 @@ export class RolesPermissionsComponent implements OnInit {
 
     const modalEl = document.getElementById('addRoleModal');
 
+    // Hace focus al input del nombre
     setTimeout(() => {
       const input = modalEl?.querySelector<HTMLInputElement>(
         'input[name="roleName"]:not([disabled])'
@@ -257,6 +316,7 @@ export class RolesPermissionsComponent implements OnInit {
     }, 1);
   }
 
+  // Limpia el formulario del modal
   resetCreateForm(): void {
     this.createForm = {
       name: '',
@@ -271,6 +331,7 @@ export class RolesPermissionsComponent implements OnInit {
     this.engine.clearErrors();
   }
 
+  // Guarda desde el modal según el modo actual
   async onSaveRoleModal(): Promise<void> {
     this.engine.clearErrors();
     this.notify.close();
@@ -289,17 +350,24 @@ export class RolesPermissionsComponent implements OnInit {
     this.onUpdateRoleDetails();
   }
 
+  // =============================
+  // CREAR ROL
+  // =============================
   onCreateRole(): void {
     const name = this.createForm.name.trim();
     const key = (this.createForm.key || this.slugify(name)).trim().toLowerCase();
 
+    // Si faltan datos mínimos, no sigue
     if (!name || !key) {
       return;
     }
 
     this.creating = true;
 
+    // Resuelve colores/icono según colorKey
     const style = this.resolveRoleStyle(this.createForm.colorKey);
+
+    // Construye permisos iniciales
     const permissionsByRoute = this.enforceMandatoryPermissionsMap(
       this.buildCreatePermissionsMap(this.createForm.copyFromRoleKey)
     );
@@ -350,6 +418,9 @@ export class RolesPermissionsComponent implements OnInit {
       });
   }
 
+  // =============================
+  // ACTUALIZAR DETALLES DEL ROL
+  // =============================
   onUpdateRoleDetails(): void {
     if (!this.editingRoleId) {
       return;
@@ -369,6 +440,7 @@ export class RolesPermissionsComponent implements OnInit {
 
     this.saving = true;
 
+    // Resuelve colores/icono
     const style = this.resolveRoleStyle(this.createForm.colorKey);
 
     const body: UpdateRoleRequest = {
@@ -423,6 +495,9 @@ export class RolesPermissionsComponent implements OnInit {
       });
   }
 
+  // =============================
+  // GUARDAR PERMISOS DEL ROL SELECCIONADO
+  // =============================
   savePermissions(): void {
     if (!this.selectedRole || this.saving) {
       return;
@@ -482,6 +557,9 @@ export class RolesPermissionsComponent implements OnInit {
     });
   }
 
+  // =============================
+  // QUITAR USUARIO DEL ROL
+  // =============================
   confirmRemoveUserFromRole(user: RoleUserDto): void {
     if (!this.selectedRole) {
       return;
@@ -548,15 +626,20 @@ export class RolesPermissionsComponent implements OnInit {
     });
   }
 
+  // =============================
+  // CAMBIO DE PERMISOS INDIVIDUALES
+  // =============================
   setPermission(row: PermissionRowView, key: PermissionKey, checked: boolean): void {
     if (!this.selectedRole) {
       return;
     }
 
+    // Si el permiso no aplica para esta fila, no se toca
     if (row.templatePermissions[key] === null) {
       return;
     }
 
+    // Dashboard view siempre queda en true
     if (this.isMandatoryDashboardView(row, key)) {
       row.permissions.view = true;
       this.selectedRole.permissionsByRoute[row.router] = this.toRolePermissionDto(row.permissions);
@@ -567,64 +650,73 @@ export class RolesPermissionsComponent implements OnInit {
     this.selectedRole.permissionsByRoute[row.router] = this.toRolePermissionDto(row.permissions);
   }
 
- toggleAll(row: PermissionRowView, checked: boolean): void {
-  if (!this.selectedRole) {
-    return;
-  }
-
-  const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
-
-  for (const key of keys) {
-    if (!this.isEditablePermission(row, key)) {
-      continue;
+  // Marca o desmarca todos los permisos editables de una fila
+  toggleAll(row: PermissionRowView, checked: boolean): void {
+    if (!this.selectedRole) {
+      return;
     }
 
-    row.permissions[key] = checked;
+    const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
+
+    for (const key of keys) {
+      if (!this.isEditablePermission(row, key)) {
+        continue;
+      }
+
+      row.permissions[key] = checked;
+    }
+
+    this.selectedRole.permissionsByRoute[row.router] = this.toRolePermissionDto(row.permissions);
   }
 
-  this.selectedRole.permissionsByRoute[row.router] = this.toRolePermissionDto(row.permissions);
-}
+  // Indica si todos los permisos visibles están marcados
+  isAllChecked(row: PermissionRowView): boolean {
+    const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
 
- isAllChecked(row: PermissionRowView): boolean {
-  const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
+    const visibleValues = keys
+      .filter(key => row.templatePermissions[key] !== null)
+      .map(key => row.permissions[key])
+      .filter((value): value is boolean => value !== null);
 
-  const visibleValues = keys
-    .filter(key => row.templatePermissions[key] !== null)
-    .map(key => row.permissions[key])
-    .filter((value): value is boolean => value !== null);
+    return visibleValues.length > 0 && visibleValues.every(value => value === true);
+  }
 
-  return visibleValues.length > 0 && visibleValues.every(value => value === true);
-}
+  // Indica si debe mostrarse el toggle "todos"
+  shouldShowToggleAll(row: PermissionRowView): boolean {
+    return this.countVisiblePermissions(row) > 0;
+  }
 
-shouldShowToggleAll(row: PermissionRowView): boolean {
-  return this.countVisiblePermissions(row) > 0;
-}
+  // Cuenta permisos editables
   countEditablePermissions(row: PermissionRowView): number {
-  const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
-  return keys.filter(key => this.isEditablePermission(row, key)).length;
-}
+    const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
+    return keys.filter(key => this.isEditablePermission(row, key)).length;
+  }
 
+  // Verifica si es el permiso obligatorio de dashboard:view
   isMandatoryDashboardView(row: PermissionRowView, key: PermissionKey): boolean {
     return this.normalizeRoute(row.router) === this.DASHBOARD_ROUTE && key === 'view';
   }
 
-private isEditablePermission(row: PermissionRowView, key: PermissionKey): boolean {
-  if (row.templatePermissions[key] === null) {
-    return false;
+  // Determina si un permiso puede editarse
+  private isEditablePermission(row: PermissionRowView, key: PermissionKey): boolean {
+    if (row.templatePermissions[key] === null) {
+      return false;
+    }
+
+    if (this.isMandatoryDashboardView(row, key)) {
+      return false;
+    }
+
+    return true;
   }
 
-  if (this.isMandatoryDashboardView(row, key)) {
-    return false;
+  // Cuenta permisos visibles
+  private countVisiblePermissions(row: PermissionRowView): number {
+    const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
+    return keys.filter(key => row.templatePermissions[key] !== null).length;
   }
 
-  return true;
-}
-
-private countVisiblePermissions(row: PermissionRowView): number {
-  const keys: PermissionKey[] = ['view', 'create', 'edit', 'delete'];
-  return keys.filter(key => row.templatePermissions[key] !== null).length;
-}
-
+  // Fuerza permisos obligatorios en el rol seleccionado
   private enforceMandatoryPermissionsOnSelectedRole(): void {
     if (!this.selectedRole) {
       return;
@@ -635,29 +727,33 @@ private countVisiblePermissions(row: PermissionRowView): number {
     );
   }
 
-private enforceMandatoryPermissionsMap(
-  map: Record<string, RolePermissionDto>
-): Record<string, RolePermissionDto> {
-  const result = this.clonePermissionsMap(map ?? {});
-  const dashboardRoute = this.normalizeRoute(this.DASHBOARD_ROUTE);
+  // Garantiza que dashboard tenga view=true
+  private enforceMandatoryPermissionsMap(
+    map: Record<string, RolePermissionDto>
+  ): Record<string, RolePermissionDto> {
+    const result = this.clonePermissionsMap(map ?? {});
+    const dashboardRoute = this.normalizeRoute(this.DASHBOARD_ROUTE);
 
-  if (!result[dashboardRoute]) {
-    result[dashboardRoute] = {
-      view: true,
-      create: null,
-      edit: null,
-      delete: null
-    };
-  } else {
-    result[dashboardRoute] = {
-      ...result[dashboardRoute],
-      view: true
-    };
+    if (!result[dashboardRoute]) {
+      result[dashboardRoute] = {
+        view: true,
+        create: null,
+        edit: null,
+        delete: null
+      };
+    } else {
+      result[dashboardRoute] = {
+        ...result[dashboardRoute],
+        view: true
+      };
+    }
+
+    return result;
   }
 
-  return result;
-}
-
+  // =============================
+  // CONSTRUCCIÓN DE GRUPOS/FILAS DE PERMISOS
+  // =============================
   private rebuildPermissionGroups(): void {
     if (!this.selectedRole) {
       this.permissionGroups = [];
@@ -667,6 +763,7 @@ private enforceMandatoryPermissionsMap(
     this.permissionGroups = this.buildPermissionGroupsFromSidebar(SIDEBAR_DATA);
   }
 
+  // Construye grupos usando la estructura del sidebar
   private buildPermissionGroupsFromSidebar(items: SidebarItem[]): PermissionGroupView[] {
     const groups: PermissionGroupView[] = [];
 
@@ -700,6 +797,7 @@ private enforceMandatoryPermissionsMap(
     return groups;
   }
 
+  // Recolecta filas recursivamente
   private collectRows(items: SidebarItem[]): PermissionRowView[] {
     const rows: PermissionRowView[] = [];
 
@@ -721,6 +819,7 @@ private enforceMandatoryPermissionsMap(
     return rows;
   }
 
+  // Convierte un SidebarItem a fila visual de permisos
   private toRow(item: SidebarItem): PermissionRowView {
     const route = this.normalizeRoute(item.router!);
     const permissionsMap = this.normalizePermissionsMapKeys(
@@ -751,6 +850,7 @@ private enforceMandatoryPermissionsMap(
     };
   }
 
+  // Mezcla permisos del rol con la plantilla base
   private mergePermissionsWithTemplate(
     rolePermission: RolePermissionDto | undefined,
     templatePermissions: SidebarPermissions
@@ -774,6 +874,7 @@ private enforceMandatoryPermissionsMap(
     };
   }
 
+  // Normaliza permisos plantilla
   private normalizeTemplatePermissions(
     permissions?: SidebarPermissions
   ): SidebarPermissions {
@@ -785,6 +886,7 @@ private enforceMandatoryPermissionsMap(
     };
   }
 
+  // Construye permisos iniciales al crear un rol
   private buildCreatePermissionsMap(copyFromRoleKey: string): Record<string, RolePermissionDto> {
     if (copyFromRoleKey) {
       const sourceRole = this.roles.find(x => x.key === copyFromRoleKey);
@@ -800,6 +902,7 @@ private enforceMandatoryPermissionsMap(
     );
   }
 
+  // Crea un mapa de permisos vacío basado en el sidebar
   private buildEmptyPermissionsMapFromSidebar(items: SidebarItem[]): Record<string, RolePermissionDto> {
     const result: Record<string, RolePermissionDto> = {};
 
@@ -828,6 +931,9 @@ private enforceMandatoryPermissionsMap(
     return result;
   }
 
+  // =============================
+  // ESTILOS VISUALES DE ROL
+  // =============================
   private resolveRoleStyle(colorKey: CreateRoleFormModel['colorKey']): {
     color: string;
     bgColor: string;
@@ -878,6 +984,7 @@ private enforceMandatoryPermissionsMap(
     }
   }
 
+  // Detecta el colorKey a partir del color real guardado
   private detectColorKey(
     color?: string | null
   ): 'danger' | 'warning' | 'primary' | 'info' | 'success' | 'secondary' {
@@ -897,6 +1004,10 @@ private enforceMandatoryPermissionsMap(
     }
   }
 
+  // =============================
+  // UTILIDADES
+  // =============================
+  // Cierra el modal de bootstrap
   private closeRoleModal(): void {
     const element = document.getElementById('addRoleModal');
 
@@ -908,6 +1019,7 @@ private enforceMandatoryPermissionsMap(
     modalInstance.hide();
   }
 
+  // Convierte texto a slug
   private slugify(value: string): string {
     return value
       .normalize('NFD')
@@ -918,12 +1030,14 @@ private enforceMandatoryPermissionsMap(
       .replace(/^-+|-+$/g, '');
   }
 
+  // Normaliza ruta
   private normalizeRoute(route: string): string {
     return ('/' + route.trim().replace(/^\/+/, ''))
       .replace(/\/+$/, '')
       .toLowerCase();
   }
 
+  // Normaliza keys del mapa de permisos
   private normalizePermissionsMapKeys(
     map: Record<string, RolePermissionDto>
   ): Record<string, RolePermissionDto> {
@@ -936,6 +1050,7 @@ private enforceMandatoryPermissionsMap(
     return result;
   }
 
+  // Clona rol
   private cloneRole(role: RoleSummaryDto): RoleSummaryDto {
     return {
       ...role,
@@ -944,6 +1059,7 @@ private enforceMandatoryPermissionsMap(
     };
   }
 
+  // Clona mapa de permisos
   private clonePermissionsMap(
     map: Record<string, RolePermissionDto>
   ): Record<string, RolePermissionDto> {
@@ -961,6 +1077,7 @@ private enforceMandatoryPermissionsMap(
     return result;
   }
 
+  // Convierte SidebarPermissions a DTO
   private toRolePermissionDto(permissions: SidebarPermissions): RolePermissionDto {
     return {
       view: permissions.view,
@@ -970,6 +1087,7 @@ private enforceMandatoryPermissionsMap(
     };
   }
 
+  // Obtiene avatar según género y tipo de rol
   getAvatarByGender(item: RoleUserDto): string {
     const gender = (item.gender || '').trim().toLowerCase();
     const role = (item.roleName || '').trim().toLowerCase();
