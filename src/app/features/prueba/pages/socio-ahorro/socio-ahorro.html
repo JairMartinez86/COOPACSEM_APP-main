@@ -348,35 +348,53 @@
                     </div>
                 </div>
 
-                <div class="socios-summary-strip socios-summary-strip--corriente mb-2">
-                    <div class="socios-summary-strip__label">
-                        {{ 'socioAhorro.summary.currentSaving' | translate }}
+                  <div class="card">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h6 class="mb-0">
+                            <i class="bi bi-wallet2 me-1"></i>
+                            {{ 'socioRetiro.summary.availability' | translate }}
+                        </h6>
                     </div>
-                    <div class="socios-summary-strip__value">
-                        {{ appConfigService.getCurrentSettings().currency }}
-                        {{ formatCurrency(socio?.dashboard?.totalAhorro) }}
+
+                    <div class="card-body">
+
+                        <!-- Ahorro corriente -->
+                        <div class="socios-summary-strip socios-summary-strip--corriente mb-2">
+                            <div class="socios-summary-strip__label">
+                                {{ 'socioRetiro.summary.currentSaving' | translate }}
+                            </div>
+                            <div class="socios-summary-strip__value">
+                                {{ appConfigService.getCurrentSettings().currency }}
+                                {{ formatCurrency(socio?.dashboard?.totalAhorro) }}
+                            </div>
+                        </div>
+
+                        <!-- Ahorro navideño -->
+                        <div class="socios-summary-strip socios-summary-strip--navidad mb-2">
+                            <div class="socios-summary-strip__label">
+                                {{ 'socioRetiro.summary.christmasSaving' | translate }}
+                            </div>
+                            <div class="socios-summary-strip__value">
+                                {{ appConfigService.getCurrentSettings().currency }}
+                                {{ formatCurrency(socio?.dashboard?.ahorroNavideno ?? 0) }}
+                            </div>
+                        </div>
+
+                        <!-- Crédito activo -->
+                        <div class="socios-summary-strip socios-summary-strip--credito mb-2">
+                            <div class="socios-summary-strip__label">
+                                {{ 'socioRetiro.summary.activeCredit' | translate }}
+                            </div>
+                            <div class="socios-summary-strip__value">
+                                {{ appConfigService.getCurrentSettings().currency }}
+                                {{ formatCurrency(socio?.dashboard?.creditoPendiente) }}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="socios-summary-strip socios-summary-strip--navidad mb-2">
-                    <div class="socios-summary-strip__label">
-                        {{ 'socioAhorro.summary.christmasSaving' | translate }}
-                    </div>
-                    <div class="socios-summary-strip__value">
-                        {{ appConfigService.getCurrentSettings().currency }}
-                        {{ formatCurrency(socio?.dashboard?.ahorroNavideno ?? 0) }}
-                    </div>
-                </div>
-
-                <div class="socios-summary-strip socios-summary-strip--credito mb-2">
-                    <div class="socios-summary-strip__label">
-                        {{ 'socioAhorro.summary.activeCredit' | translate }}
-                    </div>
-                    <div class="socios-summary-strip__value">
-                        {{ appConfigService.getCurrentSettings().currency }}
-                        {{ formatCurrency(socio?.dashboard?.creditoPendiente) }}
-                    </div>
-                </div>
+               
 
                 <div class="card">
                     <div class="card-body">

@@ -55,6 +55,7 @@
       "creditoActivo": "Aplicar a crédito"
     },
     "summary": {
+      "availability": "Disponibilidad",
       "currentSaving": "Ahorro corriente",
       "christmasSaving": "Ahorro navideño",
       "activeCredit": "Crédito activo"

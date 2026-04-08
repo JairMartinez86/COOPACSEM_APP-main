@@ -135,9 +135,8 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
     bancos: BancoOption[] = [];
 
     destinos = [
-        { value: 'ahorroCorriente', labelKey: 'socioRetiro.destinos.ahorroCorriente' },
-        { value: 'ahorroNavideno', labelKey: 'socioRetiro.destinos.ahorroNavideno' },
-        { value: 'creditoActivo', labelKey: 'socioRetiro.destinos.creditoActivo' }
+        { value: 'retiroCorriente', labelKey: 'socioRetiro.destinos.retiroCorriente' },
+        { value: 'retiroNavideno', labelKey: 'socioRetiro.destinos.retiroNavideno' }
     ];
 
     constructor(
@@ -242,7 +241,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
     private createEmptyForm(): SocioRetiroForm {
         return {
             socioId: '',
-            destino: 'ahorroCorriente',
+            destino: 'retiroCorriente',
             monto: null,
             bancoCodigo: '',
             noRetiro: '',
