@@ -10,6 +10,7 @@ import { AppConfigService } from '../../../../core/services/app-config.service';
 import { SociosService } from '../../services/socios.service';
 import { SocioRetiroService } from '../../services/socio-retiro.service';
 import { TableFilterService } from '../../../../core/services/table-filter.service';
+import { ConsecutivoService } from '../../../../core/services//consecutivo.service';
 
 import {
     JMartAutoFocusDirective,
@@ -71,6 +72,9 @@ interface SocioRetiroForm {
 
 interface HistorialItem {
     id: string;
+    fechaReg : string;
+    serieMov: string;
+    noMov: string;
     fecha: string;
     monto: number;
     destino: string;
@@ -104,8 +108,10 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
     private readonly sociosService = inject(SociosService);
     private readonly socioRetiroService = inject(SocioRetiroService);
     private readonly filterSvc = inject(TableFilterService);
+    private readonly consecutivo = inject(ConsecutivoService);
     public notify = inject(NotificationService);
     private engine = inject(JMartMassiveValidationService);
+
 
     private readonly isBrowser: boolean;
     private readonly subs = new Subscription();
@@ -287,6 +293,14 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
                 next: (res: any) => {
                     const data = res?.data?.socio ?? res?.data ?? {};
 
+                    this.engine.addControl('FechaServidor');
+
+                    this.engine.setControlValue(
+                        'FechaServidor',
+                        this.appConfigService.getCurrentSettings().fechaServidor
+                    );
+                    this.retiro.fechaRetiro = this.formatDate(this.appConfigService.getCurrentSettings().fechaServidor);
+
                     this.socio = {
                         id: data?.id ?? '',
                         codigoSocio: data?.codigoSocio ?? '',
@@ -312,12 +326,33 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
                             creditoPendiente: Number(data?.dashboard?.creditoPendiente ?? 0)
                         }
                     };
+
+
+                    this.NoConsecutivo();
+
+
                 },
                 error: (err) => {
                     this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
                     this.socio = null;
                 }
             });
+    }
+
+    NoConsecutivo(): void {
+
+        this.consecutivo.previewNext('RT').subscribe({
+            next: (res) => {
+                this.engine.setControlValue(
+                    'NoRetiro',
+                    res.data.numeroFormateado
+                );
+                this.retiro.noRetiro = res.data.numeroFormateado
+
+
+            }
+        });
+
     }
 
     loadBancos(): void {
@@ -357,6 +392,9 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
                     this.historialAll = Array.isArray(items)
                         ? items.map((x: any) => ({
                             id: String(x?.id ?? ''),
+                            fechaReg : String(x?.fechaReg ?? ''),
+                            serieMov: String(x?.serieMov ?? ''),
+                            noMov: String(x?.noMov ?? ''),
                             fecha: String(x?.fecha ?? ''),
                             monto: Number(x?.monto ?? 0),
                             destino: String(x?.destino ?? ''),
@@ -407,6 +445,8 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
         this.socioRetiroService.create(payload)
             .subscribe({
                 next: (res: any) => {
+
+
                     this.retiro = {
                         ...this.createEmptyForm(),
                         socioId: this.socioId
@@ -414,6 +454,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
 
                     this.loadSocio(this.socioId);
                     this.loadHistorial(this.socioId);
+                    this.NoConsecutivo();
 
                     this.notify.showFromApiResponse?.(res, 'success');
                 },

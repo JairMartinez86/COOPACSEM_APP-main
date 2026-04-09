@@ -221,6 +221,8 @@
                             <table class="table table-sm align-middle mb-0">
                                 <thead>
                                     <tr>
+                                        <th>{{ 'socioAhorro.history.columns.seq' | translate }}</th>
+                                        <th>{{ 'socioAhorro.history.columns.depositNo' | translate }}</th>
                                         <th>{{ 'socioAhorro.history.columns.date' | translate }}</th>
                                         <th>{{ 'socioAhorro.history.columns.amount' | translate }}</th>
                                         <th>{{ 'socioAhorro.history.columns.destination' | translate }}</th>
@@ -240,6 +242,19 @@
 
                                     @for (item of pagedHistorial; track item.id) {
                                     <tr>
+                                        <td>
+                                            <div>
+                                                {{ item.serieMov || '' }}{{ item.serieMov && item.noMov ? '-' : '' }}{{
+                                                item.noMov || '-' }}
+                                            </div>
+
+                                            <div class="text-muted small">
+                                                {{ item.fechaReg || '' }}
+                                            </div>
+                                        </td>
+
+                                        <td>{{ item.noDeposito }}</td>
+
                                         <td>{{ formatDate(item.fecha) }}</td>
 
                                         <td>
@@ -247,7 +262,7 @@
                                             {{ formatCurrency(item.monto) }}
                                         </td>
 
-                                         <td>
+                                        <td>
                                             {{
                                             item.destino === 'Ahorro Corriente'
                                             ? ('socioAhorro.destinos.ahorroCorriente' | translate)
@@ -356,7 +371,7 @@
                     </div>
                 </div>
 
-                  <div class="card">
+                <div class="card">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <h6 class="mb-0">
                             <i class="bi bi-wallet2 me-1"></i>
@@ -402,7 +417,7 @@
                     </div>
                 </div>
 
-               
+
 
                 <div class="card">
                     <div class="card-body">

@@ -63,6 +63,8 @@
     },
     "history": {
       "columns": {
+        "seq": "No.",
+        "depositNo": "Deposit No.",
         "date": "Date",
         "amount": "Amount",
         "destination": "Destination",

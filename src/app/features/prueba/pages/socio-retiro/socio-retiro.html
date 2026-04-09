@@ -26,18 +26,18 @@
                         <h5 class="card-title mb-0">
                             {{ 'socioRetiro.sections.socio' | translate }}
                         </h5>
-                         <!-- estado -->
-                                   <div class="d-flex justify-content-end gap-1">
-                                             <small class="text-muted d-flex align-items-center gap-1 mb-0">
-                                                <i class="bi bi-check-circle"></i>
-                                                {{ 'socioRetiro.fields.estado' | translate }}
-                                            </small>
+                        <!-- estado -->
+                        <div class="d-flex justify-content-end gap-1">
+                            <small class="text-muted d-flex align-items-center gap-1 mb-0">
+                                <i class="bi bi-check-circle"></i>
+                                {{ 'socioRetiro.fields.estado' | translate }}
+                            </small>
 
-                                            <span class="badge badge-soft-success d-flex align-items-center gap-1">
-                                                <i class="bi bi-check-circle-fill"></i>
-                                                {{ 'socioRetiro.status.activo' | translate }}
-                                            </span>
-                                        </div>
+                            <span class="badge badge-soft-success d-flex align-items-center gap-1">
+                                <i class="bi bi-check-circle-fill"></i>
+                                {{ 'socioRetiro.status.activo' | translate }}
+                            </span>
+                        </div>
                     </div>
 
 
@@ -50,15 +50,15 @@
                                 <div class="row g-2">
 
                                     <!-- empresa -->
-                                  <div class="d-flex justify-content-center gap-1">
-                                            <small class="text-muted d-flex gap-1 mb-0">
-                                                <i class="bi bi-building"></i>
-                                                {{ 'socioRetiro.fields.empresa' | translate }}
-                                            </small>
-                                            <strong>{{ socio?.sociedadLabora || '-' }}</strong>
-                                        </div>
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <small class="text-muted d-flex gap-1 mb-0">
+                                            <i class="bi bi-building"></i>
+                                            {{ 'socioRetiro.fields.empresa' | translate }}
+                                        </small>
+                                        <strong>{{ socio?.sociedadLabora || '-' }}</strong>
+                                    </div>
 
-                                   
+
 
                                 </div>
                             </div>
@@ -103,15 +103,15 @@
                                 </div>
                             </div>
 
-                    
+
 
                         </div>
                     </div>
-                    
+
                     <div class="card-footer bg-transparent">
 
                         <div class="row g-2">
-                              <div class="col-md-12">
+                            <div class="col-md-12">
                                 <div class="row g-2">
 
                                     <!-- Columna izquierda -->
@@ -276,7 +276,7 @@
 
                                     <input #NoRetiro type="text" class="form-control" [(ngModel)]="retiro.noRetiro"
                                         id="NoRetiro" name="NoRetiro" engineSync="NoRetiro" autoFocusNext
-                                        [next]="FechaRetiro" />
+                                        [next]="FechaRetiro" [readOnly]="true" />
                                 </div>
 
                                 <div class="col-md-4" error-notify="FechaRetiro" error-display="inline">
@@ -306,7 +306,7 @@
                             </div>
 
                         </div>
-                        
+
                     </form>
 
                 </div>
@@ -329,6 +329,7 @@
                             <table class="table table-sm align-middle mb-0">
                                 <thead>
                                     <tr>
+                                        <th>{{ 'socioRetiro.history.columns.seq' | translate }}</th>
                                         <th>{{ 'socioRetiro.history.columns.date' | translate }}</th>
                                         <th>{{ 'socioRetiro.history.columns.amount' | translate }}</th>
                                         <th>{{ 'socioRetiro.history.columns.destination' | translate }}</th>
@@ -339,7 +340,7 @@
                                 <tbody>
                                     @if (pagedHistorial.length === 0) {
                                     <tr>
-                                        <td colspan="4" class="text-center py-4 text-muted">
+                                        <td colspan="5" class="text-center py-4 text-muted">
                                             {{ 'socioRetiro.states.historyPending' | translate }}
                                         </td>
                                     </tr>
@@ -347,7 +348,19 @@
 
                                     @for (item of pagedHistorial; track item.id) {
                                     <tr>
+                                        <td>
+                                            <div>
+                                                {{ item.serieMov || '' }}{{ item.serieMov && item.noMov ? '-' : '' }}{{
+                                                item.noMov || '-' }}
+                                            </div>
+
+                                            <div class="text-muted small">
+                                                {{ item.fechaReg || '' }}
+                                            </div>
+                                        </td>
+
                                         <td>{{ formatDate(item.fecha) }}</td>
+
 
                                         <td>
                                             {{ appConfigService.getCurrentSettings().currency }}
@@ -356,7 +369,7 @@
 
                                         <td>
                                             {{
-                                            item.destino === 'Retiro Corriente'
+                                            item.destino === 'Retiro ExtOrd'
                                             ? ('socioRetiro.destinos.retiroCorriente' | translate)
                                             : item.destino === 'Retiro Nav'
                                             ? ('socioRetiro.destinos.retiroNavideno' | translate)

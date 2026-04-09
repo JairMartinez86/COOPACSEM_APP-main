@@ -80,6 +80,10 @@ interface SocioAhorroForm {
 // Historial
 interface HistorialItem {
     id: string;
+    fechaReg : string;
+    serieMov: string;
+    noMov: string;
+    noDeposito: string;
     fecha: string;
     monto: number;
     destino: string;
@@ -404,6 +408,10 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                     this.historialAll = Array.isArray(items)
                         ? items.map((x: any) => ({
                             id: String(x?.id ?? ''),
+                            fechaReg : String(x?.fechaReg ?? ''),
+                            serieMov: String(x?.serieMov ?? ''),
+                            noMov: String(x?.noMov ?? ''),
+                            noDeposito: String(x?.noDeposito ?? ''),
                             fecha: String(x?.fecha ?? ''),
                             monto: Number(x?.monto ?? 0),
                             destino: String(x?.destino ?? ''),

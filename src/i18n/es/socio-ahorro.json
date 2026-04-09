@@ -62,6 +62,8 @@
     },
     "history": {
       "columns": {
+        "seq": "No.",
+        "depositNo": "No Deposito",
         "date": "Fecha",
         "amount": "Monto",
         "destination": "Destino",
