@@ -22,14 +22,6 @@ export interface CompanyRequest {
   DecimalSeparator: string;
   ThousandSeparator: string;
 
-  AffiliationCost: number;
-  OrdinaryCapitalPercentage: number;
-  OtherDeferredIncomePercentage: number;
-  AffiliationAccount?: string;
-  CurrentAccount?: string;
-  ChristmasAccount?: string;
-  OrdinaryCapitalAccount?: string;
-  OtherDeferredIncomeAccount?: string;
 
   SmtpHost: string;
   SmtpPort: number;
@@ -69,14 +61,7 @@ export const EMPTY_COMPANY: CompanyRequest = {
   DecimalSeparator: '.',
   ThousandSeparator: ',',
 
-  AffiliationCost: 0,
-  OrdinaryCapitalPercentage: 0,
-  OtherDeferredIncomePercentage: 0,
-  AffiliationAccount: '',
-  CurrentAccount: '',
-  ChristmasAccount: '',
-  OrdinaryCapitalAccount: '',
-  OtherDeferredIncomeAccount: '',
+
 
   SmtpHost: '',
   SmtpPort: 0,

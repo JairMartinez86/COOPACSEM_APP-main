@@ -12,8 +12,7 @@
       "contact": "Contact information",
       "regional": "Regional settings",
       "smtp": "SMTP configuration",
-      "security": "System security",
-      "affiliation": "Affiliation settings"
+      "security": "System security"
     },
     "fields": {
       "companyName": {
@@ -115,21 +114,6 @@
           "space": "Space"
         }
       },
-      "affiliationAccount": {
-        "label": "Affiliation ledger account"
-      },
-      "ordinaryCapitalAccount": {
-        "label": "Ordinary capital ledger account"
-      },
-      "otherDeferredIncomeAccount": {
-        "label": "Other deferred income ledger account"
-      },
-      "currentAccount": {
-        "label": "Current ledger account"
-      },
-      "christmasAccount": {
-        "label": "Christmas ledger account"
-      },
       "smtpHost": {
         "label": "SMTP server",
         "placeholder": "Ex: smtp.gmail.com"
@@ -179,15 +163,6 @@
         "label": "Lockout after failed attempts",
         "placeholder": "10",
         "suffix": "min"
-      },
-      "affiliationCost": {
-        "label": "Affiliation cost"
-      },
-      "ordinaryCapitalPercentage": {
-        "label": "% Ordinary Capital"
-      },
-      "otherDeferredIncomePercentage": {
-        "label": "% Other Deferred Income"
       }
     },
     "form": {
@@ -259,38 +234,6 @@
         "ThousandSeparator": {
           "label": "Regional settings",
           "tooltip": "Thousands symbol"
-        },
-        "AffiliationCost": {
-          "label": "Affiliation cost",
-          "tooltip": "Required field"
-        },
-        "OrdinaryCapitalPercentage": {
-          "label": "Affiliation settings",
-          "tooltip": "Required field"
-        },
-        "OtherDeferredIncomePercentage": {
-          "label": "Affiliation settings",
-          "tooltip": "Required field"
-        },
-        "AffiliationAccount": {
-          "label": "Affiliation settings",
-          "tooltip": "Required field"
-        },
-        "CurrentAccount": {
-          "label": "Affiliation settings",
-          "tooltip": "Required field"
-        },
-        "ChristmasAccount": {
-          "label": "Affiliation settings",
-          "tooltip": "Required field"
-        },
-        "OrdinaryCapitalAccount": {
-          "label": "Affiliation settings",
-          "tooltip": "Required field"
-        },
-        "OtherDeferredIncomeAccount": {
-          "label": "Affiliation settings",
-          "tooltip": "Required field"
         },
         "SmtpHost": {
           "label": "SMTP configuration",
@@ -495,93 +438,6 @@
               "rule": "LEN>",
               "value": "0",
               "msj": "You must select a thousands separator"
-            }
-          }
-        },
-        "AffiliationCost": {
-          "data": {
-            "1": {
-              "rule": "NUM>=",
-              "value": "0",
-              "when": "",
-              "msj": "The affiliation amount must be greater than 0"
-            }
-          }
-        },
-        "OrdinaryCapitalPercentage": {
-          "data": {
-            "1": {
-              "rule": "NUM>=",
-              "value": "0",
-              "when": "",
-              "msj": "The ordinary capital percentage must be greater than or equal to 0"
-            },
-            "2": {
-              "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
-              "value": "100",
-              "when": "",
-              "msj": "The ordinary capital percentage and other deferred income must add up to 100"
-            }
-          }
-        },
-        "OtherDeferredIncomePercentage": {
-          "data": {
-            "1": {
-              "rule": "NUM>=",
-              "value": "0",
-              "when": "",
-              "msj": "The other deferred income percentage must be greater than or equal to 0"
-            },
-            "2": {
-              "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
-              "value": "100",
-              "when": "",
-              "msj": "The ordinary capital percentage and other deferred income must add up to 100"
-            }
-          }
-        },
-        "AffiliationAccount": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Enter the affiliation ledger account"
-            }
-          }
-        },
-        "OrdinaryCapitalAccount": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Enter the ordinary capital ledger account"
-            }
-          }
-        },
-        "OtherDeferredIncomeAccount": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Enter the other deferred income account"
-            }
-          }
-        },
-        "CurrentAccount": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Enter the current ledger account"
-            }
-          }
-        },
-        "ChristmasAccount": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Enter the Christmas ledger account"
             }
           }
         },

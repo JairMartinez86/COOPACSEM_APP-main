@@ -56,7 +56,6 @@ import { AppConfigService } from '../../../../core/services/app-config.service';
     JMartErrorNotifyDirective,
     JMartEngineSyncDirective,
     JMartAutoFocusDirective,
-    JMartNumberFormatDirective,
     Breadcrumb,
     AppPermissionDirective
   ],
@@ -306,14 +305,6 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
       Currency: data?.Currency ?? 'NIO',
       DecimalSeparator: data?.DecimalSeparator ?? '.',
       ThousandSeparator: data?.ThousandSeparator ?? ',',
-      AffiliationCost: data?.AffiliationCost ?? 0,
-      OrdinaryCapitalPercentage: data?.OrdinaryCapitalPercentage ?? 0,
-      OtherDeferredIncomePercentage: data?.OtherDeferredIncomePercentage ?? 0,
-      AffiliationAccount: data?.AffiliationAccount ?? '',
-      CurrentAccount: data?.CurrentAccount ?? '',
-       ChristmasAccount: data?.ChristmasAccount ?? '',
-      OrdinaryCapitalAccount: data?.OrdinaryCapitalAccount ?? '',
-      OtherDeferredIncomeAccount: data?.OtherDeferredIncomeAccount ?? '',
       SmtpHost: data?.SmtpHost ?? '',
       SmtpPort: data?.SmtpPort ?? 0,
       SmtpUsername: data?.SmtpUsername ?? '',
@@ -367,11 +358,6 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
             Currency: apiCompany.Currency ?? apiCompany.currency ?? 'NIO',
             DecimalSeparator: apiCompany.DecimalSeparator ?? apiCompany.decimalSeparator ?? '.',
             ThousandSeparator: apiCompany.ThousandSeparator ?? apiCompany.thousandSeparator ?? ',', 
-            AffiliationAccount: apiCompany.affiliationAccount ?? apiCompany.affiliationAccount ?? '',
-            CurrentAccount: apiCompany.currentAccount ?? apiCompany.currentAccount ?? '',
-            ChristmasAccount: apiCompany.christmasAccount ?? apiCompany.christmasAccount ?? '',
-            OrdinaryCapitalAccount: apiCompany.ordinaryCapitalAccount ?? apiCompany.ordinaryCapitalAccount ?? '',
-            OtherDeferredIncomeAccount: apiCompany.otherDeferredIncomeAccount ?? apiCompany.otherDeferredIncomeAccount ?? '',
             SmtpHost: apiCompany.SmtpHost ?? apiCompany.smtpHost ?? '',
             SmtpPort: apiCompany.SmtpPort ?? apiCompany.smtpPort ?? 0,
             SmtpUsername: apiCompany.SmtpUsername ?? apiCompany.smtpUsername ?? '',
@@ -400,22 +386,7 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
             RefreshExpiresMinutes:
               apiCompany.RefreshExpiresMinutes ??
               apiCompany.refreshExpiresMinutes ??
-              1440,
-
-            AffiliationCost:
-              apiCompany.AffiliationCost ??
-              apiCompany.affiliationCost ??
-              0,
-
-            OrdinaryCapitalPercentage:
-              apiCompany.OrdinaryCapitalPercentage ??
-              apiCompany.ordinaryCapitalPercentage ??
-              0,
-
-            OtherDeferredIncomePercentage:
-              apiCompany.OtherDeferredIncomePercentage ??
-              apiCompany.otherDeferredIncomePercentage ??
-              0
+              1440
           };
 
           this.company = { ...this.copy };

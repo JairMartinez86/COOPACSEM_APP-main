@@ -12,8 +12,7 @@
       "contact": "Información de contacto",
       "regional": "Configuración regional",
       "smtp": "Configuración SMTP",
-      "security": "Seguridad del sistema",
-      "affiliation": "Configuración de afiliación"
+      "security": "Seguridad del sistema"
     },
     "fields": {
       "companyName": {
@@ -115,22 +114,6 @@
           "space": "Espacio"
         }
       },
-      "affiliationAccount": {
-        "label": "Cuenta contable de afiliación"
-      },
-      "ordinaryCapitalAccount": {
-        "label": "Cuenta contable de capital ordinario"
-      },
-      "otherDeferredIncomeAccount": {
-        "label": "Cuenta contable de otros ingresos diferidos"
-      },
-      "currentAccount": {
-        "label": "Cuenta contable corriente"
-      },
-      "christmasAccount": {
-        "label": "Cuenta contable navideña"
-      },
-      
       "smtpHost": {
         "label": "Servidor SMTP",
         "placeholder": "Ej: smtp.gmail.com"
@@ -180,15 +163,6 @@
         "label": "Bloqueo por intentos fallidos",
         "placeholder": "10",
         "suffix": "min"
-      },
-      "affiliationCost": {
-        "label": "Costo de afiliación"
-      },
-      "ordinaryCapitalPercentage": {
-        "label": "% Capital Ordinario"
-      },
-      "otherDeferredIncomePercentage": {
-        "label": "% Otros Ingresos Diferidos"
       }
     },
     "form": {
@@ -260,38 +234,6 @@
         "ThousandSeparator": {
           "label": "Configuración regional",
           "tooltip": "Símbolo de miles"
-        },
-        "AffiliationCost": {
-          "label": "Costo de afiliación",
-          "tooltip": "Campo requerido"
-        },
-        "OrdinaryCapitalPercentage": {
-          "label": "Configuración de afiliación",
-          "tooltip": "Campo requerido"
-        },
-        "OtherDeferredIncomePercentage": {
-          "label": "Configuración de afiliación",
-          "tooltip": "Campo requerido"
-        },
-        "AffiliationAccount": {
-          "label": "Configuración de afiliación",
-          "tooltip": "Campo requerido"
-        },
-        "CurrentAccount": {
-          "label": "Configuración de afiliación",
-          "tooltip": "Campo requerido"
-        },
-         "ChristmasAccount": {
-          "label": "Configuración de afiliación",
-          "tooltip": "Campo requerido"
-        },
-        "OrdinaryCapitalAccount": {
-          "label": "Configuración de afiliación",
-          "tooltip": "Campo requerido"
-        },
-        "OtherDeferredIncomeAccount": {
-          "label": "Configuración de afiliación",
-          "tooltip": "Campo requerido"
         },
         "SmtpHost": {
           "label": "Configuración SMTP",
@@ -499,97 +441,7 @@
             }
           }
         },
-        "AffiliationCost": {
-          "data": {
-            "1": {
-              "rule": "NUM>=",
-              "value": "0",
-              "when": "",
-              "msj": "El monto de afiliacion debe de ser mayor a 0"
-            }
-          }
-        },
-        "OrdinaryCapitalPercentage": {
-          "data": {
-            "1": {
-              "rule": "NUM>=",
-              "value": "0",
-              "when": "",
-              "msj": "El porcentaje de capital ordinario debe de ser mayor o igual a 0"
-            },
-            "2": {
-              "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
-              "value": "100",
-              "when": "",
-              "msj": "El porcentaje de capital ordinario y otros ingresos diferidos deben sumar 100"
-            }
-          }
-        },
-        "OtherDeferredIncomePercentage": {
-          "data": {
-            "1": {
-              "rule": "NUM>=",
-              "value": "0",
-              "when": "",
-              "msj": "El porcentaje de otros ingresos diferidos debe de ser mayor o igual a 0"
-            },
-            "2": {
-              "rule": "NUM({OtherDeferredIncomePercentage}+{OrdinaryCapitalPercentage})=",
-              "value": "100",
-              "when": "",
-              "msj": "El porcentaje de capital ordinario y otros ingresos diferidos deben sumar 100"
-            }
-          }
-        },
-        "AffiliationAccount":{
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Ingrese la cuenta contable de afiliación"
-            }
-          }
-        },
-         "OrdinaryCapitalAccount":{
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Ingrese la cuenta contable de capital ordinario"
-            }
-          }
-        },
-         "OtherDeferredIncomeAccount":{
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Ingrese la cuenta de otros ingresos diferidos"
-            }
-          }
-        },
-
-         "CurrentAccount":{
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Ingrese la cuenta contable corriente"
-            }
-          }
-        },
-
-         "ChristmasAccount":{
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "msj": "Ingrese la cuenta contable navideña"
-            }
-          }
-        },
-
-
+       
         
         "SmtpHost": {
           "data": {
