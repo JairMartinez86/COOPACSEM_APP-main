@@ -445,9 +445,15 @@
                   {{ 'aperturaCuentaNavidena.modal.columns.noCuota' | translate }}
                 </th>
                 <th>{{ 'aperturaCuentaNavidena.modal.columns.fecha' | translate }}</th>
-                <th class="text-end">{{ 'aperturaCuentaNavidena.modal.columns.cuota' | translate }}</th>
+                <th class="text-end">
+                  {{ 'aperturaCuentaNavidena.modal.columns.cuota' | translate }}
+                </th>
                 <th>{{ 'aperturaCuentaNavidena.modal.columns.estado' | translate }}</th>
-                <th>{{ 'aperturaCuentaNavidena.modal.columns.fechaPago' | translate }}</th>
+
+                <!-- NUEVA -->
+                <th class="text-end">
+                  {{ 'aperturaCuentaNavidena.modal.columns.saldoAcumulado' | translate }}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -462,22 +468,27 @@
               @for (item of displayedPlan; track item.id; let i = $index) {
               <tr>
                 <td>
-                  <span>
-                    {{ i + 1 }}
-                  </span>
+                  <span>{{ i + 1 }}</span>
                 </td>
+
                 <td>{{ formatDate(item.fechaProgramada) }}</td>
+
                 <td class="text-end">
                   {{ appConfigService.getCurrentSettings().currency }}
                   {{ formatCurrency(item.montoCuota) }}
                 </td>
+
                 <td>
                   <span class="badge"
                     [ngClass]="item.estado === 'Pagada' ? 'badge-soft-success' : 'badge-soft-warning'">
                     {{ item.estado }}
                   </span>
                 </td>
-                <td>{{ formatDate(item.fechaPago) }}</td>
+
+                <td class="text-end fw-semibold">
+                  {{ appConfigService.getCurrentSettings().currency }}
+                  {{ formatCurrency(getSaldoAcumulado(i)) }}
+                </td>
               </tr>
               }
             </tbody>

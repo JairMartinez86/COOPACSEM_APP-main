@@ -85,7 +85,7 @@
         "fecha": "Date",
         "cuota": "Installment",
         "estado": "Status",
-        "fechaPago": "Payment date"
+         "saldoAcumulado": "Balance"
       }
     },
     "states": {

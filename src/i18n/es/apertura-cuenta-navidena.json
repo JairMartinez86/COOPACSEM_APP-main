@@ -86,7 +86,7 @@
         "fecha": "Fecha",
         "cuota": "Cuota",
         "estado": "Estado",
-        "fechaPago": "Fecha pago"
+         "saldoAcumulado": "Saldo"
       }
     },
     "states": {
