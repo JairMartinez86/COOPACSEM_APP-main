@@ -25,7 +25,7 @@ export class ConsecutivoService {
 
   previewNext(serie: string): Observable<ConsecutivoPreviewResponse> {
     return this.http.get<ConsecutivoPreviewResponse>(
-      `${this.api.baseUrl}/Consecutivo/preview?serie=${encodeURIComponent((serie ?? '').trim())}`
+      `${this.api.baseUrl}/Consecutivo/preview?tipo=${encodeURIComponent((serie ?? '').trim())}`
     );
   }
 }

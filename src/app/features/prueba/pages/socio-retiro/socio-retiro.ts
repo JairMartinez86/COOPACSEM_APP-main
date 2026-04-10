@@ -341,7 +341,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
 
     NoConsecutivo(): void {
 
-        this.consecutivo.previewNext('RT').subscribe({
+        this.consecutivo.previewNext('Retiro').subscribe({
             next: (res) => {
                 this.engine.setControlValue(
                     'NoRetiro',

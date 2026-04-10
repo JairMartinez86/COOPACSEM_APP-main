@@ -208,34 +208,34 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
  * CONFIGURACIÓN DEL CHART
  * ========================================================= */
 
-public pieSeries: ApexNonAxisChartSeries = [0, 0];
+  public pieSeries: ApexNonAxisChartSeries = [0, 0];
 
-public pieChart: ApexChart = {
-  type: 'donut',
-  height: 290
-};
+  public pieChart: ApexChart = {
+    type: 'donut',
+    height: 290
+  };
 
-public pieLabels: string[] = [];
+  public pieLabels: string[] = [];
 
-public pieLegend: ApexLegend = {
-  position: 'bottom',
-  fontSize: '13px'
-};
+  public pieLegend: ApexLegend = {
+    position: 'bottom',
+    fontSize: '13px'
+  };
 
-public pieDataLabels: ApexDataLabels = {
-  enabled: true,
-  formatter: (value: number) => `${Math.round(value)}%`
-};
+  public pieDataLabels: ApexDataLabels = {
+    enabled: true,
+    formatter: (value: number) => `${Math.round(value)}%`
+  };
 
-public pieResponsive: ApexResponsive[] = [
-  {
-    breakpoint: 576,
-    options: {
-      chart: { height: 250 },
-      legend: { position: 'bottom' }
+  public pieResponsive: ApexResponsive[] = [
+    {
+      breakpoint: 576,
+      options: {
+        chart: { height: 250 },
+        legend: { position: 'bottom' }
+      }
     }
-  }
-];
+  ];
 
 public piePlotOptions: any = {
   pie: {
@@ -243,15 +243,25 @@ public piePlotOptions: any = {
       size: '68%',
       labels: {
         show: true,
+        name: {
+          show: true
+        },
+        value: {
+          show: true,
+          formatter: (value: string) => {
+            const currency = this.appConfigService.getCurrentSettings().currency;
+            return `${currency} ${this.formatCurrency(Number(value || 0))}`;
+          }
+        },
         total: {
           show: true,
+          showAlways: true,
           label: this.translate.instant('aperturaCuentaNavidena.common.total'),
           formatter: (w: any) => {
             const total = (w?.globals?.seriesTotals || [])
               .reduce((a: number, b: number) => a + b, 0);
 
             const currency = this.appConfigService.getCurrentSettings().currency;
-
             return `${currency} ${this.formatCurrency(total)}`;
           }
         }
@@ -260,34 +270,39 @@ public piePlotOptions: any = {
   }
 };
 
-public pieTooltip: any = {
-  y: {
-    formatter: (value: number) => {
+
+  public pieTooltip: any = {
+    custom: ({ series, seriesIndex, w }: any) => {
+      const value = series[seriesIndex];
       const currency = this.appConfigService.getCurrentSettings().currency;
-      return `${currency} ${this.formatCurrency(value)}`;
+
+ return `
+  <div style="padding:10px; color:write;">
+    <strong>${this.pieLabels[seriesIndex]}</strong><br/>
+    ${currency} ${this.formatCurrency(value)}
+  </div>
+`;
     }
+  };
+  /**
+   * Carga labels traducidos para el gráfico donut.
+   */
+  loadChartLabels(): void {
+    this.pieLabels = [
+      this.translate.instant('aperturaCuentaNavidena.chart.currentSaving'),
+      this.translate.instant('aperturaCuentaNavidena.chart.goalSaving')
+    ];
   }
-};
 
-/**
- * Carga labels traducidos para el gráfico donut.
- */
-loadChartLabels(): void {
-  this.pieLabels = [
-    this.translate.instant('aperturaCuentaNavidena.chart.currentSaving'),
-    this.translate.instant('aperturaCuentaNavidena.chart.goalSaving')
-  ];
-}
+  /**
+   * Actualiza la serie principal del chart con los datos del resumen.
+   */
+  loadChartSeries(): void {
+    const ahorroActual = Number(this.resumen?.ahorroActual ?? 0);
+    const meta = Number(this.resumen?.meta ?? 0);
 
-/**
- * Actualiza la serie principal del chart con los datos del resumen.
- */
-loadChartSeries(): void {
-  const ahorroActual = Number(this.resumen?.ahorroActual ?? 0);
-  const meta = Number(this.resumen?.meta ?? 0);
-
-  this.pieSeries = [ahorroActual, meta];
-}
+    this.pieSeries = [ahorroActual, meta];
+  }
   /* =========================================================
    * EFECTO DE NIEVE
    * ========================================================= */
@@ -582,40 +597,40 @@ loadChartSeries(): void {
    * - movimientos
    * - plan
    */
-loadData(): void {
-  this.loading = true;
+  loadData(): void {
+    this.loading = true;
 
-  this.service.getData(this.socioId)
-    .pipe(finalize(() => (this.loading = false)))
-    .subscribe({
-      next: (res: any) => {
-        const data = res?.data ?? {};
+    this.service.getData(this.socioId)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (res: any) => {
+          const data = res?.data ?? {};
 
-        this.socio = data?.socio ?? null;
-        this.apertura = data?.apertura ?? null;
-        this.yaAperturada = !!data?.yaAperturada;
-        this.tieneMovimiento = !!data?.tieneMovimiento;
+          this.socio = data?.socio ?? null;
+          this.apertura = data?.apertura ?? null;
+          this.yaAperturada = !!data?.yaAperturada;
+          this.tieneMovimiento = !!data?.tieneMovimiento;
 
-        this.resumen = {
-          ahorroActual: Number(data?.resumen?.ahorroActual ?? 0),
-          meta: Number(data?.resumen?.meta ?? 0),
-          faltante: Number(data?.resumen?.faltante ?? 0),
-          porcentaje: Number(data?.resumen?.porcentaje ?? 0),
-          totalCuotas: Number(data?.resumen?.totalCuotas ?? 0),
-          cuotasPagadas: Number(data?.resumen?.cuotasPagadas ?? 0)
-        };
+          this.resumen = {
+            ahorroActual: Number(data?.resumen?.ahorroActual ?? 0),
+            meta: Number(data?.resumen?.meta ?? 0),
+            faltante: Number(data?.resumen?.faltante ?? 0),
+            porcentaje: Number(data?.resumen?.porcentaje ?? 0),
+            totalCuotas: Number(data?.resumen?.totalCuotas ?? 0),
+            cuotasPagadas: Number(data?.resumen?.cuotasPagadas ?? 0)
+          };
 
-        this.retiros = Array.isArray(data?.retiros)
-          ? data.retiros.map((x: any) => ({
+          this.retiros = Array.isArray(data?.retiros)
+            ? data.retiros.map((x: any) => ({
               id: String(x?.id ?? ''),
               fecha: String(x?.fecha ?? ''),
               descripcion: String(x?.descripcion ?? ''),
               monto: Number(x?.monto ?? 0)
             }))
-          : [];
+            : [];
 
-        this.movimientosAll = Array.isArray(data?.movimientos)
-          ? data.movimientos.map((x: any) => ({
+          this.movimientosAll = Array.isArray(data?.movimientos)
+            ? data.movimientos.map((x: any) => ({
               id: String(x?.id ?? ''),
               fecha: String(x?.fecha ?? ''),
               descripcion: String(x?.descripcion ?? ''),
@@ -625,10 +640,10 @@ loadData(): void {
               fechaPago: x?.fechaPago ?? null,
               tipoMovimiento: String(x?.tipoMovimiento ?? '')
             }))
-          : [];
+            : [];
 
-        this.plan = Array.isArray(data?.plan)
-          ? data.plan.map((x: any) => ({
+          this.plan = Array.isArray(data?.plan)
+            ? data.plan.map((x: any) => ({
               id: String(x?.id ?? `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`),
               fechaProgramada: String(x?.fechaProgramada ?? ''),
               montoCuota: Number(x?.montoCuota ?? 0),
@@ -637,48 +652,48 @@ loadData(): void {
               fechaPago: x?.fechaPago ?? null,
               usuarioPago: x?.usuarioPago ?? null
             }))
-          : [];
+            : [];
 
-        this.movimientos = [...this.movimientosAll];
-        this.applyMovimientosFilter();
+          this.movimientos = [...this.movimientosAll];
+          this.applyMovimientosFilter();
 
-        if (this.apertura) {
-          this.form.fechaInicio = this.toDateInput(this.apertura.fechaInicio);
-          this.form.montoCuota = Number(this.apertura.montoCuota ?? 0);
-          this.form.observacion = this.apertura.observacion ?? '';
-        } else {
-          this.form.fechaInicio = this.form.fechaInicio || '';
-          this.form.montoCuota = this.form.montoCuota ?? null;
-          this.form.observacion = this.form.observacion || '';
+          if (this.apertura) {
+            this.form.fechaInicio = this.toDateInput(this.apertura.fechaInicio);
+            this.form.montoCuota = Number(this.apertura.montoCuota ?? 0);
+            this.form.observacion = this.apertura.observacion ?? '';
+          } else {
+            this.form.fechaInicio = this.form.fechaInicio || '';
+            this.form.montoCuota = this.form.montoCuota ?? null;
+            this.form.observacion = this.form.observacion || '';
+          }
+
+          if (!this.yaAperturada) {
+            this.buildPreviewPlan();
+          } else if (
+            (!this.plan || this.plan.length === 0) &&
+            this.form.fechaInicio &&
+            Number(this.form.montoCuota ?? 0) > 0
+          ) {
+            this.buildPreviewPlan();
+          } else {
+            this.previewPlan = [];
+          }
+
+          this.engine.patchValues?.({
+            FechaInicio: this.normalizeDate(this.form.fechaInicio) ?? '',
+            MontoCuota: Number(this.form.montoCuota ?? 0),
+            Observacion: this.form.observacion ?? '',
+            yaAperturada: this.yaAperturada
+          });
+
+          this.engine.clearErrors?.();
+          this.loadChartSeries();
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
         }
-
-        if (!this.yaAperturada) {
-          this.buildPreviewPlan();
-        } else if (
-          (!this.plan || this.plan.length === 0) &&
-          this.form.fechaInicio &&
-          Number(this.form.montoCuota ?? 0) > 0
-        ) {
-          this.buildPreviewPlan();
-        } else {
-          this.previewPlan = [];
-        }
-
-        this.engine.patchValues?.({
-          FechaInicio: this.normalizeDate(this.form.fechaInicio) ?? '',
-          MontoCuota: Number(this.form.montoCuota ?? 0),
-          Observacion: this.form.observacion ?? '',
-          yaAperturada: this.yaAperturada
-        });
-
-        this.engine.clearErrors?.();
-        this.loadChartSeries();
-      },
-      error: (err: any) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      }
-    });
-}
+      });
+  }
 
   /* =========================================================
    * FILTRO Y PAGINACIÓN DE MOVIMIENTOS
@@ -1100,115 +1115,115 @@ loadData(): void {
   /**
    * Construye un plan preliminar de cuotas quincenales hasta noviembre.
    */
-// SOLO TE PASO LAS PARTES MODIFICADAS Y COMPLETAS DEL TS (listas para pegar)
+  // SOLO TE PASO LAS PARTES MODIFICADAS Y COMPLETAS DEL TS (listas para pegar)
 
-// ============================
-// NUEVO MÉTODO SALDO ACUMULADO
-// ============================
-getSaldoAcumulado(index: number): number {
-  if (index < 0) return 0;
+  // ============================
+  // NUEVO MÉTODO SALDO ACUMULADO
+  // ============================
+  getSaldoAcumulado(index: number): number {
+    if (index < 0) return 0;
 
-  return (this.displayedPlan ?? [])
-    .slice(0, index + 1)
-    .reduce((sum, item) => sum + Number(item?.montoCuota ?? 0), 0);
-}
-
-// ============================
-// REEMPLAZAR COMPLETO
-// buildPreviewPlan()
-// ============================
-private buildPreviewPlan(): void {
-  const fecha = this.normalizeDate(this.form.fechaInicio);
-  const monto = Number(this.form.montoCuota ?? 0);
-
-  if (!fecha || monto <= 0) {
-    this.previewPlan = [];
-    return;
+    return (this.displayedPlan ?? [])
+      .slice(0, index + 1)
+      .reduce((sum, item) => sum + Number(item?.montoCuota ?? 0), 0);
   }
 
-  let current = this.normalizePlanDate(new Date(`${fecha}T00:00:00`));
-  const end = new Date(current.getFullYear(), 10, 30);
+  // ============================
+  // REEMPLAZAR COMPLETO
+  // buildPreviewPlan()
+  // ============================
+  private buildPreviewPlan(): void {
+    const fecha = this.normalizeDate(this.form.fechaInicio);
+    const monto = Number(this.form.montoCuota ?? 0);
 
-  const rows: PlanItem[] = [];
-  let i = 1;
+    if (!fecha || monto <= 0) {
+      this.previewPlan = [];
+      return;
+    }
 
-  while (current <= end) {
-    rows.push({
-      id: `preview-${i}`,
-      fechaProgramada: this.toIsoDate(current),
-      montoCuota: monto,
-      estado: 'Pendiente',
-      pagado: false,
-      fechaPago: null,
-      usuarioPago: null
-    });
+    let current = this.normalizePlanDate(new Date(`${fecha}T00:00:00`));
+    const end = new Date(current.getFullYear(), 10, 30);
 
-    current = this.getNextBiweeklyDate(current);
-    i++;
+    const rows: PlanItem[] = [];
+    let i = 1;
+
+    while (current <= end) {
+      rows.push({
+        id: `preview-${i}`,
+        fechaProgramada: this.toIsoDate(current),
+        montoCuota: monto,
+        estado: 'Pendiente',
+        pagado: false,
+        fechaPago: null,
+        usuarioPago: null
+      });
+
+      current = this.getNextBiweeklyDate(current);
+      i++;
+    }
+
+    this.previewPlan = rows;
   }
 
-  this.previewPlan = rows;
-}
+  private normalizePlanDate(date: Date): Date {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    const lastDay = new Date(year, month + 1, 0).getDate();
 
-private normalizePlanDate(date: Date): Date {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
-  const lastDay = new Date(year, month + 1, 0).getDate();
+    if (day <= 15) {
+      return new Date(year, month, 15);
+    }
 
-  if (day <= 15) {
-    return new Date(year, month, 15);
-  }
-
-  return new Date(year, month, lastDay);
-}
-
-private getNextBiweeklyDate(current: Date): Date {
-  const year = current.getFullYear();
-  const month = current.getMonth();
-  const day = current.getDate();
-  const lastDay = new Date(year, month + 1, 0).getDate();
-
-  if (day === 15) {
     return new Date(year, month, lastDay);
   }
 
-  return new Date(year, month + 1, 15);
-}
+  private getNextBiweeklyDate(current: Date): Date {
+    const year = current.getFullYear();
+    const month = current.getMonth();
+    const day = current.getDate();
+    const lastDay = new Date(year, month + 1, 0).getDate();
 
-// ============================
-// NUEVO: NORMALIZAR PRIMERA FECHA
-// ============================
-private normalizeMonthlyPlanDate(date: Date, dayBase: number): Date {
-  const year = date.getFullYear();
-  const month = date.getMonth();
+    if (day === 15) {
+      return new Date(year, month, lastDay);
+    }
 
-  const lastDay = new Date(year, month + 1, 0).getDate();
-  const targetDay = Math.min(dayBase, lastDay);
-
-  if (date.getDate() <= targetDay) {
-    return new Date(year, month, targetDay);
+    return new Date(year, month + 1, 15);
   }
 
-  const nextMonthLastDay = new Date(year, month + 2, 0).getDate();
-  const nextTargetDay = Math.min(dayBase, nextMonthLastDay);
+  // ============================
+  // NUEVO: NORMALIZAR PRIMERA FECHA
+  // ============================
+  private normalizeMonthlyPlanDate(date: Date, dayBase: number): Date {
+    const year = date.getFullYear();
+    const month = date.getMonth();
 
-  return new Date(year, month + 1, nextTargetDay);
-}
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    const targetDay = Math.min(dayBase, lastDay);
+
+    if (date.getDate() <= targetDay) {
+      return new Date(year, month, targetDay);
+    }
+
+    const nextMonthLastDay = new Date(year, month + 2, 0).getDate();
+    const nextTargetDay = Math.min(dayBase, nextMonthLastDay);
+
+    return new Date(year, month + 1, nextTargetDay);
+  }
 
 
-// ============================
-// NUEVO: SIGUIENTE FECHA MENSUAL
-// ============================
-private getNextMonthlyDate(current: Date, dayBase: number): Date {
-  const year = current.getFullYear();
-  const month = current.getMonth() + 1;
+  // ============================
+  // NUEVO: SIGUIENTE FECHA MENSUAL
+  // ============================
+  private getNextMonthlyDate(current: Date, dayBase: number): Date {
+    const year = current.getFullYear();
+    const month = current.getMonth() + 1;
 
-  const lastDay = new Date(year, month + 1, 0).getDate();
-  const targetDay = Math.min(dayBase, lastDay);
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    const targetDay = Math.min(dayBase, lastDay);
 
-  return new Date(year, month, targetDay);
-}
+    return new Date(year, month, targetDay);
+  }
 
   /* =========================================================
    * PARSEO Y UTILIDADES DE FECHAS
