@@ -1,15 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { Planes } from '../../../ahorro.models';
 
-export interface PlanCuotaRow {
-  numero: number;
-  fecha: string;
-  cuota: number;
-  estado: 'Pendiente' | 'Pagado' | 'Vencido';
-  tipoCuenta: 'Corriente' | 'Navidena';
-}
 
-export interface PlanCuotaRowView extends PlanCuotaRow {
+export interface PlanCuotaRowView extends Planes {
   saldo: number;
 }
 
@@ -21,7 +15,7 @@ export interface PlanCuotaRowView extends PlanCuotaRow {
   styleUrl: './planes-table.component.scss',
 })
 export class PlanesTableComponent {
-  @Input() rows: PlanCuotaRow[] = [];
+  @Input() rows: Planes[] = [];
 
   get corrienteRows(): PlanCuotaRowView[] {
     return this.buildRowsWithSaldo(
@@ -35,7 +29,7 @@ export class PlanesTableComponent {
     );
   }
 
-  private buildRowsWithSaldo(rows: PlanCuotaRow[]): PlanCuotaRowView[] {
+  private buildRowsWithSaldo(rows: Planes[]): PlanCuotaRowView[] {
     let acumulado = 0;
 
     return rows.map(row => {

@@ -30,31 +30,20 @@ export interface SimpleMovimientoRow {
   saldo?: string;
 }
 
-export interface AhorroMovimiento {
-  id?: string;
-
-  // 📅 Información básica
+export interface Planes {
+  numero: number;
   fecha: string;
-  descripcion: string;
-
-  // 💰 Datos financieros
-  monto: number;
-  saldo?: number;
-
-  // 🏦 Cuenta
-  tipoCuenta: 'Corriente' | 'Navideña';
-
-  // 🔄 Tipo de movimiento
-  tipoMovimiento?: 'Ahorro' | 'Retiro' | 'Deposito' | 'Afiliacion';
-
-  // 📌 Opcionales para crecimiento
-  estado?: 'Activo' | 'Pendiente' | 'Anulado';
-  referencia?: string;
+  cuota: number;
+  estado: 'Pendiente' | 'Pagado' | 'Vencido';
+  tipoCuenta: 'Corriente' | 'Navidena';
 
   // 👤 Relación
   socioId?: string;
   codigoSocio?: string;
 }
+
+
+
 
 
 export interface CuentaRow {

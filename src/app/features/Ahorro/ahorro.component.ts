@@ -9,7 +9,7 @@ import { CuentasTableComponent } from './components/tables/cuentas-table/cuentas
 import { DepositosTableComponent } from './components/tables/depositos-table/depositos-table.component';
 import { RetirosTableComponent } from './components/tables/retiros-table/retiros-table.component';
 import { SociosTableComponent } from './components/tables/socios-table/socios-table.component';
-import { ActionItem, AlertItem, AhorroTab, ReportItem, SimpleMovimientoRow, SocioDetalleTab, SocioRow, SummaryCard } from './ahorro.models';
+import { ActionItem, AlertItem, AhorroTab, ReportItem, SimpleMovimientoRow, SocioDetalleTab, SocioRow, SummaryCard, Planes } from './ahorro.models';
 import { Breadcrumb } from '../../shared/components/breadcrumb/breadcrumb';
 
 @Component({
@@ -26,7 +26,7 @@ import { Breadcrumb } from '../../shared/components/breadcrumb/breadcrumb';
     CuentasTableComponent,
     AhorroSidePanelComponent,
     AhorroSocioResumenComponent,
-    Breadcrumb 
+    Breadcrumb
   ],
   templateUrl: './ahorro.component.html',
   styleUrl: './ahorro.component.scss',
@@ -138,6 +138,51 @@ export class AhorroComponent {
     { codigo: 'CTA-002', nombre: 'Ricardo de Jesús Aguirre Gómez', tipoCuenta: 'Corriente', estado: 'Activa', saldo: 'NIO 0.00' },
     { codigo: 'CTA-003', nombre: 'Tania Judith Gómez Balmaceda', tipoCuenta: 'Navideña', estado: 'Activa', saldo: 'NIO 0.00' },
   ];
+
+
+  planesRows: Planes[] = [
+
+  // 🔵 CORRIENTE
+  {
+    numero: 1,
+    fecha: '15/04/2026',
+    cuota: 300,
+    estado: 'Pendiente',
+    tipoCuenta: 'Corriente',
+    socioId: '1',
+    codigoSocio: 'SOC-001'
+  },
+  {
+    numero: 2,
+    fecha: '30/04/2026',
+    cuota: 300,
+    estado: 'Pendiente',
+    tipoCuenta: 'Corriente',
+    socioId: '1',
+    codigoSocio: 'SOC-001'
+  },
+  {
+    numero: 3,
+    fecha: '15/05/2026',
+    cuota: 300,
+    estado: 'Pendiente',
+    tipoCuenta: 'Corriente',
+    socioId: '1',
+    codigoSocio: 'SOC-001'
+  },
+  {
+    numero: 4,
+    fecha: '31/05/2026',
+    cuota: 300,
+    estado: 'Pendiente',
+    tipoCuenta: 'Corriente',
+    socioId: '1',
+    codigoSocio: 'SOC-001'
+  },
+
+  
+
+];
 
   selectedSocio = this.socioRows[0];
 }

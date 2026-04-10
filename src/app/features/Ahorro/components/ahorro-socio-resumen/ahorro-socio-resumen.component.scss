@@ -44,4 +44,38 @@
   }
 }
 
+.resumen-kpis {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 
+/* TARJETAS */
+.socios-summary-strip {
+  flex: 1 1 0;      /* 🔥 clave: ocupan todo el ancho */
+  min-width: 0;     /* 🔥 evita que se rompa antes */
+
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  color: #fff;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* TEXTO */
+.socios-summary-strip__label,
+.socios-summary-strip__value {
+  white-space: nowrap;
+}
+
+/* COLORES */
+.socios-summary-strip--ahorro {
+  background: linear-gradient(135deg, #009688, #00796b);
+}
+
+.socios-summary-strip--credito {
+  background: linear-gradient(135deg, #bf5700, #a04200);
+}
