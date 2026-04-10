@@ -1,0 +1,47 @@
+.resumen-kpis {
+  min-width: 320px;
+}
+
+.socios-summary-strip {
+  min-width: 140px;
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  color: #fff;
+}
+
+.socios-summary-strip__label {
+  font-size: 11px;
+  opacity: 0.85;
+  margin-bottom: 4px;
+  line-height: 1.1;
+}
+
+.socios-summary-strip__value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.socios-summary-strip--ahorro {
+  background: linear-gradient(135deg, rgba(0, 150, 136, 0.85), rgba(0, 121, 107, 0.85));
+  border-color: rgba(0, 150, 136, 0.9);
+}
+
+.socios-summary-strip--credito {
+  background: linear-gradient(135deg, rgba(191, 87, 0, 0.9), rgba(160, 66, 0, 0.9));
+  border-color: rgba(191, 87, 0, 0.95);
+}
+
+@media (max-width: 991.98px) {
+  .resumen-kpis {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .socios-summary-strip {
+    flex: 1 1 160px;
+  }
+}
+
+

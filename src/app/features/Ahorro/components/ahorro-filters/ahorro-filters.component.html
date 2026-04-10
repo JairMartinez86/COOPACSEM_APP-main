@@ -1,0 +1,45 @@
+<div class="row g-3 align-items-end mb-3">
+
+  <!-- BUSCADOR -->
+  <div class="col-xl-6 col-lg-12">
+    <label class="form-label mb-1">&nbsp;</label>
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </span>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="search"
+        placeholder="Buscar por código, nombre, documento..." />
+    </div>
+  </div>
+
+  <!-- TIPO CUENTA -->
+  <div class="col-xl-2 col-lg-4 col-md-6">
+    <label class="form-label">Tipo de cuenta</label>
+    <select class="form-select" [(ngModel)]="tipoCuenta">
+      <option>Todos</option>
+      <option>Corriente</option>
+      <option>Navideña</option>
+    </select>
+  </div>
+
+  <!-- ESTADO -->
+  <div class="col-xl-2 col-lg-4 col-md-6">
+    <label class="form-label">Estado</label>
+    <select class="form-select" [(ngModel)]="estado">
+      <option>Todos</option>
+      <option>Activo</option>
+      <option>Inactivo</option>
+    </select>
+  </div>
+
+  <!-- BOTÓN -->
+  <div class="col-xl-2 col-lg-4 col-md-12">
+    <button type="button" class="btn btn-secondary w-100">
+      Limpiar
+    </button>
+  </div>
+
+</div>

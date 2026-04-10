@@ -1,0 +1,92 @@
+:host {
+  display: block;
+}
+
+.ahorro-page {
+  min-height: 100%;
+  padding: 24px;
+}
+
+.page-header {
+  margin-bottom: 18px;
+}
+
+.breadcrumb-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.page-header h1 {
+  margin: 0 0 8px;
+  font-size: 46px;
+  line-height: 1.05;
+  font-weight: 800;
+}
+
+.page-header p {
+  margin: 0;
+  color: #8ea8d8;
+  font-size: 15px;
+}
+
+.content-grid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 2.65fr) minmax(340px, 1fr);
+  gap: 18px;
+}
+
+
+
+.tabs-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.top-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.top-tabs button,
+.filter-btn,
+.square-btn {
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #8da6d5;
+  font-weight: 700;
+}
+
+.top-tabs button {
+  height: 38px;
+  padding: 0 16px;
+}
+
+
+.toolbar-actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+@media (max-width: 1399px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .ahorro-page { padding: 16px; }
+  .page-header h1 { font-size: 34px; }
+  .tabs-toolbar { flex-direction: column; align-items: stretch; }
+}

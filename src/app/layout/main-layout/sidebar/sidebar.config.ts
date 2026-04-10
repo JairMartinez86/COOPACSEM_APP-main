@@ -54,7 +54,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
         type: 'link',
         titleKey: 'sidebar.items.userlist',
         router: '/user-list',
-        
+
         permissions: {
           view: false,
           create: false,
@@ -103,7 +103,49 @@ export const SIDEBAR_DATA: SidebarItem[] = [
       }
     ]
   },
-   {
+
+  //SOCIO
+  {
+    type: 'heading',
+    titleKey: 'sidebar.items.partnerPanel'
+  },
+    {
+    type: 'link',
+    titleKey: 'sidebar.items.partner',
+    iconclass: 'fa-solid fa-handshake',
+    router: '/socios',
+    permissions: {
+      view: false,
+      create: false,
+      edit: false,
+      delete: false
+    }
+  },
+
+  {
+    type: 'submenu',
+    titleKey: 'sidebar.items.saving',
+    iconclass: 'fa-sharp fa-solid fa-piggy-bank',
+    children: [
+    {
+    type: 'link',
+    titleKey: 'sidebar.items.saverList',
+    iconclass: '',
+    router: '/ahorro-list',
+    permissions: {
+      view: false,
+      create: false,
+      edit: false,
+      delete: null
+    }
+  },
+
+     
+    ]
+  },
+
+  //FIN DE SOCIO
+  {
     type: 'heading',
     titleKey: 'sidebar.items.emptyPanel'
   },
@@ -121,7 +163,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     }
   },
 
-   {
+  {
     type: 'link',
     titleKey: 'sidebar.items.supplier',
     iconclass: 'ph ph-money',
@@ -151,4 +193,6 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     type: 'heading',
     titleKey: 'sidebar.items.otro'
   },
+
+
 ];

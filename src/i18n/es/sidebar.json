@@ -15,8 +15,18 @@
       "account": "Cuenta",
       "activity": "Actividad",
       "rolesPermissions": "Roles y Permisos",
+
+
+
+      "partnerPanel": "Administración de Socio",
       "partner": "Socio",
+      "saving": "Ahorro",
+      "saverList": "Lista de Ahorro",
+
+
+
       "supplier": "Proveedor",
+       
        "emptyPanel": "Vacío",
       "empty": "Vacío"
     }

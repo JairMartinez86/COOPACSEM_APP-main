@@ -1,0 +1,87 @@
+/* GRID */
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* BOTÓN BASE */
+.quick-action-btn {
+  width: 100%;
+  min-height: 56px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.9rem 1rem;
+  font-weight: 600;
+  text-align: left;
+  background: var(--bs-tertiary-bg);
+  color: var(--bs-body-color);
+  transition: all 0.2s ease;
+}
+
+/* ICONO */
+.quick-action-btn i {
+  width: 18px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* HOVER */
+.quick-action-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* 🔥 COLORES INTENSOS */
+
+/* VERDE */
+.quick-action-btn.is-green {
+  background: rgba(var(--bs-success-rgb), 0.28);
+  border-color: rgba(var(--bs-success-rgb), 0.45);
+  color: var(--bs-success);
+}
+
+/* AZUL */
+.quick-action-btn.is-blue {
+  background: rgba(var(--bs-primary-rgb), 0.28);
+  border-color: rgba(var(--bs-primary-rgb), 0.45);
+  color: var(--bs-primary);
+}
+
+/* VIOLETA */
+.quick-action-btn.is-violet {
+  background: rgba(var(--bs-purple-rgb), 0.28);
+  border-color: rgba(var(--bs-purple-rgb), 0.45);
+  color: var(--bs-purple);
+}
+
+/* CYAN */
+.quick-action-btn.is-cyan {
+  background: rgba(var(--bs-info-rgb), 0.28);
+  border-color: rgba(var(--bs-info-rgb), 0.45);
+  color: var(--bs-info);
+}
+
+/* AMBAR */
+.quick-action-btn.is-amber {
+  background: rgba(var(--bs-warning-rgb), 0.32);
+  border-color: rgba(var(--bs-warning-rgb), 0.5);
+  color: #c47f00;
+}
+
+/* ESMERALDA */
+.quick-action-btn.is-emerald {
+  background: rgba(var(--bs-success-rgb), 0.24);
+  border-color: rgba(var(--bs-success-rgb), 0.4);
+  color: #198754;
+}
+
+/* RESPONSIVE */
+@media (max-width: 575px) {
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}

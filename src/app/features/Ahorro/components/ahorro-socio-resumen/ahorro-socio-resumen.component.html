@@ -1,0 +1,145 @@
+
+<div class="card mt-3">
+
+  <!-- HEADER -->
+  <div class="card-header">
+     <!-- PERFIL -->
+      <div class="d-flex align-items-center gap-3">
+        <div
+          class="avatar rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+          style="width: 42px; height: 42px;">
+          JC
+        </div>
+
+        <div>
+          <h6 class="mb-0 fw-semibold">{{ socio?.nombre }}</h6>
+          <small class="text-muted">{{ socio?.codigo }}</small>
+
+          <div class="d-flex gap-2 mt-1">
+            <span class="badge badge-soft-success">Corriente</span>
+            <span class="badge badge-soft-warning">Navideña</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACTO -->
+      <div class="d-flex flex-column small text-muted">
+        <span><i class="fa-solid fa-phone me-1"></i> 2222-2222</span>
+        <span><i class="fa-regular fa-envelope me-1"></i> juan@example.com</span>
+        <span><i class="fa-regular fa-id-card me-1"></i> 4410309860004W</span>
+        <span><i class="fa-solid fa-location-dot me-1"></i> Barrio ejemplo, casa #123</span>
+      </div>
+
+      <!-- RESUMEN -->
+      <div class="d-flex flex-wrap gap-2 resumen-kpis">
+        <div class="socios-summary-strip socios-summary-strip--ahorro">
+          <div class="socios-summary-strip__label">Total ahorro</div>
+          <div class="socios-summary-strip__value">NIO 1,200.00</div>
+        </div>
+
+        <div class="socios-summary-strip socios-summary-strip--credito">
+          <div class="socios-summary-strip__label">Crédito pendiente</div>
+          <div class="socios-summary-strip__value">NIO 0.00</div>
+        </div>
+      </div>
+  </div>
+
+  <div class="card-body">
+
+    <!-- TABS (igual a plantilla) -->
+    <ul class="nav nav-tabs mb-4">
+
+      <li class="nav-item">
+        <a class="nav-link"
+           [class.active]="detailTab === 'ahorros'"
+           href="javascript:void(0)"
+           (click)="setDetailTab('ahorros')">
+          <i class="bi bi-piggy-bank me-1"></i> Ahorros
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link"
+           [class.active]="detailTab === 'retiros'"
+           href="javascript:void(0)"
+           (click)="setDetailTab('retiros')">
+          <i class="bi bi-arrow-up-circle me-1"></i> Retiros
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link"
+           [class.active]="detailTab === 'depositos'"
+           href="javascript:void(0)"
+           (click)="setDetailTab('depositos')">
+          <i class="bi bi-arrow-down-circle me-1"></i> Depósitos
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link"
+           [class.active]="detailTab === 'solicitudes'"
+           href="javascript:void(0)"
+           (click)="setDetailTab('solicitudes')">
+          <i class="bi bi-file-earmark-text me-1"></i> Solicitudes
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link"
+           [class.active]="detailTab === 'planes'"
+           href="javascript:void(0)"
+           (click)="setDetailTab('planes')">
+          <i class="bi bi-calendar-event me-1"></i> Planes
+        </a>
+      </li>
+
+    </ul>
+
+    <!-- CONTENIDO DINÁMICO -->
+    <div class="tab-content">
+
+      <div class="tab-pane fade"
+           [class.show]="detailTab === 'ahorros'"
+           [class.active]="detailTab === 'ahorros'">
+        <app-ahorros-table [rows]="ahorrosRows"></app-ahorros-table>
+      </div>
+
+      <div class="tab-pane fade"
+           [class.show]="detailTab === 'retiros'"
+           [class.active]="detailTab === 'retiros'">
+        <app-retiros-table [rows]="retirosRows"></app-retiros-table>
+      </div>
+
+      <div class="tab-pane fade"
+           [class.show]="detailTab === 'depositos'"
+           [class.active]="detailTab === 'depositos'">
+        <app-depositos-table [rows]="depositosRows"></app-depositos-table>
+      </div>
+
+      <div class="tab-pane fade"
+           [class.show]="detailTab === 'solicitudes'"
+           [class.active]="detailTab === 'solicitudes'">
+        <app-solicitudes-table [rows]="solicitudesRows"></app-solicitudes-table>
+      </div>
+
+      <div class="tab-pane fade"
+           [class.show]="detailTab === 'planes'"
+           [class.active]="detailTab === 'planes'">
+        <app-planes-table [rows]="planesRows"></app-planes-table>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="card-footer bg-transparent text-end">
+    <a href="javascript:void(0)" class="small">
+      Ver todos los movimientos <i class="fa-solid fa-arrow-right ms-1"></i>
+    </a>
+  </div>
+
+</div>
+
+  
+

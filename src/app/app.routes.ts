@@ -211,6 +211,18 @@ export const routes: Routes = [
       },
 
 
+       // AHORROS
+
+        {
+        path: 'ahorro-list',
+        loadComponent: () =>
+          import('./features/Ahorro/ahorro.component')
+            .then(m => m.AhorroComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/ahorro-list', action: 'view', tableFilterKey: 'ahorro-list' },
+        providers: [JMartMassiveValidationService],
+      },
+
 
       // PROVEEDORES
       {

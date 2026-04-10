@@ -1,0 +1,40 @@
+<div class="dashboard-grid dashboard-grid-4 mb-3">
+  @for (card of cards; track $index) {
+    <div class="card widget-stat">
+
+      <div class="widget-stat-header">
+
+        <!-- TEXTO -->
+        <div>
+          <div class="widget-stat-value">
+            {{ card.amount }}
+          </div>
+
+          <div class="widget-stat-label">
+            {{ card.title }}
+          </div>
+
+          <small class="text-muted">
+            {{ card.subtitle }}
+          </small>
+        </div>
+
+        <!-- ICONO -->
+        <div
+          class="widget-stat-icon"
+          [ngClass]="{
+            'success': card.accent === 'teal',
+            'info': card.accent === 'blue',
+            'warning': card.accent === 'orange',
+            'purple': card.accent === 'purple'
+          }">
+
+          <i [class]="card.icon"></i>
+
+        </div>
+
+      </div>
+
+    </div>
+  }
+</div>
