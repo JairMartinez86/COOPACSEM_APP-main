@@ -183,19 +183,17 @@
     "types": {
       "plan": "Payroll",
       "extraordinario": "Extraordinary"
-    }
-  },
-  "common": {
+    },
+      "common": {
     "search": "Search",
     "close": "Close",
     "cancel": "Cancel",
     "yes": "Yes",
     "no": "No",
     "showing": "Showing",
+    "total": "Total",
     "of": "of"
-  },
-  "draft": {
-    "leavePageTitle": "Warning",
-    "leavePageMessage": "You have unsaved changes. If you leave this page, they will be lost. Do you want to continue?"
   }
+  }
+
 }

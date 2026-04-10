@@ -205,62 +205,89 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   ];
 
   /* =========================================================
-   * CONFIGURACIÓN DEL CHART
-   * ========================================================= */
+ * CONFIGURACIÓN DEL CHART
+ * ========================================================= */
 
-  public pieSeries: ApexNonAxisChartSeries = [0, 0, 0];
+public pieSeries: ApexNonAxisChartSeries = [0, 0];
 
-  public pieChart: ApexChart = {
-    type: 'donut',
-    height: 290
-  };
+public pieChart: ApexChart = {
+  type: 'donut',
+  height: 290
+};
 
-  public pieLabels: string[] = [];
+public pieLabels: string[] = [];
 
-  public pieLegend: ApexLegend = {
-    position: 'bottom',
-    fontSize: '13px'
-  };
+public pieLegend: ApexLegend = {
+  position: 'bottom',
+  fontSize: '13px'
+};
 
-  public pieDataLabels: ApexDataLabels = {
-    enabled: true,
-    formatter: (value: number) => `${Math.round(value)}%`
-  };
+public pieDataLabels: ApexDataLabels = {
+  enabled: true,
+  formatter: (value: number) => `${Math.round(value)}%`
+};
 
-  public pieResponsive: ApexResponsive[] = [
-    {
-      breakpoint: 576,
-      options: {
-        chart: { height: 250 },
-        legend: { position: 'bottom' }
-      }
+public pieResponsive: ApexResponsive[] = [
+  {
+    breakpoint: 576,
+    options: {
+      chart: { height: 250 },
+      legend: { position: 'bottom' }
     }
-  ];
+  }
+];
 
-  public piePlotOptions: any = {
-    pie: {
-      donut: {
-        size: '68%',
-        labels: {
+public piePlotOptions: any = {
+  pie: {
+    donut: {
+      size: '68%',
+      labels: {
+        show: true,
+        total: {
           show: true,
-          total: {
-            show: true,
-            label: 'Total'
+          label: this.translate.instant('aperturaCuentaNavidena.common.total'),
+          formatter: (w: any) => {
+            const total = (w?.globals?.seriesTotals || [])
+              .reduce((a: number, b: number) => a + b, 0);
+
+            const currency = this.appConfigService.getCurrentSettings().currency;
+
+            return `${currency} ${this.formatCurrency(total)}`;
           }
         }
       }
     }
-  };
+  }
+};
 
-  public pieTooltip: any = {
-    y: {
-      formatter: (value: number) => {
-        const currency = this.appConfigService.getCurrentSettings().currency;
-        return `${currency} ${this.formatCurrency(value)}`;
-      }
+public pieTooltip: any = {
+  y: {
+    formatter: (value: number) => {
+      const currency = this.appConfigService.getCurrentSettings().currency;
+      return `${currency} ${this.formatCurrency(value)}`;
     }
-  };
+  }
+};
 
+/**
+ * Carga labels traducidos para el gráfico donut.
+ */
+loadChartLabels(): void {
+  this.pieLabels = [
+    this.translate.instant('aperturaCuentaNavidena.chart.currentSaving'),
+    this.translate.instant('aperturaCuentaNavidena.chart.goalSaving')
+  ];
+}
+
+/**
+ * Actualiza la serie principal del chart con los datos del resumen.
+ */
+loadChartSeries(): void {
+  const ahorroActual = Number(this.resumen?.ahorroActual ?? 0);
+  const meta = Number(this.resumen?.meta ?? 0);
+
+  this.pieSeries = [ahorroActual, meta];
+}
   /* =========================================================
    * EFECTO DE NIEVE
    * ========================================================= */
@@ -540,31 +567,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     this.engine.clearErrors?.();
   }
 
-  /* =========================================================
-   * CHART
-   * ========================================================= */
 
-  /**
-   * Carga labels traducidos para el gráfico donut.
-   */
-  loadChartLabels(): void {
-    this.pieLabels = [
-      this.translate.instant('aperturaCuentaNavidena.chart.currentSaving'),
-      this.translate.instant('aperturaCuentaNavidena.chart.goalSaving'),
-      this.translate.instant('aperturaCuentaNavidena.chart.pendingSaving')
-    ];
-  }
-
-  /**
-   * Actualiza la serie principal del chart con los datos del resumen.
-   */
-  loadChartSeries(): void {
-    const ahorroActual = Number(this.resumen?.ahorroActual ?? 0);
-    const meta = Number(this.resumen?.meta ?? 0);
-    const faltante = Number(this.resumen?.faltante ?? 0);
-
-    this.pieSeries = [ahorroActual, meta, faltante];
-  }
 
   /* =========================================================
    * CARGA DE DATOS

@@ -184,19 +184,17 @@
     "types": {
       "plan": "Nómina",
       "extraordinario": "Extraordinario"
-    }
-  },
-  "common": {
+    },
+      "common": {
     "search": "Buscar",
     "close": "Cerrar",
     "cancel": "Cancelar",
     "yes": "Sí",
     "no": "No",
     "showing": "Mostrando",
+    "total": "Total",
     "of": "de"
-  },
-  "draft": {
-    "leavePageTitle": "Advertencia",
-    "leavePageMessage": "Tienes cambios sin guardar. Si sales de esta página se perderán. ¿Deseas continuar?"
   }
+  }
+
 }

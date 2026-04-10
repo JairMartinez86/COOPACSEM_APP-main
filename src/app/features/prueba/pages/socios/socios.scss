@@ -196,3 +196,14 @@
   max-height: 220px !important;
   overflow-y: auto !important;
 }
+
+
+
+.alert-top-badge {
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  font-size: 14px;
+  color: #ffc107; // warning
+  z-index: 5;
+}

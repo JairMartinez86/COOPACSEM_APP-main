@@ -144,13 +144,25 @@
 
                     <td>
                       <div class="table-user">
-                        <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
-                          {{ getInitials(item.nombreCompleto) }}
+
+                        <div class="position-relative d-inline-block">
+
+                          <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
+                            {{ getInitials(item.nombreCompleto) }}
+                          </div>
+
+                          @if (item.alertCount > 0) {
+                          <i class="fa-solid fa-triangle-exclamation text-warning position-absolute top-0 start-100 translate-middle"
+                            style="font-size: 14px;">
+                          </i>
+                          }
+
                         </div>
 
                         <div>
                           {{ item.codigoSocio || '-' }}
                         </div>
+
                       </div>
                     </td>
 

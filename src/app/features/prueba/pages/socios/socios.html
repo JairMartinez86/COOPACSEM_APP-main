@@ -131,7 +131,7 @@
         <div class="col-12 col-xl-9">
           <div class="d-flex flex-column gap-4">
 
-            
+
             <div id="datos-personales" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
                 <h5 class="card-title mb-1">{{ 'socios.sections.datosPersonales.title' | translate }}</h5>
@@ -252,12 +252,28 @@
                     </div>
 
                     <div class="col-md-4" error-notify="fechaVencimiento" error-display="inline">
-                      <label for="fechaVencimiento" class="form-label required">{{
-                        'socios.fields.fechaVencimiento.label' | translate }}</label>
+
+                      <label for="fechaVencimiento" class="form-label d-flex align-items-center gap-1">
+
+                        <span>
+                          {{ 'socios.fields.fechaVencimiento.label' | translate }}
+                        </span>
+
+                        <span class="text-danger">*</span>
+
+                        @if (esFechaVencida(socio.fechaVencimiento)) {
+                        <i class="fa-solid fa-triangle-exclamation text-warning ms-1"
+                          [title]="'socios.alerts.fechaVencida' | translate">
+                        </i>
+                        }
+
+                      </label>
+
                       <input #fechaVencimiento id="fechaVencimiento" name="fechaVencimiento"
                         [(ngModel)]="socio.fechaVencimiento" engineSync="fechaVencimiento" autoFocusNext
                         [next]="paisNacimiento" type="text" class="form-control" dateFormat
-                        [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
+                        [dateFormat]="appConfigService.getCurrentSettings().dateFormat" />
+
                     </div>
 
                     <div class="col-md-4" error-notify="paisNacimiento" error-display="inline">
@@ -370,8 +386,7 @@
                       <label for="observaciones" class="form-label">{{ 'socios.fields.observaciones.label' | translate
                         }}</label>
                       <textarea #observaciones id="observaciones" name="observaciones" [(ngModel)]="socio.observaciones"
-                        engineSync="observaciones" autoFocusNext [next]="afiliacionTipoPago"
-                        class="form-control"
+                        engineSync="observaciones" autoFocusNext [next]="afiliacionTipoPago" class="form-control"
                         rows="3" [placeholder]="'socios.fields.observaciones.placeholder' | translate"></textarea>
                     </div>
                   </div>
@@ -397,8 +412,9 @@
                   <!-- TIPO -->
                   <div class="col-md-4" error-notify="afiliacionTipoPago" error-display="inline">
                     <label class="form-label required">Tipo de pago</label>
-                    <select #afiliacionTipoPago name="afiliacionTipoPago" class="form-select" [(ngModel)]="socio.afiliacionTipoPago"
-                      (ngModelChange)="onAfiliacionTipoPagoChange($event)" engineSync="afiliacionTipoPago" required>
+                    <select #afiliacionTipoPago name="afiliacionTipoPago" class="form-select"
+                      [(ngModel)]="socio.afiliacionTipoPago" (ngModelChange)="onAfiliacionTipoPagoChange($event)"
+                      engineSync="afiliacionTipoPago" required>
                       <option [ngValue]="null">
                         {{ 'socios.common.selectOption' | translate }}
                       </option>
@@ -465,7 +481,9 @@
                     <label class="form-label required">Fecha depósito</label>
                     <input #afiliacionFechaDeposito class="form-control" [(ngModel)]="socio.afiliacionFechaDeposito"
                       name="afiliacionFechaDeposito" engineSync="afiliacionFechaDeposito" dateFormat
-                      [dateFormat]="appConfigService.getCurrentSettings().dateFormat" autoFocusNext [next]="cuentaCorrienteFechaInicioDeduccion" [next-isdisable]="[cuentaNavidenaFechaInicioDeduccion, sociedadLabora]">
+                      [dateFormat]="appConfigService.getCurrentSettings().dateFormat" autoFocusNext
+                      [next]="cuentaCorrienteFechaInicioDeduccion"
+                      [next-isdisable]="[cuentaNavidenaFechaInicioDeduccion, sociedadLabora]">
                   </div>
                   }
 
@@ -520,7 +538,7 @@
                           <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                         </div>
                       </div>
-              
+
                     </div>
                   </div>
                   <div class="col-12">
@@ -559,7 +577,7 @@
                           <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                         </div>
                       </div>
- 
+
                     </div>
                   </div>
                 </div>

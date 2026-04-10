@@ -38,6 +38,7 @@ interface SocioDashboardRow {
 
 interface SocioRow {
   id: string;
+  alertCount : number;
   codigoSocio: string;
   nombreCompleto: string;
   nombrePublico: string;
@@ -509,6 +510,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
   private normalizeSocio(item: any): SocioRow {
     return {
       id: item?.id ?? '',
+      alertCount : item?.alertCount ?? 0,
       codigoSocio: item?.codigoSocio ?? '',
       nombreCompleto: item?.nombreCompleto ?? '',
       nombrePublico: item?.nombrePublico ?? '',
@@ -590,4 +592,6 @@ export class SociosListComponent implements OnInit, OnDestroy {
   onDiminucionCuota(idSocio: string) {
     this.router.navigate(['/cambio-cuota/new', idSocio, 'disminucion']);
   }
+
+  
 }
