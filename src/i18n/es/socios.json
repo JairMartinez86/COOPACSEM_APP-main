@@ -1145,61 +1145,59 @@
       }
     },
     "list": {
-  "title": "Socios",
-  "subtitle": "Gestiona socios con ahorro, crédito, estado y acciones",
-  "tableSubtitle": "Seleccioná un socio para ver su ficha lateral y sus movimientos.",
-  "newButton": "Nuevo socio",
-  "loading": "Cargando socios...",
-  "empty": "No se encontraron socios.",
-  "columns": {
-    "member": "Socio",
-    "code": "Código",
-    "saving": "Ahorro",
-    "status": "Estado",
-    "date": "Fecha",
-     "accounts": "Cuentas",
-    "actions": "Acciones"
-  },
-  "pagination": {
-    "showing": "Mostrando",
-    "of": "de",
-    "users": "socios"
-  }
-},
- "accounts": {
-    "current": "Corriente",
-    "christmas": "Navideña"
-  },
-"dashboard": {
-  "totalSaving": "Total ahorro",
-  "pendingCredit": "Crédito pendiente",
-  "nextWithdrawal": "Próximo retiro",
-  "pendingApprovals": "Aprobaciones pendientes"
-},
-
-"profile": {
-  "memberSince": "Socio desde",
-  "newSaving": "Nuevo ahorro",
-  "newDeposit": "Nuevo depósito",
-  "newCredit": "Nuevo crédito",
-  "newWithdrawal": "Nuevo retiro",
-  "more": "Mas",
-  "increaseSavings": "Aumentar ahorro",
-  "decreaseSavings": "Disminuir ahorro",
-  "credits": "Créditos"
-},
-
-"movements": {
-  "title": "Últimos movimientos",
-  "empty": "No hay movimientos configurados todavía para este socio.",
-  "columns": {
-    "date": "Fecha",
-    "description": "Descripción",
-    "debit": "Débito",
-    "credit": "Crédito",
-    "balance": "Saldo"
-  }
-},
+      "title": "Socios",
+      "subtitle": "Gestiona socios con ahorro, crédito, estado y acciones",
+      "tableSubtitle": "Seleccioná un socio para ver su ficha lateral y sus movimientos.",
+      "newButton": "Nuevo socio",
+      "loading": "Cargando socios...",
+      "empty": "No se encontraron socios.",
+      "columns": {
+        "member": "Socio",
+        "code": "Código",
+        "saving": "Ahorro",
+        "status": "Estado",
+        "date": "Fecha",
+        "accounts": "Cuentas",
+        "actions": "Acciones"
+      },
+      "pagination": {
+        "showing": "Mostrando",
+        "of": "de",
+        "users": "socios"
+      }
+    },
+    "accounts": {
+      "current": "Corriente",
+      "christmas": "Navideña"
+    },
+    "dashboard": {
+      "totalSaving": "Total ahorro",
+      "pendingCredit": "Crédito pendiente",
+      "nextWithdrawal": "Próximo retiro",
+      "pendingApprovals": "Aprobaciones pendientes"
+    },
+    "profile": {
+      "memberSince": "Socio desde",
+      "newSaving": "Nuevo ahorro",
+      "newDeposit": "Nuevo depósito",
+      "newCredit": "Nuevo crédito",
+      "newWithdrawal": "Nuevo retiro",
+      "more": "Mas",
+      "increaseSavings": "Aumentar ahorro",
+      "decreaseSavings": "Disminuir ahorro",
+      "credits": "Créditos"
+    },
+    "movements": {
+      "title": "Últimos movimientos",
+      "empty": "No hay movimientos configurados todavía para este socio.",
+      "columns": {
+        "date": "Fecha",
+        "description": "Descripción",
+        "debit": "Débito",
+        "credit": "Crédito",
+        "balance": "Saldo"
+      }
+    },
     "stats": {
       "title": "Estado de socios",
       "active": "Activo",
@@ -1218,15 +1216,18 @@
       "message": "¿Está seguro de eliminar el registro de {{nombre}} ({{identificacion}})?",
       "warning": "Esta acción no se puede deshacer."
     },
+    "destinos": {
+      "saving": "Ahorro",
+      "withdrawal": "Retiro",
+      "membership": "Afiliación",
+      "membPayment" : "Pago Afiliación"
+       
+    },
     "breadcrumbs": {
       "list": [
         {
           "label": "Home",
           "url": "/home"
-        },
-        {
-          "label": "Prueba",
-          "url": ""
         },
         {
           "label": "Socios",

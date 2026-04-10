@@ -38,7 +38,7 @@ interface SocioDashboardRow {
 
 interface SocioRow {
   id: string;
-  alertCount : number;
+  alertCount: number;
   codigoSocio: string;
   nombreCompleto: string;
   nombrePublico: string;
@@ -48,8 +48,8 @@ interface SocioRow {
   celular: string;
   direccionDomiciliar?: string | null;
   fechaIngreso?: string | null;
-  cuentaCorrienteActiva : boolean;
-  cuentaNavidenaActiva : boolean;
+  cuentaCorrienteActiva: boolean;
+  cuentaNavidenaActiva: boolean;
   activo: boolean;
   createdAtUtc?: string | null;
   updatedAtUtc?: string | null;
@@ -510,7 +510,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
   private normalizeSocio(item: any): SocioRow {
     return {
       id: item?.id ?? '',
-      alertCount : item?.alertCount ?? 0,
+      alertCount: item?.alertCount ?? 0,
       codigoSocio: item?.codigoSocio ?? '',
       nombreCompleto: item?.nombreCompleto ?? '',
       nombrePublico: item?.nombrePublico ?? '',
@@ -593,5 +593,19 @@ export class SociosListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/cambio-cuota/new', idSocio, 'disminucion']);
   }
 
-  
+  getDestinoLabel(destino?: string | null): string {
+    switch ((destino || '').trim()) {
+      case 'Ahorro ExtOrd':
+        return 'socios.destinos.saving';
+      case 'Retiro ExtOrd':
+        return 'socios.destinos.withdrawal';
+      case 'Afiliacion':
+        return 'socios.destinos.membership';
+      case 'Pago Afiliacion':
+        return 'socios.destinos.membPayment';
+      default:
+        return destino || '';
+    }
+  }
+
 }

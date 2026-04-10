@@ -439,7 +439,9 @@
                   @for (mov of (selectedSocio.dashboard?.ultimosMovimientos ?? []); track $index) {
                   <tr>
                     <td>{{ formatDate(mov.fecha) }}</td>
-                    <td>{{ mov.descripcion || '-' }}</td>
+                    <td>
+                      {{ getDestinoLabel(mov.descripcion) | translate }}
+                    </td>
                     <td>{{ formatCurrency(mov.debito) }}</td>
                     <td>{{ formatCurrency(mov.credito) }}</td>
                   </tr>

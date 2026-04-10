@@ -1167,9 +1167,9 @@
       }
     },
     "accounts": {
-    "current": "Checking",
-    "christmas": "Christmas"
-  },
+      "current": "Checking",
+      "christmas": "Christmas"
+    },
     "dashboard": {
       "totalSaving": "Total savings",
       "pendingCredit": "Pending credit",
@@ -1216,15 +1216,17 @@
       "message": "Are you sure you want to delete the record for {{nombre}} ({{identificacion}})?",
       "warning": "This action cannot be undone."
     },
+    "destinos": {
+      "saving": "Saving",
+      "withdrawal": "Withdrawal",
+      "membership": "Membership",
+      "membPayment": "Membership Payment"
+    },
     "breadcrumbs": {
       "list": [
         {
           "label": "Home",
           "url": "/home"
-        },
-        {
-          "label": "Test",
-          "url": ""
         },
         {
           "label": "Members",
