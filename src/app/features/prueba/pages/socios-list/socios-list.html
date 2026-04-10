@@ -442,6 +442,7 @@
                     <td>
 
                       {{ formatDate(mov.fecha) }}
+                      
                     </td>
                     <td>
                       {{ getDestinoLabel(mov.descripcion) | translate }}
@@ -449,10 +450,10 @@
                     <td>{{ formatCurrency(mov.debito) }}</td>
                     <td>{{ formatCurrency(mov.credito) }}</td>
                     <td>
-                      <div>
+          
 
                         @if(mov.tipoCuenta == 'Corriente')
-                        { <span class="badge d-inline-flex align-items-center gap-1" class="badge-soft-success">
+                        { <span class="badge d-inline-flex align-items-center gap-1" class="badge badge-soft-success">
                           <i class="bi bi-check-circle-fill"></i>
                           {{ 'socios.accounts.current' | translate }}
                         </span>
@@ -460,14 +461,13 @@
                         }
 
                         @if(mov.tipoCuenta == 'Navidena'){
-                        <span class="badge d-inline-flex align-items-center gap-1" calss="badge-soft-warning">
+                        <span class="badge d-inline-flex align-items-center gap-1" calss="badge-soft-warning small">
                           <i class="bi bi-check-circle-fill"></i>
                           {{ 'socios.accounts.christmas' | translate }}
                         </span>
 
                         }
 
-                      </div>
                     </td>
                   </tr>
                   }
