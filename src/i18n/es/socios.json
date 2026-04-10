@@ -1195,7 +1195,8 @@
         "description": "Descripción",
         "debit": "Débito",
         "credit": "Crédito",
-        "balance": "Saldo"
+        "balance": "Saldo",
+        "account": "Cuenta"
       }
     },
     "stats": {
@@ -1220,8 +1221,7 @@
       "saving": "Ahorro",
       "withdrawal": "Retiro",
       "membership": "Afiliación",
-      "membPayment" : "Pago Afiliación"
-       
+      "membPayment": "Pago Afiliación"
     },
     "breadcrumbs": {
       "list": [

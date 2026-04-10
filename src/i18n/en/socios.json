@@ -1195,7 +1195,8 @@
         "description": "Description",
         "debit": "Debit",
         "credit": "Credit",
-        "balance": "Balance"
+        "balance": "Balance",
+        "account": "Account"
       }
     },
     "stats": {

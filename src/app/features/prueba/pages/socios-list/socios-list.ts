@@ -26,6 +26,7 @@ interface SocioMovimientoRow {
   debito?: number | null;
   credito?: number | null;
   saldo?: number | null;
+  tipoCuenta : string | null;
 }
 
 interface SocioDashboardRow {
@@ -538,7 +539,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
             descripcion: mov?.descripcion ?? null,
             debito: Number(mov?.debito ?? 0),
             credito: Number(mov?.credito ?? 0),
-            saldo: Number(mov?.saldo ?? 0)
+            saldo: Number(mov?.saldo ?? 0),
+            tipoCuenta: mov?.tipoCuenta ?? null
           }))
           : []
       }

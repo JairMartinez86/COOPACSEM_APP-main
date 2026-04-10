@@ -433,17 +433,42 @@
                     <th>{{ 'socios.movements.columns.description' | translate }}</th>
                     <th>{{ 'socios.movements.columns.debit' | translate }}</th>
                     <th>{{ 'socios.movements.columns.credit' | translate }}</th>
+                 <th>{{ 'socios.movements.columns.account' | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
                   @for (mov of (selectedSocio.dashboard?.ultimosMovimientos ?? []); track $index) {
                   <tr>
-                    <td>{{ formatDate(mov.fecha) }}</td>
+                    <td>
+
+                      {{ formatDate(mov.fecha) }}
+                    </td>
                     <td>
                       {{ getDestinoLabel(mov.descripcion) | translate }}
                     </td>
                     <td>{{ formatCurrency(mov.debito) }}</td>
                     <td>{{ formatCurrency(mov.credito) }}</td>
+                    <td>
+                      <div>
+
+                        @if(mov.tipoCuenta == 'Corriente')
+                        { <span class="badge d-inline-flex align-items-center gap-1" class="badge-soft-success">
+                          <i class="bi bi-check-circle-fill"></i>
+                          {{ 'socios.accounts.current' | translate }}
+                        </span>
+
+                        }
+
+                        @if(mov.tipoCuenta == 'Navidena'){
+                        <span class="badge d-inline-flex align-items-center gap-1" calss="badge-soft-warning">
+                          <i class="bi bi-check-circle-fill"></i>
+                          {{ 'socios.accounts.christmas' | translate }}
+                        </span>
+
+                        }
+
+                      </div>
+                    </td>
                   </tr>
                   }
                 </tbody>
