@@ -40,7 +40,7 @@ export class AhorroService extends BrowserApiService {
       if (payload.socioId) params = params.set('socioId', payload.socioId);
 
       const headers = skipLoader
-        ? { 'X-Skip-Loader': 'true' }
+        ? { 'X-Skip-Loader': 'false' }
         : undefined;
 
       return this.http.get<{ ok: boolean; codigo: string; data: AhorroDashboardResponse }>(
@@ -54,13 +54,15 @@ export class AhorroService extends BrowserApiService {
     });
   }
 
-  getSocioDetail(socioId: string, skipLoader = false) {
-    const headers = skipLoader ? { 'X-Skip-Loader': 'false' } : undefined;
+getSocioDetail(socioId: string, skipLoader = false) {
+  const headers = skipLoader
+    ? { 'X-Skip-Loader': 'false' }
+    : undefined;
 
-    return this.http.get<any>(`${this.api.baseUrl}/ahorro/detail/${socioId}`, {
-      headers,
-      withCredentials: true
-    });
-  }
+  return this.http.get<any>(`${this.api.baseUrl}/ahorro/detail/${socioId}`, {
+    headers,
+    withCredentials: true
+  });
+}
 
 }

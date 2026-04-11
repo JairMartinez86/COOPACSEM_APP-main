@@ -19,33 +19,25 @@
           <div class="card-body">
             <app-ahorro-filters (filtersChange)="onFiltersChange($event)"></app-ahorro-filters>
 
-            <app-socios-table
-  [rows]="socioRows"
-  [pagination]="pagination"
-  [selectedId]="selectedSocioId"
-  (selectRow)="onSelectSocio($event)"
-  (pageChange)="onPageChange($event)">
-</app-socios-table>
+            <app-socios-table [rows]="socioRows" [pagination]="pagination" [selectedId]="selectedSocioId"
+              (selectRow)="onSelectSocio($event)" (pageChange)="onPageChange($event)">
+            </app-socios-table>
           </div>
         </div>
 
-        
-       <app-ahorro-socio-resumen
-  [socio]="selectedSocio"
-  [ahorrosRows]="ahorroRows"
-  [retirosRows]="retiroRows"
-  [depositosRows]="depositoRows"
-  [solicitudesRows]="solicitudRows"
-  [planesRows]="planesRows">
-</app-ahorro-socio-resumen>
+ <app-ahorro-socio-resumen
+    [socio]="selectedSocio"
+    [ahorrosRows]="ahorroRows"
+    [retirosRows]="retiroRows"
+    [depositosRows]="depositoRows"
+    [solicitudesRows]="solicitudRows"
+    [planesRows]="planesRows">
+  </app-ahorro-socio-resumen>
       </div>
 
       <div class="col-xxl-3 col-xl-4">
-       <app-ahorro-side-panel
-  [actions]="actions"
-  [alerts]="alerts"
-  [reports]="reports">
-</app-ahorro-side-panel>
+        <app-ahorro-side-panel [actions]="actions" [alerts]="alerts" [reports]="reports">
+        </app-ahorro-side-panel>
       </div>
     </div>
   </div>

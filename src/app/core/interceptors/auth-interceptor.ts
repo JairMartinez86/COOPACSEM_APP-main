@@ -234,21 +234,33 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return fallback;
   }
+
   private cloneRequest(req: HttpRequest<any>, token?: string): HttpRequest<any> {
-    const headers: Record<string, string> = {
-      'Accept-Language': this.getCurrentLanguageHeader(),
-      ...this.requestLocation.getHeadersSnapshot()
-    };
+  const currentHeaders: Record<string, string> = {};
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+  req.headers.keys().forEach((key) => {
+    const value = req.headers.get(key);
+    if (value !== null) {
+      currentHeaders[key] = value;
     }
+  });
 
-    return req.clone({
-      setHeaders: headers,
-      withCredentials: true
-    });
+  const headers: Record<string, string> = {
+    ...currentHeaders,
+    'Accept-Language': this.getCurrentLanguageHeader(),
+    ...this.requestLocation.getHeadersSnapshot()
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
   }
+
+  return req.clone({
+    setHeaders: headers,
+    withCredentials: true
+  });
+}
+
 
   private buildRequest(req: HttpRequest<any>): HttpRequest<any> {
     if (this.isAssetRequest(req.url)) {

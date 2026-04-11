@@ -21,16 +21,6 @@ import {
   SummaryCard
 } from '../interface/ahorro.models';
 
-type SocioDetailVm = {
-  socio: SocioDetail | null;
-  ahorrosRows: SimpleMovimientoRow[];
-  retirosRows: SimpleMovimientoRow[];
-  depositosRows: SimpleMovimientoRow[];
-  solicitudesRows: SimpleMovimientoRow[];
-  planesRows: PlanRow[];
-  alerts: AlertItem[];
-};
-
 
 
 @Component({
@@ -54,6 +44,7 @@ export class AhorroComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly notificationService = inject(NotificationService);
 
+
   readonly pageSize = 20;
   loading = false;
 
@@ -61,6 +52,13 @@ export class AhorroComponent implements OnInit {
 
 
   selectedSocioId: string | null = null;
+  selectedSocio: SocioDetail | null = null;
+  ahorroRows: SimpleMovimientoRow[] = [];
+  retiroRows: SimpleMovimientoRow[] = [];
+  depositoRows: SimpleMovimientoRow[] = [];
+  solicitudRows: SimpleMovimientoRow[] = [];
+  planesRows: PlanRow[] = [];
+  alerts: AlertItem[] = [];
 
   breadcrumbs = [
     { label: '', url: '/' },
@@ -94,15 +92,7 @@ export class AhorroComponent implements OnInit {
     end: 0
   };
 
-  detailVm: SocioDetailVm = {
-    socio: null,
-    ahorrosRows: [],
-    retirosRows: [],
-    depositosRows: [],
-    solicitudesRows: [],
-    planesRows: [],
-    alerts: []
-  };
+
 
   detailRenderKey = 0;
 
@@ -122,100 +112,90 @@ export class AhorroComponent implements OnInit {
     this.loadDashboard(1);
   }
 
-  onFiltersChange(filters: { search: string; tipoCuenta: string; estado: string }): void {
-    this.filters = filters;
-    this.selectedSocioId = null;
-    this.resetDetailVm();
-    this.loadDashboard(1);
-  }
+ onFiltersChange(filters: { search: string; tipoCuenta: string; estado: string }): void {
+  this.filters = filters;
+  this.selectedSocioId = null;
+  this.clearDetail();
+  this.loadDashboard(1);
+}
 
-  onPageChange(page: number): void {
-    this.selectedSocioId = null;
-    this.resetDetailVm();
-    this.loadDashboard(page);
-  }
+onPageChange(page: number): void {
+  this.selectedSocioId = null;
+  this.clearDetail();
+  this.loadDashboard(page);
+}
 
-  onSelectSocio(row: SocioRow): void {
-    this.selectedSocioId = row.id;
-    this.loadSocioDetail(row.id);
-  }
-  private loadDashboard(page = 1): void {
-    this.loading = true;
+onSelectSocio(row: SocioRow): void {
+  this.selectedSocioId = row.id;
+  this.loadSocioDetail(row.id);
+}
 
-    this.ahorroService.getDashboard({
-      page,
-      pageSize: this.pageSize,
-      search: this.filters.search,
-      tipoCuenta: this.filters.tipoCuenta,
-      estado: this.filters.estado
-    }).subscribe({
-      next: (response) => {
-        const data = response?.data;
-        const summary = data?.summary;
+private loadDashboard(page = 1): void {
+  this.loading = true;
 
-        this.cards = [
-          { icon: 'fa-regular fa-hand-holding-heart', titleKey: 'ahorro.summary.totalSaved.title', amount: Number(summary?.totalAhorrado ?? 0), subtitleKey: 'ahorro.summary.totalSaved.subtitle', accent: 'teal' },
-          { icon: 'fa-solid fa-arrow-up-from-bracket', titleKey: 'ahorro.summary.totalWithdrawn.title', amount: Number(summary?.totalRetirado ?? 0), subtitleKey: 'ahorro.summary.totalWithdrawn.subtitle', accent: 'blue' },
-          { icon: 'fa-solid fa-arrow-down', titleKey: 'ahorro.summary.totalDeposited.title', amount: Number(summary?.totalDepositado ?? 0), subtitleKey: 'ahorro.summary.totalDeposited.subtitle', accent: 'blue' },
-          { icon: 'fa-regular fa-clipboard', titleKey: 'ahorro.summary.pendingRequests.title', amount: Number(summary?.solicitudesPendientes ?? 0), subtitleKey: 'ahorro.summary.pendingRequests.subtitle', accent: 'orange' },
-        ];
+  this.ahorroService.getDashboard({
+    page,
+    pageSize: this.pageSize,
+    search: this.filters.search,
+    tipoCuenta: this.filters.tipoCuenta,
+    estado: this.filters.estado
+  }).subscribe({
+    next: (response) => {
+      const data = response?.data;
+      const summary = data?.summary;
 
-        this.socioRows = data?.socios?.items ?? [];
+      this.cards = [
+        { icon: 'fa-regular fa-hand-holding-heart', titleKey: 'ahorro.summary.totalSaved.title', amount: Number(summary?.totalAhorrado ?? 0), subtitleKey: 'ahorro.summary.totalSaved.subtitle', accent: 'teal' },
+        { icon: 'fa-solid fa-arrow-up-from-bracket', titleKey: 'ahorro.summary.totalWithdrawn.title', amount: Number(summary?.totalRetirado ?? 0), subtitleKey: 'ahorro.summary.totalWithdrawn.subtitle', accent: 'blue' },
+        { icon: 'fa-solid fa-arrow-down', titleKey: 'ahorro.summary.totalDeposited.title', amount: Number(summary?.totalDepositado ?? 0), subtitleKey: 'ahorro.summary.totalDeposited.subtitle', accent: 'blue' },
+        { icon: 'fa-regular fa-clipboard', titleKey: 'ahorro.summary.pendingRequests.title', amount: Number(summary?.solicitudesPendientes ?? 0), subtitleKey: 'ahorro.summary.pendingRequests.subtitle', accent: 'orange' },
+      ];
 
-        const total = Number(data?.socios?.total ?? 0);
-        const currentPage = Number(data?.socios?.page ?? page);
-        const pageSize = Number(data?.socios?.pageSize ?? this.pageSize);
-        const totalPages = Number(data?.socios?.totalPages ?? 0);
-        const start = total === 0 ? 0 : ((currentPage - 1) * pageSize) + 1;
-        const end = total === 0 ? 0 : Math.min(currentPage * pageSize, total);
+      this.socioRows = data?.socios?.items ?? [];
 
-        this.pagination = { page: currentPage, pageSize, total, totalPages, start, end };
-        this.loading = false;
-      },
-      error: (error) => {
-        this.loading = false;
-        this.notificationService.showFromApiResponse(error);
-      }
-    });
-  }
+      const total = Number(data?.socios?.total ?? 0);
+      const currentPage = Number(data?.socios?.page ?? page);
+      const pageSize = Number(data?.socios?.pageSize ?? this.pageSize);
+      const totalPages = Number(data?.socios?.totalPages ?? 0);
+      const start = total === 0 ? 0 : ((currentPage - 1) * pageSize) + 1;
+      const end = total === 0 ? 0 : Math.min(currentPage * pageSize, total);
 
+      this.pagination = { page: currentPage, pageSize, total, totalPages, start, end };
+      this.loading = false;
+    },
+    error: (error) => {
+      this.loading = false;
+      this.notificationService.showFromApiResponse(error);
+    }
+  });
+}
 
-  selectedSocio: SocioDetail | null = null;
-  ahorroRows: SimpleMovimientoRow[] = [];
-  retiroRows: SimpleMovimientoRow[] = [];
-  depositoRows: SimpleMovimientoRow[] = [];
-  solicitudRows: SimpleMovimientoRow[] = [];
-  planesRows: PlanRow[] = [];
-  alerts: AlertItem[] = [];
+private loadSocioDetail(socioId: string): void {
+  this.ahorroService.getSocioDetail(socioId, true).subscribe({
+    next: (response) => {
+      const data = response?.data;
 
-  private loadSocioDetail(socioId: string): void {
-    this.ahorroService.getSocioDetail(socioId, true).subscribe({
-      next: (response) => {
-        const data = response?.data;
+      this.selectedSocio = data?.selectedSocio ?? null;
+      this.ahorroRows = data?.detail?.ahorros ?? [];
+      this.retiroRows = data?.detail?.retiros ?? [];
+      this.depositoRows = data?.detail?.depositos ?? [];
+      this.solicitudRows = data?.detail?.solicitudes ?? [];
+      this.planesRows = data?.detail?.planes ?? [];
+      this.alerts = data?.alerts ?? [];
+    },
+    error: (error) => {
+      this.notificationService.showFromApiResponse(error);
+    }
+  });
+}
 
-        this.selectedSocio = data?.selectedSocio ?? null;
-        this.ahorroRows = data?.detail?.ahorros ?? [];
-        this.retiroRows = data?.detail?.retiros ?? [];
-        this.depositoRows = data?.detail?.depositos ?? [];
-        this.solicitudRows = data?.detail?.solicitudes ?? [];
-        this.planesRows = data?.detail?.planes ?? [];
-        this.alerts = data?.alerts ?? [];
-      },
-      error: (error) => {
-        this.notificationService.showFromApiResponse(error);
-      }
-    });
-  }
-
-  private resetDetailVm(): void {
-    this.detailVm = {
-      socio: null,
-      ahorrosRows: [],
-      retirosRows: [],
-      depositosRows: [],
-      solicitudesRows: [],
-      planesRows: [],
-      alerts: []
-    };
-  }
+private clearDetail(): void {
+  this.selectedSocio = null;
+  this.ahorroRows = [];
+  this.retiroRows = [];
+  this.depositoRows = [];
+  this.solicitudRows = [];
+  this.planesRows = [];
+  this.alerts = [];
+}
 }
