@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { AhorrosTableComponent } from '../tables/ahorros-table/ahorros-table.component';
@@ -13,11 +13,19 @@ import { PlanRow, SimpleMovimientoRow, SocioDetail, SocioDetalleTab } from '../.
 @Component({
   selector: 'app-ahorro-socio-resumen',
   standalone: true,
-  imports: [CommonModule, TranslateModule, AhorrosTableComponent, RetirosTableComponent, DepositosTableComponent, SolicitudesTableComponent, PlanesTableComponent],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    AhorrosTableComponent,
+    RetirosTableComponent,
+    DepositosTableComponent,
+    SolicitudesTableComponent,
+    PlanesTableComponent
+  ],
   templateUrl: './ahorro-socio-resumen.component.html',
   styleUrl: './ahorro-socio-resumen.component.scss',
 })
-export class AhorroSocioResumenComponent {
+export class AhorroSocioResumenComponent implements OnChanges {
   private readonly appConfigService = inject(AppConfigService);
 
   @Input() socio: SocioDetail | null = null;
@@ -29,16 +37,31 @@ export class AhorroSocioResumenComponent {
 
   detailTab: SocioDetalleTab = 'ahorros';
 
-  setDetailTab(tab: SocioDetalleTab): void { this.detailTab = tab; }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['socio']) {
+      this.detailTab = 'ahorros';
+    }
+  }
+
+  setDetailTab(tab: SocioDetalleTab): void {
+    this.detailTab = tab;
+  }
 
   get initials(): string {
     const name = this.socio?.nombre?.trim() || '';
     if (!name) return 'NA';
-    return name.split(/\s+/).slice(0, 2).map(x => x[0]?.toUpperCase() || '').join('');
+    return name
+      .split(/\s+/)
+      .slice(0, 2)
+      .map(x => x[0]?.toUpperCase() || '')
+      .join('');
   }
 
   formatCurrency(value: number | null | undefined): string {
     const currency = this.appConfigService.getCurrentSettings().currency || 'NIO';
-    return `${currency} ${Number(value ?? 0).toLocaleString('es-NI', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `${currency} ${Number(value ?? 0).toLocaleString('es-NI', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}`;
   }
 }

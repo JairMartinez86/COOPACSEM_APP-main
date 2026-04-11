@@ -24,10 +24,22 @@
       "overdue": "Overdue"
     },
     "summary": {
-      "totalSaved": { "title": "Total saved", "subtitle": "Net accumulated balance of applied savings and withdrawals" },
-      "totalWithdrawn": { "title": "Total withdrawn", "subtitle": "Applied and not cancelled withdrawals" },
-      "totalDeposited": { "title": "Total deposited", "subtitle": "Savingss aplicados y no anulados" },
-      "pendingRequests": { "title": "Pending requests", "subtitle": "Withdrawals pending application" }
+      "totalSaved": {
+        "title": "Total saved",
+        "subtitle": "Net accumulated balance of applied savings and withdrawals"
+      },
+      "totalWithdrawn": {
+        "title": "Total withdrawn",
+        "subtitle": "Applied and not cancelled withdrawals"
+      },
+      "totalDeposited": {
+        "title": "Total deposited",
+        "subtitle": "Savingss aplicados y no anulados"
+      },
+      "pendingRequests": {
+        "title": "Pending requests",
+        "subtitle": "Withdrawals pending application"
+      }
     },
     "actions": {
       "newSaving": "New saving",
@@ -45,9 +57,18 @@
       "noAlerts": "No alerts available"
     },
     "reports": {
-      "movementsByMember": { "title": "Movements by member", "subtitle": "Savings, withdrawals and deposits detail" },
-      "savingSummary": { "title": "Savings summary", "subtitle": "Totals by account type" },
-      "pendingRequests": { "title": "Pending requests", "subtitle": "List of requests to review" }
+      "movementsByMember": {
+        "title": "Movements by member",
+        "subtitle": "Savings, withdrawals and deposits detail"
+      },
+      "savingSummary": {
+        "title": "Savings summary",
+        "subtitle": "Totals by account type"
+      },
+      "pendingRequests": {
+        "title": "Pending requests",
+        "subtitle": "List of requests to review"
+      }
     },
     "tabs": {
       "savings": "Savingss",
@@ -103,7 +124,11 @@
       "missingChristmasPlanTitle": "Christmas plan",
       "missingChristmasPlanDescription": "The member does not yet have an active Christmas account.",
       "missingCurrentAccountTitle": "Current account",
-      "missingCurrentAccountDescription": "The member does not yet have an active current account."
+      "missingCurrentAccountDescription": "The member does not yet have an active current account.",
+      "identificationExpired": {
+        "title": "Identificación vencida",
+        "description": "El socio tiene la identificación vencida."
+      }
     },
     "movementTypes": {
       "saving": "Savings",

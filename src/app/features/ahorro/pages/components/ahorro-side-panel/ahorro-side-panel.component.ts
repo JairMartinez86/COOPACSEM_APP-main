@@ -3,7 +3,6 @@ import { Component, Input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActionItem, AlertItem, ReportItem } from '../../../interface/ahorro.models';
 
-
 @Component({
   selector: 'app-ahorro-side-panel',
   standalone: true,

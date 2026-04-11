@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { LoaderService } from './loader.service';
@@ -21,6 +21,9 @@ export class NotificationService {
     type: 'success',
   });
 
+      private  loader = inject(LoaderService);
+      private  translate = inject(TranslateService);
+
   state$ = this.stateSubject.asObservable();
 
   private isOpen = false;
@@ -30,8 +33,6 @@ export class NotificationService {
   closed$ = this.closedSubject.asObservable();
 
   constructor(
-    private loader: LoaderService,
-    private translate: TranslateService
   ) {}
 
   private t(key: string, params?: Record<string, any>): string {

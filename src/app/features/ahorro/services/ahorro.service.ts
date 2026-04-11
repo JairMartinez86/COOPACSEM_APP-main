@@ -19,39 +19,48 @@ export class AhorroService extends BrowserApiService {
 
 
   getDashboard(
-  payload: {
-    page: number;
-    pageSize: number;
-    search?: string;
-    tipoCuenta?: string;
-    estado?: string;
-    socioId?: string | null;
-  },
-  skipLoader = false
-): Observable<{ ok: boolean; codigo: string; data: AhorroDashboardResponse }> {
-  return this.browserOnly(() => {
-    let params = new HttpParams()
-      .set('page', payload.page)
-      .set('pageSize', payload.pageSize);
+    payload: {
+      page: number;
+      pageSize: number;
+      search?: string;
+      tipoCuenta?: string;
+      estado?: string;
+      socioId?: string | null;
+    },
+    skipLoader = false
+  ): Observable<{ ok: boolean; codigo: string; data: AhorroDashboardResponse }> {
+    return this.browserOnly(() => {
+      let params = new HttpParams()
+        .set('page', payload.page)
+        .set('pageSize', payload.pageSize);
 
-    if (payload.search) params = params.set('search', payload.search);
-    if (payload.tipoCuenta) params = params.set('tipoCuenta', payload.tipoCuenta);
-    if (payload.estado) params = params.set('estado', payload.estado);
-    if (payload.socioId) params = params.set('socioId', payload.socioId);
+      if (payload.search) params = params.set('search', payload.search);
+      if (payload.tipoCuenta) params = params.set('tipoCuenta', payload.tipoCuenta);
+      if (payload.estado) params = params.set('estado', payload.estado);
+      if (payload.socioId) params = params.set('socioId', payload.socioId);
 
-    const headers = skipLoader
-      ? { 'X-Skip-Loader': 'true' }
-      : undefined;
+      const headers = skipLoader
+        ? { 'X-Skip-Loader': 'true' }
+        : undefined;
 
-    return this.http.get<{ ok: boolean; codigo: string; data: AhorroDashboardResponse }>(
-      `${this.api.baseUrl}/ahorro/dashboard`,
-      {
-        params,
-        headers,
-        withCredentials: true
-      }
-    );
-  });
-}
+      return this.http.get<{ ok: boolean; codigo: string; data: AhorroDashboardResponse }>(
+        `${this.api.baseUrl}/ahorro/dashboard`,
+        {
+          params,
+          headers,
+          withCredentials: true
+        }
+      );
+    });
+  }
+
+  getSocioDetail(socioId: string, skipLoader = false) {
+    const headers = skipLoader ? { 'X-Skip-Loader': 'false' } : undefined;
+
+    return this.http.get<any>(`${this.api.baseUrl}/ahorro/detail/${socioId}`, {
+      headers,
+      withCredentials: true
+    });
+  }
 
 }

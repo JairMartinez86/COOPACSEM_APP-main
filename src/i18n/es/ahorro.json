@@ -24,10 +24,22 @@
       "overdue": "Vencido"
     },
     "summary": {
-      "totalSaved": { "title": "Total ahorrado", "subtitle": "Saldo acumulado neto de ahorros y retiros aplicados" },
-      "totalWithdrawn": { "title": "Total retirado", "subtitle": "Retiros aplicados y no anulados" },
-      "totalDeposited": { "title": "Total depositado", "subtitle": "Ahorros aplicados y no anulados" },
-      "pendingRequests": { "title": "Solicitudes pendientes", "subtitle": "Retiros pendientes de aplicar" }
+      "totalSaved": {
+        "title": "Total ahorrado",
+        "subtitle": "Saldo acumulado neto de ahorros y retiros aplicados"
+      },
+      "totalWithdrawn": {
+        "title": "Total retirado",
+        "subtitle": "Retiros aplicados y no anulados"
+      },
+      "totalDeposited": {
+        "title": "Total depositado",
+        "subtitle": "Ahorros aplicados y no anulados"
+      },
+      "pendingRequests": {
+        "title": "Solicitudes pendientes",
+        "subtitle": "Retiros pendientes de aplicar"
+      }
     },
     "actions": {
       "newSaving": "Nuevo ahorro",
@@ -43,11 +55,21 @@
       "reports": "Reportes",
       "viewAllReports": "Ver todos los reportes",
       "noAlerts": "No hay alertas disponibles"
+     
     },
     "reports": {
-      "movementsBySocio": { "title": "Movimientos por socio", "subtitle": "Detalle de ahorros, retiros y depósitos" },
-      "savingSummary": { "title": "Resumen de ahorro", "subtitle": "Totales por tipo de cuenta" },
-      "pendingRequests": { "title": "Solicitudes pendientes", "subtitle": "Listado de solicitudes por revisar" }
+      "movementsBySocio": {
+        "title": "Movimientos por socio",
+        "subtitle": "Detalle de ahorros, retiros y depósitos"
+      },
+      "savingSummary": {
+        "title": "Resumen de ahorro",
+        "subtitle": "Totales por tipo de cuenta"
+      },
+      "pendingRequests": {
+        "title": "Solicitudes pendientes",
+        "subtitle": "Listado de solicitudes por revisar"
+      }
     },
     "tabs": {
       "savings": "Ahorros",
@@ -103,7 +125,11 @@
       "missingChristmasPlanTitle": "Plan navideño",
       "missingChristmasPlanDescription": "El socio aún no tiene una cuenta navideña activa.",
       "missingCurrentAccountTitle": "Cuenta corriente",
-      "missingCurrentAccountDescription": "El socio aún no tiene una cuenta corriente activa."
+      "missingCurrentAccountDescription": "El socio aún no tiene una cuenta corriente activa.",
+       "identificationExpired": {
+         "title": "Identificación vencida",
+        "description": "El socio tiene la identificación vencida."
+      }
     },
     "movementTypes": {
       "saving": "Ahorro",

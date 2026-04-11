@@ -13,7 +13,7 @@ import { PaginationMeta, SocioRow } from '../../../../interface/ahorro.models';
 })
 export class SociosTableComponent {
   private readonly appConfigService = inject(AppConfigService);
-   selectedSocio: SocioRow | null = null;
+
 
   @Input() rows: SocioRow[] = [];
   @Input() pagination: PaginationMeta = {
@@ -58,9 +58,7 @@ export class SociosTableComponent {
 
     return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
   }
-
-    selectSocio(item: SocioRow): void {
-    this.selectedSocio = item;
-    this.selectRow.emit(item)
-  }
+selectSocio(row: SocioRow): void {
+  this.selectRow.emit(row);
+}
 }
