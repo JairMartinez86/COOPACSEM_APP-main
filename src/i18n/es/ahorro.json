@@ -1,0 +1,125 @@
+{
+  "ahorro": {
+    "page": {
+      "title": "Ahorro",
+      "subtitle": "Consulta, gestiona y monitorea los ahorros de los socios. Revisa movimientos, solicitudes, planes y genera reportes."
+    },
+    "filters": {
+      "searchPlaceholder": "Buscar por código, nombre o documento...",
+      "accountType": "Tipo de cuenta",
+      "status": "Estado",
+      "all": "Todos",
+      "clear": "Limpiar"
+    },
+    "accountTypes": {
+      "current": "Corriente",
+      "christmas": "Navideña"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "applied": "Aplicado",
+      "pending": "Pendiente",
+      "paid": "Pagado",
+      "overdue": "Vencido"
+    },
+    "summary": {
+      "totalSaved": { "title": "Total ahorrado", "subtitle": "Saldo acumulado neto de ahorros y retiros aplicados" },
+      "totalWithdrawn": { "title": "Total retirado", "subtitle": "Retiros aplicados y no anulados" },
+      "totalDeposited": { "title": "Total depositado", "subtitle": "Ahorros aplicados y no anulados" },
+      "pendingRequests": { "title": "Solicitudes pendientes", "subtitle": "Retiros pendientes de aplicar" }
+    },
+    "actions": {
+      "newSaving": "Nuevo ahorro",
+      "newDeposit": "Nuevo depósito",
+      "newWithdrawal": "Nuevo retiro",
+      "printReport": "Imprimir reporte",
+      "viewChristmasPlan": "Ver plan navideño",
+      "exportExcel": "Exportar Excel"
+    },
+    "side": {
+      "quickActions": "Acciones rápidas",
+      "alerts": "Alertas",
+      "reports": "Reportes",
+      "viewAllReports": "Ver todos los reportes",
+      "noAlerts": "No hay alertas disponibles"
+    },
+    "reports": {
+      "movementsBySocio": { "title": "Movimientos por socio", "subtitle": "Detalle de ahorros, retiros y depósitos" },
+      "savingSummary": { "title": "Resumen de ahorro", "subtitle": "Totales por tipo de cuenta" },
+      "pendingRequests": { "title": "Solicitudes pendientes", "subtitle": "Listado de solicitudes por revisar" }
+    },
+    "tabs": {
+      "savings": "Ahorros",
+      "withdrawals": "Retiros",
+      "deposits": "Depósitos",
+      "requests": "Solicitudes",
+      "plans": "Planes"
+    },
+    "detail": {
+      "totalSaved": "Total ahorro",
+      "totalDeposited": "Total depositado"
+    },
+    "tables": {
+      "common": {
+        "date": "Fecha",
+        "description": "Descripción",
+        "accountType": "Tipo de cuenta",
+        "amount": "Monto",
+        "balance": "Saldo"
+      },
+      "socios": {
+        "code": "Código",
+        "member": "Socio",
+        "saved": "Ahorrado",
+        "withdrawn": "Retirado",
+        "deposited": "Depositado",
+        "lastMovement": "Último movimiento",
+        "actions": "Acciones"
+      },
+      "deposits": {
+        "depositNo": "No. depósito",
+        "date": "Fecha",
+        "registerDate": "Fecha registro",
+        "bank": "Banco"
+      },
+      "plans": {
+        "installmentNumber": "No. cuota",
+        "installment": "Cuota",
+        "status": "Estado"
+      },
+      "accounts": {
+        "code": "Código",
+        "name": "Nombre"
+      }
+    },
+    "plans": {
+      "currentAccount": "Cuenta Corriente",
+      "christmasAccount": "Cuenta Navideña"
+    },
+    "alerts": {
+      "pendingWithdrawalTitle": "Solicitudes de retiro pendientes",
+      "pendingWithdrawalDescription": "El socio tiene solicitudes de retiro pendientes de aplicar.",
+      "missingChristmasPlanTitle": "Plan navideño",
+      "missingChristmasPlanDescription": "El socio aún no tiene una cuenta navideña activa.",
+      "missingCurrentAccountTitle": "Cuenta corriente",
+      "missingCurrentAccountDescription": "El socio aún no tiene una cuenta corriente activa."
+    },
+    "movementTypes": {
+      "saving": "Ahorro",
+      "withdrawal": "Retiro",
+      "planSaving": "Ahorro plan",
+      "other": "Movimiento"
+    },
+    "states": {
+      "noRecords": "Sin registros",
+      "noMembers": "Sin socios",
+      "noAccounts": "Sin cuentas activas",
+      "noInstallments": "Sin cuotas",
+      "selectSocio": "Selecciona un socio para ver su detalle"
+    },
+    "pagination": {
+      "showing": "Mostrando {{start}}-{{end}} de {{total}} socios"
+    }
+  }
+}

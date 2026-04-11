@@ -131,7 +131,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     type: 'link',
     titleKey: 'sidebar.items.saverList',
     iconclass: '',
-    router: '/ahorro-list',
+    router: '/ahorro',
     permissions: {
       view: false,
       create: false,

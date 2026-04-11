@@ -1,0 +1,89 @@
+<div class="d-flex flex-column gap-3">
+  <div class="card h-100">
+    <div class="card-header border-0 pb-2">
+      <h5 class="card-title mb-0">{{ 'ahorro.side.quickActions' | translate }}</h5>
+    </div>
+    <div class="card-body pt-0">
+      <div class="quick-actions-grid">
+        @for (action of actions; track $index) {
+          <button type="button" class="quick-action-btn"
+            [ngClass]="{
+              'is-green': action.accent === 'green',
+              'is-blue': action.accent === 'blue',
+              'is-violet': action.accent === 'violet',
+              'is-cyan': action.accent === 'cyan',
+              'is-amber': action.accent === 'amber',
+              'is-emerald': action.accent === 'emerald'
+            }">
+            <i [class]="action.icon"></i>
+            <span>{{ action.titleKey | translate }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <h5 class="card-title mb-0">{{ 'ahorro.side.alerts' | translate }}</h5>
+        <span class="badge badge-soft-warning">{{ alerts.length }}</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="d-flex flex-column gap-3">
+        @for (item of alerts; track $index) {
+          <div class="d-flex align-items-start gap-3">
+            <span class="badge rounded-pill d-inline-flex align-items-center justify-content-center"
+              [ngClass]="item.color === 'warning' ? 'badge-soft-warning' : 'badge-soft-info'">
+              <i class="fa-solid"
+                [class.fa-triangle-exclamation]="item.color === 'warning'"
+                [class.fa-circle-info]="item.color === 'info'">
+              </i>
+            </span>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start gap-2">
+                <strong>{{ item.titleKey | translate }}</strong>
+                <span class="text-muted small">{{ item.code }}</span>
+              </div>
+              <p class="text-muted small mb-1">{{ item.descriptionKey | translate }}</p>
+              @if (item.date) {
+                <small class="text-muted">{{ item.date }}</small>
+              }
+            </div>
+          </div>
+        }
+        @if (alerts.length === 0) {
+          <div class="text-muted small">{{ 'ahorro.side.noAlerts' | translate }}</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0">{{ 'ahorro.side.reports' | translate }}</h5>
+    </div>
+    <div class="card-body">
+      <div class="d-flex flex-column gap-2">
+        @for (report of reports; track $index) {
+          <div class="d-flex justify-content-between align-items-center gap-2 border rounded p-2">
+            <div class="d-flex align-items-start gap-2">
+              <i class="fa-regular fa-file-lines mt-1"></i>
+              <div>
+                <div class="fw-semibold">{{ report.titleKey | translate }}</div>
+                <small class="text-muted">{{ report.subtitleKey | translate }}</small>
+              </div>
+            </div>
+            <button type="button" class="btn btn-icon btn-sm btn-light">
+              <i class="fa-solid fa-download"></i>
+            </button>
+          </div>
+        }
+      </div>
+      <button type="button" class="btn btn-primary w-100 mt-3">
+        {{ 'ahorro.side.viewAllReports' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

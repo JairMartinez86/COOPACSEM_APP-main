@@ -1,0 +1,14 @@
+import { CommonModule } from '@angular/common';
+import { Component, Input, inject } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { SimpleMovimientoRow } from '../../../../interface/ahorro.models';
+import { AppConfigService } from '../../../../../../core/services/app-config.service';
+
+
+@Component({ selector: 'app-solicitudes-table', standalone: true, imports: [CommonModule, TranslateModule], templateUrl: './solicitudes-table.component.html', styleUrl: './solicitudes-table.component.scss' })
+export class SolicitudesTableComponent {
+     private readonly appConfigService = inject(AppConfigService);
+     @Input() rows: SimpleMovimientoRow[] = []; formatCurrency(v: number | null | undefined):
+     string { const c = this.appConfigService.getCurrentSettings().currency || 'NIO'; return `${c} ${Number(v ?? 0).toLocaleString('es-NI', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; } 
+    
+    }

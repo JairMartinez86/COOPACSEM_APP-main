@@ -1,0 +1,40 @@
+<div class="row g-3 align-items-end mb-3">
+  <div class="col-xl-6 col-lg-12">
+    <label class="form-label mb-1">&nbsp;</label>
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </span>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="search"
+        (ngModelChange)="emitFilters()"
+        [placeholder]="'ahorro.filters.searchPlaceholder' | translate" />
+    </div>
+  </div>
+
+  <div class="col-xl-2 col-lg-4 col-md-6">
+    <label class="form-label">{{ 'ahorro.filters.accountType' | translate }}</label>
+    <select class="form-select" [(ngModel)]="tipoCuenta" (ngModelChange)="emitFilters()">
+      <option value="">{{ 'ahorro.filters.all' | translate }}</option>
+      <option value="Corriente">{{ 'ahorro.accountTypes.current' | translate }}</option>
+      <option value="Navidena">{{ 'ahorro.accountTypes.christmas' | translate }}</option>
+    </select>
+  </div>
+
+  <div class="col-xl-2 col-lg-4 col-md-6">
+    <label class="form-label">{{ 'ahorro.filters.status' | translate }}</label>
+    <select class="form-select" [(ngModel)]="estado" (ngModelChange)="emitFilters()">
+      <option value="">{{ 'ahorro.filters.all' | translate }}</option>
+      <option value="Activo">{{ 'ahorro.status.active' | translate }}</option>
+      <option value="Inactivo">{{ 'ahorro.status.inactive' | translate }}</option>
+    </select>
+  </div>
+
+  <div class="col-xl-2 col-lg-4 col-md-12">
+    <button type="button" class="btn btn-secondary w-100" (click)="clearFilters()">
+      {{ 'ahorro.filters.clear' | translate }}
+    </button>
+  </div>
+</div>

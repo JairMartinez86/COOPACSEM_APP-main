@@ -1,0 +1,125 @@
+{
+  "ahorro": {
+    "page": {
+      "title": "Savings",
+      "subtitle": "View, manage, and monitor members' savings. Review movements, requests, plans, and reports."
+    },
+    "filters": {
+      "searchPlaceholder": "Search by code, name, or document...",
+      "accountType": "Account type",
+      "status": "Status",
+      "all": "All",
+      "clear": "Clear"
+    },
+    "accountTypes": {
+      "current": "Current",
+      "christmas": "Christmas"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "applied": "Applied",
+      "pending": "Pending",
+      "paid": "Paid",
+      "overdue": "Overdue"
+    },
+    "summary": {
+      "totalSaved": { "title": "Total saved", "subtitle": "Net accumulated balance of applied savings and withdrawals" },
+      "totalWithdrawn": { "title": "Total withdrawn", "subtitle": "Applied and not cancelled withdrawals" },
+      "totalDeposited": { "title": "Total deposited", "subtitle": "Savingss aplicados y no anulados" },
+      "pendingRequests": { "title": "Pending requests", "subtitle": "Withdrawals pending application" }
+    },
+    "actions": {
+      "newSaving": "New saving",
+      "newDeposit": "New deposit",
+      "newWithdrawal": "New withdrawal",
+      "printReport": "Print report",
+      "viewChristmasPlan": "View christmas plan",
+      "exportExcel": "Export Excel"
+    },
+    "side": {
+      "quickActions": "Quick actions",
+      "alerts": "Alerts",
+      "reports": "Reports",
+      "viewAllReports": "View all reports",
+      "noAlerts": "No alerts available"
+    },
+    "reports": {
+      "movementsByMember": { "title": "Movements by member", "subtitle": "Savings, withdrawals and deposits detail" },
+      "savingSummary": { "title": "Savings summary", "subtitle": "Totals by account type" },
+      "pendingRequests": { "title": "Pending requests", "subtitle": "List of requests to review" }
+    },
+    "tabs": {
+      "savings": "Savingss",
+      "withdrawals": "Withdrawals",
+      "deposits": "Deposits",
+      "requests": "Requests",
+      "plans": "Plans"
+    },
+    "detail": {
+      "totalSaved": "Total savings",
+      "totalDeposited": "Total deposited"
+    },
+    "tables": {
+      "common": {
+        "date": "Fecha",
+        "description": "Descripción",
+        "accountType": "Account type",
+        "amount": "Monto",
+        "balance": "Saldo"
+      },
+      "socios": {
+        "code": "Code",
+        "member": "Member",
+        "saved": "Saved",
+        "withdrawn": "Withdrawn",
+        "deposited": "Deposited",
+        "lastMovement": "Last movement",
+        "actions": "Actions"
+      },
+      "deposits": {
+        "depositNo": "Deposit no.",
+        "date": "Fecha",
+        "registerDate": "Registered date",
+        "bank": "Bank"
+      },
+      "plans": {
+        "installmentNumber": "Installment no.",
+        "installment": "Installment",
+        "status": "Status"
+      },
+      "accounts": {
+        "code": "Code",
+        "name": "Name"
+      }
+    },
+    "plans": {
+      "currentAccount": "Cuenta Current",
+      "christmasAccount": "Cuenta Christmas"
+    },
+    "alerts": {
+      "pendingWithdrawalTitle": "Requests de retiro pendientes",
+      "pendingWithdrawalDescription": "The member has withdrawal requests pending application.",
+      "missingChristmasPlanTitle": "Christmas plan",
+      "missingChristmasPlanDescription": "The member does not yet have an active Christmas account.",
+      "missingCurrentAccountTitle": "Current account",
+      "missingCurrentAccountDescription": "The member does not yet have an active current account."
+    },
+    "movementTypes": {
+      "saving": "Savings",
+      "withdrawal": "Withdrawal",
+      "planSaving": "Savings plan",
+      "other": "Movement"
+    },
+    "states": {
+      "noRecords": "No records",
+      "noMembers": "No members",
+      "noAccounts": "No active accounts",
+      "noInstallments": "No installments",
+      "selectMember": "Select a member to view details"
+    },
+    "pagination": {
+      "showing": "Showing {{start}}-{{end}} of {{total}} members"
+    }
+  }
+}
