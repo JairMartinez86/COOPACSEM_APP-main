@@ -19,7 +19,7 @@
       "active": "Active",
       "inactive": "Inactive",
       "applied": "Applied",
-      "pending": "Pending",
+      "pendiente": "Pending",
       "paid": "Paid",
       "overdue": "Overdue"
     },
@@ -34,7 +34,7 @@
       },
       "totalDeposited": {
         "title": "Total deposited",
-        "subtitle": "Savingss aplicados y no anulados"
+        "subtitle": "Applied and non-cancelled savings"
       },
       "pendingRequests": {
         "title": "Pending requests",
@@ -59,9 +59,9 @@
       "noAlerts": "No alerts available"
     },
     "reports": {
-      "movementsByMember": {
-        "title": "Movements by member",
-        "subtitle": "Savings, withdrawals and deposits detail"
+      "movementsBySocio": {
+        "title": "Member movements",
+        "subtitle": "Details of savings, withdrawals, and deposits"
       },
       "savingSummary": {
         "title": "Savings summary",
@@ -144,7 +144,7 @@
       "noMembers": "No members",
       "noAccounts": "No active accounts",
       "noInstallments": "No installments",
-      "selectMember": "Select a member to view details"
+      "selectSocio": "Select a member to view details"
     },
     "pagination": {
       "showing": "Showing {{start}}-{{end}} of {{total}} members"

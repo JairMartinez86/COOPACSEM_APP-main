@@ -29,11 +29,13 @@
                                 [ngClass]="row.tipoCuenta === 'Corriente' ? 'badge-soft-success' : 'badge-soft-warning'">{{
                                 row.tipoCuenta === 'Corriente' ? ('ahorro.accountTypes.current' | translate) :
                                 ('ahorro.accountTypes.christmas' | translate) }}</span></td>
-                                 <td><span class="badge badge-soft-warning">
-                                                {{ row.estado }}
-                                            </span></td>
+                        <td>
+                            <span class="badge badge-soft-warning">
+                                {{ ('ahorro.status.' + row.estado?.toLowerCase()) | translate }}
+                            </span>
+                        </td>
                         <td class="text-end fw-semibold">{{ formatCurrency(row.monto) }}</td>
-                       
+
                     </tr>} @if (rows.length === 0) {<tr>
                         <td colspan="4" class="text-center text-muted py-3">{{ 'ahorro.states.noRecords' | translate }}
                         </td>
