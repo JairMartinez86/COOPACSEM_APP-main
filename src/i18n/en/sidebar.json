@@ -7,7 +7,7 @@
     "alerts": "Alerts",
     "items": {
       "dashboard": "Dashboard",
-      "adminPanel": "Admin Panel",
+      "adminPanel": "Administration Panel",
       "company": "Company",
       "userlist": "User List",
       "users": "Users",
@@ -15,6 +15,14 @@
       "account": "Account",
       "activity": "Activity",
       "rolesPermissions": "Roles and Permissions",
+
+      "partnerPanel": "Member Administration",
+      "partner": "Member",
+      "saving": "Savings",
+      "saverList": "Savings List",
+
+      "supplier": "Supplier",
+
       "emptyPanel": "Empty",
       "empty": "Empty"
     }

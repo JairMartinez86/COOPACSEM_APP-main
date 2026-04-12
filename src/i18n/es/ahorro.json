@@ -153,6 +153,15 @@
     },
     "common": {
       "close": "Cerrar"
-    }
+    },
+     "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/home"
+      },
+      {
+        "label": "Ahorro"
+      }
+    ]
   }
 }

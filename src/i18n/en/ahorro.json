@@ -151,6 +151,15 @@
     },
     "common": {
       "close": "Close"
-    }
+    },
+    "breadcrumbs": [
+  {
+    "label": "Home",
+    "url": "/home"
+  },
+  {
+    "label": "Savings"
+  }
+]
   }
 }

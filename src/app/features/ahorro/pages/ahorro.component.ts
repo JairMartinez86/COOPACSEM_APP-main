@@ -20,6 +20,7 @@ import {
   SocioRow,
   SummaryCard
 } from '../interface/ahorro.models';
+import { Subscription } from 'rxjs';
 
 
 
@@ -43,6 +44,7 @@ export class AhorroComponent implements OnInit {
   private readonly ahorroService = inject(AhorroService);
   private readonly translate = inject(TranslateService);
   private readonly notificationService = inject(NotificationService);
+  private readonly subs = new Subscription();
 
 
   readonly pageSize = 20;
@@ -62,7 +64,6 @@ export class AhorroComponent implements OnInit {
 
   breadcrumbs = [
     { label: '', url: '/' },
-    { label: '', url: '/ahorro' },
     { label: '' }
   ];
 
@@ -114,11 +115,15 @@ get orderedActions() {
   };
 
   ngOnInit(): void {
-    this.breadcrumbs = [
-      { label: this.translate.instant('sidebar.items.dashboard'), url: '/' },
-      { label: this.translate.instant('sidebar.items.saving'), url: '/ahorro' },
-      { label: this.translate.instant('ahorro.page.title') }
-    ];
+     this.breadcrumbs = this.translate.instant('ahorro.breadcrumbs') || [];
+
+     
+    this.subs.add(
+      this.translate.onLangChange.subscribe(() => {
+        this.breadcrumbs =
+          this.breadcrumbs = this.translate.instant('ahorro.breadcrumbs') || [];
+      })
+    );
 
     this.loadDashboard(1);
   }
