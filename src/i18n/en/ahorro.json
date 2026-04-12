@@ -150,6 +150,11 @@
     "pagination": {
       "showing": "Showing {{start}}-{{end}} of {{total}} members"
     },
+    "chart": {
+  "chartTitle": "Chart summary",
+  "totalSaved": "Total saved",
+  "totalWithdrawn": "Total withdrawn"
+},
     "common": {
       "close": "Close"
     },

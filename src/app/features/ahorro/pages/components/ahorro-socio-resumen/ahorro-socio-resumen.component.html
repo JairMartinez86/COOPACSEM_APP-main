@@ -1,75 +1,119 @@
 <div class="card mt-3">
   @if (socio) {
-    <div class="card-header py-3">
-      <div class="row align-items-center g-3">
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="d-flex align-items-center gap-3">
-            <div class="avatar rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-              {{ initials }}
-            </div>
-            <div>
-              <h6 class="mb-0 fw-semibold">{{ socio.nombre }}</h6>
-              <small class="text-muted">{{ socio.codigo }}</small>
-              <div class="d-flex gap-2 mt-1">
-                @if (socio.tieneCuentaCorriente) {
-                  <span class="badge badge-soft-success">{{ 'ahorro.accountTypes.current' | translate }}</span>
-                }
-                @if (socio.tieneCuentaNavidena) {
-                  <span class="badge badge-soft-warning">{{ 'ahorro.accountTypes.christmas' | translate }}</span>
-                }
-              </div>
+  <div class="card-header py-3">
+    <div class="row align-items-center g-3">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="d-flex align-items-center gap-3">
+          <div class="avatar rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+            style="width: 42px; height: 42px;">
+            {{ initials }}
+          </div>
+          <div>
+            <h6 class="mb-0 fw-semibold">{{ socio.nombre }}</h6>
+            <small class="text-muted">{{ socio.codigo }}</small>
+            <div class="d-flex gap-2 mt-1">
+              @if (socio.tieneCuentaCorriente) {
+              <span class="badge badge-soft-success">{{ 'ahorro.accountTypes.current' | translate }}</span>
+              }
+              @if (socio.tieneCuentaNavidena) {
+              <span class="badge badge-soft-warning">{{ 'ahorro.accountTypes.christmas' | translate }}</span>
+              }
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="small text-muted">
-            <div><i class="fa-solid fa-phone me-1"></i> {{ socio.telefono || '-' }}</div>
-            <div><i class="fa-regular fa-envelope me-1"></i> {{ socio.correo || '-' }}</div>
-            <div><i class="fa-regular fa-id-card me-1"></i> {{ socio.documento || '-' }}</div>
-            <div><i class="fa-solid fa-location-dot me-1"></i> {{ socio.direccion || '-' }}</div>
-          </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="small text-muted">
+          <div><i class="fa-solid fa-phone me-1"></i> {{ socio.telefono || '-' }}</div>
+          <div><i class="fa-regular fa-envelope me-1"></i> {{ socio.correo || '-' }}</div>
+          <div><i class="fa-regular fa-id-card me-1"></i> {{ socio.documento || '-' }}</div>
+          <div><i class="fa-solid fa-location-dot me-1"></i> {{ socio.direccion || '-' }}</div>
         </div>
+      </div>
 
-        <div class="col-12 col-md-12 col-lg-4">
-          <div class="resumen-kpis">
-            <div class="row">
-              <div class="col-6">
-                <div class="socios-summary-strip socios-summary-strip--ahorro">
-                  <div class="socios-summary-strip__label">{{ 'ahorro.detail.totalSaved' | translate }}</div>
-                  <div class="socios-summary-strip__value">{{ formatCurrency(socio.totalAhorro) }}</div>
-                </div>
+      <div class="col-12 col-md-12 col-lg-4">
+        <div class="resumen-kpis">
+          <div class="row">
+            <div class="col-6">
+              <div class="socios-summary-strip socios-summary-strip--ahorro">
+                <div class="socios-summary-strip__label">{{ 'ahorro.detail.totalSaved' | translate }}</div>
+                <div class="socios-summary-strip__value">{{ formatCurrency(socio.totalAhorro) }}</div>
               </div>
-              <div class="col-6">
-                <div class="socios-summary-strip socios-summary-strip--credito">
-                  <div class="socios-summary-strip__label">{{ 'ahorro.detail.totalDeposited' | translate }}</div>
-                  <div class="socios-summary-strip__value">{{ formatCurrency(socio.totalDepositado) }}</div>
-                </div>
+            </div>
+            <div class="col-6">
+              <div class="socios-summary-strip socios-summary-strip--credito">
+                <div class="socios-summary-strip__label">{{ 'ahorro.detail.totalDeposited' | translate }}</div>
+                <div class="socios-summary-strip__value">{{ formatCurrency(socio.totalDepositado) }}</div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="card-body">
-      <ul class="nav nav-tabs mb-4">
-        <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'ahorros'" href="javascript:void(0)" (click)="setDetailTab('ahorros')">{{ 'ahorro.tabs.savings' | translate }}</a></li>
-        <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'retiros'" href="javascript:void(0)" (click)="setDetailTab('retiros')">{{ 'ahorro.tabs.withdrawals' | translate }}</a></li>
-        <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'depositos'" href="javascript:void(0)" (click)="setDetailTab('depositos')">{{ 'ahorro.tabs.deposits' | translate }}</a></li>
-        <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'solicitudes'" href="javascript:void(0)" (click)="setDetailTab('solicitudes')">{{ 'ahorro.tabs.requests' | translate }}</a></li>
-        <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'planes'" href="javascript:void(0)" (click)="setDetailTab('planes')">{{ 'ahorro.tabs.plans' | translate }}</a></li>
-      </ul>
+  <div class="card-body">
+    <ul class="nav nav-tabs mb-4">
+      <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'ahorros'" href="javascript:void(0)"
+          (click)="setDetailTab('ahorros')">{{ 'ahorro.tabs.savings' | translate }}</a></li>
+      <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'retiros'" href="javascript:void(0)"
+          (click)="setDetailTab('retiros')">{{ 'ahorro.tabs.withdrawals' | translate }}</a></li>
+      <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'depositos'" href="javascript:void(0)"
+          (click)="setDetailTab('depositos')">{{ 'ahorro.tabs.deposits' | translate }}</a></li>
+      <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'solicitudes'" href="javascript:void(0)"
+          (click)="setDetailTab('solicitudes')">{{ 'ahorro.tabs.requests' | translate }}</a></li>
+      <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'planes'" href="javascript:void(0)"
+          (click)="setDetailTab('planes')">{{ 'ahorro.tabs.plans' | translate }}</a></li>
+    </ul>
 
-      <div class="tab-content">
-        <div class="tab-pane fade" [class.show]="detailTab === 'ahorros'" [class.active]="detailTab === 'ahorros'"><app-ahorros-table [rows]="ahorrosRows"></app-ahorros-table></div>
-        <div class="tab-pane fade" [class.show]="detailTab === 'retiros'" [class.active]="detailTab === 'retiros'"><app-retiros-table [rows]="retirosRows"></app-retiros-table></div>
-        <div class="tab-pane fade" [class.show]="detailTab === 'depositos'" [class.active]="detailTab === 'depositos'"><app-depositos-table [rows]="depositosRows"></app-depositos-table></div>
-        <div class="tab-pane fade" [class.show]="detailTab === 'solicitudes'" [class.active]="detailTab === 'solicitudes'"><app-solicitudes-table [rows]="solicitudesRows"></app-solicitudes-table></div>
-        <div class="tab-pane fade" [class.show]="detailTab === 'planes'" [class.active]="detailTab === 'planes'"><app-planes-table [rows]="planesRows"></app-planes-table></div>
+    <div class="detalle-grid">
+      <!-- IZQUIERDA: TABLA -->
+      <div class="detalle-grid__table">
+        <div class="tab-content">
+          <div class="tab-pane fade" [class.show]="detailTab === 'ahorros'" [class.active]="detailTab === 'ahorros'">
+            <app-ahorros-table [rows]="ahorrosRows"></app-ahorros-table>
+          </div>
+
+          <div class="tab-pane fade" [class.show]="detailTab === 'retiros'" [class.active]="detailTab === 'retiros'">
+            <app-retiros-table [rows]="retirosRows"></app-retiros-table>
+          </div>
+
+          <div class="tab-pane fade" [class.show]="detailTab === 'depositos'"
+            [class.active]="detailTab === 'depositos'">
+            <app-depositos-table [rows]="depositosRows"></app-depositos-table>
+          </div>
+
+          <div class="tab-pane fade" [class.show]="detailTab === 'solicitudes'"
+            [class.active]="detailTab === 'solicitudes'">
+            <app-solicitudes-table [rows]="solicitudesRows"></app-solicitudes-table>
+          </div>
+
+          <div class="tab-pane fade" [class.show]="detailTab === 'planes'" [class.active]="detailTab === 'planes'">
+            <app-planes-table [rows]="planesRows"></app-planes-table>
+          </div>
+        </div>
+      </div>
+
+      <!-- DERECHA: GRAFICO -->
+      <div class="detalle-grid__chart">
+        <div class="card detalle-chart-card">
+          <div class="card-header">
+            <h6 class="mb-0">{{ 'ahorro.chart.chartTitle' | translate }}</h6>
+          </div>
+
+          <div class="card-body">
+            <apx-chart [series]="pieSeries" [chart]="pieChart" [labels]="pieLabels" [colors]="pieColors"
+              [legend]="pieLegend" [dataLabels]="pieDataLabels" [tooltip]="pieTooltip" [responsive]="pieResponsive">
+            </apx-chart>
+
+          </div>
+        </div>
       </div>
     </div>
+
+  </div>
   } @else {
-    <div class="card-body text-center text-muted py-5">{{ 'ahorro.states.selectSocio' | translate }}</div>
+  <div class="card-body text-center text-muted py-5">{{ 'ahorro.states.selectSocio' | translate }}</div>
   }
 </div>

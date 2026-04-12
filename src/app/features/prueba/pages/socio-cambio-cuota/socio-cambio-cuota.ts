@@ -32,6 +32,7 @@ import {
   ApexLegend,
   ApexNonAxisChartSeries,
   ApexResponsive,
+  ApexTooltip,
   ChartComponent
 } from 'ng-apexcharts';
 
@@ -188,7 +189,19 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
   // =============================
   // CONFIGURACIÓN DE GRÁFICO
   // =============================
-  public pieSeries: ApexNonAxisChartSeries = [0, 0, 0];
+  public pieColors: string[] = [
+  '#19b7a5', // ahorro = verde
+  '#f59e0b', // retirado = orange
+  '#1d4ed8'  // interés = amarillo
+];
+
+ public pieSeries: ApexNonAxisChartSeries = [0, 0, 0];
+
+public pieLabels: string[] = [
+  'Ahorro',
+  'Retirado',
+  'Interés'
+];
 
   public pieChart: ApexChart = {
     type: 'pie',
@@ -196,18 +209,25 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
   };
 
   // Tooltip con formato de moneda
-  public pieOptions = {
-    tooltip: {
-      y: {
-        formatter: (value: number) => {
-          const currency = this.appConfigService.getCurrentSettings().currency;
-          return `${currency} ${this.formatCurrency(value)}`;
-        }
+public pieTooltip: ApexTooltip = {
+  y: {
+    formatter: (value: number) => {
+      const currency = this.appConfigService.getCurrentSettings().currency;
+      return `${currency} ${this.formatCurrency(value)}`;
+    }
+  }
+};
+public pieOptions = {
+  tooltip: {
+    y: {
+      formatter: (value: number) => {
+        const currency = this.appConfigService.getCurrentSettings().currency;
+        return `${currency} ${this.formatCurrency(value)}`;
       }
     }
-  };
+  }
+};
 
-  public pieLabels: string[] = [];
 
   public pieLegend: ApexLegend = {
     position: 'bottom'

@@ -100,7 +100,7 @@
         "saved": "Ahorrado",
         "withdrawn": "Retirado",
         "deposited": "Depositado",
-         "lastMovement": "Último movimiento",
+        "lastMovement": "Último movimiento",
         "decreaseInstallment": "Disminución de cuota",
         "actions": "Acciones"
       },
@@ -152,10 +152,15 @@
     "pagination": {
       "showing": "Mostrando {{start}}-{{end}} de {{total}} socios"
     },
+    "chart": {
+      "chartTitle": "Resumen gráfico",
+      "totalSaved": "Total ahorrado",
+      "totalWithdrawn": "Total retirado"
+    },
     "common": {
       "close": "Cerrar"
     },
-     "breadcrumbs": [
+    "breadcrumbs": [
       {
         "label": "Home",
         "url": "/home"

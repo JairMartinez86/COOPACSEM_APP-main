@@ -48,3 +48,17 @@
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   }
 }
+
+
+.cambio-cuota-summary-strip--actual {
+  background: linear-gradient(90deg, #10b981, #059669); // verde
+}
+
+.cambio-cuota-summary-strip--nueva {
+  background: linear-gradient(90deg, #f59e0b, #d97706); // orange
+}
+
+
+.cambio-cuota-summary-strip--interes {
+  background: linear-gradient(90deg, #facc15, #eab308); // amarillo
+}

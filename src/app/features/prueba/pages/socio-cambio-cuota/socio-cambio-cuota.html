@@ -442,8 +442,8 @@
           </div>
 
           <div class="card-body">
-            <apx-chart [series]="pieSeries" [chart]="pieChart" [labels]="pieLabels" [legend]="pieLegend"
-              [dataLabels]="pieDataLabels" [responsive]="pieResponsive" [tooltip]="pieOptions.tooltip">
+            <apx-chart [series]="pieSeries" [chart]="pieChart" [labels]="pieLabels" [colors]="pieColors"
+              [legend]="pieLegend" [dataLabels]="pieDataLabels" [tooltip]="pieTooltip" [responsive]="pieResponsive">
             </apx-chart>
           </div>
         </div>
@@ -452,8 +452,8 @@
         <div class="card">
           <div class="card-body">
             <button #saveButton type="button" class="btn btn-primary w-100 mb-2" (click)="onSave()"
-              [permissionRoute]="['/socio', '/ahorro']" [appPermission]="['create']" autoFocusNext [disableClickButton]="true"
-              [unlockOn]="notify.closed$" [disabled]="saving">
+              [permissionRoute]="['/socio', '/ahorro']" [appPermission]="['create']" autoFocusNext
+              [disableClickButton]="true" [unlockOn]="notify.closed$" [disabled]="saving">
               <i class="bi bi-arrow-left-right me-1"></i>
               {{ 'socioCambioCuota.actions.apply' | translate }}
             </button>
