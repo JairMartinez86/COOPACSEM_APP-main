@@ -168,7 +168,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
   {
     type: 'link',
     titleKey: 'sidebar.items.empty',
-    iconclass: 'ph ph-money',
+    iconclass: 'fa-solid fa-empty-set',
     router: '/dashboard',
     permissions: {
       view: false,
@@ -180,7 +180,8 @@ export const SIDEBAR_DATA: SidebarItem[] = [
 
   {
     type: 'heading',
-    titleKey: 'sidebar.items.otro'
+    titleKey: 'sidebar.items.otro',
+    
   },
 
 
