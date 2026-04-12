@@ -99,6 +99,7 @@
         "saved": "Ahorrado",
         "withdrawn": "Retirado",
         "deposited": "Depositado",
+         "lastMovement": "Último movimiento",
         "decreaseInstallment": "Disminución de cuota",
         "actions": "Acciones"
       },
