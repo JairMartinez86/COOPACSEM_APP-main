@@ -9,14 +9,15 @@
         type="text"
         class="form-control"
         [(ngModel)]="search"
-        (ngModelChange)="emitFilters()"
+        (ngModelChange)="onSearchInputChange()"
+        (keyup)="onSearchKeyup($event)"
         [placeholder]="'ahorro.filters.searchPlaceholder' | translate" />
     </div>
   </div>
 
   <div class="col-xl-2 col-lg-4 col-md-6">
     <label class="form-label">{{ 'ahorro.filters.accountType' | translate }}</label>
-    <select class="form-select" [(ngModel)]="tipoCuenta" (ngModelChange)="emitFilters()">
+    <select class="form-select" [(ngModel)]="tipoCuenta"  (ngModelChange)="onTipoCuentaChange()">
       <option value="">{{ 'ahorro.filters.all' | translate }}</option>
       <option value="Corriente">{{ 'ahorro.accountTypes.current' | translate }}</option>
       <option value="Navidena">{{ 'ahorro.accountTypes.christmas' | translate }}</option>
@@ -25,7 +26,7 @@
 
   <div class="col-xl-2 col-lg-4 col-md-6">
     <label class="form-label">{{ 'ahorro.filters.status' | translate }}</label>
-    <select class="form-select" [(ngModel)]="estado" (ngModelChange)="emitFilters()">
+    <select class="form-select" [(ngModel)]="estado"  (ngModelChange)="onEstadoChange()">
       <option value="">{{ 'ahorro.filters.all' | translate }}</option>
       <option value="Activo">{{ 'ahorro.status.active' | translate }}</option>
       <option value="Inactivo">{{ 'ahorro.status.inactive' | translate }}</option>

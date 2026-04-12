@@ -26,10 +26,15 @@ export class RouteFilterContext {
   private sync(): void {
     const root = this.router.routerState.snapshot.root;
     const deepest = this.getDeepestSnapshot(root);
-    const key = deepest.data?.['tableFilterKey'] ?? null;
+
+    const key = this.toText(deepest.data?.['tableFilterKey']) || null;
+    const requireEnter = !!deepest.data?.['tableFilterEnter'];
 
     this.filterSvc.setActiveKey(key);
 
+    if (key) {
+      this.filterSvc.setConfig(key, { requireEnter });
+    }
   }
 
   private getDeepestSnapshot(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
@@ -40,5 +45,9 @@ export class RouteFilterContext {
     }
 
     return current;
+  }
+
+  private toText(value: unknown): string {
+    return typeof value === 'string' ? value.trim() : '';
   }
 }

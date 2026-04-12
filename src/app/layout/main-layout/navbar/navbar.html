@@ -22,18 +22,19 @@
   </div>
 
   <div class="header-search-wrap">
-  <form class="search-form" action="#" method="GET" (submit)="$event.preventDefault()">
-    <i class="bi bi-search search-icon"></i>
+    <form class="search-form" action="#" method="GET" (submit)="$event.preventDefault()">
+      <i class="bi bi-search search-icon"></i>
     <input
-      type="search"
-      name="q"
-      [value]="searchValue"
-      [attr.placeholder]="'navbar.searchPlaceholder' | translate"
-      autocomplete="off"
-      (input)="onSearchInput($event)">
-    <kbd class="search-shortcut">/</kbd>
-  </form>
-</div>
+  type="search"
+  name="q"
+  [(ngModel)]="searchValue"
+  [attr.placeholder]="'navbar.searchPlaceholder' | translate"
+  autocomplete="off"
+  (input)="onSearchInput()"
+  (keyup)="onSearchKeyup($event)">
+      <kbd class="search-shortcut">/</kbd>
+    </form>
+  </div>
 
   <div class="header-right">
     <div class="header-actions-desktop">
@@ -161,13 +162,14 @@
 
 <div class="mobile-search">
   <form class="search-form" action="#" method="GET" (submit)="$event.preventDefault()">
-    <input
-      type="search"
-      name="q"
-      [value]="searchValue"
-      [attr.placeholder]="'navbar.searchShort' | translate"
-      autocomplete="off"
-      (input)="onSearchInput($event)">
+   <input
+  type="search"
+  name="q"
+  [(ngModel)]="searchValue"
+  [attr.placeholder]="'navbar.searchPlaceholder' | translate"
+  autocomplete="off"
+  (input)="onSearchInput()"
+  (keyup)="onSearchKeyup($event)">
     <button type="button" (click)="clearSearch($event)">
       <i class="bi bi-x-lg"></i>
     </button>

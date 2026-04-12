@@ -219,7 +219,7 @@ export const routes: Routes = [
           import('./features/ahorro/pages/ahorro.component')
             .then(m => m.AhorroComponent),
         canActivate: [permissionGuard],
-        data: { permission: '/ahorro', action: 'view', tableFilterKey: 'ahorro' },
+        data: { permission: '/ahorro', action: 'view', tableFilterKey: 'ahorro' ,  tableFilterEnter: true},
         providers: [JMartMassiveValidationService],
       },
 

@@ -12,6 +12,7 @@ import {
   signal
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { RouterLink } from '@angular/router';
@@ -36,7 +37,7 @@ interface LanguageItem {
 @Component({
   standalone: true,
   selector: 'app-navbar',
-  imports: [CommonModule, TranslateModule, AppPermissionDirective, RouterLink],
+  imports: [CommonModule, FormsModule, TranslateModule, AppPermissionDirective, RouterLink],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
@@ -63,7 +64,7 @@ export class Navbar implements OnInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: object
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -91,7 +92,7 @@ export class Navbar implements OnInit, OnDestroy {
     );
 
     this.subs.add(
-      this.filterSvc.activeQuery$().subscribe(value => {
+      this.filterSvc.activeDraft$().subscribe(value => {
         this.searchValue = value;
       })
     );
@@ -234,10 +235,38 @@ export class Navbar implements OnInit, OnDestroy {
     this.requestCloseSidebar.emit();
   }
 
-  onSearchInput(event: Event): void {
-    const value = (event.target as HTMLInputElement).value ?? '';
-    this.searchValue = value;
-    this.filterSvc.setQueryForActiveRoute(value);
+  onSearchInput(): void {
+    const key = this.filterSvc.getActiveKey();
+    if (!key) return;
+
+    // siempre actualiza el texto visible
+    this.filterSvc.setDraftForActiveRoute(this.searchValue ?? '');
+
+    const requireEnter = this.filterSvc.getRequireEnter(key);
+
+    // si requiere Enter, no aplicar filtro todavía
+    if (requireEnter) {
+      return;
+    }
+
+    this.filterSvc.setQueryForActiveRoute(this.searchValue ?? '');
+  }
+
+  onSearchKeyup(event: KeyboardEvent): void {
+    const key = this.filterSvc.getActiveKey();
+    if (!key) return;
+
+    const requireEnter = this.filterSvc.getRequireEnter(key);
+
+    if (!requireEnter) {
+      return;
+    }
+
+    if (event.key !== 'Enter') {
+      return;
+    }
+
+    this.filterSvc.setQueryForActiveRoute(this.searchValue ?? '');
   }
 
   clearSearch(event?: Event): void {
@@ -245,8 +274,12 @@ export class Navbar implements OnInit, OnDestroy {
     event?.stopPropagation();
 
     this.searchValue = '';
-    this.filterSvc.setQueryForActiveRoute('');
+    const key = this.filterSvc.getActiveKey();
+    if (!key) return;
+
+    this.filterSvc.clear(key);
   }
+
 
   logout(event?: Event): void {
     this.safePreventDefault(event);
