@@ -160,7 +160,12 @@
         "url": "/home"
       },
       {
-        "label": "Ahorro"
+        "label": "Ahorro",
+        "url": ""
+      },
+      {
+        "label": "Lista de Ahorros",
+        "url": "/ahorro"
       }
     ]
   }

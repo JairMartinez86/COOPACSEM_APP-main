@@ -20,7 +20,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
   {
     type: 'link',
     titleKey: 'sidebar.items.dashboard',
-    iconclass: 'ph-light ph-squares-four',
+    iconclass: 'fa-jelly-fill fa-regular fa-gauge',
     router: '/dashboard',
     permissions: {
       view: false,
@@ -48,7 +48,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
   {
     type: 'submenu',
     titleKey: 'sidebar.items.users',
-    iconclass: 'ph-light ph-users-three',
+    iconclass: 'fa-duotone fa-solid fa-users',
     children: [
       {
         type: 'link',
@@ -155,7 +155,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
   {
     type: 'link',
     titleKey: 'sidebar.items.supplier',
-    iconclass: 'ph ph-money',
+    iconclass: 'fa-duotone fa-solid fa-truck',
     router: '/proveedores',
     permissions: {
       view: false,
