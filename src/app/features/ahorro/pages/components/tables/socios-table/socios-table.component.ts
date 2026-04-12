@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppConfigService } from '../../../../../../core/services/app-config.service';
 import { PaginationMeta, SocioRow } from '../../../../interface/ahorro.models';
+import { PermissionService } from '../../../../../../core/services/permission.service';
 
 @Component({
   selector: 'app-socios-table',
@@ -13,6 +14,7 @@ import { PaginationMeta, SocioRow } from '../../../../interface/ahorro.models';
 })
 export class SociosTableComponent {
   private readonly appConfigService = inject(AppConfigService);
+  public readonly permissionService = inject(PermissionService);
 
 
   @Input() rows: SocioRow[] = [];

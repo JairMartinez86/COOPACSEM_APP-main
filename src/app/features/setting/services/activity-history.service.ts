@@ -51,7 +51,7 @@ export class ActivityHistoryService extends BrowserApiService {
     );
   }
 
-  revokeSession(sessionId: string, user: string) {
+  revokeSession(sessionId: string, user: string): Observable<any> {
     return this.http.post(
       `${this.api.baseUrl}/Auth/revoke-session/${encodeURIComponent(sessionId)}?user=${encodeURIComponent(user)}`,
       {},
@@ -59,7 +59,14 @@ export class ActivityHistoryService extends BrowserApiService {
     );
   }
 
-  logoutCurrentSession() {
+revokeAllOtherSessions(user: string): Observable<any> {
+  return this.http.post(
+    `${this.api.baseUrl}/activity/user/${encodeURIComponent(user)}/sessions/revoke-others`,
+    {},
+    { withCredentials: true }
+  );
+}
+  logoutCurrentSession(): Observable<any> {
     return this.http.post(
       `${this.api.baseUrl}/Auth/logout`,
       {},

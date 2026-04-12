@@ -79,8 +79,23 @@ export interface ReportItem {
 export interface ActionItem {
   icon: string;
   titleKey: string;
-  accent: 'green' | 'blue' | 'violet' | 'cyan' | 'amber' | 'emerald';
+  accent:
+  | 'green'
+  | 'blue'
+  | 'violet'
+  | 'cyan'
+  | 'amber'
+  | 'emerald'
+  | 'red'
+  | 'orange'
+  | 'pink'
+  | 'indigo'
+  | 'teal'
+  | 'gray'
+  | 'teal'; 
+  order: number;
 }
+
 
 export interface SocioDetail {
   id: string;

@@ -47,6 +47,8 @@
       "newWithdrawal": "New withdrawal",
       "printReport": "Print report",
       "viewChristmasPlan": "View christmas plan",
+      "increaseInstallment": "Increase installment",
+      "decreaseInstallment": "Decrease installment",
       "exportExcel": "Export Excel"
     },
     "side": {
@@ -147,7 +149,7 @@
     "pagination": {
       "showing": "Showing {{start}}-{{end}} of {{total}} members"
     },
-     "common": {
+    "common": {
       "close": "Close"
     }
   }

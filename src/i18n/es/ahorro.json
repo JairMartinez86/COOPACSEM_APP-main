@@ -47,6 +47,9 @@
       "newWithdrawal": "Nuevo retiro",
       "printReport": "Imprimir reporte",
       "viewChristmasPlan": "Ver plan navideño",
+      "lastMovement": "Último movimiento",
+      "increaseInstallment": "Aumento de cuota",
+      "decreaseInstallment": "Disminución de cuota",
       "exportExcel": "Exportar Excel"
     },
     "side": {
@@ -55,7 +58,6 @@
       "reports": "Reportes",
       "viewAllReports": "Ver todos los reportes",
       "noAlerts": "No hay alertas disponibles"
-     
     },
     "reports": {
       "movementsBySocio": {
@@ -97,7 +99,7 @@
         "saved": "Ahorrado",
         "withdrawn": "Retirado",
         "deposited": "Depositado",
-        "lastMovement": "Último movimiento",
+        "decreaseInstallment": "Disminución de cuota",
         "actions": "Acciones"
       },
       "deposits": {
@@ -127,8 +129,8 @@
       "missingChristmasPlanDescription": "El socio aún no tiene una cuenta navideña activa.",
       "missingCurrentAccountTitle": "Cuenta corriente",
       "missingCurrentAccountDescription": "El socio aún no tiene una cuenta corriente activa.",
-       "identificationExpired": {
-         "title": "Identificación vencida",
+      "identificationExpired": {
+        "title": "Identificación vencida",
         "description": "El socio tiene la identificación vencida."
       }
     },
@@ -148,7 +150,7 @@
     "pagination": {
       "showing": "Mostrando {{start}}-{{end}} de {{total}} socios"
     },
-     "common": {
+    "common": {
       "close": "Cerrar"
     }
   }

@@ -6,19 +6,21 @@
 
     <div class="card-body pt-0">
       <div class="quick-actions-grid">
-        @for (action of actions; track $index) {
+        @for (action of orderedActions; track $index) {
           <button
             type="button"
             class="quick-action-btn"
-            [ngClass]="{
-              'is-green': action.accent === 'green',
-              'is-blue': action.accent === 'blue',
-              'is-violet': action.accent === 'violet',
-              'is-cyan': action.accent === 'cyan',
-              'is-amber': action.accent === 'amber',
-              'is-emerald': action.accent === 'emerald'
-            }"
-            (click)="onActionClick(action)">
+           [ngClass]="{
+  'is-green': action.accent === 'green',
+  'is-blue': action.accent === 'blue',
+  'is-violet': action.accent === 'violet',
+  'is-cyan': action.accent === 'cyan',
+  'is-amber': action.accent === 'amber',
+  'is-emerald': action.accent === 'emerald',
+  'is-orange': action.accent === 'orange',
+  'is-teal': action.accent === 'teal' 
+}"
+            (click)="onActionClick(action)" [appPermission]="['create']" [permissionRoute]="'/ahorro'">
             <i [class]="action.icon"></i>
             <span>{{ action.titleKey | translate }}</span>
           </button>

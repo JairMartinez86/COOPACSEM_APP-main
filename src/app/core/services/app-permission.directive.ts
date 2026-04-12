@@ -15,6 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PermissionAction, PermissionService } from './permission.service';
 
 type PermissionInput = PermissionAction | 'new' | Array<PermissionAction | 'new'>;
+type PermissionRouteInput = string | string[];
 
 @Directive({
   selector: '[appPermission]',
@@ -22,7 +23,7 @@ type PermissionInput = PermissionAction | 'new' | Array<PermissionAction | 'new'
 })
 export class AppPermissionDirective implements OnInit, OnChanges {
   @Input('appPermission') actions!: PermissionInput;
-  @Input() permissionRoute?: string;
+  @Input() permissionRoute?: PermissionRouteInput;
   @Input() permissionMode: 'hide' | 'disable' = 'hide';
 
   private router = inject(Router);
@@ -54,8 +55,8 @@ export class AppPermissionDirective implements OnInit, OnChanges {
   }
 
   private applyPermission(): void {
-    const route = this.getPermissionRoute();
-    const allowed = this.hasAnyPermission(route);
+    const routes = this.getPermissionRoutes();
+    const allowed = this.hasAnyPermission(routes);
     const element = this.el.nativeElement;
 
     if (this.permissionMode === 'hide') {
@@ -76,17 +77,23 @@ export class AppPermissionDirective implements OnInit, OnChanges {
     }
   }
 
-  private getPermissionRoute(): string {
-    if (this.permissionRoute?.trim()) {
-      return this.normalizeRoute(this.permissionRoute);
+  private getPermissionRoutes(): string[] {
+    if (Array.isArray(this.permissionRoute) && this.permissionRoute.length > 0) {
+      return this.permissionRoute
+        .filter(route => typeof route === 'string' && route.trim().length > 0)
+        .map(route => this.normalizeRoute(route));
+    }
+
+    if (typeof this.permissionRoute === 'string' && this.permissionRoute.trim()) {
+      return [this.normalizeRoute(this.permissionRoute)];
     }
 
     const routeFromData = this.getDeepestPermissionFromRoute(this.activatedRoute);
     if (routeFromData) {
-      return this.normalizeRoute(routeFromData);
+      return [this.normalizeRoute(routeFromData)];
     }
 
-    return this.normalizeRoute(this.router.url.split('?')[0].split('#')[0]);
+    return [this.normalizeRoute(this.router.url.split('?')[0].split('#')[0])];
   }
 
   private getDeepestPermissionFromRoute(route: ActivatedRoute): string | null {
@@ -105,12 +112,14 @@ export class AppPermissionDirective implements OnInit, OnChanges {
     return permission;
   }
 
-  private hasAnyPermission(route: string): boolean {
+  private hasAnyPermission(routes: string[]): boolean {
     const actions = Array.isArray(this.actions) ? this.actions : [this.actions];
 
-    return actions
-      .map(action => this.normalizeAction(action))
-      .some(action => this.permissionService.has(action, route));
+    return routes.some(route =>
+      actions
+        .map(action => this.normalizeAction(action))
+        .some(action => this.permissionService.has(action, route))
+    );
   }
 
   private normalizeAction(action: PermissionAction | 'new'): PermissionAction {

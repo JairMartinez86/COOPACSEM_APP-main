@@ -181,14 +181,14 @@
             <div class="card-footer bg-transparent">
               <div class="d-flex justify-content-end gap-2 flex-wrap">
 
-                <button type="button" class="btn btn-light" (click)="onCancel()" [permissionRoute]="'/socios'"
+                <button type="button" class="btn btn-light" (click)="onCancel()" [permissionRoute]="['/socio', '/ahorro']"
                   [appPermission]="['create']">
                   {{ 'aperturaCuentaNavidena.common.cancel' | translate }}
                 </button>
 
                 @if (!tieneMovimiento) {
                 <button #saveButton type="button" class="btn btn-primary" (click)="onSave()"
-                  [permissionRoute]="'/socios'" [appPermission]="['create']" autoFocusNext [disableClickButton]="true"
+                  [permissionRoute]="['/socio', '/ahorro']" [appPermission]="['create']" autoFocusNext [disableClickButton]="true"
                   [unlockOn]="notify.closed$">
 
                   {{
@@ -201,7 +201,7 @@
                 }
 
                 @if (yaAperturada && !tieneMovimiento) {
-                <button type="button" class="btn btn-outline-danger" (click)="onDelete()" [permissionRoute]="'/socios'"
+                <button type="button" class="btn btn-outline-danger" (click)="onDelete()" [permissionRoute]="['/socio', '/ahorro']"
                   [appPermission]="['delete']">
 
                   <i class="fa-thin fa-trash me-1"></i>
@@ -211,7 +211,7 @@
 
 
                 <button type="button" class="btn btn-outline-primary" (click)="openPlanModal()"
-                  [permissionRoute]="'/socios'" [appPermission]="['view', 'create']">
+                  [permissionRoute]="['/socio', '/ahorro']" [appPermission]="['view', 'create']">
                   {{ 'aperturaCuentaNavidena.actions.viewPlan' | translate }}
                 </button>
               </div>
@@ -323,7 +323,7 @@
 
               <!-- Ahorro -->
               <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoDeposito()"
-                [appPermission]="['create']" [permissionRoute]="'/socios'">
+                [appPermission]="['create']" [permissionRoute]="['/socio', '/ahorro']">
 
                 <i class="fa-sharp fa-thin fa-money-bill-trend-up me-1"></i>
                 {{ 'socios.profile.newDeposit' | translate }}
@@ -331,7 +331,7 @@
 
               <!-- Retiro -->
               <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoRetiro()"
-                [appPermission]="['create']" [permissionRoute]="'/socios'">
+                [appPermission]="['create']" [permissionRoute]="['/socio', '/ahorro']">
                 <i class="fa-thin fa-money-simple-from-bracket me-1"></i>
                 {{ 'socios.profile.newWithdrawal' | translate }}
               </button>

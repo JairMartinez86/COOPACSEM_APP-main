@@ -52,7 +52,10 @@
           "minutesAgo": "Hace {{value}} min",
           "hoursAgo": "Hace {{value}} h",
           "daysAgo": "Hace {{value}} d"
-        }
+        },
+        "closeOthers": "Cerrar las demás sesiones",
+        "closeOthersConfirmTitle": "Cerrar sesiones activas",
+        "closeOthersConfirmMessage": "¿Deseas cerrar todas las sesiones activas excepto la actual?"
       },
       "timeline": {
         "title": "Línea de tiempo reciente",

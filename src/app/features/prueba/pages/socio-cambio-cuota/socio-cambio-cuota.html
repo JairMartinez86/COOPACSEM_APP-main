@@ -452,14 +452,14 @@
         <div class="card">
           <div class="card-body">
             <button #saveButton type="button" class="btn btn-primary w-100 mb-2" (click)="onSave()"
-              [permissionRoute]="'/socios'" [appPermission]="['create']" autoFocusNext [disableClickButton]="true"
+              [permissionRoute]="['/socio', '/ahorro']" [appPermission]="['create']" autoFocusNext [disableClickButton]="true"
               [unlockOn]="notify.closed$" [disabled]="saving">
               <i class="bi bi-arrow-left-right me-1"></i>
               {{ 'socioCambioCuota.actions.apply' | translate }}
             </button>
 
             <button type="button" class="btn btn-outline-secondary w-100" (click)="onCancel()"
-              [permissionRoute]="'/socios'" [appPermission]="['create']">
+              [permissionRoute]="['/socio', '/ahorro']" [appPermission]="['create']">
               {{ 'socioCambioCuota.actions.cancel' | translate }}
             </button>
           </div>

@@ -5,11 +5,12 @@ import { ActionItem, AlertItem, PlanRow, ReportItem } from '../../../interface/a
 import { Router } from '@angular/router';
 import { AppConfigService } from '../../../../../core/services/app-config.service';
 import { NotificationService } from '../../../../../core/services/notification.service';
+import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
 
 @Component({
   selector: 'app-ahorro-side-panel',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, AppPermissionDirective],
   templateUrl: './ahorro-side-panel.component.html',
   styleUrl: './ahorro-side-panel.component.scss',
 })
@@ -34,7 +35,7 @@ export class AhorroSidePanelComponent {
 
   onActionClick(action: ActionItem): void {
 
-    if (this.alerts.length === 0){
+    if (this.alerts.length === 0) {
       this.notify.show("Seleccione un socio", "Información", "info");
       return;
     }
@@ -53,8 +54,23 @@ export class AhorroSidePanelComponent {
       case "ahorro.actions.viewChristmasPlan":
         this.showPlanModal = true;
         break;
+      case "ahorro.actions.increaseInstallment":
+        this.router.navigate(['/cambio-cuota/new', this.alerts[0].socioId, 'incremento']);
+        break;
+      case "ahorro.actions.decreaseInstallment":
+        this.router.navigate(['/cambio-cuota/new', this.alerts[0].socioId, 'disminucion']);
+        break;
+        
     }
 
+    console.log('Action clicked:', action);
+
+  }
+
+
+
+  get orderedActions() {
+    return [...this.actions].sort((a, b) => a.order - b.order);
   }
 
 

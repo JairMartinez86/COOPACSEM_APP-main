@@ -77,7 +77,8 @@
                             <div class="table-actions" (click)="$event.stopPropagation()">
                                 <button type="button" class="btn btn-icon btn-sm btn-light"
                                     (click)="$event.stopPropagation(); selectSocio(row)">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'">
+                          </i>
                                 </button>
                             </div>
                         </td>

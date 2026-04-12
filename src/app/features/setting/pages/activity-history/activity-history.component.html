@@ -163,18 +163,33 @@
         </div>
 
         <div class="card al-card">
-          <div class="card-header d-flex align-items-center justify-content-between">
-            <h5 class="card-title mb-0">{{ 'activity.activity.sessions.title' | translate }}</h5>
+          <div class="card-header d-flex align-items-center justify-content-between gap-2 flex-wrap">
+  <h5 class="card-title mb-0">{{ 'activity.activity.sessions.title' | translate }}</h5>
 
-            <button
-              type="button"
-              class="btn btn-link al-link p-0"
-              (click)="openTrustedDevicesModal()">
-              {{ 'activity.activity.sessions.manage' | translate }}
-            </button>
-           
-          </div>
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <button
+      type="button"
+      class="btn btn-outline-danger btn-sm rounded-pill"
+      (click)="confirmRevokeAllOtherSessions()"
+      [disabled]="closingOtherSessions() || !hasOtherActiveSessions()">
 
+      @if (closingOtherSessions()) {
+        <span class="spinner-border spinner-border-sm me-1"></span>
+      } @else {
+        <i class="bi bi-shield-x me-1"></i>
+      }
+
+      {{ 'activity.activity.sessions.closeOthers' | translate }}
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-link al-link p-0"
+      (click)="openTrustedDevicesModal()">
+      {{ 'activity.activity.sessions.manage' | translate }}
+    </button>
+  </div>
+</div>
           <div class="card-body">
             @if (activeSessions().length) {
               <div class="al-session-list">

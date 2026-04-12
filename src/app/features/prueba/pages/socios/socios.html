@@ -871,14 +871,14 @@
                             @if(this.mode != "view"){
 
                             <button type="button" class="btn btn-icon btn-sm btn-light"
-                              [appPermission]="['new', 'edit']" permissionRoute="/socios"
+                              [appPermission]="['new', 'edit']" [permissionRoute]="['/socio', '/ahorro']"
                               [title]="'common.actions.edit' | translate" (click)="openBeneficiarioModal(item)">
                               <i class="bi"
                                 [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
                             </button>
 
                             <button type="button" class="btn btn-icon btn-sm btn-light"
-                              [appPermission]="['new', 'delete']" permissionRoute="/socios"
+                              [appPermission]="['new', 'delete']" [permissionRoute]="['/socio', '/ahorro']"
                               [title]="'common.actions.delete' | translate" (click)="removeBeneficiario(item)">
                               <i class="bi bi-trash"></i>
                             </button>

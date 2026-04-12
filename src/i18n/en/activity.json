@@ -52,7 +52,10 @@
           "minutesAgo": "{{value}} min ago",
           "hoursAgo": "{{value}} h ago",
           "daysAgo": "{{value}} d ago"
-        }
+        },
+        "closeOthers": "Close other sessions",
+        "closeOthersConfirmTitle": "Close active sessions",
+        "closeOthersConfirmMessage": "Do you want to close all active sessions except the current one?"
       },
       "timeline": {
         "title": "Recent timeline",

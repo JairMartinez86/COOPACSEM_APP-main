@@ -79,6 +79,20 @@
   color: #198754;
 }
 
+/* ORANGE */
+.quick-action-btn.is-orange {
+  background: rgba(253, 126, 20, 0.24); /* equivalente a --bs-orange */
+  border-color: rgba(253, 126, 20, 0.4);
+  color: #fd7e14;
+}
+
+/* TEAL */
+.quick-action-btn.is-teal {
+  background: rgba(20, 184, 166, 0.24); /* teal base */
+  border-color: rgba(20, 184, 166, 0.4);
+  color: #0f766e;
+}
+
 /* RESPONSIVE */
 @media (max-width: 575px) {
   .quick-actions-grid {

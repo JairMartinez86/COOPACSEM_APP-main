@@ -73,6 +73,7 @@ export class ActivityHistoryComponent implements OnInit {
   readonly selectedFilter = signal<ActivityFilter>('all');
   readonly selectedDays = signal(7);
   readonly availableRanges = [7, 10, 30];
+  readonly closingOtherSessions = signal(false);
 
   readonly username = signal('');
   readonly userInfo = signal<any | null>(null);
@@ -93,13 +94,13 @@ export class ActivityHistoryComponent implements OnInit {
   readonly trustedDevices = signal<TrustedDeviceItem[]>([]);
   readonly revokingTrustedDeviceId = signal<string | null>(null);
 
-    breadcrumbs = [
+  breadcrumbs = [
     { label: '', url: '' },
     { label: '', url: '/' },
     { label: '' }
   ];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -310,6 +311,51 @@ export class ActivityHistoryComponent implements OnInit {
     });
   }
 
+  confirmRevokeAllOtherSessions(): void {
+    if (!this.hasOtherActiveSessions() || this.closingOtherSessions()) return;
+
+    const title =
+      this.translate.instant('activity.activity.sessions.closeOthersConfirmTitle') ||
+      this.translate.instant('activity.common.warning');
+
+    const message =
+      this.translate.instant('activity.activity.sessions.closeOthersConfirmMessage');
+
+    const ref = this.notify.confirm(message, title, 'warning');
+    if (!ref) return;
+
+    ref.subscribe((result: number) => {
+      if (result !== 1) return;
+      this.revokeAllOtherSessions();
+    });
+  }
+  readonly hasOtherActiveSessions = computed(() =>
+    this.activeSessions().some(session => !session.isCurrent)
+  );
+
+
+  private revokeAllOtherSessions(): void {
+    const user = this.username();
+    if (!user) return;
+
+    this.closingOtherSessions.set(true);
+
+    this.activityService.revokeAllOtherSessions(user).subscribe({
+      next: (res: any) => {
+        this.notify.showFromApiResponse(res, 'success');
+        this.loadUserHistory(1);
+        this.closingOtherSessions.set(false);
+      },
+      error: (err: any) => {
+        this.closingOtherSessions.set(false);
+        this.notify.showFromApiResponse(err?.error ?? err, 'Error');
+      }
+    });
+  }
+
+
+
+
   private logoutCurrentSessionFromList(session: ActiveSessionItem): void {
     if (!session?.sessionId) return;
     this.revokingSessionId.set(session.sessionId);
@@ -346,6 +392,7 @@ export class ActivityHistoryComponent implements OnInit {
   private finishClientLogout(): void {
     this.revokingSessionId.set(null);
     this.revokingTrustedDeviceId.set(null);
+    this.closingOtherSessions.set(false);
     this.trustedDevicesModalOpen.set(false);
 
     this.userInfo.set(null);
@@ -507,4 +554,6 @@ export class ActivityHistoryComponent implements OnInit {
 
     return { key: labelText, labelText };
   }
+
+
 }
