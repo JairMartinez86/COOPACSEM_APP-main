@@ -504,6 +504,16 @@
                             </div>
                         </div>
 
+                                  <div class="socios-summary-strip socios-summary-strip--retirado mb-2">
+                            <div class="socios-summary-strip__label">
+                                {{ 'socioRetiro.summary.totalWithdrawn' | translate }}
+                            </div>
+                            <div class="socios-summary-strip__value">
+                                {{ appConfigService.getCurrentSettings().currency }}
+                                {{ formatCurrency(socio?.dashboard?.totalRetirado ?? 0) }}
+                            </div>
+                        </div>
+
                         <!-- Crédito activo -->
                         <div class="socios-summary-strip socios-summary-strip--credito mb-2">
                             <div class="socios-summary-strip__label">

@@ -62,7 +62,8 @@
       "availability": "Disponibilidad",
       "currentSaving": "Ahorro corriente",
       "christmasSaving": "Ahorro navideño",
-      "activeCredit": "Crédito activo"
+      "activeCredit": "Crédito activo",
+       "totalWithdrawn": "Total retirado"
     },
     "history": {
       "columns": {

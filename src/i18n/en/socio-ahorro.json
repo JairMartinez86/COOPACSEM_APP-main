@@ -59,7 +59,8 @@
       "availability": "Availability",
       "currentSaving": "Current savings",
       "christmasSaving": "Christmas savings",
-      "activeCredit": "Active credit"
+      "activeCredit": "Active credit",
+      "totalWithdrawn": "Total withdrawn"
     },
     "history": {
       "columns": {

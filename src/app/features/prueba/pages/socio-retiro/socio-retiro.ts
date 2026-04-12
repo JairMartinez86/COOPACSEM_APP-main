@@ -37,6 +37,7 @@ interface SocioDashboard {
     totalAhorro?: number;
     ahorroNavideno?: number;
     creditoPendiente?: number;
+    totalRetirado?: number;
 }
 
 interface SocioResumen {
@@ -323,7 +324,8 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
                         dashboard: {
                             totalAhorro: Number(data?.dashboard?.totalAhorro ?? 0),
                             ahorroNavideno: Number(data?.dashboard?.ahorroNavideno ?? 0),
-                            creditoPendiente: Number(data?.dashboard?.creditoPendiente ?? 0)
+                            creditoPendiente: Number(data?.dashboard?.creditoPendiente ?? 0),
+                            totalRetirado: Number(data?.dashboard?.totalRetirado ?? 0)
                         }
                     };
 
