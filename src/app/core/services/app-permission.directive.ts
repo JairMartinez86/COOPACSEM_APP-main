@@ -37,17 +37,12 @@ export class AppPermissionDirective implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
+    if (!isPlatformBrowser(this.platformId)) return;
     this.applyPermission();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
+    if (!isPlatformBrowser(this.platformId)) return;
 
     if (changes['actions'] || changes['permissionRoute'] || changes['permissionMode']) {
       this.applyPermission();
@@ -113,13 +108,18 @@ export class AppPermissionDirective implements OnInit, OnChanges {
   }
 
   private hasAnyPermission(routes: string[]): boolean {
-    const actions = Array.isArray(this.actions) ? this.actions : [this.actions];
+    const actions = (Array.isArray(this.actions) ? this.actions : [this.actions])
+      .map(action => this.normalizeAction(action));
 
     return routes.some(route =>
-      actions
-        .map(action => this.normalizeAction(action))
-        .some(action => this.permissionService.has(action, route))
+      actions.some(action => this.hasPermission(action, route))
     );
+  }
+
+  private hasPermission(action: PermissionAction, route: string): boolean {
+    const normalizedRoute = this.normalizeRoute(route);
+
+    return this.permissionService.has(action, normalizedRoute);
   }
 
   private normalizeAction(action: PermissionAction | 'new'): PermissionAction {

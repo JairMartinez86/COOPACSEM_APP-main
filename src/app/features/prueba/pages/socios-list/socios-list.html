@@ -92,15 +92,15 @@
 
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <button type="button" class="btn btn-success btn-sm" (click)="onExcelImportClick()"
-                [disabled]="importingExcel" [appPermission]="['new', 'edit']" permissionRoute="/socios">
+                [disabled]="importingExcel" [appPermission]="['new', 'edit']" [permissionRoute]="['/socio', '/ahorro']">
                 <i class="bi bi-file-earmark-excel me-1"></i>
                 {{ 'socios.import.button' | translate }}
               </button>
 
               <input #excelFileInput type="file" accept=".xlsx" class="d-none" (change)="onExcelFileSelected($event)" />
 
-              <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']" permissionRoute="/socios"
-                (click)="onCreate()">
+              <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']"
+                [permissionRoute]="['/socio', '/ahorro']" (click)="onCreate()">
                 <i class="bi bi-plus-lg me-1"></i>
                 {{ 'socios.list.newButton' | translate }}
               </button>
@@ -211,16 +211,19 @@
                     <td class="text-end">
                       <div class="table-actions" (click)="$event.stopPropagation()">
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(item.id)">
-                          <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'">
+                          <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"
+                            >
                           </i>
                         </button>
 
-                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onToggleStatus(item)">
+                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onToggleStatus(item)"
+                          [permissionRoute]="['/socio']" [appPermission]="['delete']">
                           <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'">
                           </i>
                         </button>
 
-                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onDelete(item)">
+                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onDelete(item)"  [permissionRoute]="['/socio']"
+          [appPermission]="['delete']">
                           <i class="bi bi-trash"></i>
                         </button>
                       </div>
@@ -433,7 +436,7 @@
                     <th>{{ 'socios.movements.columns.description' | translate }}</th>
                     <th>{{ 'socios.movements.columns.debit' | translate }}</th>
                     <th>{{ 'socios.movements.columns.credit' | translate }}</th>
-                 <th>{{ 'socios.movements.columns.account' | translate }}</th>
+                    <th>{{ 'socios.movements.columns.account' | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -442,7 +445,7 @@
                     <td>
 
                       {{ formatDate(mov.fecha) }}
-                      
+
                     </td>
                     <td>
                       {{ getDestinoLabel(mov.descripcion) | translate }}
@@ -450,23 +453,23 @@
                     <td>{{ formatCurrency(mov.debito) }}</td>
                     <td>{{ formatCurrency(mov.credito) }}</td>
                     <td>
-          
 
-                        @if(mov.tipoCuenta == 'Corriente')
-                        { <span class="badge d-inline-flex align-items-center gap-1" class="badge badge-soft-success">
-                          <i class="bi bi-check-circle-fill"></i>
-                          {{ 'socios.accounts.current' | translate }}
-                        </span>
 
-                        }
+                      @if(mov.tipoCuenta == 'Corriente')
+                      { <span class="badge d-inline-flex align-items-center gap-1" class="badge badge-soft-success">
+                        <i class="bi bi-check-circle-fill"></i>
+                        {{ 'socios.accounts.current' | translate }}
+                      </span>
 
-                        @if(mov.tipoCuenta == 'Navidena'){
-                        <span class="badge d-inline-flex align-items-center gap-1" calss="badge-soft-warning">
-                          <i class="bi bi-check-circle-fill"></i>
-                          {{ 'socios.accounts.christmas' | translate }}
-                        </span>
+                      }
 
-                        }
+                      @if(mov.tipoCuenta == 'Navidena'){
+                      <span class="badge d-inline-flex align-items-center gap-1" calss="badge-soft-warning">
+                        <i class="bi bi-check-circle-fill"></i>
+                        {{ 'socios.accounts.christmas' | translate }}
+                      </span>
+
+                      }
 
                     </td>
                   </tr>
