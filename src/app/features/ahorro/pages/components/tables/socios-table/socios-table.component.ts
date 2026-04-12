@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AppConfigService } from '../../../../../../core/services/app-config.service';
 import { PaginationMeta, SocioRow } from '../../../../interface/ahorro.models';
 import { PermissionService } from '../../../../../../core/services/permission.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-socios-table',
@@ -15,6 +16,7 @@ import { PermissionService } from '../../../../../../core/services/permission.se
 export class SociosTableComponent {
   private readonly appConfigService = inject(AppConfigService);
   public readonly permissionService = inject(PermissionService);
+  private readonly router = inject(Router);
 
 
   @Input() rows: SocioRow[] = [];
@@ -63,4 +65,18 @@ export class SociosTableComponent {
 selectSocio(row: SocioRow): void {
   this.selectRow.emit(row);
 }
+
+
+  onEdit(id: string): void {
+    if (this.permissionService.has('edit', '/socios')) {
+      this.router.navigate(['/socios', id, 'edit']);
+      return;
+    }
+
+    if (this.permissionService.has('view', '/socios')) {
+      this.router.navigate(['/socios', id]);
+    }
+  }
+
+
 }

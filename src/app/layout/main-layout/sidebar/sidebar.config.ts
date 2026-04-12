@@ -150,18 +150,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     titleKey: 'sidebar.items.emptyPanel'
   },
 
-  {
-    type: 'link',
-    titleKey: 'sidebar.items.partner',
-    iconclass: 'ph ph-money',
-    router: '/socios',
-    permissions: {
-      view: false,
-      create: false,
-      edit: false,
-      delete: false
-    }
-  },
+ 
 
   {
     type: 'link',
