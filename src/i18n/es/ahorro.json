@@ -21,7 +21,8 @@
       "applied": "Aplicado",
       "paid": "Pagado",
       "overdue": "Vencido",
-      "pendiente": "Pendiente"
+      "pendiente": "Pendiente",
+      "pending": "Pendiente"
     },
     "summary": {
       "totalSaved": {
