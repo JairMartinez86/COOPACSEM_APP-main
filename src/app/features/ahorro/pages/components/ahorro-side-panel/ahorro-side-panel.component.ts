@@ -1,16 +1,37 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { ActionItem, AlertItem, PlanRow, ReportItem } from '../../../interface/ahorro.models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  ActionItem,
+  AlertItem,
+  PlanRow,
+  ReportItem,
+  SocioDetail
+} from '../../../interface/ahorro.models';
 import { Router } from '@angular/router';
 import { AppConfigService } from '../../../../../core/services/app-config.service';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
 
+import {
+  ApexChart,
+  ApexDataLabels,
+  ApexLegend,
+  ApexNonAxisChartSeries,
+  ApexResponsive,
+  ApexTooltip,
+  ChartComponent
+} from 'ng-apexcharts';
+
 @Component({
   selector: 'app-ahorro-side-panel',
   standalone: true,
-  imports: [CommonModule, TranslateModule, AppPermissionDirective],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    AppPermissionDirective,
+    ChartComponent
+  ],
   templateUrl: './ahorro-side-panel.component.html',
   styleUrl: './ahorro-side-panel.component.scss',
 })
@@ -19,11 +40,11 @@ export class AhorroSidePanelComponent {
   @Input() alerts: AlertItem[] = [];
   @Input() reports: ReportItem[] = [];
   @Input() planesRows: PlanRow[] = [];
+  @Input() selectedSocio: SocioDetail | null = null;
 
-
-  get navidenaRows(): PlanRow[] { return (this.planesRows || []).filter(x => x.tipoCuenta === 'Navidena'); }
-
-
+  get navidenaRows(): PlanRow[] {
+    return (this.planesRows || []).filter(x => x.tipoCuenta === 'Navidena');
+  }
 
   showPlanModal = false;
 
@@ -31,14 +52,87 @@ export class AhorroSidePanelComponent {
   private readonly appConfigService = inject(AppConfigService);
   private readonly notify = inject(NotificationService);
 
-  formatCurrency(v: number | null | undefined): string { const c = this.appConfigService.getCurrentSettings().currency || 'NIO'; return `${c} ${Number(v ?? 0).toLocaleString('es-NI', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; }
+  private readonly translate = inject(TranslateService);
+
+public pieLabels: string[] = [];
+
+ngOnInit(): void {
+  this.setLabels();
+
+  this.translate.onLangChange.subscribe(() => {
+    this.setLabels();
+  });
+}
+
+private setLabels(): void {
+  this.pieLabels = [
+    this.translate.instant('ahorro.chart.labels.saved'),
+    this.translate.instant('ahorro.chart.labels.withdrawn')
+  ];
+}
+
+
+  public pieChart: ApexChart = {
+    type: 'pie',
+    height: 280,
+    background: 'transparent'
+  };
+
+
+  public pieColors: string[] = [
+    '#10b981',
+    '#f59e0b'
+  ];
+
+  public pieLegend: ApexLegend = {
+    position: 'bottom'
+  };
+
+  public pieDataLabels: ApexDataLabels = {
+    enabled: true,
+    formatter: (_val: number, opts?: any) => {
+      const value = opts?.w?.config?.series?.[opts.seriesIndex] ?? 0;
+      return this.formatCurrency(value);
+    }
+  };
+
+  public pieTooltip: ApexTooltip = {
+    y: {
+      formatter: (value: number) => this.formatCurrency(value)
+    }
+  };
+
+  public pieResponsive: ApexResponsive[] = [
+    {
+      breakpoint: 576,
+      options: {
+        chart: { height: 240 },
+        legend: { position: 'bottom' }
+      }
+    }
+  ];
+
+  get chartSeries(): ApexNonAxisChartSeries {
+    return [
+      Number(this.selectedSocio?.totalAhorro ?? 0),
+      Number(this.selectedSocio?.totalRetirado ?? 0)
+    ];
+  }
+
+  formatCurrency(v: number | null | undefined): string {
+    const c = this.appConfigService.getCurrentSettings().currency || 'NIO';
+    return `${c} ${Number(v ?? 0).toLocaleString('es-NI', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}`;
+  }
 
   onActionClick(action: ActionItem): void {
-
     if (this.alerts.length === 0) {
-      this.notify.show("Seleccione un socio", "Información", "info");
+      this.notify.show('Seleccione un socio', 'Información', 'info');
       return;
     }
+
     switch (action.titleKey) {
       case 'ahorro.actions.newDeposit':
         this.router.navigate(['/socio-ahorro/new', this.alerts[0].socioId]);
@@ -51,33 +145,27 @@ export class AhorroSidePanelComponent {
       case 'ahorro.actions.newSaving':
         this.router.navigate(['/apertura-cuenta-navidena', this.alerts[0].socioId]);
         break;
-      case "ahorro.actions.viewChristmasPlan":
+
+      case 'ahorro.actions.viewChristmasPlan':
         this.showPlanModal = true;
         break;
-      case "ahorro.actions.increaseInstallment":
+
+      case 'ahorro.actions.increaseInstallment':
         this.router.navigate(['/cambio-cuota/new', this.alerts[0].socioId, 'incremento']);
         break;
-      case "ahorro.actions.decreaseInstallment":
+
+      case 'ahorro.actions.decreaseInstallment':
         this.router.navigate(['/cambio-cuota/new', this.alerts[0].socioId, 'disminucion']);
         break;
-        
     }
 
-    console.log('Action clicked:', action);
-
   }
-
-
 
   get orderedActions() {
     return [...this.actions].sort((a, b) => a.order - b.order);
   }
 
-
   closePlanModal(): void {
     this.showPlanModal = false;
   }
-
-
-
 }

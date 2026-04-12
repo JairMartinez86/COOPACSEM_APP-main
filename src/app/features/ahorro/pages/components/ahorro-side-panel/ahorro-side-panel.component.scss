@@ -99,3 +99,32 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.socios-summary-strip {
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.socios-summary-strip__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  opacity: 0.9;
+  margin-bottom: 0.25rem;
+}
+
+.socios-summary-strip__value {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.socios-summary-strip--ahorro {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.socios-summary-strip--retirado {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}

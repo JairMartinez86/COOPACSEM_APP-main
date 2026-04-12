@@ -93,7 +93,12 @@
     "chart": {
       "ahorro": "Ahorro disponible",
       "deposito": "Depósitos mensuales",
-      "intereses": "Intereses acumulados"
+      "intereses": "Intereses acumulados",
+      "labels": {
+        "saving": "Ahorro",
+        "withdrawal": "Retiro",
+        "interest": "Interés"
+      }
     },
     "form": {
       "fieldMeta": {

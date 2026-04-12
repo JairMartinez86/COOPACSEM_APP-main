@@ -155,7 +155,11 @@
     "chart": {
       "chartTitle": "Resumen gráfico",
       "totalSaved": "Total ahorrado",
-      "totalWithdrawn": "Total retirado"
+      "totalWithdrawn": "Total retirado",
+      "labels": {
+      "saved": "Ahorro",
+      "withdrawn": "Retirado"
+    }
     },
     "common": {
       "close": "Cerrar"

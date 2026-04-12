@@ -60,7 +60,7 @@
       "quincena": "Next payroll period",
       "inmediato": "Immediate",
       "afiliacionCorriente": "Current Savings Enrollment",
-    "afiliacionNavidena": "Christmas Savings Enrollment"
+      "afiliacionNavidena": "Christmas Savings Enrollment"
     },
     "actions": {
       "apply": "Apply Movement",
@@ -93,7 +93,12 @@
     "chart": {
       "ahorro": "Available Savings",
       "deposito": "Monthly Deposits",
-      "intereses": "Accumulated Interests"
+      "intereses": "Accumulated Interests",
+      "labels": {
+        "saving": "Savings",
+        "withdrawal": "Withdrawal",
+        "interest": "Interest"
+      }
     },
     "form": {
       "fieldMeta": {

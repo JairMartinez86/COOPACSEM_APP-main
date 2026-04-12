@@ -129,6 +129,8 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
   private readonly subs = new Subscription(); // Manejo de subscripciones
   private readonly filterKey = 'socio-cambio-cuota'; // Key del filtro
 
+  
+
   // Estado del componente
   mode: 'create' | 'view' | 'edit' = 'create';
 
@@ -268,6 +270,13 @@ public pieOptions = {
     // Cargar breadcrumbs traducidos
     this.breadcrumbs = this.translate.instant('socioCambioCuota.breadcrumbs') || this.breadcrumbs;
 
+     this.setLabels();
+
+  this.translate.onLangChange.subscribe(() => {
+    this.setLabels();
+  });
+
+
     // Escuchar filtro de búsqueda
     this.subs.add(
       this.filterSvc.query$(this.filterKey).subscribe(query => {
@@ -328,6 +337,15 @@ public pieOptions = {
     // Inicializa modo según ruta
     this.initRouteModeAndLoad();
   }
+
+
+  private setLabels(): void {
+  this.pieLabels = [
+    this.translate.instant('socioCambioCuota.chart.labels.saving'),
+    this.translate.instant('socioCambioCuota.chart.labels.withdrawal'),
+    this.translate.instant('socioCambioCuota.chart.labels.interest')
+  ];
+}
 
   // Determina modo (create / view)
   private initRouteModeAndLoad(): void {
