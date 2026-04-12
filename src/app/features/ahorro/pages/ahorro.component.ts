@@ -156,10 +156,10 @@ get orderedActions() {
         const summary = data?.summary;
 
         this.cards = [
-          { icon: 'fa-regular fa-hand-holding-heart', titleKey: 'ahorro.summary.totalSaved.title', amount: Number(summary?.totalAhorrado ?? 0), subtitleKey: 'ahorro.summary.totalSaved.subtitle', accent: 'teal' },
-          { icon: 'fa-solid fa-arrow-up-from-bracket', titleKey: 'ahorro.summary.totalWithdrawn.title', amount: Number(summary?.totalRetirado ?? 0), subtitleKey: 'ahorro.summary.totalWithdrawn.subtitle', accent: 'blue' },
-          { icon: 'fa-solid fa-arrow-down', titleKey: 'ahorro.summary.totalDeposited.title', amount: Number(summary?.totalDepositado ?? 0), subtitleKey: 'ahorro.summary.totalDeposited.subtitle', accent: 'blue' },
-          { icon: 'fa-regular fa-clipboard', titleKey: 'ahorro.summary.pendingRequests.title', amount: Number(summary?.solicitudesPendientes ?? 0), subtitleKey: 'ahorro.summary.pendingRequests.subtitle', accent: 'orange' },
+          { icon: 'fa-regular fa-hand-holding-heart fa-2xl', titleKey: 'ahorro.summary.totalSaved.title', amount: Number(summary?.totalAhorrado ?? 0), subtitleKey: 'ahorro.summary.totalSaved.subtitle', accent: 'teal' },
+          { icon: 'fa-solid fa-arrow-up-from-bracket fa-2xl', titleKey: 'ahorro.summary.totalWithdrawn.title', amount: Number(summary?.totalRetirado ?? 0), subtitleKey: 'ahorro.summary.totalWithdrawn.subtitle', accent: 'blue' },
+          { icon: 'fa-solid fa-arrow-down fa-2xl', titleKey: 'ahorro.summary.totalDeposited.title', amount: Number(summary?.totalDepositado ?? 0), subtitleKey: 'ahorro.summary.totalDeposited.subtitle', accent: 'blue' },
+          { icon: 'fa-regular fa-clipboard fa-2xl', titleKey: 'ahorro.summary.pendingRequests.title', amount: Number(summary?.solicitudesPendientes ?? 0), subtitleKey: 'ahorro.summary.pendingRequests.subtitle', accent: 'orange' },
         ];
 
         this.socioRows = data?.socios?.items ?? [];
