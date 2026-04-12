@@ -87,7 +87,8 @@
         "description": "Descripción",
         "accountType": "Account type",
         "amount": "Monto",
-        "balance": "Saldo"
+        "balance": "Saldo",
+        "status": "Status"
       },
       "socios": {
         "code": "Code",
@@ -145,6 +146,9 @@
     },
     "pagination": {
       "showing": "Showing {{start}}-{{end}} of {{total}} members"
+    },
+     "common": {
+      "close": "Close"
     }
   }
 }

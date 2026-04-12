@@ -49,6 +49,7 @@ export interface SimpleMovimientoRow {
   noDeposito?: string | null;
   banco?: string | null;
   estadoKey?: string | null;
+  estado?: string;
 }
 
 export interface PlanRow {
@@ -62,6 +63,7 @@ export interface PlanRow {
 }
 
 export interface AlertItem {
+  socioId: string;
   color: 'warning' | 'info';
   titleKey: string;
   descriptionKey: string;

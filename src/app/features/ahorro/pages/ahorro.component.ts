@@ -182,6 +182,7 @@ private loadSocioDetail(socioId: string): void {
       this.solicitudRows = data?.detail?.solicitudes ?? [];
       this.planesRows = data?.detail?.planes ?? [];
       this.alerts = data?.alerts ?? [];
+  
     },
     error: (error) => {
       this.notificationService.showFromApiResponse(error);

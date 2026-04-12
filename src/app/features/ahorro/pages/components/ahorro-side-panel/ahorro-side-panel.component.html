@@ -17,7 +17,8 @@
               'is-cyan': action.accent === 'cyan',
               'is-amber': action.accent === 'amber',
               'is-emerald': action.accent === 'emerald'
-            }">
+            }"
+            (click)="onActionClick(action)">
             <i [class]="action.icon"></i>
             <span>{{ action.titleKey | translate }}</span>
           </button>
@@ -105,3 +106,82 @@
     </div>
   </div>
 </div>
+
+@if (showPlanModal) {
+  <div class="modal fade show d-block" tabindex="-1" (click)="closePlanModal()">
+    <div class="modal-dialog modal-xl modal-dialog-centered" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">
+            {{ 'ahorro.plans.christmasAccount' | translate }}
+          </h5>
+          <button type="button" class="btn-close" (click)="closePlanModal()"></button>
+        </div>
+
+        <div class="modal-body p-0">
+          <div class="card h-100 border-0 rounded-0">
+            <div class="card-header py-2">
+              <h6 class="mb-0">{{ 'ahorro.plans.christmasAccount' | translate }}</h6>
+            </div>
+
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>{{ 'ahorro.tables.plans.installmentNumber' | translate }}</th>
+                      <th>{{ 'ahorro.tables.common.date' | translate }}</th>
+                      <th>{{ 'ahorro.tables.plans.installment' | translate }}</th>
+                      <th>{{ 'ahorro.tables.plans.status' | translate }}</th>
+                      <th class="text-end">{{ 'ahorro.tables.common.balance' | translate }}</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    @for (row of navidenaRows; track $index) {
+                      <tr>
+                        <td>{{ row.numero }}</td>
+                        <td>{{ row.fecha }}</td>
+                        <td>{{ formatCurrency(row.cuota) }}</td>
+                        <td>
+                          <span
+                            class="badge"
+                            [ngClass]="row.estado === 'Pagado'
+                              ? 'badge-soft-success'
+                              : row.estado === 'Vencido'
+                              ? 'badge-soft-danger'
+                              : 'badge-soft-warning'">
+                            {{ row.estadoKey | translate }}
+                          </span>
+                        </td>
+                        <td class="text-end fw-semibold">{{ formatCurrency(row.saldo) }}</td>
+                      </tr>
+                    }
+
+                    @if (navidenaRows.length === 0) {
+                      <tr>
+                        <td colspan="5" class="text-center text-muted py-3">
+                          {{ 'ahorro.states.noInstallments' | translate }}
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="closePlanModal()">
+            {{ 'ahorro.common.close' | translate }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop fade show"></div>
+}

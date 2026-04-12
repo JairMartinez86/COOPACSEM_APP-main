@@ -88,7 +88,8 @@
         "description": "Descripción",
         "accountType": "Tipo de cuenta",
         "amount": "Monto",
-        "balance": "Saldo"
+        "balance": "Saldo",
+        "status": "Estado"
       },
       "socios": {
         "code": "Código",
@@ -146,6 +147,9 @@
     },
     "pagination": {
       "showing": "Mostrando {{start}}-{{end}} de {{total}} socios"
+    },
+     "common": {
+      "close": "Cerrar"
     }
   }
 }
