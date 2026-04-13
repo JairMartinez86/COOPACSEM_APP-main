@@ -95,7 +95,7 @@
           type="button"
           class="btn btn-outline-secondary"
           (click)="onClose()"
-          [permissionRoute]="['/socio', '/ahorro']"
+          [permissionRoute]="['/socios', '/ahorro']"
           [appPermission]="['new', 'edit']">
           {{ 'socios.common.actions.cancel' | translate }}
         </button>
@@ -109,7 +109,7 @@
           [disableClickButton]="true"
           [unlockOn]="notify.closed$"
           [disabled]="saving"
-          [permissionRoute]="['/socio', '/ahorro']"
+          [permissionRoute]="['/socios', '/ahorro']"
           [appPermission]="['new', 'edit']">
           {{ 'socios.common.actions.save' | translate }}
         </button>

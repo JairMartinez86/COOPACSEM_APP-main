@@ -92,7 +92,7 @@
 
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <button type="button" class="btn btn-success btn-sm" (click)="onExcelImportClick()"
-                [disabled]="importingExcel" [appPermission]="['new', 'edit']" [permissionRoute]="['/socio', '/ahorro']">
+                [disabled]="importingExcel" [appPermission]="['new', 'edit']" [permissionRoute]="['/socios', '/ahorro']">
                 <i class="bi bi-file-earmark-excel me-1"></i>
                 {{ 'socios.import.button' | translate }}
               </button>
@@ -100,7 +100,7 @@
               <input #excelFileInput type="file" accept=".xlsx" class="d-none" (change)="onExcelFileSelected($event)" />
 
               <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']"
-                [permissionRoute]="['/socio', '/ahorro']" (click)="onCreate()">
+                [permissionRoute]="['/socios', '/ahorro']" (click)="onCreate()">
                 <i class="bi bi-plus-lg me-1"></i>
                 {{ 'socios.list.newButton' | translate }}
               </button>
@@ -211,19 +211,18 @@
                     <td class="text-end">
                       <div class="table-actions" (click)="$event.stopPropagation()">
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(item.id)">
-                          <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"
-                            >
+                          <i class="bi" [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'">
                           </i>
                         </button>
 
                         <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onToggleStatus(item)"
-                          [permissionRoute]="['/socio']" [appPermission]="['delete']">
+                          [permissionRoute]="['/socios']" [appPermission]="['delete']">
                           <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'">
                           </i>
                         </button>
 
-                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onDelete(item)"  [permissionRoute]="['/socio']"
-          [appPermission]="['delete']">
+                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onDelete(item)"
+                          [permissionRoute]="['/socios']" [appPermission]="['delete']">
                           <i class="bi bi-trash"></i>
                         </button>
                       </div>

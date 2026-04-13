@@ -44,7 +44,11 @@ export class AppPermissionDirective implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    if (changes['actions'] || changes['permissionRoute'] || changes['permissionMode']) {
+    if (
+      changes['actions'] ||
+      changes['permissionRoute'] ||
+      changes['permissionMode']
+    ) {
       this.applyPermission();
     }
   }
@@ -61,22 +65,27 @@ export class AppPermissionDirective implements OnInit, OnChanges {
 
     if (!allowed) {
       this.renderer.setAttribute(element, 'disabled', 'true');
+      this.renderer.setAttribute(element, 'aria-disabled', 'true');
       this.renderer.addClass(element, 'disabled');
       this.renderer.setStyle(element, 'pointer-events', 'none');
       this.renderer.setStyle(element, 'opacity', '0.65');
     } else {
       this.renderer.removeAttribute(element, 'disabled');
+      this.renderer.removeAttribute(element, 'aria-disabled');
       this.renderer.removeClass(element, 'disabled');
       this.renderer.removeStyle(element, 'pointer-events');
       this.renderer.removeStyle(element, 'opacity');
+      this.renderer.removeStyle(element, 'display');
     }
   }
 
   private getPermissionRoutes(): string[] {
-    if (Array.isArray(this.permissionRoute) && this.permissionRoute.length > 0) {
-      return this.permissionRoute
-        .filter(route => typeof route === 'string' && route.trim().length > 0)
+    if (Array.isArray(this.permissionRoute)) {
+      const routes = this.permissionRoute
+        .filter((route): route is string => typeof route === 'string' && !!route.trim())
         .map(route => this.normalizeRoute(route));
+
+      if (routes.length > 0) return routes;
     }
 
     if (typeof this.permissionRoute === 'string' && this.permissionRoute.trim()) {
@@ -97,6 +106,7 @@ export class AppPermissionDirective implements OnInit, OnChanges {
 
     while (current) {
       const currentPermission = current.snapshot.data?.['permission'];
+
       if (typeof currentPermission === 'string' && currentPermission.trim()) {
         permission = currentPermission;
       }
@@ -108,18 +118,26 @@ export class AppPermissionDirective implements OnInit, OnChanges {
   }
 
   private hasAnyPermission(routes: string[]): boolean {
-    const actions = (Array.isArray(this.actions) ? this.actions : [this.actions])
-      .map(action => this.normalizeAction(action));
+    const actions = this.getActions();
 
+    if (!routes.length || !actions.length) {
+      return false;
+    }
+
+    // OR entre rutas y OR entre acciones
+    // Ejemplo:
+    // has(delete, /socio) || has(delete, /ahorro)
     return routes.some(route =>
-      actions.some(action => this.hasPermission(action, route))
+      actions.some(action => this.permissionService.has(action, route))
     );
   }
 
-  private hasPermission(action: PermissionAction, route: string): boolean {
-    const normalizedRoute = this.normalizeRoute(route);
+  private getActions(): PermissionAction[] {
+    const rawActions = Array.isArray(this.actions) ? this.actions : [this.actions];
 
-    return this.permissionService.has(action, normalizedRoute);
+    return rawActions
+      .filter((action): action is PermissionAction | 'new' => !!action)
+      .map(action => this.normalizeAction(action));
   }
 
   private normalizeAction(action: PermissionAction | 'new'): PermissionAction {
