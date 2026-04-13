@@ -12,7 +12,7 @@
                 <p class="text-muted mb-0">
                     {{ 'socioAhorro.subtitle' | translate }}
                 </p>
-                
+
             </div>
         </div>
 
@@ -27,7 +27,7 @@
                         <h5 class="card-title mb-0">
                             {{ 'socioAhorro.sections.socio' | translate }}
                         </h5>
-                         <!-- estado -->
+                        <!-- estado -->
                         <div class="d-flex justify-content-end gap-1">
                             <small class="text-muted d-flex align-items-center gap-1 mb-0">
                                 {{ 'socioAhorro.fields.estado' | translate }}
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
 
-                          
+
 
                         </div>
                     </div>
@@ -268,8 +268,11 @@
                                             ? ('socioAhorro.destinos.ahorroCorriente' | translate)
                                             : item.destino === 'Ahorro Nav'
                                             ? ('socioAhorro.destinos.ahorroNavideno' | translate)
+                                            : item.destino === 'Ahorro Intereses'
+                                            ? ('socioAhorro.destinos.ahorroIntereses' | translate)
                                             : item.destino
                                             }}
+                                            
                                         </td>
 
                                         <td>

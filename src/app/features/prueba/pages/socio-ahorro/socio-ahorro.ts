@@ -153,7 +153,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
     historialAll: HistorialItem[] = [];
 
     historialCurrentPage = 1;
-    historialPageSize = 20;
+    historialPageSize = 5;
     historialCurrentTerm = '';
 
     socio: SocioResumen | null = null;
