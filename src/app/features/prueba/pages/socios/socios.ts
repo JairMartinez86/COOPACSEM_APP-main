@@ -527,7 +527,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (res: any) => {
           const socioApi = res?.data?.socio ?? null;
 
-        
+
 
           socioApi.fechaEmision = this.appConfigService.formatDate(socioApi.fechaEmision);
           socioApi.fechaVencimiento = this.appConfigService.formatDate(socioApi.fechaVencimiento);
@@ -664,6 +664,14 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       }
     }
+
+    // Registrar fecha servidor
+    this.engine.addControl('FechaServidor');
+
+    this.engine.setControlValue(
+      'FechaServidor',
+      this.appConfigService.getCurrentSettings().fechaServidor
+    );
 
     this.engine.validateAll?.();
     this.engine.clearErrors?.();
@@ -986,66 +994,66 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-onSave(): void {
-  if (this.mode === 'view') {
-    return;
-  }
+  onSave(): void {
+    if (this.mode === 'view') {
+      return;
+    }
 
-  this.engine.patchValues?.({
-    ...this.socio,
-    beneficiarioPorcentaje: this.beneficiariosTotalPorcentaje
-  });
+    this.engine.patchValues?.({
+      ...this.socio,
+      beneficiarioPorcentaje: this.beneficiariosTotalPorcentaje
+    });
 
-  const ok = this.engine.validateAll?.();
+    const ok = this.engine.validateAll?.();
 
-  if (!ok) {
-    this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
-    return;
-  }
+    if (!ok) {
+      this.notify.show?.(this.engine.getGroupedErrorsHtmlSnapshot?.(), '', 'warning');
+      return;
+    }
 
-  this.engine.clearErrors?.();
-  this.notify.close?.();
+    this.engine.clearErrors?.();
+    this.notify.close?.();
 
-  const payload = this.toSocioForm(this.socio);
-  payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
-  payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
-  payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
-  payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
-  payload.afiliacionFechaDeposito = this.normalizeDate(this.socio.afiliacionFechaDeposito);
-  payload.cuentaCorrienteFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaCorrienteFechaInicioDeduccion);
-  payload.cuentaNavidenaFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaNavidenaFechaInicioDeduccion);
-
-
+    const payload = this.toSocioForm(this.socio);
+    payload.fechaEmision = this.normalizeDate(this.socio.fechaEmision);
+    payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
+    payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
+    payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
+    payload.afiliacionFechaDeposito = this.normalizeDate(this.socio.afiliacionFechaDeposito);
+    payload.cuentaCorrienteFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaCorrienteFechaInicioDeduccion);
+    payload.cuentaNavidenaFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaNavidenaFechaInicioDeduccion);
 
 
-  this.sociosService
-    .save(payload)
-    .pipe(finalize(() => { }))
-    .subscribe({
-      next: (res: any) => {
-        if (this.mode === 'edit') {
-          const savedId = res?.data?.socio?.id ?? this.socio.id;
 
-          this.draftRef?.clear();
-          this.draftRef?.cancel();
-          this.notify.showFromApiResponse?.(res, 'success');
 
-          if (savedId) {
-            this.draftRef = undefined;
-            this.dataReady = false;
-            this.loadSocioById(savedId);
+    this.sociosService
+      .save(payload)
+      .pipe(finalize(() => { }))
+      .subscribe({
+        next: (res: any) => {
+          if (this.mode === 'edit') {
+            const savedId = res?.data?.socio?.id ?? this.socio.id;
+
+            this.draftRef?.clear();
+            this.draftRef?.cancel();
+            this.notify.showFromApiResponse?.(res, 'success');
+
+            if (savedId) {
+              this.draftRef = undefined;
+              this.dataReady = false;
+              this.loadSocioById(savedId);
+            }
+
+            return;
           }
 
-          return;
-        }
-
-        this.resetFormAfterSuccess(res);
-      },
-      error: (err: any) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      },
-    });
-}
+          this.resetFormAfterSuccess(res);
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        },
+      });
+  }
   onCancel(): void {
     this.notify.close?.();
     this.draftRef?.cancel();
@@ -1856,27 +1864,27 @@ onSave(): void {
     return null;
   }
 
-esFechaVencida(value: any): boolean {
-  const fecha = this.parseLocalDate(value);
-  const hoy = this.parseLocalDate(this.appConfigService.getCurrentSettings().fechaServidor);
+  esFechaVencida(value: any): boolean {
+    const fecha = this.parseLocalDate(value);
+    const hoy = this.parseLocalDate(this.appConfigService.getCurrentSettings().fechaServidor);
 
-  if (!fecha || !hoy) return false;
+    if (!fecha || !hoy) return false;
 
-  fecha.setHours(0, 0, 0, 0);
-  hoy.setHours(0, 0, 0, 0);
+    fecha.setHours(0, 0, 0, 0);
+    hoy.setHours(0, 0, 0, 0);
 
-  return fecha < hoy;
-}
+    return fecha < hoy;
+  }
 
-esFechaPorVencer(value: any): boolean {
-  const fecha = this.parseLocalDate(value);
-  const hoy = this.parseLocalDate(this.appConfigService.getCurrentSettings().fechaServidor);
+  esFechaPorVencer(value: any): boolean {
+    const fecha = this.parseLocalDate(value);
+    const hoy = this.parseLocalDate(this.appConfigService.getCurrentSettings().fechaServidor);
 
-  if (!fecha || !hoy) return false;
+    if (!fecha || !hoy) return false;
 
-  const limite = new Date(hoy);
-  limite.setDate(limite.getDate() + 30);
+    const limite = new Date(hoy);
+    limite.setDate(limite.getDate() + 30);
 
-  return fecha >= hoy && fecha <= limite;
-}
+    return fecha >= hoy && fecha <= limite;
+  }
 }

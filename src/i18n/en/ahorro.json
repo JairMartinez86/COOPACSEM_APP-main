@@ -157,7 +157,8 @@
   "totalWithdrawn": "Total withdrawn",
    "labels": {
       "saved": "Savings",
-      "withdrawn": "Withdrawn"
+      "withdrawn": "Withdrawn",
+      "interests": "Interests"
     }
 },
     "common": {

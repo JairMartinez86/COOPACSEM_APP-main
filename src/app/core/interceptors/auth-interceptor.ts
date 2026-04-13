@@ -135,53 +135,54 @@ export class AuthInterceptor implements HttpInterceptor {
     const value = payload.toLowerCase();
     return value.includes('<!doctype html') || value.includes('<html');
   }
-  /*
-    private extractErrorMessage(err: any, fallbackKey: string): string {
-      const fallback = this.t(fallbackKey);
-  
-      if (!err) {
-        return fallback;
-      }
-  
-      if (typeof err?.mensaje === 'string' && err.mensaje.trim()) {
-        return err.mensaje;
-      }
-  
-      if (typeof err?.message === 'string' && err.message.trim()) {
-        return err.message;
-      }
-  
-      if (typeof err?.error?.mensaje === 'string' && err.error.mensaje.trim()) {
-        return err.error.mensaje;
-      }
-  
-      if (typeof err?.error?.message === 'string' && err.error.message.trim()) {
-        return err.error.message;
-      }
-  
-      if (typeof err?.error === 'string') {
-        if (this.isHtmlPayload(err.error)) {
-          return this.t('interceptor.errors.sessionExpiredMessage');
-        }
-  
-        if (err.error.trim()) {
-          return err.error;
-        }
-      }
-  
-      if (typeof err === 'string') {
-        if (this.isHtmlPayload(err)) {
-          return this.t('interceptor.errors.sessionExpiredMessage');
-        }
-  
-        if (err.trim()) {
-          return err;
-        }
-      }
-  
-      return fallback;
-    }*/
 
+  /*
+  private extractErrorMessage(err: any, fallbackKey: string): string {
+    const fallback = this.t(fallbackKey);
+
+    if (!err) {
+      return fallback;
+    }
+
+    if (typeof err?.mensaje === 'string' && err.mensaje.trim()) {
+      return err.mensaje;
+    }
+
+    if (typeof err?.message === 'string' && err.message.trim()) {
+      return err.message;
+    }
+
+    if (typeof err?.error?.mensaje === 'string' && err.error.mensaje.trim()) {
+      return err.error.mensaje;
+    }
+
+    if (typeof err?.error?.message === 'string' && err.error.message.trim()) {
+      return err.error.message;
+    }
+
+    if (typeof err?.error === 'string') {
+      if (this.isHtmlPayload(err.error)) {
+        return this.t('interceptor.errors.sessionExpiredMessage');
+      }
+
+      if (err.error.trim()) {
+        return err.error;
+      }
+    }
+
+    if (typeof err === 'string') {
+      if (this.isHtmlPayload(err)) {
+        return this.t('interceptor.errors.sessionExpiredMessage');
+      }
+
+      if (err.trim()) {
+        return err;
+      }
+    }
+
+    return fallback;
+  }
+  */
 
   private extractErrorMessage(err: any, fallbackKey: string): string {
     const fallback = this.t(fallbackKey);
@@ -260,7 +261,6 @@ export class AuthInterceptor implements HttpInterceptor {
       withCredentials: true
     });
   }
-
 
   private buildRequest(req: HttpRequest<any>): HttpRequest<any> {
     if (this.isAssetRequest(req.url)) {
@@ -463,6 +463,8 @@ export class AuthInterceptor implements HttpInterceptor {
           return throwError(() => normalized);
         }
 
+        // Reparado:
+        // ya NO excluye validate-session del refresh.
         if (err.status === 401 && !isAuthRequest) {
           if (this.isRefreshing) {
             return this.refreshTokenSubject.pipe(
@@ -557,6 +559,8 @@ export class AuthInterceptor implements HttpInterceptor {
               'interceptor.errors.sessionExpiredMessage'
             );
 
+            // Reparado:
+            // validate-session ya no hace logout directo aquí.
             if (isRefreshEndpoint || isLogoutEndpoint) {
               this.handleLogout();
             }
@@ -647,12 +651,11 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         const normalized = {
-          ...(err?.error ?? {}), // 👈 mantiene todo lo del backend
+          ...(err?.error ?? {}),
           ok: false,
           mensaje: message,
           codigo: err.status ?? err?.error?.codigo ?? 0
         };
-
 
         const errorCode = err?.error?.errorCode;
 
@@ -662,6 +665,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (!this.isLoggingOut && !skipModal) {
           this.notification.show(message, title, type);
         }
+
         return throwError(() => normalized);
       })
     );

@@ -159,7 +159,8 @@
       "totalWithdrawn": "Total retirado",
       "labels": {
       "saved": "Ahorro",
-      "withdrawn": "Retirado"
+      "withdrawn": "Retirado",
+      "interests": "Intereses"
     }
     },
     "common": {

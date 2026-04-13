@@ -627,6 +627,12 @@
               "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
               "when": "",
               "msj": "Ingrese una fecha de vencimiento valida"
+            },
+             "2": {
+              "rule": "DATE>=",
+              "value": "{FechaServidor}",
+              "when": "",
+              "msj": "La fecha de vencimiento de la identificación ha expirado. Por favor, actualice el documento."
             }
           }
         },

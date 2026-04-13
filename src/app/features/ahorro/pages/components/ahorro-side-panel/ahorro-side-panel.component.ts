@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   ActionItem,
@@ -22,6 +22,7 @@ import {
   ApexTooltip,
   ChartComponent
 } from 'ng-apexcharts';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ahorro-side-panel',
@@ -35,12 +36,14 @@ import {
   templateUrl: './ahorro-side-panel.component.html',
   styleUrl: './ahorro-side-panel.component.scss',
 })
-export class AhorroSidePanelComponent {
+export class AhorroSidePanelComponent implements OnInit, OnDestroy {
   @Input() actions: ActionItem[] = [];
   @Input() alerts: AlertItem[] = [];
   @Input() reports: ReportItem[] = [];
   @Input() planesRows: PlanRow[] = [];
   @Input() selectedSocio: SocioDetail | null = null;
+
+  private langChangeSub?: Subscription;
 
   get navidenaRows(): PlanRow[] {
     return (this.planesRows || []).filter(x => x.tipoCuenta === 'Navidena');
@@ -51,26 +54,29 @@ export class AhorroSidePanelComponent {
   private readonly router = inject(Router);
   private readonly appConfigService = inject(AppConfigService);
   private readonly notify = inject(NotificationService);
-
   private readonly translate = inject(TranslateService);
 
-public pieLabels: string[] = [];
+  public pieLabels: string[] = [];
 
-ngOnInit(): void {
-  this.setLabels();
-
-  this.translate.onLangChange.subscribe(() => {
+  ngOnInit(): void {
     this.setLabels();
-  });
-}
 
-private setLabels(): void {
-  this.pieLabels = [
-    this.translate.instant('ahorro.chart.labels.saved'),
-    this.translate.instant('ahorro.chart.labels.withdrawn')
-  ];
-}
+    this.langChangeSub = this.translate.onLangChange.subscribe(() => {
+      this.setLabels();
+    });
+  }
 
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
+  }
+
+  private setLabels(): void {
+    this.pieLabels = [
+      this.translate.instant('ahorro.chart.labels.saved'),
+      this.translate.instant('ahorro.chart.labels.withdrawn'),
+      this.translate.instant('ahorro.chart.labels.interests')
+    ];
+  }
 
   public pieChart: ApexChart = {
     type: 'pie',
@@ -78,10 +84,10 @@ private setLabels(): void {
     background: 'transparent'
   };
 
-
   public pieColors: string[] = [
     '#10b981',
-    '#f59e0b'
+    '#f59e0b',
+    '#3b82f6'
   ];
 
   public pieLegend: ApexLegend = {
@@ -115,7 +121,8 @@ private setLabels(): void {
   get chartSeries(): ApexNonAxisChartSeries {
     return [
       Number(this.selectedSocio?.totalAhorro ?? 0),
-      Number(this.selectedSocio?.totalRetirado ?? 0)
+      Number(this.selectedSocio?.totalRetirado ?? 0),
+      Number((this.selectedSocio as any)?.totalIntereses ?? 0)
     ];
   }
 
@@ -158,7 +165,6 @@ private setLabels(): void {
         this.router.navigate(['/cambio-cuota/new', this.alerts[0].socioId, 'disminucion']);
         break;
     }
-
   }
 
   get orderedActions() {
