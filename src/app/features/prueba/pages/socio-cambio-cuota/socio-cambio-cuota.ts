@@ -129,7 +129,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
   private readonly subs = new Subscription(); // Manejo de subscripciones
   private readonly filterKey = 'socio-cambio-cuota'; // Key del filtro
 
-  
+
 
   // Estado del componente
   mode: 'create' | 'view' | 'edit' = 'create';
@@ -192,18 +192,18 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
   // CONFIGURACIÓN DE GRÁFICO
   // =============================
   public pieColors: string[] = [
-  '#19b7a5', // ahorro = verde
-  '#f59e0b', // retirado = orange
-  '#1d4ed8'  // interés = amarillo
-];
+    '#19b7a5', // ahorro = verde
+    '#f59e0b', // retirado = orange
+    '#1d4ed8'  // interés = amarillo
+  ];
 
- public pieSeries: ApexNonAxisChartSeries = [0, 0, 0];
+  public pieSeries: ApexNonAxisChartSeries = [0, 0, 0];
 
-public pieLabels: string[] = [
-  'Ahorro',
-  'Retirado',
-  'Interés'
-];
+  public pieLabels: string[] = [
+    'Ahorro',
+    'Retirado',
+    'Interés'
+  ];
 
   public pieChart: ApexChart = {
     type: 'pie',
@@ -211,24 +211,24 @@ public pieLabels: string[] = [
   };
 
   // Tooltip con formato de moneda
-public pieTooltip: ApexTooltip = {
-  y: {
-    formatter: (value: number) => {
-      const currency = this.appConfigService.getCurrentSettings().currency;
-      return `${currency} ${this.formatCurrency(value)}`;
-    }
-  }
-};
-public pieOptions = {
-  tooltip: {
+  public pieTooltip: ApexTooltip = {
     y: {
       formatter: (value: number) => {
         const currency = this.appConfigService.getCurrentSettings().currency;
         return `${currency} ${this.formatCurrency(value)}`;
       }
     }
-  }
-};
+  };
+  public pieOptions = {
+    tooltip: {
+      y: {
+        formatter: (value: number) => {
+          const currency = this.appConfigService.getCurrentSettings().currency;
+          return `${currency} ${this.formatCurrency(value)}`;
+        }
+      }
+    }
+  };
 
 
   public pieLegend: ApexLegend = {
@@ -270,11 +270,11 @@ public pieOptions = {
     // Cargar breadcrumbs traducidos
     this.breadcrumbs = this.translate.instant('socioCambioCuota.breadcrumbs') || this.breadcrumbs;
 
-     this.setLabels();
-
-  this.translate.onLangChange.subscribe(() => {
     this.setLabels();
-  });
+
+    this.translate.onLangChange.subscribe(() => {
+      this.setLabels();
+    });
 
 
     // Escuchar filtro de búsqueda
@@ -302,6 +302,9 @@ public pieOptions = {
       this.appConfigService.getCurrentSettings().fechaServidor
     );
 
+
+
+
     // Sincronizar valores en el form
     (this.form as any).FechaServidor = this.appConfigService.getCurrentSettings().fechaServidor;
     (this.form as any).tipoMovimiento = this.tipoMovimiento;
@@ -313,6 +316,8 @@ public pieOptions = {
 
         const routeTipo = params.get('tipoMovimiento');
         this.tipoMovimiento = routeTipo === 'disminucion' ? 'disminucion' : 'incremento';
+
+
 
         this.form.socioId = this.socioId;
         this.form.tipoMovimiento = this.tipoMovimiento;
@@ -340,12 +345,12 @@ public pieOptions = {
 
 
   private setLabels(): void {
-  this.pieLabels = [
-    this.translate.instant('socioCambioCuota.chart.labels.saving'),
-    this.translate.instant('socioCambioCuota.chart.labels.withdrawal'),
-    this.translate.instant('socioCambioCuota.chart.labels.interest')
-  ];
-}
+    this.pieLabels = [
+      this.translate.instant('socioCambioCuota.chart.labels.saving'),
+      this.translate.instant('socioCambioCuota.chart.labels.withdrawal'),
+      this.translate.instant('socioCambioCuota.chart.labels.interest')
+    ];
+  }
 
   // Determina modo (create / view)
   private initRouteModeAndLoad(): void {
@@ -417,6 +422,14 @@ public pieOptions = {
         next: (res: any) => {
           const data = res?.data ?? {};
 
+    
+          if (this.form.tipoCuenta == 'corriente') {
+            this.form.cuotaActual = Number(data?.cuotas?.corriente ?? 0);
+          }
+          else {
+            this.form.cuotaActual = Number(data?.cuotas?.navideno ?? 0);
+          }
+
           this.socio = data?.socio ?? null;
 
           // Asignar cuotas
@@ -441,6 +454,23 @@ public pieOptions = {
             estado: String(x?.estadoDescripcion ?? ''),
             estadoRaw: Number(x?.estado ?? 0)
           }));
+
+          this.engine.setControlValue(
+            'FechaServidor',
+            this.appConfigService.getCurrentSettings().fechaServidor
+          );
+
+
+
+          this.engine.setControlValue(
+            'CuotaActual',
+            this.form.cuotaActual
+          );
+
+
+
+
+
 
           this.applyFilter();
 
@@ -489,6 +519,15 @@ public pieOptions = {
     this.form.cuotaActual = this.form.tipoCuenta === 'corriente'
       ? Number(this.cuotas.corriente ?? 0)
       : Number(this.cuotas.navideno ?? 0);
+
+
+    if (this.form.tipoCuenta == 'corriente') {
+      this.form.cuotaActual = Number(this.cuotas.corriente ?? 0);
+    }
+    else {
+      this.form.cuotaActual = Number(this.cuotas.navideno ?? 0);
+    }
+
   }
 
   // Calcula diferencia entre cuotas

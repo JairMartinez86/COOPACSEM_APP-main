@@ -236,30 +236,30 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private cloneRequest(req: HttpRequest<any>, token?: string): HttpRequest<any> {
-  const currentHeaders: Record<string, string> = {};
+    const currentHeaders: Record<string, string> = {};
 
-  req.headers.keys().forEach((key) => {
-    const value = req.headers.get(key);
-    if (value !== null) {
-      currentHeaders[key] = value;
+    req.headers.keys().forEach((key) => {
+      const value = req.headers.get(key);
+      if (value !== null) {
+        currentHeaders[key] = value;
+      }
+    });
+
+    const headers: Record<string, string> = {
+      ...currentHeaders,
+      'Accept-Language': this.getCurrentLanguageHeader(),
+      ...this.requestLocation.getHeadersSnapshot()
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
     }
-  });
 
-  const headers: Record<string, string> = {
-    ...currentHeaders,
-    'Accept-Language': this.getCurrentLanguageHeader(),
-    ...this.requestLocation.getHeadersSnapshot()
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    return req.clone({
+      setHeaders: headers,
+      withCredentials: true
+    });
   }
-
-  return req.clone({
-    setHeaders: headers,
-    withCredentials: true
-  });
-}
 
 
   private buildRequest(req: HttpRequest<any>): HttpRequest<any> {
@@ -463,7 +463,7 @@ export class AuthInterceptor implements HttpInterceptor {
           return throwError(() => normalized);
         }
 
-        if (err.status === 401 && !isAuthRequest && !isValidateSessionEndpoint) {
+        if (err.status === 401 && !isAuthRequest) {
           if (this.isRefreshing) {
             return this.refreshTokenSubject.pipe(
               filter((token): token is string => token !== null),
@@ -557,7 +557,7 @@ export class AuthInterceptor implements HttpInterceptor {
               'interceptor.errors.sessionExpiredMessage'
             );
 
-            if (isRefreshEndpoint || isLogoutEndpoint || isValidateSessionEndpoint) {
+            if (isRefreshEndpoint || isLogoutEndpoint) {
               this.handleLogout();
             }
             break;
@@ -654,14 +654,14 @@ export class AuthInterceptor implements HttpInterceptor {
         };
 
 
-       const errorCode = err?.error?.errorCode;
+        const errorCode = err?.error?.errorCode;
 
-      const skipModal =
-        errorCode === 'CUSTOM_ERROR';
+        const skipModal =
+          errorCode === 'CUSTOM_ERROR';
 
-      if (!this.isLoggingOut && !skipModal) {
-        this.notification.show(message, title, type);
-      }
+        if (!this.isLoggingOut && !skipModal) {
+          this.notification.show(message, title, type);
+        }
         return throwError(() => normalized);
       })
     );
