@@ -165,7 +165,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
 
   // Paginación historial
   historialCurrentPage = 1;
-  historialPageSize = 5;
+  historialPageSize = 20;
   historialCurrentTerm = '';
   historial: HistorialItem[] = [];
   historialAll: HistorialItem[] = [];

@@ -52,7 +52,8 @@
     "destinos": {
       "ahorroCorriente": "Ahorro a Cuenta Corriente",
       "ahorroNavideno": "Ahorro a Cuenta navideña",
-      "creditoActivo": "Aplicar a crédito"
+      "creditoActivo": "Aplicar a crédito",
+      "ahorroIntereses": "Intereses Generados"
     },
     "summary": {
       "availability": "Disponibilidad",

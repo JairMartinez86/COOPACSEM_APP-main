@@ -103,7 +103,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
 
 
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 20;
   readonly pageSizeOptions = [10, 20, 50];
 
   breadcrumbs = [

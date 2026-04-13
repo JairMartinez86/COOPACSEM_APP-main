@@ -13,7 +13,8 @@
     },
     "accountTypes": {
       "current": "Current",
-      "christmas": "Christmas"
+      "christmas": "Christmas",
+       "intereses": "Interest"
     },
     "status": {
       "active": "Active",

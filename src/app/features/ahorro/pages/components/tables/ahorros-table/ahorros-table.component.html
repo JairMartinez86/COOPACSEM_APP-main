@@ -1,47 +1,124 @@
 <div class="card">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-sm mb-0">
-                <thead>
-                    <tr>
-                        <th>{{ 'ahorro.tables.deposits.registerDate' | translate }}</th>
-                        <!--<th>{{ 'ahorro.tables.common.date' | translate }}</th>-->
-                        <th>{{ 'ahorro.tables.common.description' | translate }}</th>
-                        <th>{{ 'ahorro.tables.common.accountType' | translate }}</th>
-                        <th class="text-end">{{ 'ahorro.tables.common.amount' | translate }}</th>
-                        <th class="text-end">{{ 'ahorro.tables.common.balance' | translate }}</th>
-                    </tr>
-                </thead>
-                <tbody>@for (row of rows; track $index) {<tr>
-                        <td>{{ row.fechaRegistro }}</td>
-                        <!--<td>{{ row.fecha }}</td>-->
-                        <td>
-                            <div class="fw-semibold"> {{
-                                row.descripcion === 'Ahorro ExtOrd'
-                                ? ('socioAhorro.destinos.ahorroCorriente' | translate)
-                                : row.descripcion === 'Ahorro Nav'
-                                ? ('socioAhorro.destinos.ahorroNavideno' | translate)
-                                : row.descripcion === 'Retiro ExtOrd'
-                                ? ('socioRetiro.destinos.retiroCorriente' | translate)
-                                : row.descripcion === 'Retiro Nav'
-                                ? ('socioRetiro.destinos.retiroNavideno' | translate)
-                                : row.descripcion
-                                }}</div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-sm mb-0">
+        <thead>
+          <tr>
+            <th>{{ 'ahorro.tables.deposits.registerDate' | translate }}</th>
+            <!--<th>{{ 'ahorro.tables.common.date' | translate }}</th>-->
+            <th>{{ 'ahorro.tables.common.description' | translate }}</th>
+            <th>{{ 'ahorro.tables.common.accountType' | translate }}</th>
+            <th class="text-end">{{ 'ahorro.tables.common.amount' | translate }}</th>
+            <th class="text-end">{{ 'ahorro.tables.common.balance' | translate }}</th>
+          </tr>
+        </thead>
 
+        <tbody>
+          @for (row of pagedRows; track $index) {
+            <tr>
+              <td>{{ row.fechaRegistro }}</td>
+              <!--<td>{{ row.fecha }}</td>-->
+              <td>
+                <div class="fw-semibold">
+                  {{
+                    row.descripcion === 'Ahorro ExtOrd'
+                      ? ('socioAhorro.destinos.ahorroCorriente' | translate)
+                    : row.descripcion === 'Ahorro Nav'
+                      ? ('socioAhorro.destinos.ahorroNavideno' | translate)
+                    : row.descripcion === 'Retiro ExtOrd'
+                      ? ('socioRetiro.destinos.retiroCorriente' | translate)
+                    : row.descripcion === 'Retiro Nav'
+                      ? ('socioRetiro.destinos.retiroNavideno' | translate)
+                    : row.descripcion === 'Ahorro Intereses'
+                      ? ('socioAhorro.destinos.ahorroIntereses' | translate)
+                    : row.descripcion
+                  }}
+                </div>
+              </td>
 
+              <td>
+                <span class="badge"
+                  [ngClass]="row.tipoCuenta === 'Corriente' ? 'badge-soft-success' : 'badge-soft-warning'">
+                  {{
+                    row.tipoCuenta === 'Corriente'
+                      ? ('ahorro.accountTypes.current' | translate)
+                      : ('ahorro.accountTypes.christmas' | translate)
+                  }}
+                </span>
 
-                        </td>
-                        <td><span class="badge"
-                                [ngClass]="row.tipoCuenta === 'Corriente' ? 'badge-soft-success' : 'badge-soft-warning'">{{
-                                row.tipoCuenta === 'Corriente' ? ('ahorro.accountTypes.current' | translate) :
-                                ('ahorro.accountTypes.christmas' | translate) }}</span></td>
-                        <td class="text-end">{{ formatCurrency(row.monto) }}</td>
-                        <td class="text-end">{{ formatCurrency(row.saldo) }}</td>
-                    </tr>} @if (rows.length === 0) {<tr>
-                        <td colspan="5" class="text-center text-muted py-3">{{ 'ahorro.states.noRecords' | translate }}
-                        </td>
-                    </tr>}</tbody>
-            </table>
-        </div>
+                @if ((row.descripcion || '').toUpperCase().includes('INTERESE')) {
+                  <span class="badge badge-soft-info ms-1">
+                    {{ 'ahorro.accountTypes.intereses' | translate }}
+                  </span>
+                }
+              </td>
+
+              <td class="text-end">{{ formatCurrency(row.monto) }}</td>
+              <td class="text-end">{{ formatCurrency(row.saldo) }}</td>
+            </tr>
+          }
+
+          @if (pagedRows.length === 0) {
+            <tr>
+              <td colspan="5" class="text-center text-muted py-3">
+                {{ 'ahorro.states.noRecords' | translate }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
+  </div>
+
+  @if (rows.length > 0) {
+    <div class="card-footer bg-transparent d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <span class="small text-muted">
+          Mostrando {{ startRecord }} - {{ endRecord }} de {{ rows.length }}
+        </span>
+
+        <select class="form-select form-select-sm w-auto" [value]="pageSize" (change)="onPageSizeChange($event)">
+          @for (size of pageSizeOptions; track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+      </div>
+
+      <nav aria-label="Paginación de ahorros">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="page === 1">
+            <button type="button" class="page-link" (click)="goToPage(1)" [disabled]="page === 1">
+              «
+            </button>
+          </li>
+
+          <li class="page-item" [class.disabled]="page === 1">
+            <button type="button" class="page-link" (click)="prevPage()" [disabled]="page === 1">
+              ‹
+            </button>
+          </li>
+
+          @for (p of visiblePages; track p) {
+            <li class="page-item" [class.active]="p === page">
+              <button type="button" class="page-link" (click)="goToPage(p)">
+                {{ p }}
+              </button>
+            </li>
+          }
+
+          <li class="page-item" [class.disabled]="page === totalPages">
+            <button type="button" class="page-link" (click)="nextPage()" [disabled]="page === totalPages">
+              ›
+            </button>
+          </li>
+
+          <li class="page-item" [class.disabled]="page === totalPages">
+            <button type="button" class="page-link" (click)="goToPage(totalPages)" [disabled]="page === totalPages">
+              »
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  }
 </div>

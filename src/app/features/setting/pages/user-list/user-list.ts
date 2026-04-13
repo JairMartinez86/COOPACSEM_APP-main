@@ -151,7 +151,7 @@ export class UserList implements OnInit, AfterViewInit, OnDestroy, CanComponentD
 
   // Paginación
   page = 1;
-  pageSize = 8;
+  pageSize = 20;
   totalPages = 1;
 
   // Selección múltiple

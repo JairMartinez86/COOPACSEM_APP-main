@@ -11,31 +11,90 @@
                         <th class="text-end">{{ 'ahorro.tables.common.amount' | translate }}</th>
                     </tr>
                 </thead>
-                <tbody>@for (row of rows; track $index) {<tr>
-                    <td>{{ row.fechaRegistro }}</td>
+                <tbody>
+                    @for (row of pagedRows; track $index) {
+                    <tr>
+                        <td>{{ row.fechaRegistro }}</td>
                         <!--<td>{{ row.fecha }}</td>-->
                         <td>
-                            <div class="fw-semibold"> {{
-                                            row.descripcion === 'Retiro ExtOrd'
-                                            ? ('socioRetiro.destinos.retiroCorriente' | translate)
-                                            : row.descripcion === 'Retiro Nav'
-                                            ? ('socioRetiro.destinos.retiroNavideno' | translate)
-                                            : row.descripcion
-                                            }}</div>
-
-
-
+                            <div class="fw-semibold">
+                                {{
+                                    row.descripcion === 'Retiro ExtOrd'
+                                        ? ('socioRetiro.destinos.retiroCorriente' | translate)
+                                    : row.descripcion === 'Retiro Nav'
+                                        ? ('socioRetiro.destinos.retiroNavideno' | translate)
+                                    : row.descripcion
+                                }}
+                            </div>
                         </td>
-                        <td><span class="badge"
-                                [ngClass]="row.tipoCuenta === 'Corriente' ? 'badge-soft-success' : 'badge-soft-warning'">{{
-                                row.tipoCuenta === 'Corriente' ? ('ahorro.accountTypes.current' | translate) :
-                                ('ahorro.accountTypes.christmas' | translate) }}</span></td>
+                        <td>
+                            <span class="badge"
+                                [ngClass]="row.tipoCuenta === 'Corriente' ? 'badge-soft-success' : 'badge-soft-warning'">
+                                {{
+                                    row.tipoCuenta === 'Corriente'
+                                        ? ('ahorro.accountTypes.current' | translate)
+                                        : ('ahorro.accountTypes.christmas' | translate)
+                                }}
+                            </span>
+                        </td>
                         <td class="text-end fw-semibold">{{ formatCurrency(row.monto) }}</td>
-                    </tr>} @if (rows.length === 0) {<tr>
-                        <td colspan="4" class="text-center text-muted py-3">{{ 'ahorro.states.noRecords' | translate }}
+                    </tr>
+                    }
+
+                    @if (pagedRows.length === 0) {
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-3">
+                            {{ 'ahorro.states.noRecords' | translate }}
                         </td>
-                    </tr>}</tbody>
+                    </tr>
+                    }
+                </tbody>
             </table>
         </div>
     </div>
+
+    @if (rows.length > 0) {
+    <div class="card-footer bg-transparent d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+        <div class="small text-muted">
+            Mostrando {{ startRecord }} - {{ endRecord }} de {{ rows.length }}
+        </div>
+
+        <nav aria-label="Paginación de retiros">
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item" [class.disabled]="page === 1">
+                    <button type="button" class="page-link" (click)="goToPage(1)" [disabled]="page === 1">
+                        «
+                    </button>
+                </li>
+
+                <li class="page-item" [class.disabled]="page === 1">
+                    <button type="button" class="page-link" (click)="prevPage()" [disabled]="page === 1">
+                        ‹
+                    </button>
+                </li>
+
+                @for (p of visiblePages; track p) {
+                <li class="page-item" [class.active]="p === page">
+                    <button type="button" class="page-link" (click)="goToPage(p)">
+                        {{ p }}
+                    </button>
+                </li>
+                }
+
+                <li class="page-item" [class.disabled]="page === totalPages">
+                    <button type="button" class="page-link" (click)="nextPage()" [disabled]="page === totalPages">
+                        ›
+                    </button>
+                </li>
+
+                <li class="page-item" [class.disabled]="page === totalPages">
+                    <button type="button" class="page-link" (click)="goToPage(totalPages)"
+                        [disabled]="page === totalPages">
+                        »
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    }
 </div>

@@ -138,7 +138,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
     historialAll: HistorialItem[] = [];
 
     historialCurrentPage = 1;
-    historialPageSize = 5;
+    historialPageSize = 20;
     historialCurrentTerm = '';
 
     socio: SocioResumen | null = null;
