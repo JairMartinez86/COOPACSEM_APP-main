@@ -1,0 +1,11 @@
+{
+  "alerts": {
+    "common": {
+      "title": "Alerts"
+    },
+    "socios": {
+      "identificationExpiredRecently": "The identification expired {{months}} month ago. Expiration date: {{expirationDate}}.",
+      "identificationExpired": "The identification expired {{months}} months ago. Expiration date: {{expirationDate}}."
+    }
+  }
+}

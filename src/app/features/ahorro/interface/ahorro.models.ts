@@ -1,3 +1,5 @@
+import { SocioAlerts } from "../../../shared/interfaces/alert.model";
+
 export type SocioDetalleTab = 'ahorros' | 'retiros' | 'depositos' | 'solicitudes' | 'planes';
 
 export interface SummaryCard {
@@ -17,6 +19,7 @@ export interface PaginationMeta {
   end: number;
 }
 
+
 export interface SocioRow {
   id: string;
   codigo: string;
@@ -34,8 +37,8 @@ export interface SocioRow {
   depositos: number;
   ultimoMovimiento?: string | null;
   movimientoTipoKey?: string | null;
+  alerts: SocioAlerts;
 }
-
 export interface SimpleMovimientoRow {
   id?: string;
   fecha: string;

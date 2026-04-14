@@ -627,12 +627,6 @@
               "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
               "when": "",
               "msj": "Enter a valid expiration date"
-            },
-             "2": {
-              "rule": "DATE>=",
-              "value": "{FechaServidor}",
-              "when": "",
-              "msj": "The identification has expired. Please update the document."
             }
           }
         },
@@ -1116,9 +1110,9 @@
             },
             "2": {
               "rule": "NUM<=",
-              "value": "100",
+              "value": "{value}",
               "when": "",
-              "msj": "A maximum of 100% is allowed"
+              "msj": "A maximum of {value}% is allowed"
             }
           }
         },

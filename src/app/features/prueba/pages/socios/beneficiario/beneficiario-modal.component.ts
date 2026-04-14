@@ -15,7 +15,7 @@ import { AppPermissionDirective } from '../../../../../core/services/app-permiss
 
 
 @Injectable()
-export class BeneficiarioValidationEngine extends JMartMassiveValidationService {}
+export class BeneficiarioValidationEngine extends JMartMassiveValidationService { }
 
 @Component({
   selector: 'app-beneficiario-modal',
@@ -48,6 +48,9 @@ export class BeneficiarioModalComponent implements OnChanges {
   @Input() item: BeneficiarioForm | null = null;
   @Input() socioId: string | null = null;
   @Input() saving = false;
+  @Input() PorcMax: number = 100;
+  @Input() Porc: number = 0;
+
 
   @Output() closed = new EventEmitter<void>();
   @Output() saved = new EventEmitter<BeneficiarioForm>();
@@ -55,7 +58,7 @@ export class BeneficiarioModalComponent implements OnChanges {
   draft: BeneficiarioForm = { ...EMPTY_BENEFICIARIO };
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['open'] || changes['item'] || changes['socioId']) {
+    if (changes['open'] || changes['item'] || changes['socioId'] || changes['Porc']) {
       if (this.open) {
         this.initModalState();
       }
@@ -65,6 +68,14 @@ export class BeneficiarioModalComponent implements OnChanges {
   private initModalState(): void {
     this.notify.close?.();
 
+   
+
+    if(this.item != null){
+      this.Porc -= this.item.porcentaje || 0;
+      console.log(this.Porc);
+    }
+    
+ 
     this.draft = this.item
       ? { ...this.item }
       : { ...EMPTY_BENEFICIARIO, socioId: this.socioId };
@@ -95,8 +106,8 @@ export class BeneficiarioModalComponent implements OnChanges {
           id: fieldId,
           condition: String(rule?.rule ?? '').trim(),
           when: String(rule?.when ?? '').trim(),
-          value,
-          message: String(rule?.msj ?? '').replace('{value}', String(value ?? '')),
+          value : String(rule?.value ?? '').replace('{value}', Math.round(this.PorcMax - this.Porc).toString()),
+          message: String(rule?.msj ?? '').replace('{value}', Math.round(this.PorcMax - this.Porc).toString()),
           classIconSuccess: rule?.classIconSuccess ?? '',
           classIconError: rule?.classIconError ?? '',
         });
@@ -114,6 +125,8 @@ export class BeneficiarioModalComponent implements OnChanges {
 
   onSave(): void {
     this.engine.patchValues?.(this.draft);
+
+
 
     const ok = this.engine.validateAll?.();
 
@@ -134,6 +147,15 @@ export class BeneficiarioModalComponent implements OnChanges {
       porcentaje: this.draft.porcentaje == null ? null : Number(this.draft.porcentaje),
       activo: this.draft.activo ?? true,
     };
+
+
+
+
+
+
+
+
+
 
     this.saved.emit(payload);
   }

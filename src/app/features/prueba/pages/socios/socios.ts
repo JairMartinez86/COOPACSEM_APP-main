@@ -1004,6 +1004,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       beneficiarioPorcentaje: this.beneficiariosTotalPorcentaje
     });
 
+
     const ok = this.engine.validateAll?.();
 
     if (!ok) {

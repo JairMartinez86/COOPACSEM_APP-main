@@ -21,14 +21,30 @@
                         (click)="selectSocio(row)">
 
                         <td>
+
                             <div class="table-user">
-                                <div class="table-user-avatar table-user-avatar-text">
-                                    {{ getInitials(row.nombre) }}
+
+                                <div class="position-relative d-inline-block">
+
+                                    <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
+                                        {{ getInitials(row.nombre) }}
+                                    </div>
+
+                                    @if (row.alerts.count) {
+                                    <i class="fa-solid fa-triangle-exclamation text-warning position-absolute top-0 start-100 translate-middle"
+                                        style="font-size: 14px;">
+                                    </i>
+                                    }
+
                                 </div>
+
                                 <div>
                                     {{ row.codigo || '-' }}
                                 </div>
+
                             </div>
+
+
                         </td>
 
                         <td>
@@ -77,14 +93,13 @@
                             <div class="table-actions" (click)="$event.stopPropagation()">
                                 <button type="button" class="btn btn-icon btn-sm btn-light"
                                     (click)="$event.stopPropagation(); selectSocio(row)">
-                                        <button type="button" class="btn btn-icon btn-sm btn-light"
-                                    (click)="$event.stopPropagation(); selectSocio(row)">
-                                    <i class="fa-duotone fa-solid fa-magnifying-glass"></i>
-                                </button>
+                                    <button type="button" class="btn btn-icon btn-sm btn-light"
+                                        (click)="$event.stopPropagation(); selectSocio(row)">
+                                        <i class="fa-duotone fa-solid fa-magnifying-glass"></i>
+                                    </button>
                                 </button>
 
-                                    <button type="button" class="btn btn-icon btn-sm btn-light"
-                                    (click)="onEdit(row.id)">
+                                <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(row.id)">
                                     <i class="bi"
                                         [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'">
                                     </i>
@@ -92,7 +107,7 @@
 
 
 
-                                
+
                             </div>
                         </td>
                     </tr>

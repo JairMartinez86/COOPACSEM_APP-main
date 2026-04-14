@@ -168,7 +168,8 @@ get orderedActions() {
         ];
 
         this.socioRows = data?.socios?.items ?? [];
-
+        console.log(this.socioRows);
+  
         const total = Number(data?.socios?.total ?? 0);
         const currentPage = Number(data?.socios?.page ?? page);
         const pageSize = Number(data?.socios?.pageSize ?? this.pageSize);
@@ -215,4 +216,6 @@ get orderedActions() {
     this.planesRows = [];
     this.alerts = [];
   }
+
+  
 }

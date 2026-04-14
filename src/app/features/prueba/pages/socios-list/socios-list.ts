@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
@@ -18,6 +18,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
 import { TableFilterService } from '../../../../core/services/table-filter.service';
 import { PermissionService } from '../../../../core/services/permission.service';
 import { AppConfigService } from '../../../../core/services/app-config.service';
+import { SocioAlerts } from '../../../../shared/interfaces/alert.model';
 
 
 interface SocioMovimientoRow {
@@ -26,7 +27,7 @@ interface SocioMovimientoRow {
   debito?: number | null;
   credito?: number | null;
   saldo?: number | null;
-  tipoCuenta : string | null;
+  tipoCuenta: string | null;
 }
 
 interface SocioDashboardRow {
@@ -39,7 +40,7 @@ interface SocioDashboardRow {
 
 interface SocioRow {
   id: string;
-  alertCount: number;
+
   codigoSocio: string;
   nombreCompleto: string;
   nombrePublico: string;
@@ -57,6 +58,7 @@ interface SocioRow {
   createdBy?: string | null;
   updatedBy?: string | null;
   dashboard?: SocioDashboardRow | null;
+  alerts: SocioAlerts;
 }
 
 @Component({
@@ -216,6 +218,35 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   selectSocio(item: SocioRow): void {
+    if (item.alerts?.count > 0) {
+
+      const type =
+        item.alerts.highestSeverity === 'danger'
+          ? 'error'
+          : item.alerts.highestSeverity === 'warning'
+            ? 'warning'
+            : 'info';
+
+      const observables = item.alerts.items.map(alert =>
+        this.translate.get(alert.messageKey, alert.params ?? {})
+      );
+
+      this.translate.get('alerts.common.title').subscribe(title => {
+
+        if (observables.length === 0) {
+          this.notify.show('', title, type);
+          return;
+        }
+
+        // combinar todas las traducciones
+        forkJoin(observables).subscribe(messages => {
+          const message = messages.join('\n');
+          this.notify.show(message, title, type);
+        });
+
+      });
+    }
+
     this.selectedSocio = item;
   }
 
@@ -511,7 +542,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
   private normalizeSocio(item: any): SocioRow {
     return {
       id: item?.id ?? '',
-      alertCount: item?.alertCount ?? 0,
+      alerts: item?.alerts ?? 0,
       codigoSocio: item?.codigoSocio ?? '',
       nombreCompleto: item?.nombreCompleto ?? '',
       nombrePublico: item?.nombrePublico ?? '',

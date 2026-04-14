@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AppConfigService } from '../../../../../../core/services/app-config.service';
 import { PaginationMeta, SocioRow } from '../../../../interface/ahorro.models';
 import { PermissionService } from '../../../../../../core/services/permission.service';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../../../../../core/services/notification.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-socios-table',
@@ -17,6 +19,8 @@ export class SociosTableComponent {
   private readonly appConfigService = inject(AppConfigService);
   public readonly permissionService = inject(PermissionService);
   private readonly router = inject(Router);
+   private readonly translate = inject(TranslateService);
+   private readonly notify = inject(NotificationService);
 
 
   @Input() rows: SocioRow[] = [];
@@ -63,6 +67,39 @@ export class SociosTableComponent {
     return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
   }
 selectSocio(row: SocioRow): void {
+
+  if (row.alerts?.count > 0) {
+  
+        console.log(row.alerts);
+  
+        const type =
+          row.alerts.highestSeverity === 'danger'
+            ? 'error'
+            : row.alerts.highestSeverity === 'warning'
+              ? 'warning'
+              : 'info';
+  
+        const observables = row.alerts.items.map(alert =>
+          this.translate.get(alert.messageKey, alert.params ?? {})
+        );
+  
+        this.translate.get('alerts.common.title').subscribe(title => {
+  
+          if (observables.length === 0) {
+            this.notify.show('', title, type);
+            return;
+          }
+  
+          // combinar todas las traducciones
+          forkJoin(observables).subscribe(messages => {
+            const message = messages.join('\n');
+            this.notify.show(message, title, type);
+          });
+  
+        });
+      }
+  
+
   this.selectRow.emit(row);
 }
 
@@ -78,5 +115,20 @@ selectSocio(row: SocioRow): void {
     }
   }
 
+  
+    isDarkTheme(): boolean {
+    return document.documentElement.getAttribute('data-theme') === 'dark';
+  }
+  getAvatarStyle(): Record<string, string> {
+    if (this.isDarkTheme()) {
+      return {};
+    }
+
+    return {
+      background: '#1e3a8a',
+      color: '#ffffff',
+      border: '1px solid #1d4ed8'
+    };
+  }
 
 }

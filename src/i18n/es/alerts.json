@@ -1,0 +1,11 @@
+{
+  "alerts": {
+    "common": {
+      "title": "Alertas"
+    },
+    "socios": {
+      "identificationExpiredRecently": "La identificación está vencida desde hace {{months}} mes. Fecha de vencimiento: {{expirationDate}}.",
+      "identificationExpired": "La identificación está vencida desde hace {{months}} meses. Fecha de vencimiento: {{expirationDate}}."
+    }
+  }
+}
