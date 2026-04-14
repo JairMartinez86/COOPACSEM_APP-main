@@ -24,7 +24,6 @@ export class SociosService extends BrowserApiService {
     );
   }
 
-
   getAll(): Observable<any> {
     return this.browserOnly(() =>
       this.http.get<any>(`${this.api.baseUrl}/socios`, { withCredentials: true })
@@ -72,7 +71,6 @@ export class SociosService extends BrowserApiService {
     );
   }
 
-
   importExcel(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
@@ -83,7 +81,6 @@ export class SociosService extends BrowserApiService {
       { withCredentials: true }
     );
   }
-
 
   getBeneficiarios(socioId: string): Observable<any> {
     return this.http.get<any>(
@@ -114,5 +111,54 @@ export class SociosService extends BrowserApiService {
       { withCredentials: true }
     );
   }
-  
+
+  getFiles(socioId: string, path: string = ''): Observable<any> {
+    return this.http.get<any>(
+      `${this.api.baseUrl}/socios/${socioId}/files`,
+      {
+        params: { path },
+        withCredentials: true
+      }
+    );
+  }
+
+  createFolder(socioId: string, body: { folderName: string; path?: string | null }): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/files/folder`,
+      body,
+      { withCredentials: true }
+    );
+  }
+  uploadFiles(socioId: string, formData: FormData): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/files/upload`,
+      formData,
+      { withCredentials: true }
+    );
+  }
+
+  downloadFile(socioId: string, path: string): Observable<Blob> {
+    return this.http.get(
+      `${this.api.baseUrl}/socios/${socioId}/files/download`,
+      {
+        params: { path },
+        withCredentials: true,
+        responseType: 'blob'
+      }
+    );
+  }
+
+  deleteFile(socioId: string, path: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/files`,
+      {
+        params: { path },
+        withCredentials: true
+      }
+    );
+  }
+
+  getFilePreviewUrl(socioId: string, path: string): string {
+  return `${this.api.baseUrl}/socios/${socioId}/files/download?path=${encodeURIComponent(path)}`;
+}
 }

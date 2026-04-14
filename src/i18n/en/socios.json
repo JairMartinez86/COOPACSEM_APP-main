@@ -8,7 +8,7 @@
     },
     "badges": {
       "newMember": "New member",
-      "sections": "5 sections",
+      "sections": "7 sections",
       "beneficiaries": "Dynamic beneficiaries"
     },
     "beneficiariosTable": {
@@ -73,7 +73,11 @@
           "title": "Membership",
           "desc": "Configure the member affiliation."
         }
-      }
+      },
+       "fileManager": {
+          "title": "File Manager",
+          "desc": "Member folders and documents"
+        }
     },
     "groups": {
       "identificacion": "Identification",
@@ -103,6 +107,34 @@
       "afiliacion": {
         "title": "Membership",
         "subtitle": "Define the cost, payment method, and accounting distribution of the membership."
+      },
+      "fileManager": {
+        "title": "File Manager",
+        "subtitle": "Manage member folders, images, and documents"
+      }
+    },
+     "fileManager": {
+      "actions": {
+        "newFolder": "New Folder",
+        "upload": "Upload Files",
+        "back": "Back"
+      },
+      "columns": {
+        "name": "Name",
+        "type": "Type",
+        "size": "Size",
+        "modified": "Modified",
+        "actions": "Actions"
+      },
+      "types": {
+        "folder": "Folder"
+      },
+      "currentPath": "Current Path",
+      "emptyTitle": "No files or folders",
+      "emptySubtitle": "Create a folder or upload files for this member",
+       "myFiles": "My Files",
+      "prompts": {
+        "folderName": "Enter folder name"
       }
     },
     "fields": {

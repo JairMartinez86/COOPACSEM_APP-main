@@ -81,6 +81,9 @@
 // 6. Utilities - Custom utilities not provided by Bootstrap
 @use 'utilities/utilities';
 
-// 7. Themes - Dark Mode, Print Styles
+// 7. File Manager
+@use 'file-manager/file-manager';
+
+// 8. Themes - Dark Mode, Print Styles
 @use 'themes/dark-mode';
 @use 'themes/print';

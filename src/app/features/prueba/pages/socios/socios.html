@@ -122,6 +122,20 @@
                       <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.beneficiarios.desc' | translate }}</div>
                     </div>
                   </button>
+
+
+                  @if (mode !== 'create') {
+                  <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'file-manager'"
+                    [class.active]="activeSection === 'file-manager'" [class.completed]="isCompleted('file-manager')"
+                    (click)="scrollToSection('file-manager')">
+                    <div class="wizard-step-v-icon"><span>7</span></div>
+                    <div class="wizard-step-v-content">
+                      <div class="wizard-step-v-title">{{ 'socios.wizard.steps.fileManager.title' | translate }}</div>
+                      <div class="wizard-step-v-desc">{{ 'socios.wizard.steps.fileManager.desc' | translate }}</div>
+                    </div>
+                  </button>
+                  }
+                 
                 </div>
               </div>
             </div>
@@ -386,8 +400,8 @@
                       <label for="observaciones" class="form-label">{{ 'socios.fields.observaciones.label' | translate
                         }}</label>
                       <textarea #observaciones id="observaciones" name="observaciones" [(ngModel)]="socio.observaciones"
-                        engineSync="observaciones" autoFocusNext [next]="afiliacionCuotas" class="form-control"
-                        rows="3" [placeholder]="'socios.fields.observaciones.placeholder' | translate"></textarea>
+                        engineSync="observaciones" autoFocusNext [next]="afiliacionCuotas" class="form-control" rows="3"
+                        [placeholder]="'socios.fields.observaciones.placeholder' | translate"></textarea>
                     </div>
                   </div>
                 </div>
@@ -431,8 +445,9 @@
                         <div class="col-md-6" error-notify="afiliacionCuotas" error-display="inline">
                           <label class="form-label required">{{ 'socios.fields.afiliacionCuotas.label' | translate
                             }}</label>
-                          <select #afiliacionCuotas class="form-select" [(ngModel)]="socio.afiliacionCuotas" name="afiliacionCuotas"
-                            engineSync="afiliacionCuotas" autoFocusNext [next]="membresiaCuotas">
+                          <select #afiliacionCuotas class="form-select" [(ngModel)]="socio.afiliacionCuotas"
+                            name="afiliacionCuotas" engineSync="afiliacionCuotas" autoFocusNext
+                            [next]="membresiaCuotas">
                             <option [ngValue]="null">
                               {{ 'socios.common.selectOption' | translate }}
                             </option>
@@ -467,8 +482,9 @@
                         <div class="col-md-6" error-notify="membresiaCuotas" error-display="inline">
                           <label class="form-label required">{{ 'socios.fields.membresiaCuotas.label' | translate
                             }}</label>
-                          <select #membresiaCuotas class="form-select" [(ngModel)]="socio.membresiaCuotas" name="membresiaCuotas"
-                            engineSync="membresiaCuotas" autoFocusNext [next]="cuentaCorrienteFechaInicioDeduccion">
+                          <select #membresiaCuotas class="form-select" [(ngModel)]="socio.membresiaCuotas"
+                            name="membresiaCuotas" engineSync="membresiaCuotas" autoFocusNext
+                            [next]="cuentaCorrienteFechaInicioDeduccion">
                             <option [ngValue]="null">
                               {{ 'socios.common.selectOption' | translate }}
                             </option>
@@ -915,6 +931,139 @@
               [Porc]="beneficiariosTotalPorcentaje" [saving]="beneficiarioSaving" (closed)="closeBeneficiarioModal()"
               (saved)="onBeneficiarioModalSaved($event)">
             </app-beneficiario-modal>
+
+            @if (mode !== 'create') {
+
+            <div id="file-manager" class="card ue-shell-card socio-card socio-scroll-section">
+              <div class="card-header socio-card-header">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 w-100">
+                  <div>
+                    <h5 class="card-title mb-1">{{ 'socios.sections.fileManager.title' | translate }}</h5>
+                    <p class="card-subtitle mb-0">{{ 'socios.sections.fileManager.subtitle' | translate }}</p>
+                  </div>
+
+                  <div class="fm-actions">
+                    <button type="button" class="btn btn-light btn-sm" (click)="goToParentFolder()"
+                      [disabled]="!currentFilePath">
+                      <i class="bi bi-arrow-left me-1"></i>
+                      {{ 'socios.fileManager.actions.back' | translate }}
+                    </button>
+
+                    <button type="button" class="btn btn-light btn-sm" (click)="openCreateFolderModal()">
+                      <i class="bi bi-folder-plus me-1"></i>
+                      {{ 'socios.fileManager.actions.newFolder' | translate }}
+                    </button>
+
+                    <label class="btn btn-primary btn-sm mb-0">
+                      <i class="bi bi-cloud-upload me-1"></i>
+                      {{ 'socios.fileManager.actions.upload' | translate }}
+                      <input type="file" hidden multiple accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx"
+                        (change)="onFileSelected($event)">
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-body p-0">
+                <div class="fm-main">
+                  <div class="fm-content">
+
+                    <div class="fm-breadcrumb mb-3">
+                      <a href="javascript:void(0)" (click)="loadFiles('')">
+                        <i class="bi bi-house"></i>
+                      </a>
+
+                      @if (currentFilePath) {
+                      <i class="bi bi-chevron-right"></i>
+                      <span>{{ currentFilePath }}</span>
+                      } @else {
+                      <i class="bi bi-chevron-right"></i>
+                      <span>{{ 'socios.fileManager.myFiles' | translate }}</span>
+                      }
+                    </div>
+
+                    @if (folderItems.length > 0) {
+                    <div class="fm-section-title">Folders</div>
+
+                    <div class="fm-grid active">
+                      @for (item of folderItems; track item.relativePath) {
+                      <div class="fm-item" data-type="folder">
+                        <div class="fm-item-icon folder" (dblclick)="openFolder(item)" (click)="openFolder(item)">
+                          <i class="bi bi-folder-fill"></i>
+                        </div>
+
+                        <div class="fm-item-name" (dblclick)="openFolder(item)" (click)="openFolder(item)">
+                          {{ item.name }}
+                        </div>
+
+                        <div class="fm-item-meta">Folder</div>
+
+                        <div class="d-flex justify-content-center gap-1 mt-2">
+                          <button type="button" class="btn btn-sm btn-light"
+                            (click)="openFolder(item); $event.stopPropagation()" title="Open">
+                            <i class="bi bi-folder2-open"></i>
+                          </button>
+
+                          <button type="button" class="btn btn-sm btn-light"
+                            (click)="deleteFileItem(item); $event.stopPropagation()" title="Delete">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                      }
+                    </div>
+                    }
+                    @if (fileOnlyItems.length > 0) {
+                    <div class="fm-section-title mt-4">Files</div>
+
+                    <div class="fm-grid active">
+                      @for (item of fileOnlyItems; track item.relativePath) {
+                      <div class="fm-item" [attr.data-type]="resolveFileType(item)">
+
+                        @if (isImage(item)) {
+                        <img [src]="previewUrls[item.relativePath] || ''" [alt]="item.name" class="fm-item-thumbnail" />
+                        } @else {
+                        <div class="fm-item-icon" [ngClass]="getFileTypeClass(item)">
+                          <i class="bi" [ngClass]="getFileIconClass(item)"></i>
+                        </div>
+                        }
+
+                        <div class="fm-item-name">{{ item.name }}</div>
+                        <div class="fm-item-meta">{{ formatFileSize(item.size) }}</div>
+
+                        <div class="d-flex justify-content-center gap-1 mt-2">
+                          <button type="button" class="btn btn-sm btn-light"
+                            (click)="downloadFile(item); $event.stopPropagation()" title="Download">
+                            <i class="bi bi-download"></i>
+                          </button>
+
+                          <button type="button" class="btn btn-sm btn-light"
+                            (click)="deleteFileItem(item); $event.stopPropagation()" title="Delete">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                      }
+                    </div>
+                    }
+
+                    @if (!folderItems.length && !fileOnlyItems.length) {
+                    <div class="fm-empty">
+                      <div class="fm-empty-icon">
+                        <i class="bi bi-folder2-open"></i>
+                      </div>
+                      <h5>{{ 'socios.fileManager.emptyTitle' | translate }}</h5>
+                      <p>{{ 'socios.fileManager.emptySubtitle' | translate }}</p>
+                    </div>
+                    }
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            }
 
           </div>
         </div>

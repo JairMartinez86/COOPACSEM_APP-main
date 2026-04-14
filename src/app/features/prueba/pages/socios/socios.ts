@@ -108,14 +108,17 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   activeSection = 'datos-personales';
 
-  readonly sections = [
-    'datos-personales',
-    'afiliacion',
-    'ahorro',
-    'actividad-economica',
-    'datos-conyuge',
-    'beneficiarios',
-  ];
+readonly sections = [
+  'datos-personales',
+  'afiliacion',
+  'ahorro',
+  'actividad-economica',
+  'datos-conyuge',
+  'beneficiarios',
+  'file-manager',
+];
+
+
 
   socio: SocioForm = { ...EMPTY_SOCIO };
   copy: SocioForm = { ...EMPTY_SOCIO };
@@ -621,6 +624,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
             this.refreshAllChoices();
 
             setTimeout(() => {
+              this.loadFiles();
               this.reapplyChoicesValues();
               this.setChoicesValue(this.municipioChoices, this.socio.municipioId);
               this.formRef?.form.markAsPristine();
@@ -1897,5 +1901,210 @@ private syncAfiliacionConfigValues(): void {
   }
 
 
+
+
+
+//FILE MANAGER
+
+fileItems: any[] = [];
+currentFilePath = '';
+uploadingFiles = false;
+creatingFolder = false;
+previewUrls: Record<string, string> = {};
+
+
+
+
+loadFiles(path: string = ''): void {
+  this.sociosService.getFiles(this.socio.id!, path).subscribe({
+    next: (res) => {
+      this.fileItems = res.data.items;
+      this.currentFilePath = res.data.currentPath;
+
+      this.loadImagePreviews(); // 👈 ESTA LÍNEA ES CLAVE
+    }
+  });
+}
+openFolder(item: any): void {
+  if (!item?.isDirectory) return;
+  this.loadFiles(item.relativePath);
+}
+
+goToParentFolder(): void {
+  if (!this.currentFilePath) return;
+
+  const parts = this.currentFilePath.split('/').filter(Boolean);
+  parts.pop();
+  this.loadFiles(parts.join('/'));
+}
+
+onFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const files = input.files;
+
+  if (!files?.length || !this.socio?.id) return;
+
+  const formData = new FormData();
+  for (let i = 0; i < files.length; i++) {
+    formData.append('files', files[i]);
+  }
+  formData.append('path', this.currentFilePath || '');
+
+  this.sociosService.uploadFiles(this.socio.id, formData).subscribe({
+    next: (res: any) => {
+      //this.notify.showFromApiResponse?.(res, 'success');
+      this.loadFiles(this.currentFilePath);
+      input.value = '';
+    },
+    error: (err) => {
+      this.notify.showFromApiResponse?.(err, 'error');
+      input.value = '';
+    }
+  });
+}
+
+openCreateFolderModal(): void {
+  const folderName = prompt(this.translate.instant('socios.fileManager.prompts.folderName'));
+  if (!folderName?.trim() || !this.socio?.id) return;
+
+  this.sociosService.createFolder(this.socio.id, {
+    folderName: folderName.trim(),
+    path: this.currentFilePath || ''
+  }).subscribe({
+    next: (res: any) => {
+      //this.notify.showFromApiResponse?.(res, 'success');
+      this.loadFiles(this.currentFilePath);
+    },
+    error: (err) => this.notify.showFromApiResponse?.(err, 'error')
+  });
+}
+
+downloadFile(item: any): void {
+  if (!this.socio?.id || item?.isDirectory) return;
+
+  this.sociosService.downloadFile(this.socio.id, item.relativePath).subscribe({
+    next: (blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = item.name;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  });
+}
+
+deleteFileItem(item: any): void {
+  if (!this.socio?.id) return;
+
+  this.sociosService.deleteFile(this.socio.id, item.relativePath).subscribe({
+    next: (res: any) => {
+      //this.notify.showFromApiResponse?.(res, 'success');
+      this.loadFiles(this.currentFilePath);
+    },
+    error: (err) => this.notify.showFromApiResponse?.(err, 'error')
+  });
+}
+
+formatFileSize(bytes: number): string {
+  if (!bytes) return '0 B';
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 2)} ${sizes[i]}`;
+}
+
+getFileIcon(extension: string): string {
+  const ext = (extension || '').toLowerCase();
+
+  switch (ext) {
+    case '.jpg':
+    case '.jpeg':
+    case '.png':
+    case '.gif':
+    case '.webp':
+      return 'bi-file-earmark-image text-success';
+    case '.pdf':
+      return 'bi-file-earmark-pdf text-danger';
+    case '.doc':
+    case '.docx':
+      return 'bi-file-earmark-word text-primary';
+    default:
+      return 'bi-file-earmark text-secondary';
+  }
+}
+
+get folderItems(): any[] {
+  return (this.fileItems ?? []).filter(x => x.isDirectory);
+}
+
+get fileOnlyItems(): any[] {
+  return (this.fileItems ?? []).filter(x => !x.isDirectory);
+}
+
+isImage(item: any): boolean {
+  const ext = (item?.extension || '').toLowerCase();
+  return ['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext);
+}
+
+resolveFileType(item: any): string {
+  const ext = (item?.extension || '').toLowerCase();
+
+  if (this.isImage(item)) return 'image';
+  if (ext === '.pdf') return 'pdf';
+  if (ext === '.doc' || ext === '.docx') return 'document';
+  return 'document';
+}
+
+getFileTypeClass(item: any): string {
+  const type = this.resolveFileType(item);
+
+  switch (type) {
+    case 'pdf': return 'pdf';
+    case 'document': return 'document';
+    case 'image': return 'images';
+    default: return 'document';
+  }
+}
+
+getFileIconClass(item: any): string {
+  const ext = (item?.extension || '').toLowerCase();
+
+  switch (ext) {
+    case '.pdf': return 'bi-file-earmark-pdf';
+    case '.doc':
+    case '.docx': return 'bi-file-earmark-word';
+    default: return 'bi-file-earmark';
+  }
+}
+
+buildPreviewUrl(item: any): string {
+  if (!this.socio?.id || !item?.relativePath) {
+    return '';
+  }
+
+  return this.sociosService.getFilePreviewUrl(this.socio.id, item.relativePath);
+}
+
+private loadImagePreviews(): void {
+  Object.values(this.previewUrls).forEach(url => URL.revokeObjectURL(url));
+  this.previewUrls = {};
+
+  const images = (this.fileItems ?? []).filter(x => !x.isDirectory && this.isImage(x));
+
+  if (!this.socio?.id || !images.length) return;
+
+  for (const item of images) {
+    this.sociosService.downloadFile(this.socio.id, item.relativePath)
+      .subscribe({
+        next: (blob: Blob) => {
+          this.previewUrls[item.relativePath] = URL.createObjectURL(blob);
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.previewUrls[item.relativePath] = '';
+        }
+      });
+  }
+}
   
 }
