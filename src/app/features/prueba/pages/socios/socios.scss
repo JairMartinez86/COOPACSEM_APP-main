@@ -207,3 +207,34 @@
   color: #ffc107; // warning
   z-index: 5;
 }
+
+
+
+
+
+
+
+
+
+.fm-context-menu {
+  position: fixed;
+  z-index: 999999;
+  min-width: 220px;
+  background: var(--surface-color, #fff);
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  padding: 6px;
+  display: none;
+}
+
+.fm-context-menu.show {
+  display: block !important;
+}
+
+.fm-shell,
+.socio-card,
+.card,
+.card-body {
+  overflow: visible !important;
+}

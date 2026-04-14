@@ -113,30 +113,46 @@
         "subtitle": "Manage member folders, images, and documents"
       }
     },
-     "fileManager": {
-      "actions": {
-        "newFolder": "New Folder",
-        "upload": "Upload Files",
-        "back": "Back"
-      },
-      "columns": {
-        "name": "Name",
-        "type": "Type",
-        "size": "Size",
-        "modified": "Modified",
-        "actions": "Actions"
-      },
-      "types": {
-        "folder": "Folder"
-      },
-      "currentPath": "Current Path",
-      "emptyTitle": "No files or folders",
-      "emptySubtitle": "Create a folder or upload files for this member",
-       "myFiles": "My Files",
-      "prompts": {
-        "folderName": "Enter folder name"
-      }
-    },
+  "fileManager": {
+  "actions": {
+    "newFolder": "New folder",
+    "upload": "Upload files",
+    "back": "Back"
+  },
+  "columns": {
+    "name": "Name",
+    "type": "Type",
+    "size": "Size",
+    "modified": "Modified",
+    "actions": "Actions"
+  },
+  "types": {
+    "folder": "Folder"
+  },
+ "contextMenu": {
+  "newFolder": "New folder",
+  "rename": "Rename",
+  "copy": "Copy",
+  "cut": "Cut",
+  "paste": "Paste",
+  "delete": "Delete"
+},
+"messages": {
+  "itemCopied": "Item copied.",
+  "itemCut": "Item cut.",
+  "itemPasted": "Item pasted.",
+  "renamePrompt": "Enter the new name",
+  "renamePending": "Rename feature not implemented yet",
+  "saveBeforeUse": "You must save the member before using the file manager."
+},
+  "currentPath": "Current path",
+  "emptyTitle": "There are no files or folders",
+  "emptySubtitle": "Create a folder or upload files for this member",
+  "myFiles": "My files",
+  "prompts": {
+    "folderName": "Enter the folder name"
+  }
+},
     "fields": {
       "nombreCompleto": {
         "label": "Full name",

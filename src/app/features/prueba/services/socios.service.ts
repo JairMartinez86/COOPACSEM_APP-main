@@ -158,7 +158,18 @@ export class SociosService extends BrowserApiService {
     );
   }
 
+  pasteFile(
+    socioId: string,
+    body: { sourcePath: string; destinationPath: string; mode: 'copy' | 'cut' }
+  ): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/files/paste`,
+      body,
+      { withCredentials: true }
+    );
+  }
+
   getFilePreviewUrl(socioId: string, path: string): string {
-  return `${this.api.baseUrl}/socios/${socioId}/files/download?path=${encodeURIComponent(path)}`;
-}
+    return `${this.api.baseUrl}/socios/${socioId}/files/download?path=${encodeURIComponent(path)}`;
+  }
 }

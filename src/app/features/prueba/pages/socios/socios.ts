@@ -1904,7 +1904,16 @@ private syncAfiliacionConfigValues(): void {
 
 
 
-//FILE MANAGER
+
+
+
+
+
+
+
+
+
+  // FILE MANAGER
 
 fileItems: any[] = [];
 currentFilePath = '';
@@ -1912,26 +1921,66 @@ uploadingFiles = false;
 creatingFolder = false;
 previewUrls: Record<string, string> = {};
 
+selectedItem: any = null;
+clipboardItem: any = null;
+clipboardMode: 'copy' | 'cut' | null = null;
 
+get isFileManagerAvailable(): boolean {
+  return this.mode !== 'create' && !!this.socio?.id;
+}
 
+get folderItems(): any[] {
+  return (this.fileItems ?? []).filter(x => x.isDirectory);
+}
+
+get fileOnlyItems(): any[] {
+  return (this.fileItems ?? []).filter(x => !x.isDirectory);
+}
 
 loadFiles(path: string = ''): void {
-  this.sociosService.getFiles(this.socio.id!, path).subscribe({
-    next: (res) => {
-      this.fileItems = res.data.items;
-      this.currentFilePath = res.data.currentPath;
+  if (!this.isFileManagerAvailable || !this.socio?.id) {
+    this.fileItems = [];
+    this.currentFilePath = '';
+    this.selectedItem = null;
+    this.clearPreviewUrls();
+    this.hideContextMenu();
+    this.cdr.detectChanges();
+    return;
+  }
 
-      this.loadImagePreviews(); // 👈 ESTA LÍNEA ES CLAVE
+  this.sociosService.getFiles(this.socio.id, path).subscribe({
+    next: (res: any) => {
+      this.fileItems = res?.data?.items ?? [];
+      this.currentFilePath = res?.data?.currentPath ?? '';
+      this.selectedItem = null;
+      this.loadImagePreviews();
+      this.hideContextMenu();
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.fileItems = [];
+      this.currentFilePath = '';
+      this.selectedItem = null;
+      this.clearPreviewUrls();
+      this.hideContextMenu();
+      this.notify.showFromApiResponse?.(err, 'error');
+      this.cdr.detectChanges();
     }
   });
 }
+
+selectItem(item: any): void {
+  this.selectedItem = item;
+}
+
 openFolder(item: any): void {
-  if (!item?.isDirectory) return;
+  if (!this.isFileManagerAvailable || !item?.isDirectory) return;
+  this.selectedItem = item;
   this.loadFiles(item.relativePath);
 }
 
 goToParentFolder(): void {
-  if (!this.currentFilePath) return;
+  if (!this.isFileManagerAvailable || !this.currentFilePath) return;
 
   const parts = this.currentFilePath.split('/').filter(Boolean);
   parts.pop();
@@ -1942,21 +1991,30 @@ onFileSelected(event: Event): void {
   const input = event.target as HTMLInputElement;
   const files = input.files;
 
-  if (!files?.length || !this.socio?.id) return;
+  if (!this.isFileManagerAvailable || !files?.length || !this.socio?.id) {
+    input.value = '';
+    return;
+  }
 
   const formData = new FormData();
+
   for (let i = 0; i < files.length; i++) {
     formData.append('files', files[i]);
   }
+
   formData.append('path', this.currentFilePath || '');
+
+  this.uploadingFiles = true;
 
   this.sociosService.uploadFiles(this.socio.id, formData).subscribe({
     next: (res: any) => {
-      //this.notify.showFromApiResponse?.(res, 'success');
+      this.uploadingFiles = false;
+      this.notify.showFromApiResponse?.(res, 'success');
       this.loadFiles(this.currentFilePath);
       input.value = '';
     },
     error: (err) => {
+      this.uploadingFiles = false;
       this.notify.showFromApiResponse?.(err, 'error');
       input.value = '';
     }
@@ -1964,23 +2022,41 @@ onFileSelected(event: Event): void {
 }
 
 openCreateFolderModal(): void {
-  const folderName = prompt(this.translate.instant('socios.fileManager.prompts.folderName'));
-  if (!folderName?.trim() || !this.socio?.id) return;
+  if (!this.isFileManagerAvailable || !this.socio?.id) {
+    this.notify.show?.(
+      this.translate.instant('socios.fileManager.messages.saveBeforeUse'),
+      '',
+      'warning'
+    );
+    return;
+  }
+
+  const folderName = prompt(
+    this.translate.instant('socios.fileManager.prompts.folderName')
+  );
+
+  if (!folderName?.trim()) return;
+
+  this.creatingFolder = true;
 
   this.sociosService.createFolder(this.socio.id, {
     folderName: folderName.trim(),
     path: this.currentFilePath || ''
   }).subscribe({
     next: (res: any) => {
-      //this.notify.showFromApiResponse?.(res, 'success');
+      this.creatingFolder = false;
+      this.notify.showFromApiResponse?.(res, 'success');
       this.loadFiles(this.currentFilePath);
     },
-    error: (err) => this.notify.showFromApiResponse?.(err, 'error')
+    error: (err) => {
+      this.creatingFolder = false;
+      this.notify.showFromApiResponse?.(err, 'error');
+    }
   });
 }
 
 downloadFile(item: any): void {
-  if (!this.socio?.id || item?.isDirectory) return;
+  if (!this.isFileManagerAvailable || !this.socio?.id || item?.isDirectory) return;
 
   this.sociosService.downloadFile(this.socio.id, item.relativePath).subscribe({
     next: (blob: Blob) => {
@@ -1990,55 +2066,35 @@ downloadFile(item: any): void {
       a.download = item.name;
       a.click();
       window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      this.notify.showFromApiResponse?.(err, 'error');
     }
   });
 }
 
 deleteFileItem(item: any): void {
-  if (!this.socio?.id) return;
+  if (!this.isFileManagerAvailable || !this.socio?.id || !item?.relativePath) return;
 
   this.sociosService.deleteFile(this.socio.id, item.relativePath).subscribe({
     next: (res: any) => {
-      //this.notify.showFromApiResponse?.(res, 'success');
+      this.notify.showFromApiResponse?.(res, 'success');
+      this.selectedItem = null;
       this.loadFiles(this.currentFilePath);
     },
-    error: (err) => this.notify.showFromApiResponse?.(err, 'error')
+    error: (err) => {
+      this.notify.showFromApiResponse?.(err, 'error');
+    }
   });
 }
 
 formatFileSize(bytes: number): string {
   if (!bytes) return '0 B';
+
   const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
+
   return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 2)} ${sizes[i]}`;
-}
-
-getFileIcon(extension: string): string {
-  const ext = (extension || '').toLowerCase();
-
-  switch (ext) {
-    case '.jpg':
-    case '.jpeg':
-    case '.png':
-    case '.gif':
-    case '.webp':
-      return 'bi-file-earmark-image text-success';
-    case '.pdf':
-      return 'bi-file-earmark-pdf text-danger';
-    case '.doc':
-    case '.docx':
-      return 'bi-file-earmark-word text-primary';
-    default:
-      return 'bi-file-earmark text-secondary';
-  }
-}
-
-get folderItems(): any[] {
-  return (this.fileItems ?? []).filter(x => x.isDirectory);
-}
-
-get fileOnlyItems(): any[] {
-  return (this.fileItems ?? []).filter(x => !x.isDirectory);
 }
 
 isImage(item: any): boolean {
@@ -2052,6 +2108,7 @@ resolveFileType(item: any): string {
   if (this.isImage(item)) return 'image';
   if (ext === '.pdf') return 'pdf';
   if (ext === '.doc' || ext === '.docx') return 'document';
+
   return 'document';
 }
 
@@ -2059,10 +2116,14 @@ getFileTypeClass(item: any): string {
   const type = this.resolveFileType(item);
 
   switch (type) {
-    case 'pdf': return 'pdf';
-    case 'document': return 'document';
-    case 'image': return 'images';
-    default: return 'document';
+    case 'pdf':
+      return 'pdf';
+    case 'document':
+      return 'document';
+    case 'image':
+      return 'images';
+    default:
+      return 'document';
   }
 }
 
@@ -2070,41 +2131,193 @@ getFileIconClass(item: any): string {
   const ext = (item?.extension || '').toLowerCase();
 
   switch (ext) {
-    case '.pdf': return 'bi-file-earmark-pdf';
+    case '.pdf':
+      return 'bi-file-earmark-pdf';
     case '.doc':
-    case '.docx': return 'bi-file-earmark-word';
-    default: return 'bi-file-earmark';
+    case '.docx':
+      return 'bi-file-earmark-word';
+    default:
+      return 'bi-file-earmark';
   }
-}
-
-buildPreviewUrl(item: any): string {
-  if (!this.socio?.id || !item?.relativePath) {
-    return '';
-  }
-
-  return this.sociosService.getFilePreviewUrl(this.socio.id, item.relativePath);
 }
 
 private loadImagePreviews(): void {
-  Object.values(this.previewUrls).forEach(url => URL.revokeObjectURL(url));
-  this.previewUrls = {};
+  this.clearPreviewUrls();
 
-  const images = (this.fileItems ?? []).filter(x => !x.isDirectory && this.isImage(x));
+  const images = (this.fileItems ?? []).filter(
+    x => !x.isDirectory && this.isImage(x)
+  );
 
-  if (!this.socio?.id || !images.length) return;
+  if (!this.isFileManagerAvailable || !this.socio?.id || !images.length) return;
 
   for (const item of images) {
-    this.sociosService.downloadFile(this.socio.id, item.relativePath)
-      .subscribe({
-        next: (blob: Blob) => {
-          this.previewUrls[item.relativePath] = URL.createObjectURL(blob);
-          this.cdr.detectChanges();
-        },
-        error: () => {
-          this.previewUrls[item.relativePath] = '';
-        }
-      });
+    this.sociosService.downloadFile(this.socio.id, item.relativePath).subscribe({
+      next: (blob: Blob) => {
+        this.previewUrls[item.relativePath] = URL.createObjectURL(blob);
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.previewUrls[item.relativePath] = '';
+      }
+    });
   }
 }
-  
+
+private clearPreviewUrls(): void {
+  Object.values(this.previewUrls).forEach(url => {
+    try {
+      URL.revokeObjectURL(url);
+    } catch {}
+  });
+
+  this.previewUrls = {};
+}
+
+onRightClick(event: MouseEvent, item: any): void {
+  event.preventDefault();
+  event.stopPropagation();
+
+  this.selectedItem = item;
+
+  const menu = document.getElementById('fmContextMenu');
+  if (!menu) return;
+
+  const menuWidth = 220;
+  const menuHeight = 230;
+
+  let x = event.clientX;
+  let y = event.clientY;
+
+  if (x + menuWidth > window.innerWidth) {
+    x = window.innerWidth - menuWidth - 10;
+  }
+
+  if (y + menuHeight > window.innerHeight) {
+    y = window.innerHeight - menuHeight - 10;
+  }
+
+  menu.style.left = `${x}px`;
+  menu.style.top = `${y}px`;
+  menu.classList.add('show');
+}
+
+onRightClickBackground(event: MouseEvent): void {
+  const target = event.target as HTMLElement | null;
+  if (target?.closest('.fm-item')) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  this.selectedItem = null;
+
+  const menu = document.getElementById('fmContextMenu');
+  if (!menu) return;
+
+  const menuWidth = 220;
+  const menuHeight = 230;
+
+  let x = event.clientX;
+  let y = event.clientY;
+
+  if (x + menuWidth > window.innerWidth) {
+    x = window.innerWidth - menuWidth - 10;
+  }
+
+  if (y + menuHeight > window.innerHeight) {
+    y = window.innerHeight - menuHeight - 10;
+  }
+
+  menu.style.left = `${x}px`;
+  menu.style.top = `${y}px`;
+  menu.classList.add('show');
+}
+
+private hideContextMenu(): void {
+  const menu = document.getElementById('fmContextMenu');
+  if (menu) {
+    menu.classList.remove('show');
+  }
+}
+
+contextActionNewFolder(): void {
+  this.hideContextMenu();
+  this.openCreateFolderModal();
+}
+
+contextActionCopy(): void {
+  this.hideContextMenu();
+
+  if (!this.selectedItem) return;
+
+  this.clipboardItem = { ...this.selectedItem };
+  this.clipboardMode = 'copy';
+
+ /* this.notify.show?.(
+    this.translate.instant('socios.fileManager.messages.itemCopied'),
+    '',
+    'success'
+  );*/
+}
+
+contextActionCut(): void {
+  this.hideContextMenu();
+
+  if (!this.selectedItem) return;
+
+  this.clipboardItem = { ...this.selectedItem };
+  this.clipboardMode = 'cut';
+
+ /* this.notify.show?.(
+    this.translate.instant('socios.fileManager.messages.itemCut'),
+    '',
+    'success'
+  );*/
+}
+
+contextActionPaste(): void {
+  this.hideContextMenu();
+
+  if (!this.clipboardItem || !this.clipboardMode || !this.socio?.id) return;
+
+  const body = {
+    sourcePath: this.clipboardItem.relativePath,
+    destinationPath: this.currentFilePath || '',
+    mode: this.clipboardMode
+  };
+
+  this.sociosService.pasteFile(this.socio.id, body).subscribe({
+    next: (res: any) => {
+     // this.notify.showFromApiResponse?.(res, 'success');
+
+      if (this.clipboardMode === 'cut') {
+        this.clipboardItem = null;
+        this.clipboardMode = null;
+      }
+
+      this.loadFiles(this.currentFilePath);
+    },
+    error: (err) => {
+      this.notify.showFromApiResponse?.(err, 'error');
+    }
+  });
+}
+
+contextActionDelete(): void {
+  this.hideContextMenu();
+
+  if (!this.selectedItem) return;
+
+  this.deleteFileItem(this.selectedItem);
+}
+
+private onGlobalClickHideContextMenu = (event: MouseEvent) => {
+  const target = event.target as HTMLElement | null;
+  if (target?.closest('#fmContextMenu')) return;
+  this.hideContextMenu();
+};
+
+private onGlobalScrollHideContextMenu = () => {
+  this.hideContextMenu();
+};
+
 }
