@@ -91,13 +91,6 @@
             </div>
 
             <div class="d-flex align-items-center gap-2 flex-wrap">
-              <button type="button" class="btn btn-success btn-sm" (click)="onExcelImportClick()"
-                [disabled]="importingExcel" [appPermission]="['new', 'edit']" [permissionRoute]="['/socios', '/ahorro']">
-                <i class="bi bi-file-earmark-excel me-1"></i>
-                {{ 'socios.import.button' | translate }}
-              </button>
-
-              <input #excelFileInput type="file" accept=".xlsx" class="d-none" (change)="onExcelFileSelected($event)" />
 
               <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']"
                 [permissionRoute]="['/socios', '/ahorro']" (click)="onCreate()">

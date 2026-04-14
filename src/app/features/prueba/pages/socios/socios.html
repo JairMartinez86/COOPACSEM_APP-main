@@ -386,7 +386,7 @@
                       <label for="observaciones" class="form-label">{{ 'socios.fields.observaciones.label' | translate
                         }}</label>
                       <textarea #observaciones id="observaciones" name="observaciones" [(ngModel)]="socio.observaciones"
-                        engineSync="observaciones" autoFocusNext [next]="afiliacionTipoPago" class="form-control"
+                        engineSync="observaciones" autoFocusNext [next]="afiliacionCuotas" class="form-control"
                         rows="3" [placeholder]="'socios.fields.observaciones.placeholder' | translate"></textarea>
                     </div>
                   </div>
@@ -407,85 +407,79 @@
               </div>
 
               <div class="card-body p-4">
-                <div class="row g-3 align-items-end">
+                <div class="row g-4">
 
-                  <!-- TIPO -->
-                  <div class="col-md-4" error-notify="afiliacionTipoPago" error-display="inline">
-                    <label class="form-label required">Tipo de pago</label>
-                    <select #afiliacionTipoPago name="afiliacionTipoPago" class="form-select"
-                      [(ngModel)]="socio.afiliacionTipoPago" (ngModelChange)="onAfiliacionTipoPagoChange($event)"
-                      engineSync="afiliacionTipoPago" required>
-                      <option [ngValue]="null">
-                        {{ 'socios.common.selectOption' | translate }}
-                      </option>
-                      <option value="contado">Contado</option>
-                      <option value="credito">Crédito</option>
-                    </select>
-                  </div>
+                  <!-- AFILIACION -->
+                  <div class="col-12">
+                    <div class="border rounded-3 p-3">
+                      <h6 class="mb-3">{{ 'socios.fields.afiliacion.title' | translate }}</h6>
 
-                  <!-- CUOTAS (SOLO CRÉDITO) -->
-                  @if (socio.afiliacionTipoPago === 'credito') {
-                  <div class="col-md-4" error-notify="afiliacionCuotas" error-display="inline">
-                    <label class="form-label required">Cuotas</label>
-                    <select class="form-select" [(ngModel)]="socio.afiliacionCuotas" name="afiliacionCuotas"
-                      engineSync="afiliacionCuotas">
-                      <option [ngValue]="null">
-                        {{ 'socios.common.selectOption' | translate }}
-                      </option>
-                      <option [ngValue]="1">1</option>
-                      <option [ngValue]="2">2</option>
-                      <option [ngValue]="3">3</option>
-                    </select>
-                  </div>
-                  }
+                      <div class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                          <label class="form-label">{{ 'socios.fields.afiliacionMonto.label' | translate }}</label>
+                          <div class="input-group">
+                            <input class="form-control text-end" [(ngModel)]="socio.afiliacionCostoTotal"
+                              name="afiliacionCostoTotal" readonly numberFormat [decimals]="2"
+                              [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                              [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator">
+                            <span class="input-group-text">
+                              {{ appConfigService.getCurrentSettings().currency }}
+                            </span>
+                          </div>
+                        </div>
 
-                  <!-- TOTAL (SIEMPRE ÚLTIMO) -->
-                  <div class="col-md-4 align-self-start">
-                    <label class="form-label">Total afiliación</label>
-                    <div class="input-group">
-                      <input class="form-control text-end" [(ngModel)]="socio.afiliacionCostoTotal"
-                        name="afiliacionCostoTotal" readonly numberFormat [decimals]="2"
-                        [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                        [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator">
-                      <span class="input-group-text">
-                        {{ appConfigService.getCurrentSettings().currency }}
-                      </span>
+                        <div class="col-md-6" error-notify="afiliacionCuotas" error-display="inline">
+                          <label class="form-label required">{{ 'socios.fields.afiliacionCuotas.label' | translate
+                            }}</label>
+                          <select #afiliacionCuotas class="form-select" [(ngModel)]="socio.afiliacionCuotas" name="afiliacionCuotas"
+                            engineSync="afiliacionCuotas" autoFocusNext [next]="membresiaCuotas">
+                            <option [ngValue]="null">
+                              {{ 'socios.common.selectOption' | translate }}
+                            </option>
+                            @for (item of afiliacionCuotasOptions; track item) {
+                            <option [ngValue]="item">{{ item }}</option>
+                            }
+                          </select>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <!-- CONTADO (SEGUNDA FILA) -->
-                  @if (socio.afiliacionTipoPago === 'contado') {
 
-                  <div class="col-md-12"></div>
+                  <!-- MEMBRESIA -->
+                  <div class="col-12">
+                    <div class="border rounded-3 p-3">
+                      <h6 class="mb-3">{{ 'socios.fields.membresia.title' | translate }}</h6>
 
-                  <div class="col-md-4" error-notify="afiliacionBancoCodigo" error-display="inline">
-                    <label class="form-label required">Banco</label>
-                    <select class="form-select" [(ngModel)]="socio.afiliacionBancoCodigo" name="afiliacionBancoCodigo"
-                      engineSync="afiliacionBancoCodigo">
-                      <option [ngValue]="null">
-                        {{ 'socios.common.selectOption' | translate }}
-                      </option>
-                      @for (b of bancos; track b.codigo) {
-                      <option [value]="b.codigo">{{ b.nombreBanco }}</option>
-                      }
-                    </select>
+                      <div class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                          <label class="form-label">{{ 'socios.fields.membresiaMonto.label' | translate }}</label>
+                          <div class="input-group">
+                            <input class="form-control text-end" [(ngModel)]="socio.membresiaCostoTotal"
+                              name="membresiaCostoTotal" readonly numberFormat [decimals]="2"
+                              [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                              [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator">
+                            <span class="input-group-text">
+                              {{ appConfigService.getCurrentSettings().currency }}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6" error-notify="membresiaCuotas" error-display="inline">
+                          <label class="form-label required">{{ 'socios.fields.membresiaCuotas.label' | translate
+                            }}</label>
+                          <select #membresiaCuotas class="form-select" [(ngModel)]="socio.membresiaCuotas" name="membresiaCuotas"
+                            engineSync="membresiaCuotas" autoFocusNext [next]="cuentaCorrienteFechaInicioDeduccion">
+                            <option [ngValue]="null">
+                              {{ 'socios.common.selectOption' | translate }}
+                            </option>
+                            @for (item of membresiaCuotasOptions; track item) {
+                            <option [ngValue]="item">{{ item }}</option>
+                            }
+                          </select>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-                  <div class="col-md-4" error-notify="afiliacionVoucherNumero" error-display="inline">
-                    <label class="form-label required">Voucher</label>
-                    <input class="form-control" [(ngModel)]="socio.afiliacionVoucherNumero"
-                      name="afiliacionVoucherNumero" engineSync="afiliacionVoucherNumero"
-                      placeholder="Número de voucher" autoFocusNext [next]="afiliacionFechaDeposito">
-                  </div>
-
-                  <div class="col-md-4" error-notify="afiliacionFechaDeposito" error-display="inline">
-                    <label class="form-label required">Fecha depósito</label>
-                    <input #afiliacionFechaDeposito class="form-control" [(ngModel)]="socio.afiliacionFechaDeposito"
-                      name="afiliacionFechaDeposito" engineSync="afiliacionFechaDeposito" dateFormat
-                      [dateFormat]="appConfigService.getCurrentSettings().dateFormat" autoFocusNext
-                      [next]="cuentaCorrienteFechaInicioDeduccion"
-                      [next-isdisable]="[cuentaNavidenaFechaInicioDeduccion, sociedadLabora]">
-                  </div>
-                  }
 
                 </div>
               </div>
@@ -917,8 +911,8 @@
 
 
 
-            <app-beneficiario-modal [open]="beneficiarioModalOpen" [item]="beneficiarioEditing" [socioId]="socio.id" [Porc]="beneficiariosTotalPorcentaje"
-              [saving]="beneficiarioSaving" (closed)="closeBeneficiarioModal()"
+            <app-beneficiario-modal [open]="beneficiarioModalOpen" [item]="beneficiarioEditing" [socioId]="socio.id"
+              [Porc]="beneficiariosTotalPorcentaje" [saving]="beneficiarioSaving" (closed)="closeBeneficiarioModal()"
               (saved)="onBeneficiarioModalSaved($event)">
             </app-beneficiario-modal>
 

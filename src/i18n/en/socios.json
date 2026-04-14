@@ -276,6 +276,18 @@
         "label": "Observations",
         "placeholder": "Enter observations"
       },
+      "afiliacion": {
+        "title": "Affiliation"
+      },
+      "afiliacionMonto": {
+        "label": "Total affiliation cost"
+      },
+      "membresia": {
+        "title": "Membership"
+      },
+      "membresiaMonto": {
+        "label": "Total membership cost"
+      },
       "cuentaCorrienteActiva": {
         "label": "Checking account",
         "placeholder": ""
@@ -300,28 +312,10 @@
         "label": "Installment amount",
         "placeholder": "0.00"
       },
-      "afiliacionActiva": {
-        "label": "Membership",
-        "help": "Enable this option to register the member affiliation."
-      },
-      "afiliacionTipoPago": {
-        "label": "Payment type",
-        "options": {
-          "credito": "Credit",
-          "contado": "Cash"
-        }
-      },
-      "afiliacionBancoCodigo": {
-        "label": "Bank"
-      },
-      "afiliacionVoucherNumero": {
-        "label": "Voucher number",
-        "placeholder": "Enter the voucher number"
-      },
-      "afiliacionFechaDeposito": {
-        "label": "Voucher date"
-      },
       "afiliacionCuotas": {
+        "label": "Installments"
+      },
+      "membresiaCuotas": {
         "label": "Installments"
       },
       "afiliacionCostoTotal": {
@@ -496,23 +490,11 @@
           "label": "Location and contact",
           "tooltip": "Optional field"
         },
-        "afiliacionTipoPago": {
-          "label": "Membership",
-          "tooltip": "Required field"
-        },
-        "afiliacionBancoCodigo": {
-          "label": "Membership",
-          "tooltip": ""
-        },
-        "afiliacionVoucherNumero": {
-          "label": "Membership",
-          "tooltip": "Required field"
-        },
-        "afiliacionFechaDeposito": {
-          "label": "Membership",
-          "tooltip": "Required field"
-        },
         "afiliacionCuotas": {
+          "label": "Membership",
+          "tooltip": "Required field"
+        },
+        "membresiaCuotas": {
           "label": "Membership",
           "tooltip": "Required field"
         }
@@ -720,63 +702,23 @@
             }
           }
         },
-        "afiliacionTipoPago": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Select the membership type"
-            }
-          }
-        },
         "afiliacionCuotas": {
           "data": {
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "when": "{afiliacionTipoPago}='credito'",
+              "when": "",
               "msj": "Select the number of installments for the membership"
             }
           }
         },
-        "afiliacionCostoTotal": {
+        "membresiaCuotas": {
           "data": {
             "1": {
-              "rule": "LEN>=",
+              "rule": "NUM>",
               "value": "0",
               "when": "",
-              "msj": ""
-            }
-          }
-        },
-        "afiliacionBancoCodigo": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{afiliacionTipoPago}='contado'",
-              "msj": "Select a bank"
-            }
-          }
-        },
-        "afiliacionVoucherNumero": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{afiliacionTipoPago}='contado'",
-              "msj": "Enter the voucher number"
-            }
-          }
-        },
-        "afiliacionFechaDeposito": {
-          "data": {
-            "1": {
-              "rule": "REGEX",
-              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
-              "when": "{afiliacionTipoPago}='contado'",
-              "msj": "Enter a valid date"
+              "msj": "Please select the number of membership installments"
             }
           }
         },
@@ -903,30 +845,36 @@
         "conyugeNumeroIdentificacion": {
           "data": {
             "1": {
-              "rule": "IF({estadoCivil}='casado' || {estadoCivil}='union_libre')->{2,3,4,5}",
+              "rule": "IF({estadoCivil}='casado' || {estadoCivil}='union_libre')->{3,4,5,6}",
               "value": "0",
               "when": "",
               "msj": ""
             },
-            "2": {
+             "2": {
+              "rule": "IF(LEN({conyugeNumeroIdentificacion})>0)->{3,4,5,6}",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            },
+            "3": {
               "rule": "LEN>",
               "value": "0",
               "when": "{conyugeTipoIdentificacion} !='cedula'",
               "msj": "The spouse ID number is required"
             },
-            "3": {
+            "4": {
               "rule": "IGUAL!=",
               "value": "{numeroIdentificacion}",
               "when": "{conyugeTipoIdentificacion}='cedula'",
               "msj": "The spouse ID number cannot be the same as the member’s"
             },
-            "4": {
+            "5": {
               "rule": "REGEX",
               "when": "{conyugeTipoIdentificacion}='cedula' || {conyugeTipoIdentificacion}='residencia'",
               "value": "^[0-9]+[A-Za-z]$",
               "msj": "Only numbers and one letter at the end are allowed"
             },
-            "5": {
+            "6": {
               "rule": "LEN==",
               "when": "{conyugeTipoIdentificacion}='residencia' || {conyugeTipoIdentificacion}='cedula'",
               "value": "14",
@@ -1300,13 +1248,6 @@
     "draft": {
       "leavePageTitle": "Warning",
       "leavePageMessage": "You have unsaved changes. If you leave this page, they will be lost. Do you want to continue?"
-    },
-    "import": {
-      "title": "Bulk member upload",
-      "button": "Upload Excel",
-      "invalidFile": "You must select a valid Excel file (.xlsx).",
-      "errorTitle": "Bulk upload errors",
-      "errorMessage": "Errors were found in the Excel file."
     }
   }
 }

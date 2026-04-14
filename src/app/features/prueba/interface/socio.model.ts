@@ -45,29 +45,24 @@ export interface SocioForm {
   conyugePaisNacimiento: string | null;
   conyugeNacionalidadId: string | null;
 
-  afiliacionTipoPago: string | null;
-  afiliacionBancoCodigo: string | null;
-  afiliacionVoucherNumero: string | null;
-  afiliacionFechaDeposito: string | null;
   afiliacionCuotas: number | null;
   afiliacionCostoTotal: number | null;
-  afiliacionCapitalOrdinario: number | null;
-  afiliacionOtrosIngresosDiferidos: number | null;
+
+  membresiaCuotas: number | null;
+  membresiaCostoTotal: number | null;
 
   cuentaCorrienteActiva: boolean;
   cuentaCorrienteFechaInicioDeduccion: string | null;
   cuentaCorrienteMontoCuota: number | null;
 
-
   cuentaNavidenaActiva: boolean;
   cuentaNavidenaFechaInicioDeduccion: string | null;
   cuentaNavidenaMontoCuota: number | null;
 
-
   beneficiarios: BeneficiarioForm[];
   activo: boolean;
 
-  beneficiarioPorcentaje :  number | null;
+  beneficiarioPorcentaje: number | null;
 }
 
 export const EMPTY_SOCIO: SocioForm = {
@@ -115,25 +110,19 @@ export const EMPTY_SOCIO: SocioForm = {
   conyugePaisNacimiento: null,
   conyugeNacionalidadId: null,
 
-
-  afiliacionTipoPago: null,
-  afiliacionBancoCodigo: null,
-  afiliacionVoucherNumero: null,
-  afiliacionFechaDeposito: null,
   afiliacionCuotas: null,
-  afiliacionCostoTotal: null,
-  afiliacionCapitalOrdinario: null,
-  afiliacionOtrosIngresosDiferidos: null,
+  afiliacionCostoTotal: 0,
+
+  membresiaCuotas: null,
+  membresiaCostoTotal: 0,
 
   cuentaCorrienteActiva: false,
   cuentaCorrienteFechaInicioDeduccion: null,
   cuentaCorrienteMontoCuota: null,
 
-
   cuentaNavidenaActiva: false,
   cuentaNavidenaFechaInicioDeduccion: null,
   cuentaNavidenaMontoCuota: null,
-
 
   beneficiarios: [],
   activo: true,

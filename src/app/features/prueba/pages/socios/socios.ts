@@ -133,7 +133,8 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   bancos: Banco[] = [];
 
 
-  readonly afiliacionCuotasOptions = [1, 2, 3];
+  afiliacionCuotasOptions: number[] = [];
+  membresiaCuotasOptions: number[] = [];
 
   formReady = false;
   dataReady = false;
@@ -238,6 +239,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadBreadcrumbs();
         this.loadSocioConfig();
         this.loadCatalogos();
+        this.syncAfiliacionConfigValues();
         this.cdr.detectChanges();
       })
     );
@@ -255,11 +257,13 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     window.document.addEventListener('click', this.onClickBound);
 
     this.loadSocioConfig();
+    this.syncAfiliacionConfigValues();
     this.initRouteModeAndLoad();
 
     this.langChangeSub = this.translate.onLangChange.subscribe(() => {
       this.languages = this.langService.getAvailableLanguages();
       this.loadSocioConfig();
+      this.syncAfiliacionConfigValues();
       this.refreshAllChoices();
     });
 
@@ -390,6 +394,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.socio = this.toSocioForm({ ...EMPTY_SOCIO });
     this.copy = this.toSocioForm({ ...EMPTY_SOCIO });
+    this.syncAfiliacionConfigValues();
     this.municipios = [];
     this.activeSection = 'datos-personales';
 
@@ -495,6 +500,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mode = 'create';
       this.socio = { ...EMPTY_SOCIO };
       this.copy = { ...EMPTY_SOCIO };
+      this.syncAfiliacionConfigValues();
       this.patchEngineFromSocio();
       this.dataReady = true;
       this.tryInitDraftManager();
@@ -535,7 +541,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
           socioApi.fechaIngreso = this.appConfigService.formatDate(socioApi.fechaIngreso);
           socioApi.cuentaCorrienteFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaCorrienteFechaInicioDeduccion);
           socioApi.cuentaNavidenaFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaNavidenaFechaInicioDeduccion);
-          socioApi.afiliacionFechaDeposito = this.appConfigService.formatDate(socioApi.afiliacionFechaDeposito);
 
 
 
@@ -598,7 +603,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
             conyugeNacionalidadId
           };
 
-
+          this.syncAfiliacionConfigValues();
 
           this.loadBeneficiarios(id);
 
@@ -842,6 +847,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
           this.socio.beneficiarios = [...this.beneficiarios];
 
+          this.syncAfiliacionConfigValues();
           this.patchEngineFromSocio();
           this.loadMunicipiosIfNeeded(this.socio.municipioId, () => {
             this.cdr.detectChanges();
@@ -859,6 +865,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         restoreSavedData: (data: Partial<SocioForm> | null | undefined) => {
           this.copy = this.toSocioForm(data);
           this.copy.beneficiarios = this.mapBeneficiarios(data?.beneficiarios);
+          this.syncAfiliacionConfigValues();
           this.syncCatalogValuesWithOptions();
         },
 
@@ -898,7 +905,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       fechaIngreso: this.normalizeEmpty(data?.fechaIngreso),
       fechaNacimiento: this.normalizeEmpty(data?.fechaNacimiento),
       fechaVencimiento: this.normalizeEmpty(data?.fechaVencimiento),
-      afiliacionFechaDeposito: this.normalizeEmpty(data?.afiliacionFechaDeposito),
       cuentaCorrienteFechaInicioDeduccion: this.normalizeEmpty(data?.cuentaCorrienteFechaInicioDeduccion),
       cuentaNavidenaFechaInicioDeduccion: this.normalizeEmpty(data?.cuentaNavidenaFechaInicioDeduccion),
 
@@ -909,17 +915,15 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       ingresosAnuales:
         data?.ingresosAnuales == null ? null : Number(data.ingresosAnuales),
 
-      afiliacionTipoPago: this.normalizeEmpty(data?.afiliacionTipoPago),
-      afiliacionVoucherNumero: this.normalizeEmpty(data?.afiliacionVoucherNumero),
-      afiliacionBancoCodigo: this.normalizeEmpty(data?.afiliacionBancoCodigo),
       afiliacionCuotas:
         data?.afiliacionCuotas == null ? null : Number(data.afiliacionCuotas),
       afiliacionCostoTotal:
         data?.afiliacionCostoTotal == null ? null : Number(data.afiliacionCostoTotal),
-      afiliacionCapitalOrdinario:
-        data?.afiliacionCapitalOrdinario == null ? null : Number(data.afiliacionCapitalOrdinario),
-      afiliacionOtrosIngresosDiferidos:
-        data?.afiliacionOtrosIngresosDiferidos == null ? null : Number(data.afiliacionOtrosIngresosDiferidos),
+
+      membresiaCuotas:
+        data?.membresiaCuotas == null ? null : Number(data.membresiaCuotas),
+      membresiaCostoTotal:
+        data?.membresiaCostoTotal == null ? null : Number(data.membresiaCostoTotal),
 
       cuentaCorrienteMontoCuota:
         data?.cuentaCorrienteMontoCuota == null ? null : Number(data.cuentaCorrienteMontoCuota),
@@ -999,6 +1003,8 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    this.syncAfiliacionConfigValues();
+
     this.engine.patchValues?.({
       ...this.socio,
       beneficiarioPorcentaje: this.beneficiariosTotalPorcentaje
@@ -1020,7 +1026,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     payload.fechaIngreso = this.normalizeDate(this.socio.fechaIngreso);
     payload.fechaNacimiento = this.normalizeDate(this.socio.fechaNacimiento);
     payload.fechaVencimiento = this.normalizeDate(this.socio.fechaVencimiento);
-    payload.afiliacionFechaDeposito = this.normalizeDate(this.socio.afiliacionFechaDeposito);
     payload.cuentaCorrienteFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaCorrienteFechaInicioDeduccion);
     payload.cuentaNavidenaFechaInicioDeduccion = this.normalizeDate(this.socio.cuentaNavidenaFechaInicioDeduccion);
 
@@ -1062,6 +1067,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.beneficiarios = this.mapBeneficiarios(this.copy.beneficiarios);
     this.socio.beneficiarios = [...this.beneficiarios];
 
+    this.syncAfiliacionConfigValues();
     this.syncCatalogValuesWithOptions();
     this.patchEngineFromSocio();
     this.engine.clearErrors?.();
@@ -1779,35 +1785,36 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-  onAfiliacionTipoPagoChange(tipo: string | null): void {
-    this.socio.afiliacionTipoPago = tipo;
 
-    if (tipo === 'contado') {
-      this.socio.afiliacionCuotas = null;
-    }
 
-    if (tipo === 'credito') {
-      this.socio.afiliacionBancoCodigo = null;
-      this.socio.afiliacionVoucherNumero = null;
-      this.socio.afiliacionFechaDeposito = null;
+private syncAfiliacionConfigValues(): void {
+  const settings = this.appConfigService.getCurrentSettings();
 
-      if (!this.socio.afiliacionCuotas) {
-        this.socio.afiliacionCuotas = 1;
-      }
-    }
 
-    this.syncAfiliacionConfigValues();
-    this.patchEngineFromSocio();
-    this.cdr.detectChanges();
-  }
-  private syncAfiliacionConfigValues(): void {
+  const afiliacionMonto = Number(settings?.afiliacion?.total ?? 0);
+  const afiliacionCuentaMax = Number(settings?.afiliacion?.cuotaMax ?? 0);
 
-    const settings = this.appConfigService.getCurrentSettings();
-    const costo = Number(settings?.affiliationCost ?? 0);
+  const membresiaMonto = Number(settings?.membresia?.total ?? 0);
+  const membresiaCuentaMax = Number(settings?.membresia?.cuotaMax ?? 0);
 
-    this.socio.afiliacionCostoTotal = costo;
-  }
+  this.socio.afiliacionCostoTotal = afiliacionMonto;
+  this.socio.membresiaCostoTotal = membresiaMonto;
 
+  this.copy.afiliacionCostoTotal = afiliacionMonto;
+  this.copy.membresiaCostoTotal = membresiaMonto;
+
+  this.afiliacionCuotasOptions = Array.from(
+    { length: afiliacionCuentaMax },
+    (_, i) => i + 1
+  );
+
+  this.membresiaCuotasOptions = Array.from(
+    { length: membresiaCuentaMax },
+    (_, i) => i + 1
+  );
+
+  this.patchEngineFromSocio();
+}
 
   private normalizeEmpty(value: any): any {
     return value === '' ? null : value;
@@ -1888,4 +1895,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return fecha >= hoy && fecha <= limite;
   }
+
+
+  
 }

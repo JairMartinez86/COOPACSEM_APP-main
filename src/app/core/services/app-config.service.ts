@@ -11,10 +11,17 @@ export interface AppRegionalConfig {
   currency: string;
   decimalSeparator: string;
   thousandSeparator: string;
-  affiliationCost: number;
-  ordinaryCapitalPercentage: number;
-  otherDeferredIncomePercentage: number;
-  fechaServidor : string
+  fechaServidor: string;
+
+  afiliacion: {
+    total: number;
+    cuotaMax: number;
+  };
+
+  membresia: {
+    total: number;
+    cuotaMax: number;
+  };
 }
 
 export interface PublicSettingsResponse {
@@ -28,19 +35,26 @@ export class AppConfigService {
   private http = inject(HttpClient);
   private api = inject(ApiConfigService);
 
-  private settings: AppRegionalConfig = {
-    companyName: 'Mi Empresa S.A.',
-    logoUrl: '',
-    logoFileName: '',
-    dateFormat: 'dd/MM/yyyy',
-    currency: 'NIO',
-    decimalSeparator: '.',
-    thousandSeparator: ',',
-    affiliationCost: 0,
-    ordinaryCapitalPercentage: 0,
-    otherDeferredIncomePercentage: 0,
-    fechaServidor: '',
-  };
+private settings: AppRegionalConfig = {
+  companyName: 'Mi Empresa S.A.',
+  logoUrl: '',
+  logoFileName: '',
+  dateFormat: 'dd/MM/yyyy',
+  currency: 'NIO',
+  decimalSeparator: '.',
+  thousandSeparator: ',',
+  fechaServidor: '',
+
+  afiliacion: {
+    total: 0,
+    cuotaMax: 0
+  },
+
+  membresia: {
+    total: 0,
+    cuotaMax: 0
+  }
+};
 
   getPublicSettings(): Observable<PublicSettingsResponse> {
     return this.http
@@ -48,6 +62,7 @@ export class AppConfigService {
       .pipe(
         tap((res) => {
           if (res?.data) {
+
             this.settings = {
               ...this.settings,
               ...res.data

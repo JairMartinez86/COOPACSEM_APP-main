@@ -276,6 +276,18 @@
         "label": "Observaciones",
         "placeholder": "Ingrese observaciones"
       },
+      "afiliacion": {
+        "title": "Afiliación"
+      },
+      "afiliacionMonto": {
+        "label": "Costo total de afiliación"
+      },
+      "membresia": {
+        "title": "Membresía"
+      },
+      "membresiaMonto": {
+        "label": "Costo total de membresía"
+      },
       "cuentaCorrienteActiva": {
         "label": "Cuenta corriente",
         "placeholder": ""
@@ -300,28 +312,10 @@
         "label": "Monto de cuota",
         "placeholder": "0.00"
       },
-      "afiliacionActiva": {
-        "label": "Afiliación",
-        "help": "Activa esta opción para registrar la afiliación del socio."
-      },
-      "afiliacionTipoPago": {
-        "label": "Tipo de pago",
-        "options": {
-          "credito": "Crédito",
-          "contado": "Contado"
-        }
-      },
-      "afiliacionBancoCodigo": {
-        "label": "Banco"
-      },
-      "afiliacionVoucherNumero": {
-        "label": "Número de voucher",
-        "placeholder": "Ingrese el número de voucher"
-      },
-      "afiliacionFechaDeposito": {
-        "label": "Fecha de voucher"
-      },
       "afiliacionCuotas": {
+        "label": "Cuotas"
+      },
+      "membresiaCuotas": {
         "label": "Cuotas"
       },
       "afiliacionCostoTotal": {
@@ -496,23 +490,11 @@
           "label": "Ubicación y contacto",
           "tooltip": "Campo opcional"
         },
-        "afiliacionTipoPago": {
-          "label": "Afiliación",
-          "tooltip": "Campo requerido"
-        },
-        "afiliacionBancoCodigo": {
-          "label": "Afiliación",
-          "tooltip": ""
-        },
-        "afiliacionVoucherNumero": {
-          "label": "Afiliación",
-          "tooltip": "Campo requerido"
-        },
-        "afiliacionFechaDeposito": {
-          "label": "Afiliación",
-          "tooltip": "Campo requerido"
-        },
         "afiliacionCuotas": {
+          "label": "Afiliación",
+          "tooltip": "Campo requerido"
+        },
+        "membresiaCuotas": {
           "label": "Afiliación",
           "tooltip": "Campo requerido"
         }
@@ -720,63 +702,23 @@
             }
           }
         },
-        "afiliacionTipoPago": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Seleccione el tipo de afiliación"
-            }
-          }
-        },
         "afiliacionCuotas": {
           "data": {
             "1": {
               "rule": "LEN>",
               "value": "0",
-              "when": "{afiliacionTipoPago}='credito'",
+              "when": "",
               "msj": "Seleccione el número de cuotas para la afiliación"
             }
           }
         },
-        "afiliacionCostoTotal": {
+        "membresiaCuotas": {
           "data": {
             "1": {
-              "rule": "LEN>=",
+              "rule": "LEN>",
               "value": "0",
               "when": "",
-              "msj": ""
-            }
-          }
-        },
-        "afiliacionBancoCodigo": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{afiliacionTipoPago}='contado'",
-              "msj": "Seleccione un banco"
-            }
-          }
-        },
-        "afiliacionVoucherNumero": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "{afiliacionTipoPago}='contado'",
-              "msj": "Ingrese el numero de voucher"
-            }
-          }
-        },
-        "afiliacionFechaDeposito": {
-          "data": {
-            "1": {
-              "rule": "REGEX",
-              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
-              "when": "{afiliacionTipoPago}='contado'",
-              "msj": "Ingrese una fecha válida"
+              "msj": "Seleccione el número de cuotas para la membresía"
             }
           }
         },
@@ -903,30 +845,36 @@
         "conyugeNumeroIdentificacion": {
           "data": {
             "1": {
-              "rule": "IF({estadoCivil}='casado' || {estadoCivil}='union_libre')->{2,3,4,5}",
+              "rule": "IF({estadoCivil}='casado' || {estadoCivil}='union_libre')->{3,4,5,6}",
               "value": "0",
               "when": "",
               "msj": ""
             },
             "2": {
+              "rule": "IF(LEN({conyugeNumeroIdentificacion})>0)->{3,4,5,6}",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            },
+            "3": {
               "rule": "LEN>",
               "value": "0",
               "when": "{conyugeTipoIdentificacion} !='cedula'",
               "msj": "El número de identificación del cónyuge es requerido"
             },
-            "3": {
+            "4": {
               "rule": "IGUAL!=",
               "value": "{numeroIdentificacion}",
               "when": "{conyugeTipoIdentificacion}='cedula'",
               "msj": "El número de identificación del cónyuge no puede ser igual al del socio"
             },
-            "4": {
+            "5": {
               "rule": "REGEX",
               "when": "{conyugeTipoIdentificacion}='cedula' || {conyugeTipoIdentificacion}='residencia'",
               "value": "^[0-9]+[A-Za-z]$",
               "msj": "Solo se permiten números y una letra al final"
             },
-            "5": {
+            "6": {
               "rule": "LEN==",
               "when": "{conyugeTipoIdentificacion}='residencia' || {conyugeTipoIdentificacion}='cedula'",
               "value": "14",
@@ -1300,13 +1248,6 @@
     "draft": {
       "leavePageTitle": "Advertencia",
       "leavePageMessage": "Tienes cambios sin guardar. Si sales de esta página se perderán. ¿Deseas continuar?"
-    },
-    "import": {
-      "title": "Carga masiva de socios",
-      "button": "Cargar Excel",
-      "invalidFile": "Debe seleccionar un archivo Excel válido (.xlsx).",
-      "errorTitle": "Errores en carga masiva",
-      "errorMessage": "Se encontraron errores en el archivo Excel."
     }
   }
 }
