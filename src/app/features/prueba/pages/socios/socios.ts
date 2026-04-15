@@ -1211,33 +1211,30 @@ readonly sections = [
   }
 
   private updateActiveSectionFromEvent(event: Event): void {
-    if (!this.isBrowser) return;
+  if (!this.isBrowser) return;
 
-    const target = event.target as HTMLElement | null;
-    if (!target) return;
+  const target = event.target as HTMLElement | null;
+  if (!target) return;
 
-    // ✅ Si el modal de beneficiarios está abierto y el click/focus fue dentro del modal,
-    // marcamos directamente la sección beneficiarios
-    const modal =
-      target.closest('.beneficiario-modal') ||
-      target.closest('.modal') ||
-      target.closest('[data-beneficiario-modal="true"]');
+  const modal =
+    target.closest('.beneficiario-modal') ||
+    target.closest('.modal') ||
+    target.closest('[data-beneficiario-modal="true"]');
 
-    if (this.beneficiarioModalOpen && modal) {
-      this.activeSection = 'beneficiarios';
-      return;
-    }
-
-    const field = target.closest('input, select, textarea, button');
-    if (!field) return;
-
-    const section = target.closest('.socio-scroll-section') as HTMLElement | null;
-    if (!section?.id) return;
-
-    if (this.sections.includes(section.id)) {
-      this.activeSection = section.id;
-    }
+  if (this.beneficiarioModalOpen && modal) {
+    this.activeSection = 'beneficiarios';
+    return;
   }
+
+  const section = target.closest('.socio-scroll-section') as HTMLElement | null;
+  if (!section?.id) return;
+
+  if (this.sections.includes(section.id)) {
+    this.activeSection = section.id;
+    this.syncWizardHorizontalScroll();
+    this.cdr.detectChanges();
+  }
+}
 
   private updateWizardAffix(): void {
     if (!this.isBrowser || !this.wizardSlotRef || !this.wizardCardRef) return;
@@ -1909,17 +1906,14 @@ private syncAfiliacionConfigValues(): void {
 
 
 
-
-
-
-
-  // FILE MANAGER
+// FILE MANAGER
 
 fileItems: any[] = [];
 currentFilePath = '';
 uploadingFiles = false;
 creatingFolder = false;
 previewUrls: Record<string, string> = {};
+contextMenuMode: 'item' | 'background' | null = null;
 
 selectedItem: any = null;
 clipboardItem: any = null;
@@ -2009,7 +2003,7 @@ onFileSelected(event: Event): void {
   this.sociosService.uploadFiles(this.socio.id, formData).subscribe({
     next: (res: any) => {
       this.uploadingFiles = false;
-      this.notify.showFromApiResponse?.(res, 'success');
+      //this.notify.showFromApiResponse?.(res, 'success');
       this.loadFiles(this.currentFilePath);
       input.value = '';
     },
@@ -2045,7 +2039,7 @@ openCreateFolderModal(): void {
   }).subscribe({
     next: (res: any) => {
       this.creatingFolder = false;
-      this.notify.showFromApiResponse?.(res, 'success');
+      //this.notify.showFromApiResponse?.(res, 'success');
       this.loadFiles(this.currentFilePath);
     },
     error: (err) => {
@@ -2078,7 +2072,7 @@ deleteFileItem(item: any): void {
 
   this.sociosService.deleteFile(this.socio.id, item.relativePath).subscribe({
     next: (res: any) => {
-      this.notify.showFromApiResponse?.(res, 'success');
+      //this.notify.showFromApiResponse?.(res, 'success');
       this.selectedItem = null;
       this.loadFiles(this.currentFilePath);
     },
@@ -2173,14 +2167,20 @@ private clearPreviewUrls(): void {
   this.previewUrls = {};
 }
 
+
+
+
 onRightClick(event: MouseEvent, item: any): void {
   event.preventDefault();
   event.stopPropagation();
 
-  this.selectedItem = item;
-
   const menu = document.getElementById('fmContextMenu');
   if (!menu) return;
+
+  this.hideContextMenu();
+
+  this.selectedItem = item;
+  this.contextMenuMode = 'item';
 
   const menuWidth = 220;
   const menuHeight = 230;
@@ -2198,23 +2198,38 @@ onRightClick(event: MouseEvent, item: any): void {
 
   menu.style.left = `${x}px`;
   menu.style.top = `${y}px`;
+
+  void menu.offsetWidth;
   menu.classList.add('show');
+}
+
+onLeftClickBackground(event: MouseEvent): void {
+  const target = event.target as HTMLElement | null;
+
+  if (target?.closest('.fm-item')) return;
+
+  this.selectedItem = null;
+  this.hideContextMenu();
 }
 
 onRightClickBackground(event: MouseEvent): void {
   const target = event.target as HTMLElement | null;
+
   if (target?.closest('.fm-item')) return;
 
   event.preventDefault();
   event.stopPropagation();
 
-  this.selectedItem = null;
-
   const menu = document.getElementById('fmContextMenu');
   if (!menu) return;
 
+  this.hideContextMenu();
+
+  this.selectedItem = null;
+  this.contextMenuMode = 'background';
+
   const menuWidth = 220;
-  const menuHeight = 230;
+  const menuHeight = 80;
 
   let x = event.clientX;
   let y = event.clientY;
@@ -2229,15 +2244,23 @@ onRightClickBackground(event: MouseEvent): void {
 
   menu.style.left = `${x}px`;
   menu.style.top = `${y}px`;
+
+  void menu.offsetWidth;
   menu.classList.add('show');
 }
 
 private hideContextMenu(): void {
   const menu = document.getElementById('fmContextMenu');
-  if (menu) {
-    menu.classList.remove('show');
-  }
+  if (!menu) return;
+
+  menu.classList.remove('show');
+  menu.style.left = '-9999px';
+  menu.style.top = '-9999px';
+  this.contextMenuMode = null;
 }
+
+
+
 
 contextActionNewFolder(): void {
   this.hideContextMenu();
@@ -2251,12 +2274,6 @@ contextActionCopy(): void {
 
   this.clipboardItem = { ...this.selectedItem };
   this.clipboardMode = 'copy';
-
- /* this.notify.show?.(
-    this.translate.instant('socios.fileManager.messages.itemCopied'),
-    '',
-    'success'
-  );*/
 }
 
 contextActionCut(): void {
@@ -2266,12 +2283,6 @@ contextActionCut(): void {
 
   this.clipboardItem = { ...this.selectedItem };
   this.clipboardMode = 'cut';
-
- /* this.notify.show?.(
-    this.translate.instant('socios.fileManager.messages.itemCut'),
-    '',
-    'success'
-  );*/
 }
 
 contextActionPaste(): void {
@@ -2287,8 +2298,6 @@ contextActionPaste(): void {
 
   this.sociosService.pasteFile(this.socio.id, body).subscribe({
     next: (res: any) => {
-     // this.notify.showFromApiResponse?.(res, 'success');
-
       if (this.clipboardMode === 'cut') {
         this.clipboardItem = null;
         this.clipboardMode = null;
@@ -2310,14 +2319,5 @@ contextActionDelete(): void {
   this.deleteFileItem(this.selectedItem);
 }
 
-private onGlobalClickHideContextMenu = (event: MouseEvent) => {
-  const target = event.target as HTMLElement | null;
-  if (target?.closest('#fmContextMenu')) return;
-  this.hideContextMenu();
-};
-
-private onGlobalScrollHideContextMenu = () => {
-  this.hideContextMenu();
-};
 
 }

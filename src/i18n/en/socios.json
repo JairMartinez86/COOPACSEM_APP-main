@@ -127,7 +127,8 @@
     "actions": "Actions"
   },
   "types": {
-    "folder": "Folder"
+    "folder": "Folder",
+    "file": "File"
   },
  "contextMenu": {
   "newFolder": "New folder",

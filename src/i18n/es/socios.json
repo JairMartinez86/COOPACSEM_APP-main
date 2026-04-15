@@ -128,7 +128,8 @@
     "actions": "Acciones"
   },
   "types": {
-    "folder": "Carpeta"
+    "folder": "Carpeta",
+    "file": "Archivo"
   },
   "contextMenu": {
   "newFolder": "Nueva carpeta",
