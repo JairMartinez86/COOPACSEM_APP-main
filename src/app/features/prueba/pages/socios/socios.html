@@ -123,7 +123,7 @@
                     </div>
                   </button>
 
-<button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'file-manager'"
+                  <button #wizardStep type="button" class="wizard-step-v" [attr.data-section]="'file-manager'"
                     [class.active]="activeSection === 'file-manager'" [class.completed]="isCompleted('file-manager')"
                     (click)="scrollToSection('file-manager')">
                     <div class="wizard-step-v-icon"><span>7</span></div>
@@ -422,7 +422,7 @@
 
                   <!-- AFILIACION -->
                   <div class="col-12">
-                    <div class="border rounded-3 p-3">
+                    <div class="rounded-3 p-3">
                       <h6 class="mb-3">{{ 'socios.fields.afiliacion.title' | translate }}</h6>
 
                       <div class="row g-3 align-items-end">
@@ -459,7 +459,7 @@
 
                   <!-- MEMBRESIA -->
                   <div class="col-12">
-                    <div class="border rounded-3 p-3">
+                    <div class="rounded-3 p-3">
                       <h6 class="mb-3">{{ 'socios.fields.membresia.title' | translate }}</h6>
 
                       <div class="row g-3 align-items-end">
@@ -1046,37 +1046,37 @@
 
                 @if (contextMenuMode === 'background') {
                 <button type="button" class="fm-context-item" (click)="contextActionNewFolder()">
-                  <i class="fa-duotone fa-solid fa-folder-plus"></i>
+                  <i class="bi bi-folder-plus"></i>
                   <span>{{ 'socios.fileManager.contextMenu.newFolder' | translate }}</span>
                 </button>
 
-                <button type="button" class="fm-context-item" [disabled]="!clipboardItem"
-                  (click)="contextActionPaste()">
-                  <i class="fa-duotone fa-solid fa-paste"></i>
+                @if (clipboardItem) {
+                <button type="button" class="fm-context-item" (click)="contextActionPaste()">
+                  <i class="bi bi-clipboard"></i>
                   <span>{{ 'socios.fileManager.contextMenu.paste' | translate }}</span>
                 </button>
+                }
                 }
 
                 @if (contextMenuMode === 'item') {
                 <button type="button" class="fm-context-item" [disabled]="!selectedItem" (click)="contextActionCopy()">
-                 <i class="fa-duotone fa-solid fa-copy"></i>
+                  <i class="bi bi-files"></i>
                   <span>{{ 'socios.fileManager.contextMenu.copy' | translate }}</span>
                 </button>
 
                 <button type="button" class="fm-context-item" [disabled]="!selectedItem" (click)="contextActionCut()">
-                  <i class="fa-duotone fa-solid fa-scissors"></i>
+                  <i class="bi bi-scissors"></i>
                   <span>{{ 'socios.fileManager.contextMenu.cut' | translate }}</span>
                 </button>
 
                 <button type="button" class="fm-context-item danger" [disabled]="!selectedItem"
                   (click)="contextActionDelete()">
-                 <i class="fa-duotone fa-solid fa-trash"></i>
+                  <i class="bi bi-trash"></i>
                   <span>{{ 'socios.fileManager.contextMenu.delete' | translate }}</span>
                 </button>
                 }
 
               </div>
-
             </div>
             } @else {
             <div class="card ue-shell-card socio-card socio-scroll-section">
