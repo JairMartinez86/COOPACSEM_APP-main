@@ -14,7 +14,7 @@
     "accountTypes": {
       "current": "Current",
       "christmas": "Christmas",
-       "intereses": "Interest"
+      "intereses": "Interest"
     },
     "status": {
       "active": "Active",
@@ -43,18 +43,16 @@
         "subtitle": "Withdrawals pending application"
       }
     },
-
-  "affiliation": {
-    "plans": {
-      "title": "Affiliation"
-    }
-  },
-  "membership": {
-    "plans": {
-      "title": "Membership"
-    }
-  },
-
+    "afiliacion": {
+      "plans": {
+        "title": "Affiliation"
+      }
+    },
+    "membresia": {
+      "plans": {
+        "title": "Membership"
+      }
+    },
     "actions": {
       "newSaving": "New saving",
       "newDeposit": "New deposit",
@@ -106,7 +104,7 @@
         "amount": "Monto",
         "balance": "Saldo",
         "status": "Status",
-        "paid" : "Paid"
+        "paid": "Paid"
       },
       "socios": {
         "code": "Code",
@@ -137,7 +135,6 @@
       "currentAccount": "Cuenta Current",
       "christmasAccount": "Cuenta Christmas"
     },
-
     "alerts": {
       "pendingWithdrawalTitle": "Requests de retiro pendientes",
       "pendingWithdrawalDescription": "The member has withdrawal requests pending application.",
@@ -167,31 +164,31 @@
       "showing": "Showing {{start}}-{{end}} of {{total}} members"
     },
     "chart": {
-  "chartTitle": "Chart summary",
-  "totalSaved": "Total saved",
-  "totalWithdrawn": "Total withdrawn",
-   "labels": {
-      "saved": "Savings",
-      "withdrawn": "Withdrawn",
-      "interests": "Interests"
-    }
-},
+      "chartTitle": "Chart summary",
+      "totalSaved": "Total saved",
+      "totalWithdrawn": "Total withdrawn",
+      "labels": {
+        "saved": "Savings",
+        "withdrawn": "Withdrawn",
+        "interests": "Interests"
+      }
+    },
     "common": {
       "close": "Close"
     },
     "breadcrumbs": [
-  {
-    "label": "Home",
-    "url": "/home"
-  },
-  {
-    "label": "Savings",
-    "url": ""
-  },
-  {
-    "label": "Savings List",
-    "url": "/ahorro"
-  }
-]
+      {
+        "label": "Home",
+        "url": "/home"
+      },
+      {
+        "label": "Savings",
+        "url": ""
+      },
+      {
+        "label": "Savings List",
+        "url": "/ahorro"
+      }
+    ]
   }
 }
