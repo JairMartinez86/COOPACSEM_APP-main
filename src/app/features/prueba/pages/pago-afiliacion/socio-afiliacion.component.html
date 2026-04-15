@@ -1,0 +1,273 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+  <div class="main-content page-dashboard-finance">
+
+    <div class="page-header mb-2">
+      <div>
+        <h1 class="page-title">
+          <i class="fa-solid fa-id-card text-primary"></i>
+          {{ 'socioAfiliacionPago.title' | translate }}
+        </h1>
+        <p class="text-muted mb-0">
+          {{ 'socioAfiliacionPago.subtitle' | translate }}
+        </p>
+      </div>
+    </div>
+
+    <div class="two-column-layout">
+
+      <!-- IZQUIERDA -->
+      <div>
+
+        <!-- DATOS SOCIO -->
+        <div class="card mb-2">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              {{ 'socioAfiliacionPago.sections.socio' | translate }}
+            </h5>
+
+            <div class="d-flex justify-content-end gap-1">
+              <small class="text-muted d-flex align-items-center gap-1 mb-0">
+                {{ 'socioAfiliacionPago.fields.estado' | translate }}
+              </small>
+
+              <span class="badge" [ngClass]="socio?.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                <i class="bi bi-check-circle-fill"></i>
+                {{ (socio?.activo ? 'socioAhorro.status.activo' : 'common.inactive') | translate }}
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="row g-2">
+
+              <div class="col-md-6">
+                <div class="d-flex gap-2">
+                  <small class="text-muted d-flex gap-1 mb-0">
+                    <i class="bi bi-hash"></i>
+                    {{ 'socioAfiliacionPago.fields.codigo' | translate }}
+                  </small>
+                  <strong>{{ socio?.codigoSocio || '-' }}</strong>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="d-flex align-items-center gap-1">
+                  <small class="text-muted d-flex gap-1 mb-0">
+                    <i class="bi bi-person"></i>
+                    {{ 'socioAfiliacionPago.fields.nombres' | translate }}
+                  </small>
+                  <strong>{{ socio?.nombreCompleto || '-' }}</strong>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="d-flex gap-1">
+                  <small class="text-muted d-flex gap-1 mb-0">
+                    <i class="bi bi-card-text"></i>
+                    {{ 'socioAfiliacionPago.fields.cedula' | translate }}
+                  </small>
+                  <strong>{{ socio?.numeroIdentificacion || '-' }}</strong>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="d-flex gap-1">
+                  <small class="text-muted d-flex gap-1 mb-0">
+                    <i class="bi bi-building"></i>
+                    {{ 'socioAfiliacionPago.fields.empresa' | translate }}
+                  </small>
+                  <strong>{{ socio?.sociedadLabora || '-' }}</strong>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- DETALLE / FORM -->
+        <div class="card mb-2">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              {{ 'socioAfiliacionPago.sections.detail' | translate }}
+            </h5>
+          </div>
+          <form autocomplete="off" novalidate>
+            <div class="card-body">
+
+              <!-- MONTO -->
+              <div class="d-flex justify-content-center mb-2" error-notify="Monto" error-display="inline">
+                <div class="input-group input-group-sm" style="max-width: 340px;">
+                  <span class="input-group-text">
+                    {{ 'socioAfiliacionPago.fields.monto.label' | translate }}
+                  </span>
+
+                  <span class="input-group-text">
+                    {{ appConfigService.getCurrentSettings().currency }}
+                  </span>
+
+                  <input #Monto type="text" class="form-control text-center" [(ngModel)]="pago.monto" id="Monto"
+                    name="Monto" engineSync="Monto" autoFocusNext [next]="BancoCodigo" numberFormat [decimals]="2"
+                    [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                    [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" JmartAutoFocus />
+                </div>
+              </div>
+
+              <div class="row g-2">
+
+                <!-- BANCO -->
+                <div class="col-md-4" error-notify="BancoCodigo" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioAfiliacionPago.fields.banco.label' | translate }}
+                  </label>
+
+                  <select #BancoCodigo class="form-select" [(ngModel)]="pago.bancoCodigo" id="BancoCodigo"
+                    name="BancoCodigo" engineSync="BancoCodigo" autoFocusNext [next]="NoDeposito">
+
+                    <option value="">
+                      {{ 'socioAfiliacionPago.fields.banco.placeholder' | translate }}
+                    </option>
+
+                    @for (banco of bancos; track banco.codigo) {
+                    @if (banco.activo) {
+                    <option [value]="banco.codigo">
+                      {{ banco.nombreBanco }}
+                    </option>
+                    }
+                    }
+                  </select>
+                </div>
+
+                <!-- NO DEPOSITO -->
+                <div class="col-md-4" error-notify="NoDeposito" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioAfiliacionPago.fields.noDeposito.label' | translate }}
+                  </label>
+
+                  <input #NoDeposito type="text" class="form-control" [(ngModel)]="pago.noDeposito" id="NoDeposito"
+                    name="NoDeposito" engineSync="NoDeposito" autoFocusNext [next]="FechaDeposito" />
+                </div>
+
+                <!-- FECHA DEPOSITO -->
+                <div class="col-md-4" error-notify="FechaDeposito" error-display="inline">
+                  <label class="form-label">
+                    {{ 'socioAfiliacionPago.fields.fechaDeposito.label' | translate }}
+                  </label>
+
+                  <input #FechaDeposito type="text" class="form-control" [(ngModel)]="pago.fechaDeposito"
+                    id="FechaDeposito" name="FechaDeposito" engineSync="FechaDeposito" autoFocusNext
+                    [next]="Observacion" [dateFormat]="appConfigService.getCurrentSettings().dateFormat" />
+                </div>
+
+              </div>
+
+              <!-- OBSERVACION -->
+              <div class="mt-2" error-notify="Observacion" error-display="inline">
+                <label class="form-label">
+                  {{ 'socioAfiliacionPago.fields.observacion.label' | translate }}
+                </label>
+
+                <textarea #Observacion class="form-control" rows="2" style="resize: none;"
+                  placeholder="{{ 'socioAfiliacionPago.fields.observacion.placeholder' | translate }}"
+                  [(ngModel)]="pago.observacion" id="Observacion" name="Observacion"
+                  engineSync="Observacion"></textarea>
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+        <!-- TABLAS -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              {{ 'socioAfiliacionPago.sections.history' | translate }}
+            </h5>
+          </div>
+
+          <div class="card-body">
+            <app-afiliacion-membresia-table [afiliacionRows]="afiliacionRows" [membresiaRows]="membresiaRows">
+            </app-afiliacion-membresia-table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DERECHA -->
+      <div>
+
+        <div class="card mb-2">
+          <div class="card-body">
+            <h6 class="mb-1 d-flex align-items-center gap-2">
+              <i class="bi bi-person-fill text-primary"></i>
+              {{ socio?.nombreCompleto }}
+            </h6>
+
+            <small class="text-muted d-block mb-2 d-flex align-items-center gap-2">
+              <i class="bi bi-hash"></i>
+              {{ socio?.codigoSocio }}
+            </small>
+
+            <div class="small text-muted">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-card-text"></i>
+                {{ socio?.numeroIdentificacion }}
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-calendar-event"></i>
+                {{ 'socioAfiliacionPago.fields.empleadoDesde' | translate }}
+                {{ formatDate(socio?.fechaIngreso) }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-2">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h6 class="mb-0">
+              <i class="bi bi-wallet2 me-1"></i>
+              {{ 'socioAfiliacionPago.summary.availability' | translate }}
+            </h6>
+          </div>
+
+          <div class="card-body">
+
+            <div class="socios-summary-strip socios-summary-strip--credito mb-2">
+                            <div class="socios-summary-strip__label">
+                                {{ 'socioRetiro.summary.activeCredit' | translate }}
+                            </div>
+                            <div class="socios-summary-strip__value">
+                                {{ appConfigService.getCurrentSettings().currency }}
+                                {{ formatCurrency(socio?.dashboard?.creditoPendiente) }}
+                            </div>
+                        </div>
+
+
+        
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <button #btn type="button" class="btn btn-success w-100 mb-2" (click)="onSave()"
+              [permissionRoute]="['/socios', '/socio-afiliacion-pago']" [appPermission]="['create']" autoFocusNext
+              [disableClickButton]="true" [unlockOn]="notify.closed$">
+
+              <i class="bi bi-plus-circle me-1"></i>
+              {{ 'socioAfiliacionPago.actions.save' | translate }}
+            </button>
+
+            <button type="button" class="btn btn-outline-secondary w-100" (click)="onCancel()"
+              [permissionRoute]="['/socios', '/socio-afiliacion-pago']" [appPermission]="['create']">
+              {{ 'socioAfiliacionPago.actions.cancel' | translate }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,157 @@
+{
+  "socioAfiliacionPago": {
+    "title": "Pago de afiliación y membresía",
+    "subtitle": "Registro de pagos aplicados a cuotas del socio.",
+    "sections": {
+      "socio": "Datos del socio",
+      "detail": "Detalle del pago",
+      "history": "Cuotas"
+    },
+    "fields": {
+      "estado": "Estado",
+      "codigo": "Código",
+      "nombres": "Nombres",
+      "cedula": "Cédula",
+      "empresa": "Empresa",
+      "empleadoDesde": "Empleado desde",
+      "monto": {
+        "label": "Monto"
+      },
+      "banco": {
+        "label": "Banco",
+        "placeholder": "Seleccione un banco"
+      },
+      "noDeposito": {
+        "label": "No. depósito"
+      },
+      "fechaDeposito": {
+        "label": "Fecha de depósito"
+      },
+      "observacion": {
+        "label": "Observación",
+        "placeholder": "Ingrese una observación"
+      }
+    },
+    "summary": {
+      "availability": "Resumen"
+    },
+    "actions": {
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "tables": {
+      "common": {
+        "date": "Fecha",
+        "amount": "Monto",
+        "status": "Estado",
+        "paid": "Pagado",
+        "balance": "Saldo"
+      }
+    },
+    "states": {
+      "noInstallments": "No hay cuotas registradas."
+    },
+    "affiliation": {
+      "plans": {
+        "title": "Afiliación"
+      }
+    },
+    "membership": {
+      "plans": {
+        "title": "Membresía"
+      }
+     
+    },
+     "form": {
+        "fieldMeta": {
+          "Monto": {
+            "label": "Detalle del depósito",
+            "tooltip": "Campo requerido"
+          },
+          "BancoCodigo": {
+            "label": "Detalle del depósito",
+            "tooltip": "Campo requerido"
+          },
+          "NoDeposito": {
+            "label": "Detalle del depósito",
+            "tooltip": "Campo requerido"
+          },
+          "FechaDeposito": {
+            "label": "Detalle del depósito",
+            "tooltip": "Campo requerido"
+          },
+          "Observacion": {
+            "label": "Detalle del depósito",
+            "tooltip": "Campo requerido"
+          }
+        },
+        "validations": {
+          "Monto": {
+            "data": {
+              "1": {
+                "rule": "NUM>",
+                "value": "0",
+                "msj": "Ingrese un monto mayor a 0"
+              }
+            }
+          },
+          "BancoCodigo": {
+            "data": {
+              "1": {
+                "rule": "LEN>",
+                "value": "0",
+                "msj": "Seleccione un banco"
+              }
+            }
+          },
+          "NoDeposito": {
+            "data": {
+              "1": {
+                "rule": "REGEX",
+                "value": "^[0-9]+$",
+                "msj": "Ingrese el número de depósito"
+              }
+            }
+          },
+          "FechaDeposito": {
+            "data": {
+              "1": {
+                "rule": "REGEX",
+                "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+                "when": "",
+                "msj": "Ingrese una fecha válida"
+              },
+              "2": {
+                "rule": "DATE<=",
+                "value": "{FechaServidor}",
+                "when": "",
+                "msj": "La fecha debe de ser menor o igual al del servidor."
+              }
+            }
+          },
+          "Observacion": {
+            "data": {
+              "1": {
+                "rule": "LEN>",
+                "value": "0",
+                "msj": "Ingrese una observación"
+              }
+            }
+          }
+        }
+      },
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/"
+      },
+      {
+        "label": "Socios",
+        "url": "/socios"
+      },
+      {
+        "label": "Pago de afiliación y membresía"
+      }
+    ]
+  }
+}

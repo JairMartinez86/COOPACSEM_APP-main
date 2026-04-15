@@ -135,34 +135,36 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
   }
 
   onActionClick(action: ActionItem): void {
-    if (this.alerts.length === 0) {
+
+
+    if (this.selectedSocio == null) {
       this.notify.show('Seleccione un socio', 'Información', 'info');
       return;
     }
 
     switch (action.titleKey) {
       case 'ahorro.actions.newDeposit':
-        this.router.navigate(['/socio-ahorro/new', this.alerts[0].socioId]);
+        this.router.navigate(['/socio-ahorro/new', this.selectedSocio.id]);
         break;
 
       case 'ahorro.actions.newWithdrawal':
-        this.router.navigate(['/socio-retiro/new', this.alerts[0].socioId]);
+        this.router.navigate(['/socio-retiro/new', this.selectedSocio.id]);
         break;
 
       case 'ahorro.actions.newSaving':
-        this.router.navigate(['/apertura-cuenta-navidena', this.alerts[0].socioId]);
+        this.router.navigate(['/apertura-cuenta-navidena', this.selectedSocio.id]);
         break;
 
       case 'ahorro.actions.viewChristmasPlan':
-        this.showPlanModal = true;
+        this.router.navigate(['/socio-afiliacion-pago/new', this.selectedSocio.id]);
         break;
 
       case 'ahorro.actions.increaseInstallment':
-        this.router.navigate(['/cambio-cuota/new', this.alerts[0].socioId, 'incremento']);
+        this.router.navigate(['/cambio-cuota/new', this.selectedSocio.id, 'incremento']);
         break;
 
       case 'ahorro.actions.decreaseInstallment':
-        this.router.navigate(['/cambio-cuota/new', this.alerts[0].socioId, 'disminucion']);
+        this.router.navigate(['/cambio-cuota/new', this.selectedSocio.id, 'disminucion']);
         break;
     }
   }

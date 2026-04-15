@@ -211,15 +211,29 @@ export const routes: Routes = [
       },
 
 
-       // AHORROS
+      //PAGO AFILIACION
+      {
+        path: 'socio-afiliacion-pago/new/:socioId',
+        loadComponent: () =>
+          import('./features/prueba/pages/pago-afiliacion/socio-afiliacion.component')
+            .then(m => m.SocioAfiliacionPagoComponent),
+        data: {
+          permission: '/socios',
+          action: ['view', 'create']
+        },
+        providers: [JMartMassiveValidationService]
+      },
 
-        {
+
+      // AHORROS
+
+      {
         path: 'ahorro',
         loadComponent: () =>
           import('./features/ahorro/pages/ahorro.component')
             .then(m => m.AhorroComponent),
         canActivate: [permissionGuard],
-        data: { permission: '/ahorro', action: 'view', tableFilterKey: 'ahorro' ,  tableFilterEnter: true},
+        data: { permission: '/ahorro', action: 'view', tableFilterKey: 'ahorro', tableFilterEnter: true },
         providers: [JMartMassiveValidationService],
       },
 
