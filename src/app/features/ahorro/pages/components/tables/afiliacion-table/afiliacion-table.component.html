@@ -1,0 +1,123 @@
+<div class="row g-3">
+  <!-- AFILIACION -->
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header py-2">
+        <h6 class="mb-0">{{ 'ahorro.afiliacion.plans.title' | translate }}</h6>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{{ 'ahorro.tables.common.date' | translate }}</th>
+                <th>{{ 'ahorro.tables.common.amount' | translate }}</th>
+                <th>{{ 'ahorro.tables.common.status' | translate }}</th>
+                <th>{{ 'ahorro.tables.common.paid' | translate }}</th>
+                <th class="text-end">{{ 'ahorro.tables.common.balance' | translate }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (row of afiliacionRows; track $index) {
+              <tr>
+                <td>{{ row.noCuota }}</td>
+                <td>{{ row.fecha }}</td>
+                <td>{{ formatCurrency(row.monto) }}</td>
+
+                <td>
+                  <span class="badge"
+                    [ngClass]="row.estado === 'Pagado'
+                      ? 'badge-soft-success'
+                      : row.estado === 'Vencido'
+                      ? 'badge-soft-danger'
+                      : 'badge-soft-warning'">
+                    {{ row.estadoKey | translate }}
+                  </span>
+                </td>
+
+                <td>{{ formatCurrency(row.montoPagado) }}</td>
+
+                <td class="text-end fw-semibold">
+                  {{ formatCurrency(row.saldo) }}
+                </td>
+              </tr>
+              }
+
+              @if (afiliacionRows.length === 0) {
+              <tr>
+                <td colspan="6" class="text-center text-muted py-3">
+                  {{ 'ahorro.states.noInstallments' | translate }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEMBRESIA -->
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header py-2">
+        <h6 class="mb-0">{{ 'ahorro.membresia.plans.title' | translate }}</h6>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{{ 'ahorro.tables.common.date' | translate }}</th>
+                <th>{{ 'ahorro.tables.common.amount' | translate }}</th>
+                <th>{{ 'ahorro.tables.common.status' | translate }}</th>
+                <th>{{ 'ahorro.tables.common.paid' | translate }}</th>
+                <th class="text-end">{{ 'ahorro.tables.common.balance' | translate }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (row of membresiaRows; track $index) {
+              <tr>
+                <td>{{ row.noCuota }}</td>
+                <td>{{ row.fecha }}</td>
+                <td>{{ formatCurrency(row.monto) }}</td>
+
+                <td>
+                  <span class="badge"
+                    [ngClass]="row.estado === 'Pagado'
+                      ? 'badge-soft-success'
+                      : row.estado === 'Vencido'
+                      ? 'badge-soft-danger'
+                      : 'badge-soft-warning'">
+                    {{ row.estadoKey | translate }}
+                  </span>
+                </td>
+
+                <td>{{ formatCurrency(row.montoPagado) }}</td>
+
+                <td class="text-end fw-semibold">
+                  {{ formatCurrency(row.saldo) }}
+                </td>
+              </tr>
+              }
+
+              @if (membresiaRows.length === 0) {
+              <tr>
+                <td colspan="6" class="text-center text-muted py-3">
+                  {{ 'ahorro.states.noInstallments' | translate }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

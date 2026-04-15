@@ -8,7 +8,9 @@ import { DepositosTableComponent } from '../tables/depositos-table/depositos-tab
 import { SolicitudesTableComponent } from '../tables/solicitudes-table/solicitudes-table.component';
 import { PlanesTableComponent } from '../tables/planes-table/planes-table.component';
 import { AppConfigService } from '../../../../../core/services/app-config.service';
-import { PlanRow, SimpleMovimientoRow, SocioDetail, SocioDetalleTab } from '../../../interface/ahorro.models';
+import { AfiliacionMembresiaRow, PlanRow, SimpleMovimientoRow, SocioDetail, SocioDetalleTab } from '../../../interface/ahorro.models';
+import { AfiliacionTableComponent } from "../tables/afiliacion-table/afiliacion-table.component";
+
 
 @Component({
   selector: 'app-ahorro-socio-resumen',
@@ -20,8 +22,9 @@ import { PlanRow, SimpleMovimientoRow, SocioDetail, SocioDetalleTab } from '../.
     RetirosTableComponent,
     DepositosTableComponent,
     SolicitudesTableComponent,
-    PlanesTableComponent
-  ],
+    PlanesTableComponent,
+    AfiliacionTableComponent
+],
   templateUrl: './ahorro-socio-resumen.component.html',
   styleUrl: './ahorro-socio-resumen.component.scss',
 })
@@ -33,6 +36,7 @@ export class AhorroSocioResumenComponent implements OnChanges {
   @Input() retirosRows: SimpleMovimientoRow[] = [];
   @Input() depositosRows: SimpleMovimientoRow[] = [];
   @Input() solicitudesRows: SimpleMovimientoRow[] = [];
+   @Input() afiliacionMembresiaRows: AfiliacionMembresiaRow[] = [];
   @Input() planesRows: PlanRow[] = [];
 
   detailTab: SocioDetalleTab = 'ahorros';

@@ -43,6 +43,18 @@
         "subtitle": "Withdrawals pending application"
       }
     },
+
+  "affiliation": {
+    "plans": {
+      "title": "Affiliation"
+    }
+  },
+  "membership": {
+    "plans": {
+      "title": "Membership"
+    }
+  },
+
     "actions": {
       "newSaving": "New saving",
       "newDeposit": "New deposit",
@@ -79,6 +91,7 @@
       "withdrawals": "Withdrawals",
       "deposits": "Deposits",
       "requests": "Requests",
+      "membership": "Membership",
       "plans": "Plans"
     },
     "detail": {
@@ -92,7 +105,8 @@
         "accountType": "Account type",
         "amount": "Monto",
         "balance": "Saldo",
-        "status": "Status"
+        "status": "Status",
+        "paid" : "Paid"
       },
       "socios": {
         "code": "Code",
@@ -123,6 +137,7 @@
       "currentAccount": "Cuenta Current",
       "christmasAccount": "Cuenta Christmas"
     },
+
     "alerts": {
       "pendingWithdrawalTitle": "Requests de retiro pendientes",
       "pendingWithdrawalDescription": "The member has withdrawal requests pending application.",

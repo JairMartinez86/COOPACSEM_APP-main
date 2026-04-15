@@ -1,6 +1,6 @@
 import { SocioAlerts } from "../../../shared/interfaces/alert.model";
 
-export type SocioDetalleTab = 'ahorros' | 'retiros' | 'depositos' | 'solicitudes' | 'planes';
+export type SocioDetalleTab = 'ahorros' | 'retiros' | 'depositos' | 'solicitudes' | 'afiliacion' | 'planes';
 
 export interface SummaryCard {
   icon: string;
@@ -53,6 +53,28 @@ export interface SimpleMovimientoRow {
   banco?: string | null;
   estadoKey?: string | null;
   estado?: string;
+}
+
+export interface AfiliacionMembresiaRow {
+  id: string;
+
+  tipo: 'Afiliacion' | 'Membresia';
+
+  noCuota: number;
+
+  fecha: string;
+
+  monto: number;
+
+  montoPagado: number;
+
+  saldo: number;
+
+  fechaPago?: string | null;
+
+  estado: 'Pagado' | 'Pendiente' | 'Vencido';
+
+  estadoKey: string;
 }
 
 export interface PlanRow {

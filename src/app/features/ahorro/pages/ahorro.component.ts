@@ -11,6 +11,7 @@ import { AhorroService } from '../services/ahorro.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import {
   ActionItem,
+  AfiliacionMembresiaRow,
   AlertItem,
   PaginationMeta,
   PlanRow,
@@ -60,6 +61,7 @@ export class AhorroComponent implements OnInit {
   depositoRows: SimpleMovimientoRow[] = [];
   solicitudRows: SimpleMovimientoRow[] = [];
   planesRows: PlanRow[] = [];
+   afiliacionMembresiaRows: AfiliacionMembresiaRow[] = [];
   alerts: AlertItem[] = [];
 
   breadcrumbs = [
@@ -198,6 +200,7 @@ get orderedActions() {
         this.depositoRows = data?.detail?.depositos ?? [];
         this.solicitudRows = data?.detail?.solicitudes ?? [];
         this.planesRows = data?.detail?.planes ?? [];
+        this.afiliacionMembresiaRows = data?.detail?.afiliacionMembresia ?? [];
         this.alerts = data?.alerts ?? [];
 
       },
@@ -213,6 +216,7 @@ get orderedActions() {
     this.retiroRows = [];
     this.depositoRows = [];
     this.solicitudRows = [];
+     this.afiliacionMembresiaRows = [];
     this.planesRows = [];
     this.alerts = [];
   }

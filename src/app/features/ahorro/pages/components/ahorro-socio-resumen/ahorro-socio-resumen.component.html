@@ -58,6 +58,7 @@
         <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'retiros'" href="javascript:void(0)" (click)="setDetailTab('retiros')">{{ 'ahorro.tabs.withdrawals' | translate }}</a></li>
         <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'depositos'" href="javascript:void(0)" (click)="setDetailTab('depositos')">{{ 'ahorro.tabs.deposits' | translate }}</a></li>
         <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'solicitudes'" href="javascript:void(0)" (click)="setDetailTab('solicitudes')">{{ 'ahorro.tabs.requests' | translate }}</a></li>
+        <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'afiliacion'" href="javascript:void(0)" (click)="setDetailTab('afiliacion')">{{ 'ahorro.tabs.membership' | translate }}</a></li>
         <li class="nav-item"><a class="nav-link" [class.active]="detailTab === 'planes'" href="javascript:void(0)" (click)="setDetailTab('planes')">{{ 'ahorro.tabs.plans' | translate }}</a></li>
       </ul>
 
@@ -66,6 +67,7 @@
         <div class="tab-pane fade" [class.show]="detailTab === 'retiros'" [class.active]="detailTab === 'retiros'"><app-retiros-table [rows]="retirosRows"></app-retiros-table></div>
         <div class="tab-pane fade" [class.show]="detailTab === 'depositos'" [class.active]="detailTab === 'depositos'"><app-depositos-table [rows]="depositosRows"></app-depositos-table></div>
         <div class="tab-pane fade" [class.show]="detailTab === 'solicitudes'" [class.active]="detailTab === 'solicitudes'"><app-solicitudes-table [rows]="solicitudesRows"></app-solicitudes-table></div>
+        <div class="tab-pane fade" [class.show]="detailTab === 'afiliacion'" [class.active]="detailTab === 'afiliacion'"><app-afiliacion-table [rows]="afiliacionMembresiaRows"></app-afiliacion-table></div>
         <div class="tab-pane fade" [class.show]="detailTab === 'planes'" [class.active]="detailTab === 'planes'"><app-planes-table [rows]="planesRows"></app-planes-table></div>
       </div>
     </div>
