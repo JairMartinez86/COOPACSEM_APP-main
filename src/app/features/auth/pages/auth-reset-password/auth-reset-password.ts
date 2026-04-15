@@ -196,7 +196,7 @@ export class AuthResetPassword implements OnDestroy {
     this.remainingSeconds.set(Math.max(diffSeconds, 0));
     this.expired.set(diffSeconds <= 0);
 
-    console.log('remainingSeconds', this.remainingSeconds());
+  
 
     if (this.expired()) {
       this.stopCountdown();

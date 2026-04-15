@@ -1,0 +1,102 @@
+
+
+//FILE MANAGER CONTEXT MENU
+
+.fm-context-menu {
+  position: fixed;
+  z-index: 999999;
+  min-width: 220px;
+  background: var(--surface-color, #fff);
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  padding: 6px;
+  display: none;
+}
+
+.fm-context-menu.show {
+  display: block !important;
+}
+
+.fm-shell,
+.socio-card,
+.card,
+.card-body {
+  overflow: visible !important;
+}
+
+
+.fm-context-menu {
+  position: fixed;
+  z-index: 999999;
+  min-width: 220px;
+  display: none;
+}
+
+.fm-context-menu.show {
+  display: block !important;
+}
+
+
+.fm-inline-input {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 13px;
+}
+
+.fm-item.new-folder {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+
+
+.fm-item[draggable="true"] {
+  cursor: grab;
+}
+
+.fm-item[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.fm-drop-target {
+  outline: 2px dashed #4154f1;
+  background: rgba(65, 84, 241, 0.1);
+}
+
+.fm-drag-over {
+  background: rgba(65, 84, 241, 0.05);
+}
+
+
+.fm-external-drag-over {
+  position: relative;
+  background: rgba(65, 84, 241, 0.06);
+}
+
+.fm-upload-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: rgba(65, 84, 241, 0.08);
+  border: 2px dashed rgba(65, 84, 241, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.fm-upload-overlay-box {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+
+.fm-upload-overlay-box i {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 8px;
+}

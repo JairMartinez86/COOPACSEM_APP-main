@@ -43,6 +43,8 @@ import { Banco, CatalogoItem, MunicipioItem } from '../../../../shared/interface
 import { BeneficiarioForm, EMPTY_BENEFICIARIO } from '../../interface/beneficiario.model';
 import { PermissionService } from '../../../../core/services/permission.service';
 import { BeneficiarioModalComponent } from "./beneficiario/beneficiario-modal.component";
+import { FileManagerComponent } from "../../../../shared/components/file-manager/file-manager.component";
+import { FileManagerService } from '../../../../shared/service/FileManagerService';
 
 declare const Choices: any;
 
@@ -68,7 +70,8 @@ type DraftRef<T> = {
     JMartDateFormatDirective,
     JMartNumberFormatDirective,
     Breadcrumb,
-    BeneficiarioModalComponent
+    BeneficiarioModalComponent,
+    FileManagerComponent
   ],
   templateUrl: './socios.html',
   styleUrl: './socios.scss',
@@ -105,18 +108,25 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private router = inject(Router);
   public appConfigService = inject(AppConfigService);
   public readonly permissionService = inject(PermissionService)
+  fileService = inject(FileManagerService);
+
+    fileManagerConfig = {
+    entityId: null as string | null,
+    module: 'socios',
+    baseFolder: ''
+  };
 
   activeSection = 'datos-personales';
 
-readonly sections = [
-  'datos-personales',
-  'afiliacion',
-  'ahorro',
-  'actividad-economica',
-  'datos-conyuge',
-  'beneficiarios',
-  'file-manager',
-];
+  readonly sections = [
+    'datos-personales',
+    'afiliacion',
+    'ahorro',
+    'actividad-economica',
+    'datos-conyuge',
+    'beneficiarios',
+    'file-manager',
+  ];
 
 
 
@@ -237,6 +247,8 @@ readonly sections = [
     this.loadBreadcrumbs();
     this.loadCatalogos();
 
+   
+
     this.subs.add(
       this.translate.onLangChange.subscribe(() => {
         this.loadBreadcrumbs();
@@ -247,6 +259,17 @@ readonly sections = [
       })
     );
 
+  }
+
+    private syncFileManagerConfig(): void {
+    this.fileManagerConfig = {
+      ...this.fileManagerConfig,
+      entityId: this.socio?.id ?? null,
+
+      // Para socios no es obligatorio.
+      // El backend nuevo ya usa CodigoSocio como carpeta raíz.
+      baseFolder: ''
+    };
   }
 
   ngAfterViewInit(): void {
@@ -606,6 +629,9 @@ readonly sections = [
             conyugeNacionalidadId
           };
 
+
+          this.syncFileManagerConfig();
+
           this.syncAfiliacionConfigValues();
 
           this.loadBeneficiarios(id);
@@ -624,7 +650,6 @@ readonly sections = [
             this.refreshAllChoices();
 
             setTimeout(() => {
-              this.loadFiles();
               this.reapplyChoicesValues();
               this.setChoicesValue(this.municipioChoices, this.socio.municipioId);
               this.formRef?.form.markAsPristine();
@@ -1210,12 +1235,14 @@ readonly sections = [
     this.activeSection = current;
   }
 
-  private updateActiveSectionFromEvent(event: Event): void {
+ private updateActiveSectionFromEvent(event: Event): void {
   if (!this.isBrowser) return;
 
   const target = event.target as HTMLElement | null;
   if (!target) return;
 
+  // Si está abierto el modal de beneficiarios y el evento fue dentro del modal,
+  // mantener beneficiarios activo
   const modal =
     target.closest('.beneficiario-modal') ||
     target.closest('.modal') ||
@@ -1226,13 +1253,29 @@ readonly sections = [
     return;
   }
 
+  // Caso especial: cualquier interacción dentro del file manager
+  const fileManagerRoot =
+    target.closest('#file-manager') ||
+    target.closest('[data-section-root="file-manager"]') ||
+    target.closest('.fm-shell');
+
+  if (fileManagerRoot) {
+    this.activeSection = 'file-manager';
+    return;
+  }
+
+  // Para el resto de secciones, aceptar clicks/focus sobre casi cualquier elemento interactivo
+  const interactive = target.closest(
+    'input, select, textarea, button, a, label, .form-check, .form-switch, .choices, .choices__inner, .choices__item, .choices__list, .card, .card-body, .card-header'
+  );
+
+  if (!interactive) return;
+
   const section = target.closest('.socio-scroll-section') as HTMLElement | null;
   if (!section?.id) return;
 
   if (this.sections.includes(section.id)) {
     this.activeSection = section.id;
-    this.syncWizardHorizontalScroll();
-    this.cdr.detectChanges();
   }
 }
 
@@ -1788,34 +1831,34 @@ readonly sections = [
 
 
 
-private syncAfiliacionConfigValues(): void {
-  const settings = this.appConfigService.getCurrentSettings();
+  private syncAfiliacionConfigValues(): void {
+    const settings = this.appConfigService.getCurrentSettings();
 
 
-  const afiliacionMonto = Number(settings?.afiliacion?.total ?? 0);
-  const afiliacionCuentaMax = Number(settings?.afiliacion?.cuotaMax ?? 0);
+    const afiliacionMonto = Number(settings?.afiliacion?.total ?? 0);
+    const afiliacionCuentaMax = Number(settings?.afiliacion?.cuotaMax ?? 0);
 
-  const membresiaMonto = Number(settings?.membresia?.total ?? 0);
-  const membresiaCuentaMax = Number(settings?.membresia?.cuotaMax ?? 0);
+    const membresiaMonto = Number(settings?.membresia?.total ?? 0);
+    const membresiaCuentaMax = Number(settings?.membresia?.cuotaMax ?? 0);
 
-  this.socio.afiliacionCostoTotal = afiliacionMonto;
-  this.socio.membresiaCostoTotal = membresiaMonto;
+    this.socio.afiliacionCostoTotal = afiliacionMonto;
+    this.socio.membresiaCostoTotal = membresiaMonto;
 
-  this.copy.afiliacionCostoTotal = afiliacionMonto;
-  this.copy.membresiaCostoTotal = membresiaMonto;
+    this.copy.afiliacionCostoTotal = afiliacionMonto;
+    this.copy.membresiaCostoTotal = membresiaMonto;
 
-  this.afiliacionCuotasOptions = Array.from(
-    { length: afiliacionCuentaMax },
-    (_, i) => i + 1
-  );
+    this.afiliacionCuotasOptions = Array.from(
+      { length: afiliacionCuentaMax },
+      (_, i) => i + 1
+    );
 
-  this.membresiaCuotasOptions = Array.from(
-    { length: membresiaCuentaMax },
-    (_, i) => i + 1
-  );
+    this.membresiaCuotasOptions = Array.from(
+      { length: membresiaCuentaMax },
+      (_, i) => i + 1
+    );
 
-  this.patchEngineFromSocio();
-}
+    this.patchEngineFromSocio();
+  }
 
   private normalizeEmpty(value: any): any {
     return value === '' ? null : value;
@@ -1901,717 +1944,5 @@ private syncAfiliacionConfigValues(): void {
 
 
 
-
-
-
-
-
-// FILE MANAGER
-
-fileItems: any[] = [];
-currentFilePath = '';
-uploadingFiles = false;
-creatingFolder = false;
-creatingInlineFolder = false;
-newFolderName = '';
-previewUrls: Record<string, string> = {};
-draggedItem: any = null;
-dragOverFolderPath: string | null = null;
-isDragOverContent = false;
-isExternalDragOver = false;
-contextMenuMode: 'item' | 'background' | null = null;
-
-selectedItem: any = null;
-clipboardItem: any = null;
-clipboardMode: 'copy' | 'cut' | null = null;
-
-get isFileManagerAvailable(): boolean {
-  return this.mode !== 'create' && !!this.socio?.id;
-}
-
-get folderItems(): any[] {
-  return (this.fileItems ?? []).filter(x => x.isDirectory);
-}
-
-get fileOnlyItems(): any[] {
-  return (this.fileItems ?? []).filter(x => !x.isDirectory);
-}
-
-loadFiles(path: string = ''): void {
-  if (!this.isFileManagerAvailable || !this.socio?.id) {
-    this.fileItems = [];
-    this.currentFilePath = '';
-    this.selectedItem = null;
-    this.clearPreviewUrls();
-    this.hideContextMenu();
-    this.cdr.detectChanges();
-    return;
-  }
-
-  this.sociosService.getFiles(this.socio.id, path).subscribe({
-    next: (res: any) => {
-      this.fileItems = res?.data?.items ?? [];
-      this.currentFilePath = res?.data?.currentPath ?? '';
-      this.selectedItem = null;
-      this.loadImagePreviews();
-      this.hideContextMenu();
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      this.fileItems = [];
-      this.currentFilePath = '';
-      this.selectedItem = null;
-      this.clearPreviewUrls();
-      this.hideContextMenu();
-      this.notify.showFromApiResponse?.(err, 'error');
-      this.cdr.detectChanges();
-    }
-  });
-}
-
-selectItem(item: any): void {
-  this.selectedItem = item;
-}
-
-openFolder(item: any): void {
-  if (!this.isFileManagerAvailable || !item?.isDirectory) return;
-  this.selectedItem = item;
-  this.loadFiles(item.relativePath);
-}
-
-goToParentFolder(): void {
-  if (!this.isFileManagerAvailable || !this.currentFilePath) return;
-
-  const parts = this.currentFilePath.split('/').filter(Boolean);
-  parts.pop();
-  this.loadFiles(parts.join('/'));
-}
-
-onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const files = input.files;
-
-  if (!this.isFileManagerAvailable || !files?.length || !this.socio?.id) {
-    input.value = '';
-    return;
-  }
-
-  const formData = new FormData();
-
-  for (let i = 0; i < files.length; i++) {
-    formData.append('files', files[i]);
-  }
-
-  formData.append('path', this.currentFilePath || '');
-
-  this.uploadingFiles = true;
-
-  this.sociosService.uploadFiles(this.socio.id, formData).subscribe({
-    next: (res: any) => {
-      this.uploadingFiles = false;
-      //this.notify.showFromApiResponse?.(res, 'success');
-      this.loadFiles(this.currentFilePath);
-      input.value = '';
-    },
-    error: (err) => {
-      this.uploadingFiles = false;
-      this.notify.showFromApiResponse?.(err, 'error');
-      input.value = '';
-    }
-  });
-}
-
-
-
-startInlineFolderCreation(): void {
-  if (!this.isFileManagerAvailable || !this.socio?.id) {
-    this.notify.show?.(
-      this.translate.instant('socios.fileManager.messages.saveBeforeUse'),
-      '',
-      'warning'
-    );
-    return;
-  }
-
-  this.hideContextMenu();
-  this.creatingInlineFolder = true;
-  this.newFolderName = '';
-
-  setTimeout(() => {
-    const input = document.querySelector('.fm-inline-input') as HTMLInputElement | null;
-    input?.focus();
-    input?.select();
-  });
-}
-
-onInlineFolderFocusOut(): void {
-  // Espera un tick para que ngModel termine de actualizarse
-  setTimeout(() => {
-    if (!this.creatingInlineFolder) return;
-
-    const folderName = this.newFolderName?.trim();
-
-    if (!folderName) {
-      this.cancelCreateFolder();
-      return;
-    }
-
-    this.confirmCreateFolder();
-  });
-}
-
-confirmCreateFolder(): void {
-  if (this.creatingFolder) return;
-
-  const folderName = this.newFolderName?.trim();
-
-  console.log('confirmCreateFolder', folderName, this.socio?.id);
-
-  if (!folderName || !this.socio?.id) {
-    this.cancelCreateFolder();
-    return;
-  }
-
-  this.creatingFolder = true;
-
-  this.sociosService.createFolder(this.socio.id, {
-    folderName,
-    path: this.currentFilePath || ''
-  }).subscribe({
-    next: () => {
-      this.creatingFolder = false;
-      this.creatingInlineFolder = false;
-      this.newFolderName = '';
-      this.loadFiles(this.currentFilePath);
-    },
-    error: (err) => {
-      this.creatingFolder = false;
-      this.notify.showFromApiResponse?.(err, 'error');
-    }
-  });
-}
-
-cancelCreateFolder(): void {
-  this.creatingInlineFolder = false;
-  this.newFolderName = '';
-}
-
-
-downloadFile(item: any): void {
-  if (!this.isFileManagerAvailable || !this.socio?.id || item?.isDirectory) return;
-
-  this.sociosService.downloadFile(this.socio.id, item.relativePath).subscribe({
-    next: (blob: Blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = item.name;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    },
-    error: (err) => {
-      this.notify.showFromApiResponse?.(err, 'error');
-    }
-  });
-}
-
-deleteFileItem(item: any): void {
-  if (!this.isFileManagerAvailable || !this.socio?.id || !item?.relativePath) return;
-
-  this.sociosService.deleteFile(this.socio.id, item.relativePath).subscribe({
-    next: (res: any) => {
-      //this.notify.showFromApiResponse?.(res, 'success');
-      this.selectedItem = null;
-      this.loadFiles(this.currentFilePath);
-    },
-    error: (err) => {
-      this.notify.showFromApiResponse?.(err, 'error');
-    }
-  });
-}
-
-formatFileSize(bytes: number): string {
-  if (!bytes) return '0 B';
-
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
-
-  return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 2)} ${sizes[i]}`;
-}
-
-isImage(item: any): boolean {
-  const ext = (item?.extension || '').toLowerCase();
-  return ['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext);
-}
-
-resolveFileType(item: any): string {
-  const ext = (item?.extension || '').toLowerCase();
-
-  if (this.isImage(item)) return 'image';
-  if (ext === '.pdf') return 'pdf';
-  if (ext === '.doc' || ext === '.docx') return 'document';
-
-  return 'document';
-}
-
-getFileTypeClass(item: any): string {
-  const type = this.resolveFileType(item);
-
-  switch (type) {
-    case 'pdf':
-      return 'pdf';
-    case 'document':
-      return 'document';
-    case 'image':
-      return 'images';
-    default:
-      return 'document';
-  }
-}
-
-getFileIconClass(item: any): string {
-  const ext = (item?.extension || '').toLowerCase();
-
-  switch (ext) {
-    // IMÁGENES
-    case '.jpg':
-    case '.jpeg':
-    case '.png':
-    case '.webp':
-      return 'fa-duotone fa-solid fa-image';
-
-    // PDF
-    case '.pdf':
-      return 'fa-duotone fa-solid fa-file-pdf';
-
-    // WORD
-    case '.doc':
-    case '.docx':
-      return 'fa-duotone fa-solid fa-file-word';
-
-    // EXCEL
-    case '.xls':
-    case '.xlsx':
-      return 'fa-duotone fa-solid fa-file-excel';
-
-    // TEXTO
-    case '.txt':
-      return 'bi-file-earmark-text';
-
-    // DEFAULT
-    default:
-      return 'bi-file-earmark';
-  }
-}
-
-private loadImagePreviews(): void {
-  this.clearPreviewUrls();
-
-  const images = (this.fileItems ?? []).filter(
-    x => !x.isDirectory && this.isImage(x)
-  );
-
-  if (!this.isFileManagerAvailable || !this.socio?.id || !images.length) return;
-
-  for (const item of images) {
-    this.sociosService.downloadFile(this.socio.id, item.relativePath).subscribe({
-      next: (blob: Blob) => {
-        this.previewUrls[item.relativePath] = URL.createObjectURL(blob);
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.previewUrls[item.relativePath] = '';
-      }
-    });
-  }
-}
-
-private clearPreviewUrls(): void {
-  Object.values(this.previewUrls).forEach(url => {
-    try {
-      URL.revokeObjectURL(url);
-    } catch {}
-  });
-
-  this.previewUrls = {};
-}
-
-
-
-
-onRightClick(event: MouseEvent, item: any): void {
-  event.preventDefault();
-  event.stopPropagation();
-
-  const menu = document.getElementById('fmContextMenu');
-  if (!menu) return;
-
-  this.hideContextMenu();
-
-  this.selectedItem = item;
-  this.contextMenuMode = 'item';
-
-  const menuWidth = 220;
-  const menuHeight = 230;
-
-  let x = event.clientX;
-  let y = event.clientY;
-
-  if (x + menuWidth > window.innerWidth) {
-    x = window.innerWidth - menuWidth - 10;
-  }
-
-  if (y + menuHeight > window.innerHeight) {
-    y = window.innerHeight - menuHeight - 10;
-  }
-
-  menu.style.left = `${x}px`;
-  menu.style.top = `${y}px`;
-
-  void menu.offsetWidth;
-  menu.classList.add('show');
-}
-
-onLeftClickBackground(event: MouseEvent): void {
-  const target = event.target as HTMLElement | null;
-
-  if (target?.closest('.fm-item')) return;
-
-  this.selectedItem = null;
-  this.hideContextMenu();
-}
-
-onRightClickBackground(event: MouseEvent): void {
-  const target = event.target as HTMLElement | null;
-
-  if (target?.closest('.fm-item')) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  const menu = document.getElementById('fmContextMenu');
-  if (!menu) return;
-
-  this.hideContextMenu();
-
-  this.selectedItem = null;
-  this.contextMenuMode = 'background';
-
-  const menuWidth = 220;
-  const menuHeight = 80;
-
-  let x = event.clientX;
-  let y = event.clientY;
-
-  if (x + menuWidth > window.innerWidth) {
-    x = window.innerWidth - menuWidth - 10;
-  }
-
-  if (y + menuHeight > window.innerHeight) {
-    y = window.innerHeight - menuHeight - 10;
-  }
-
-  menu.style.left = `${x}px`;
-  menu.style.top = `${y}px`;
-
-  void menu.offsetWidth;
-  menu.classList.add('show');
-}
-
-private hideContextMenu(): void {
-  const menu = document.getElementById('fmContextMenu');
-  if (!menu) return;
-
-  menu.classList.remove('show');
-  menu.style.left = '-9999px';
-  menu.style.top = '-9999px';
-  this.contextMenuMode = null;
-}
-
-
-
-
-contextActionNewFolder(): void {
-  if (!this.isFileManagerAvailable || !this.socio?.id) {
-    this.notify.show?.(
-      this.translate.instant('socios.fileManager.messages.saveBeforeUse'),
-      '',
-      'warning'
-    );
-    return;
-  }
-
-  this.hideContextMenu();
-
-  this.creatingInlineFolder = true;
-  this.newFolderName = '';
-
-  setTimeout(() => {
-    const input = document.querySelector('.fm-inline-input') as HTMLInputElement;
-    input?.focus();
-    input?.select();
-  });
-}
-
-contextActionCopy(): void {
-  this.hideContextMenu();
-
-  if (!this.selectedItem) return;
-
-  this.clipboardItem = { ...this.selectedItem };
-  this.clipboardMode = 'copy';
-}
-
-contextActionCut(): void {
-  this.hideContextMenu();
-
-  if (!this.selectedItem) return;
-
-  this.clipboardItem = { ...this.selectedItem };
-  this.clipboardMode = 'cut';
-}
-
-contextActionPaste(): void {
-  this.hideContextMenu();
-
-  if (!this.clipboardItem || !this.clipboardMode || !this.socio?.id) return;
-
-  const body = {
-    sourcePath: this.clipboardItem.relativePath,
-    destinationPath: this.currentFilePath || '',
-    mode: this.clipboardMode
-  };
-
-  this.sociosService.pasteFile(this.socio.id, body).subscribe({
-    next: (res: any) => {
-      if (this.clipboardMode === 'cut') {
-        this.clipboardItem = null;
-        this.clipboardMode = null;
-      }
-
-      this.loadFiles(this.currentFilePath);
-    },
-    error: (err) => {
-      this.notify.showFromApiResponse?.(err, 'error');
-    }
-  });
-}
-
-contextActionDelete(): void {
-  this.hideContextMenu();
-
-  if (!this.selectedItem) return;
-
-  this.deleteFileItem(this.selectedItem);
-}
-
-
-
-
-
-onDragStart(event: DragEvent, item: any): void {
-  this.draggedItem = item;
-
-  if (event.dataTransfer) {
-    event.dataTransfer.effectAllowed = 'move';
-  }
-}
-
-onDragEnd(): void {
-  this.draggedItem = null;
-  this.dragOverFolderPath = null;
-  this.isDragOverContent = false;
-}
-
-onDragOverFolder(event: DragEvent, folder: any): void {
-  if (!folder?.isDirectory || !this.draggedItem) return;
-
-  event.preventDefault();
-  this.dragOverFolderPath = folder.relativePath;
-}
-
-onDragLeaveFolder(folder: any): void {
-  if (this.dragOverFolderPath === folder.relativePath) {
-    this.dragOverFolderPath = null;
-  }
-}
-
-onDropOnFolder(event: DragEvent, folder: any): void {
-  event.preventDefault();
-
-  if (!this.draggedItem || !this.socio?.id) return;
-
-  console.log('MOVIENDO:', this.draggedItem.relativePath, '→', folder.relativePath);
-
-  this.sociosService.pasteFile(this.socio.id, {
-    sourcePath: this.draggedItem.relativePath,
-    destinationPath: folder.relativePath,
-    mode: 'cut'
-  }).subscribe({
-    next: () => {
-      this.loadFiles(this.currentFilePath);
-    },
-    error: (err) => {
-      this.notify.showFromApiResponse?.(err, 'error');
-    }
-  });
-}
-
-onDragOverContent(event: DragEvent): void {
-  if (!this.draggedItem) return;
-
-  event.preventDefault();
-  this.isDragOverContent = true;
-}
-
-onDragLeaveContent(): void {
-  this.isDragOverContent = false;
-}
-
-onDropOnCurrentFolder(event: DragEvent): void {
-  event.preventDefault();
-  event.stopPropagation();
-
-  if (!this.draggedItem || !this.socio?.id) {
-    this.onDragEnd();
-    return;
-  }
-
-  const sourcePath = this.draggedItem.relativePath || '';
-  const destinationPath = this.currentFilePath || '';
-
-  if (!sourcePath) {
-    this.onDragEnd();
-    return;
-  }
-
-  const sourceParts = sourcePath.split('/').filter(Boolean);
-  sourceParts.pop();
-  const sourceParent = sourceParts.join('/');
-
-  if (sourceParent === destinationPath) {
-    this.onDragEnd();
-    return;
-  }
-
-  const body: {
-    sourcePath: string;
-    destinationPath: string;
-    mode: 'copy' | 'cut';
-  } = {
-    sourcePath,
-    destinationPath,
-    mode: 'cut'
-  };
-
-  this.sociosService.pasteFile(this.socio.id, body).subscribe({
-    next: () => {
-      this.onDragEnd();
-      this.loadFiles(this.currentFilePath);
-    },
-    error: (err) => {
-      this.onDragEnd();
-      this.notify.showFromApiResponse?.(err, 'error');
-    }
-  });
-}
-
-onExternalDragOver(event: DragEvent): void {
-  if (!this.isFileManagerAvailable) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  const hasFiles = Array.from(event.dataTransfer?.types ?? []).includes('Files');
-  if (!hasFiles) return;
-
-  this.isExternalDragOver = true;
-
-  if (event.dataTransfer) {
-    event.dataTransfer.dropEffect = 'copy';
-  }
-}
-
-onExternalDragLeave(event: DragEvent): void {
-  event.preventDefault();
-  event.stopPropagation();
-
-  const relatedTarget = event.relatedTarget as HTMLElement | null;
-  const currentTarget = event.currentTarget as HTMLElement | null;
-
-  if (currentTarget && relatedTarget && currentTarget.contains(relatedTarget)) {
-    return;
-  }
-
-  this.isExternalDragOver = false;
-}
-
-onExternalDrop(event: DragEvent): void {
-  event.preventDefault();
-  event.stopPropagation();
-
-  this.isExternalDragOver = false;
-
-  if (!this.isFileManagerAvailable || !this.socio?.id) {
-    return;
-  }
-
-  const files = event.dataTransfer?.files;
-  if (!files?.length) {
-    return;
-  }
-
-  const formData = new FormData();
-
-  for (let i = 0; i < files.length; i++) {
-    formData.append('files', files[i]);
-  }
-
-  formData.append('path', this.currentFilePath || '');
-
-  this.uploadingFiles = true;
-
-  this.sociosService.uploadFiles(this.socio.id, formData).subscribe({
-    next: () => {
-      this.uploadingFiles = false;
-      this.loadFiles(this.currentFilePath);
-    },
-    error: (err) => {
-      this.uploadingFiles = false;
-      this.notify.showFromApiResponse?.(err, 'error');
-    }
-  });
-}
-
-onUnifiedDragOver(event: DragEvent): void {
-  const hasExternalFiles = Array.from(event.dataTransfer?.types ?? []).includes('Files');
-
-  if (hasExternalFiles && !this.draggedItem) {
-    this.onExternalDragOver(event);
-    return;
-  }
-
-  this.onDragOverContent(event);
-}
-
-onUnifiedDragLeave(event: DragEvent): void {
-  if (this.isExternalDragOver && !this.draggedItem) {
-    this.onExternalDragLeave(event);
-    return;
-  }
-
-  this.onDragLeaveContent();
-}
-
-onUnifiedDrop(event: DragEvent): void {
-  const hasExternalFiles = !!event.dataTransfer?.files?.length;
-
-  if (hasExternalFiles && !this.draggedItem) {
-    this.onExternalDrop(event);
-    return;
-  }
-
-  this.onDropOnCurrentFolder(event);
-}
 
 }

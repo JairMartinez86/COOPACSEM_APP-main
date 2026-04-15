@@ -352,10 +352,6 @@ export class AuthInterceptor implements HttpInterceptor {
       );
   }
 
-  private debugHttp(label: string, data: any): void {
-    console.log(`%c${label}`, 'color:#0d6efd;font-weight:bold;', data);
-  }
-
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!isPlatformBrowser(this.platformId)) {
       return next.handle(req);

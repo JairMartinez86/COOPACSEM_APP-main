@@ -1,5 +1,6 @@
 import interceptor from './es/interceptor.json';
 import alerts from './es/alerts.json';
+import file_manager from './es/file-manajer.json';
 import draft from './es/draft.json';
 import twoFactor from './es/twoFactor.json';
 import sidebar from './es/sidebar.json';
@@ -23,4 +24,4 @@ import socio_cambio_cuota from './es/socio-cambio-cuota.json';
 import socio_apertura_nav from './es/apertura-cuenta-navidena.json';
 import ahorro from './es/ahorro.json';
 
-export const es = Object.assign({}, interceptor, alerts, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, socio_ahorro, socio_retiro, socio_cambio_cuota, socio_apertura_nav, ahorro, draft);
+export const es = Object.assign({}, interceptor, alerts, file_manager, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, socio_ahorro, socio_retiro, socio_cambio_cuota, socio_apertura_nav, ahorro, draft);

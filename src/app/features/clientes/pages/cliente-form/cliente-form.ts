@@ -33,11 +33,6 @@ export class ClienteForm {
   }
 
   guardar() {
-    /*if (this.id) {
-      console.log('Actualizar cliente', this.id);
-    } else {
-      console.log('Crear cliente');
-    }*/
 
     this.router.navigate(['/clientes']);
   }

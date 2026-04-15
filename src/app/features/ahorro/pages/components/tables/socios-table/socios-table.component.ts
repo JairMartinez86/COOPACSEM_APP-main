@@ -70,8 +70,7 @@ selectSocio(row: SocioRow): void {
 
   if (row.alerts?.count > 0) {
   
-        console.log(row.alerts);
-  
+
         const type =
           row.alerts.highestSeverity === 'danger'
             ? 'error'

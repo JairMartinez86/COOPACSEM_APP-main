@@ -1,0 +1,6 @@
+export interface FileManagerConfig {
+  entityId: string;
+  module: string;        // socios, empleados, prestamos...
+  baseFolder?: string;   // expediente, documentos, contratos...
+  readOnly?: boolean;
+}

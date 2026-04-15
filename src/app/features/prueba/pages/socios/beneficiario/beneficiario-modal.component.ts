@@ -72,7 +72,6 @@ export class BeneficiarioModalComponent implements OnChanges {
 
     if(this.item != null){
       this.Porc -= this.item.porcentaje || 0;
-      console.log(this.Porc);
     }
     
  

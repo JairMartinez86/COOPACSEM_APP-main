@@ -1,0 +1,37 @@
+{
+  "fileManager": {
+    "title": "Administrador de archivos",
+    "subtitle": "Gestiona archivos y carpetas",
+    "root": "Mis archivos",
+    "actions": {
+      "back": "Atrás",
+      "newFolder": "Nueva carpeta",
+      "upload": "Subir"
+    },
+    "sections": {
+      "folders": "Carpetas",
+      "files": "Archivos"
+    },
+    "types": {
+      "folder": "Carpeta"
+    },
+    "placeholders": {
+      "newFolder": "Nueva carpeta"
+    },
+    "empty": {
+      "title": "No hay elementos",
+      "subtitle": "Todavía no hay archivos ni carpetas en esta ubicación."
+    },
+    "messages": {
+      "saveBeforeUse": "Debe guardar antes de usar el administrador de archivos."
+    },
+    "contextMenu": {
+      "newFolder": "Nueva carpeta",
+      "upload": "Subir archivo",
+      "paste": "Pegar",
+      "copy": "Copiar",
+      "cut": "Cortar",
+      "delete": "Eliminar"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "fileManager": {
+    "title": "File Manager",
+    "subtitle": "Manage files and folders",
+    "root": "My files",
+    "actions": {
+      "back": "Back",
+      "newFolder": "New folder",
+      "upload": "Upload"
+    },
+    "sections": {
+      "folders": "Folders",
+      "files": "Files"
+    },
+    "types": {
+      "folder": "Folder"
+    },
+    "placeholders": {
+      "newFolder": "New folder"
+    },
+    "empty": {
+      "title": "No items found",
+      "subtitle": "There are no files or folders in this location yet."
+    },
+    "messages": {
+      "saveBeforeUse": "You must save before using the file manager."
+    },
+    "contextMenu": {
+      "newFolder": "New folder",
+      "upload": "Upload file",
+      "paste": "Paste",
+      "copy": "Copy",
+      "cut": "Cut",
+      "delete": "Delete"
+    }
+  }
+}
