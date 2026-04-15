@@ -1915,6 +1915,9 @@ creatingFolder = false;
 creatingInlineFolder = false;
 newFolderName = '';
 previewUrls: Record<string, string> = {};
+draggedItem: any = null;
+dragOverFolderPath: string | null = null;
+isDragOverContent = false;
 contextMenuMode: 'item' | 'background' | null = null;
 
 selectedItem: any = null;
@@ -2380,5 +2383,115 @@ contextActionDelete(): void {
   this.deleteFileItem(this.selectedItem);
 }
 
+
+
+
+
+onDragStart(event: DragEvent, item: any): void {
+  this.draggedItem = item;
+
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'move';
+  }
+}
+
+onDragEnd(): void {
+  this.draggedItem = null;
+  this.dragOverFolderPath = null;
+  this.isDragOverContent = false;
+}
+
+onDragOverFolder(event: DragEvent, folder: any): void {
+  if (!folder?.isDirectory || !this.draggedItem) return;
+
+  event.preventDefault();
+  this.dragOverFolderPath = folder.relativePath;
+}
+
+onDragLeaveFolder(folder: any): void {
+  if (this.dragOverFolderPath === folder.relativePath) {
+    this.dragOverFolderPath = null;
+  }
+}
+
+onDropOnFolder(event: DragEvent, folder: any): void {
+  event.preventDefault();
+
+  if (!this.draggedItem || !this.socio?.id) return;
+
+  console.log('MOVIENDO:', this.draggedItem.relativePath, '→', folder.relativePath);
+
+  this.sociosService.pasteFile(this.socio.id, {
+    sourcePath: this.draggedItem.relativePath,
+    destinationPath: folder.relativePath,
+    mode: 'cut'
+  }).subscribe({
+    next: () => {
+      this.loadFiles(this.currentFilePath);
+    },
+    error: (err) => {
+      this.notify.showFromApiResponse?.(err, 'error');
+    }
+  });
+}
+
+onDragOverContent(event: DragEvent): void {
+  if (!this.draggedItem) return;
+
+  event.preventDefault();
+  this.isDragOverContent = true;
+}
+
+onDragLeaveContent(): void {
+  this.isDragOverContent = false;
+}
+
+onDropOnCurrentFolder(event: DragEvent): void {
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (!this.draggedItem || !this.socio?.id) {
+    this.onDragEnd();
+    return;
+  }
+
+  const sourcePath = this.draggedItem.relativePath || '';
+  const destinationPath = this.currentFilePath || '';
+
+  if (!sourcePath) {
+    this.onDragEnd();
+    return;
+  }
+
+  const sourceParts = sourcePath.split('/').filter(Boolean);
+  sourceParts.pop();
+  const sourceParent = sourceParts.join('/');
+
+  if (sourceParent === destinationPath) {
+    this.onDragEnd();
+    return;
+  }
+
+  const body: {
+    sourcePath: string;
+    destinationPath: string;
+    mode: 'copy' | 'cut';
+  } = {
+    sourcePath,
+    destinationPath,
+    mode: 'cut'
+  };
+
+  this.sociosService.pasteFile(this.socio.id, body).subscribe({
+    next: () => {
+      this.onDragEnd();
+      this.loadFiles(this.currentFilePath);
+    },
+    error: (err) => {
+      this.onDragEnd();
+      this.notify.showFromApiResponse?.(err, 'error');
+    }
+  });
+}
 
 }

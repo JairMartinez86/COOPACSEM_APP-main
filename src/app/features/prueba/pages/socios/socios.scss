@@ -263,3 +263,22 @@
 .fm-item.new-folder {
   background: rgba(0, 0, 0, 0.03);
 }
+
+
+
+.fm-item[draggable="true"] {
+  cursor: grab;
+}
+
+.fm-item[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.fm-drop-target {
+  outline: 2px dashed #4154f1;
+  background: rgba(65, 84, 241, 0.1);
+}
+
+.fm-drag-over {
+  background: rgba(65, 84, 241, 0.05);
+}

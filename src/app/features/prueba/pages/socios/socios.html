@@ -932,177 +932,225 @@
 
 
 
+
             @if (mode !== 'create') {
-            <div id="file-manager" class="card ue-shell-card socio-card socio-scroll-section fm-shell">
-              <div class="card-header socio-card-header">
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 w-100">
-                  <div>
-                    <h5 class="card-title mb-1">{{ 'socios.sections.fileManager.title' | translate }}</h5>
-                    <p class="card-subtitle mb-0">{{ 'socios.sections.fileManager.subtitle' | translate }}</p>
-                  </div>
+<div id="file-manager" class="card ue-shell-card socio-card socio-scroll-section fm-shell">
 
-                  <div class="fm-actions">
-                    <button type="button" class="btn btn-light btn-sm" (click)="goToParentFolder()"
-                      [disabled]="!currentFilePath">
-                      <i class="bi bi-arrow-left me-1"></i>
-                      {{ 'socios.fileManager.actions.back' | translate }}
-                    </button>
+  <!-- HEADER -->
+  <div class="card-header socio-card-header">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 w-100">
+      <div>
+        <h5 class="card-title mb-1">{{ 'socios.sections.fileManager.title' | translate }}</h5>
+        <p class="card-subtitle mb-0">{{ 'socios.sections.fileManager.subtitle' | translate }}</p>
+      </div>
 
-                    <button type="button" class="btn btn-light btn-sm" (click)="startInlineFolderCreation()">
-                      <i class="bi bi-folder-plus me-1"></i>
-                      {{ 'socios.fileManager.actions.newFolder' | translate }}
-                    </button>
+      <div class="fm-actions">
+        <button type="button" class="btn btn-light btn-sm"
+          (click)="goToParentFolder()" [disabled]="!currentFilePath">
+          <i class="bi bi-arrow-left me-1"></i>
+          {{ 'socios.fileManager.actions.back' | translate }}
+        </button>
 
-                    <label class="btn btn-primary btn-sm mb-0">
-                      <i class="bi bi-cloud-upload me-1"></i>
-                      {{ 'socios.fileManager.actions.upload' | translate }}
-                      <input type="file" hidden multiple accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx"
-                        (change)="onFileSelected($event)">
-                    </label>
-                  </div>
-                </div>
-              </div>
+        <button type="button" class="btn btn-light btn-sm"
+          (click)="startInlineFolderCreation()">
+          <i class="bi bi-folder-plus me-1"></i>
+          {{ 'socios.fileManager.actions.newFolder' | translate }}
+        </button>
 
-              <div class="card-body p-0">
-                <div class="fm-main">
-                  <div class="fm-content" (click)="onLeftClickBackground($event)"
-                    (contextmenu)="onRightClickBackground($event)">
+        <label class="btn btn-primary btn-sm mb-0">
+          <i class="bi bi-cloud-upload me-1"></i>
+          {{ 'socios.fileManager.actions.upload' | translate }}
+          <input type="file" hidden multiple
+            accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx"
+            (change)="onFileSelected($event)">
+        </label>
+      </div>
+    </div>
+  </div>
 
-                    <div class="fm-breadcrumb mb-3">
-                      <a href="javascript:void(0)" (click)="loadFiles('')">
-                        <i class="bi bi-house"></i>
-                      </a>
-                      <i class="bi bi-chevron-right"></i>
-                      <span>{{ currentFilePath || ('socios.fileManager.myFiles' | translate) }}</span>
-                    </div>
+  <!-- BODY -->
+  <div class="card-body p-0">
+    <div class="fm-main">
 
-                    @if (creatingInlineFolder) {
-                    <div class="fm-item new-folder">
-                      <div class="fm-item-icon folder">
-                        <i class="bi bi-folder-fill"></i>
-                      </div>
+      <div class="fm-content"
+        [class.fm-drag-over]="isDragOverContent"
+        (click)="onLeftClickBackground($event)"
+        (contextmenu)="onRightClickBackground($event)"
+        (dragover)="onDragOverContent($event)"
+        (dragleave)="onDragLeaveContent()"
+        (drop)="onDropOnCurrentFolder($event)">
 
-                      <input type="text" class="fm-inline-input" [(ngModel)]="newFolderName"
-                        [ngModelOptions]="{ standalone: true }" (keyup.enter)="confirmCreateFolder()"
-                        (keydown.escape)="cancelCreateFolder()" (focusout)="onInlineFolderFocusOut()" />
+        <!-- BREADCRUMB -->
+        <div class="fm-breadcrumb mb-3">
+          <a href="javascript:void(0)" (click)="loadFiles('')">
+            <i class="bi bi-house"></i>
+          </a>
+          <i class="bi bi-chevron-right"></i>
+          <span>{{ currentFilePath || ('socios.fileManager.myFiles' | translate) }}</span>
+        </div>
 
-                    </div>
-                    }
+        <!-- NUEVA CARPETA INLINE -->
+        @if (creatingInlineFolder) {
+        <div class="fm-item new-folder">
+          <div class="fm-item-icon folder">
+            <i class="bi bi-folder-fill"></i>
+          </div>
 
-                    @if (folderItems.length > 0) {
-                    <div class="fm-section-title">{{ 'socios.fileManager.types.folder' | translate }}</div>
+          <input
+            type="text"
+            class="fm-inline-input"
+            [(ngModel)]="newFolderName"
+            [ngModelOptions]="{ standalone: true }"
+            (keyup.enter)="confirmCreateFolder()"
+            (keydown.escape)="cancelCreateFolder()"
+            (focusout)="onInlineFolderFocusOut()"
+            placeholder="Nueva carpeta" />
+        </div>
+        }
 
-                    <div class="fm-grid active">
-                      @for (item of folderItems; track item.relativePath) {
-                      <div class="fm-item" [class.selected]="selectedItem?.relativePath === item.relativePath"
-                        data-type="folder" [attr.data-path]="item.relativePath" [attr.data-name]="item.name"
-                        (click)="selectItem(item)" (dblclick)="openFolder(item)"
-                        (contextmenu)="onRightClick($event, item)">
+        <!-- FOLDERS -->
+        @if (folderItems.length > 0) {
+        <div class="fm-section-title">
+          {{ 'socios.fileManager.types.folder' | translate }}
+        </div>
 
-                        <div class="fm-item-icon folder">
-                          <i class="bi bi-folder-fill"></i>
-                        </div>
+        <div class="fm-grid active">
+          @for (item of folderItems; track item.relativePath) {
+          <div class="fm-item"
+            [class.selected]="selectedItem?.relativePath === item.relativePath"
+            [class.fm-drop-target]="dragOverFolderPath === item.relativePath"
+            draggable="true"
+            (dragstart)="onDragStart($event, item)"
+            (dragend)="onDragEnd()"
+            (dragover)="onDragOverFolder($event, item)"
+            (dragleave)="onDragLeaveFolder(item)"
+            (drop)="onDropOnFolder($event, item)"
+            (click)="selectItem(item)"
+            (dblclick)="openFolder(item)"
+            (contextmenu)="onRightClick($event, item)">
 
-                        <div class="fm-item-name">{{ item.name }}</div>
-
-                        <div class="fm-item-meta">
-                          {{ 'socios.fileManager.types.folder' | translate }}
-                        </div>
-                      </div>
-                      }
-                    </div>
-                    }
-
-                    @if (fileOnlyItems.length > 0) {
-                    <div class="fm-section-title mt-4">{{ 'socios.fileManager.types.file' | translate }}</div>
-
-                    <div class="fm-grid active">
-                      @for (item of fileOnlyItems; track item.relativePath) {
-                      <div class="fm-item" [class.selected]="selectedItem?.relativePath === item.relativePath"
-                        [attr.data-type]="resolveFileType(item)" [attr.data-path]="item.relativePath"
-                        [attr.data-name]="item.name" (click)="selectItem(item)" (dblclick)="downloadFile(item)"
-                        (contextmenu)="onRightClick($event, item)">
-
-                        @if (isImage(item)) {
-                        <img [src]="previewUrls[item.relativePath] || ''" [alt]="item.name" class="fm-item-thumbnail">
-                        } @else {
-                        <div class="fm-item-icon" [ngClass]="getFileTypeClass(item)">
-                          <i class="bi" [ngClass]="getFileIconClass(item)"></i>
-                        </div>
-                        }
-
-                        <div class="fm-item-name">{{ item.name }}</div>
-
-                        <div class="fm-item-meta">
-                          {{ formatFileSize(item.size) }}
-                        </div>
-                      </div>
-                      }
-                    </div>
-                    }
-
-                    @if (!folderItems.length && !fileOnlyItems.length) {
-                    <div class="fm-empty text-center py-4">
-                      <div class="fm-empty-icon">
-                        <i class="bi bi-folder2-open"></i>
-                      </div>
-                      <h5>{{ 'socios.fileManager.emptyTitle' | translate }}</h5>
-                      <p>{{ 'socios.fileManager.emptySubtitle' | translate }}</p>
-                    </div>
-                    }
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="fm-context-menu" id="fmContextMenu">
-
-                @if (contextMenuMode === 'background') {
-                <button type="button" class="fm-context-item" (click)="contextActionNewFolder()">
-                  <i class="bi bi-folder-plus"></i>
-                  <span>{{ 'socios.fileManager.contextMenu.newFolder' | translate }}</span>
-                </button>
-
-                @if (clipboardItem) {
-                <button type="button" class="fm-context-item" (click)="contextActionPaste()">
-                  <i class="bi bi-clipboard"></i>
-                  <span>{{ 'socios.fileManager.contextMenu.paste' | translate }}</span>
-                </button>
-                }
-                }
-
-                @if (contextMenuMode === 'item') {
-                <button type="button" class="fm-context-item" [disabled]="!selectedItem" (click)="contextActionCopy()">
-                  <i class="bi bi-files"></i>
-                  <span>{{ 'socios.fileManager.contextMenu.copy' | translate }}</span>
-                </button>
-
-                <button type="button" class="fm-context-item" [disabled]="!selectedItem" (click)="contextActionCut()">
-                  <i class="bi bi-scissors"></i>
-                  <span>{{ 'socios.fileManager.contextMenu.cut' | translate }}</span>
-                </button>
-
-                <button type="button" class="fm-context-item danger" [disabled]="!selectedItem"
-                  (click)="contextActionDelete()">
-                  <i class="bi bi-trash"></i>
-                  <span>{{ 'socios.fileManager.contextMenu.delete' | translate }}</span>
-                </button>
-                }
-
-              </div>
+            <div class="fm-item-icon folder">
+              <i class="bi bi-folder-fill"></i>
             </div>
+
+            <div class="fm-item-name">{{ item.name }}</div>
+
+            <div class="fm-item-meta">
+              {{ 'socios.fileManager.types.folder' | translate }}
+            </div>
+          </div>
+          }
+        </div>
+        }
+
+        <!-- FILES -->
+        @if (fileOnlyItems.length > 0) {
+        <div class="fm-section-title mt-4">
+          {{ 'socios.fileManager.types.file' | translate }}
+        </div>
+
+        <div class="fm-grid active">
+          @for (item of fileOnlyItems; track item.relativePath) {
+          <div class="fm-item"
+            [class.selected]="selectedItem?.relativePath === item.relativePath"
+            draggable="true"
+            (dragstart)="onDragStart($event, item)"
+            (dragend)="onDragEnd()"
+            (click)="selectItem(item)"
+            (dblclick)="downloadFile(item)"
+            (contextmenu)="onRightClick($event, item)">
+
+            @if (isImage(item)) {
+              <img
+                [src]="previewUrls[item.relativePath] || ''"
+                [alt]="item.name"
+                class="fm-item-thumbnail">
             } @else {
-            <div class="card ue-shell-card socio-card socio-scroll-section">
-              <div class="card-body text-center py-4">
-                <i class="bi bi-lock fs-2 text-muted"></i>
-                <p class="mt-2 text-muted">
-                  {{ 'socios.fileManager.messages.saveBeforeUse' | translate }}
-                </p>
+              <div class="fm-item-icon" [ngClass]="getFileTypeClass(item)">
+                <i class="bi" [ngClass]="getFileIconClass(item)"></i>
               </div>
-            </div>
             }
 
+            <div class="fm-item-name">{{ item.name }}</div>
 
+            <div class="fm-item-meta">
+              {{ formatFileSize(item.size) }}
+            </div>
+          </div>
+          }
+        </div>
+        }
+
+        <!-- EMPTY -->
+        @if (!folderItems.length && !fileOnlyItems.length) {
+        <div class="fm-empty text-center py-4">
+          <div class="fm-empty-icon">
+            <i class="bi bi-folder2-open"></i>
+          </div>
+          <h5>{{ 'socios.fileManager.emptyTitle' | translate }}</h5>
+          <p>{{ 'socios.fileManager.emptySubtitle' | translate }}</p>
+        </div>
+        }
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEXT MENU -->
+  <div class="fm-context-menu" id="fmContextMenu">
+
+    @if (contextMenuMode === 'background') {
+    <button type="button" class="fm-context-item"
+      (click)="contextActionNewFolder()">
+      <i class="bi bi-folder-plus"></i>
+      <span>{{ 'socios.fileManager.contextMenu.newFolder' | translate }}</span>
+    </button>
+
+    @if (clipboardItem) {
+    <button type="button" class="fm-context-item"
+      (click)="contextActionPaste()">
+      <i class="bi bi-clipboard"></i>
+      <span>{{ 'socios.fileManager.contextMenu.paste' | translate }}</span>
+    </button>
+    }
+    }
+
+    @if (contextMenuMode === 'item') {
+    <button type="button" class="fm-context-item"
+      [disabled]="!selectedItem"
+      (click)="contextActionCopy()">
+      <i class="bi bi-files"></i>
+      <span>{{ 'socios.fileManager.contextMenu.copy' | translate }}</span>
+    </button>
+
+    <button type="button" class="fm-context-item"
+      [disabled]="!selectedItem"
+      (click)="contextActionCut()">
+      <i class="bi bi-scissors"></i>
+      <span>{{ 'socios.fileManager.contextMenu.cut' | translate }}</span>
+    </button>
+
+    <button type="button" class="fm-context-item danger"
+      [disabled]="!selectedItem"
+      (click)="contextActionDelete()">
+      <i class="bi bi-trash"></i>
+      <span>{{ 'socios.fileManager.contextMenu.delete' | translate }}</span>
+    </button>
+    }
+
+  </div>
+</div>
+} @else {
+<div class="card ue-shell-card socio-card socio-scroll-section">
+  <div class="card-body text-center py-4">
+    <i class="bi bi-lock fs-2 text-muted"></i>
+    <p class="mt-2 text-muted">
+      {{ 'socios.fileManager.messages.saveBeforeUse' | translate }}
+    </p>
+  </div>
+</div>
+}
+          
 
 
           </div>
