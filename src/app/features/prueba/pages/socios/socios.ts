@@ -112,9 +112,10 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     fileManagerConfig = {
     entityId: null as string | null,
-    module: 'socios',
-    baseFolder: ''
+    rootFolder: 'socios',
   };
+
+
 
   activeSection = 'datos-personales';
 
@@ -264,11 +265,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     private syncFileManagerConfig(): void {
     this.fileManagerConfig = {
       ...this.fileManagerConfig,
-      entityId: this.socio?.id ?? null,
+      entityId: this.socio?.codigoSocio ?? null,
 
-      // Para socios no es obligatorio.
-      // El backend nuevo ya usa CodigoSocio como carpeta raíz.
-      baseFolder: ''
+     
     };
   }
 

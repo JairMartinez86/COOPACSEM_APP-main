@@ -13,8 +13,7 @@ import { Observable } from 'rxjs';
 
 export interface FileManagerConfig {
   entityId: string | null | undefined;
-  module: string;
-  baseFolder?: string;
+  rootFolder: string;
   readOnly?: boolean;
 }
 
@@ -37,58 +36,49 @@ export interface FileManagerListResponse {
 export interface IFileManagerService {
   list(
     entityId: string,
-    module: string,
+    rootFolder: string,
     path?: string,
-    baseFolder?: string
   ): Observable<any>;
 
   upload(
     entityId: string,
-    module: string,
     formData: FormData,
-    baseFolder?: string
   ): Observable<any>;
 
   createFolder(
     entityId: string,
-    module: string,
-    body: { folderName: string; path?: string },
-    baseFolder?: string
+    body: { rootFolder: string; folderName: string; path?: string },
   ): Observable<any>;
 
   delete(
     entityId: string,
-    module: string,
+    rootFolder: string,
     path: string,
-    baseFolder?: string
   ): Observable<any>;
 
   download(
     entityId: string,
-    module: string,
+    rootFolder: string,
     path: string,
-    baseFolder?: string
   ): Observable<Blob>;
 
   paste(
     entityId: string,
-    module: string,
     body: {
+      rootFolder: string;
       sourcePath: string;
       destinationPath?: string;
       mode: 'copy' | 'cut';
-    },
-    baseFolder?: string
+    }
   ): Observable<any>;
 
   rename?(
     entityId: string,
-    module: string,
     body: {
+      rootFolder: string;
       path: string;
       newName: string;
-    },
-    baseFolder?: string
+    }
   ): Observable<any>;
 }
 
@@ -144,6 +134,9 @@ export class FileManagerComponent implements OnInit, OnDestroy {
     return !!this.config?.readOnly;
   }
 
+  get hasValidConfig(): boolean {
+    return !!this.config?.entityId && !!this.config?.rootFolder?.trim();
+  }
 
   get folderItems(): FileManagerItem[] {
     return (this.fileItems ?? []).filter(x => x.isDirectory);
@@ -154,12 +147,20 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   }
 
   loadFiles(path: string = ''): void {
+    if (!this.hasValidConfig) {
+      this.fileItems = [];
+      this.currentFilePath = '';
+      this.selectedItem = null;
+      this.clearPreviewUrls();
+      this.hideContextMenu();
+      this.cdr.detectChanges();
+      return;
+    }
 
     this.fileService.list(
       this.config.entityId!,
-      this.config.module,
-      path,
-      this.config.baseFolder
+      this.config.rootFolder,
+      path
     ).subscribe({
       next: (res: FileManagerListResponse) => {
         this.fileItems = res?.data?.items ?? [];
@@ -186,13 +187,13 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   }
 
   openFolder(item: FileManagerItem): void {
-    if ( !item?.isDirectory) return;
+    if (!item?.isDirectory) return;
     this.selectedItem = item;
     this.loadFiles(item.relativePath);
   }
 
   goToParentFolder(): void {
-    if ( !this.currentFilePath) return;
+    if (!this.currentFilePath) return;
 
     const parts = this.currentFilePath.split('/').filter(Boolean);
     parts.pop();
@@ -203,7 +204,7 @@ export class FileManagerComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     const files = input.files;
 
-    if ( this.readOnly || !files?.length) {
+    if (!this.hasValidConfig || this.readOnly || !files?.length) {
       input.value = '';
       return;
     }
@@ -214,15 +215,14 @@ export class FileManagerComponent implements OnInit, OnDestroy {
       formData.append('files', files[i]);
     }
 
+    formData.append('rootFolder', this.config.rootFolder);
     formData.append('path', this.currentFilePath || '');
 
     this.uploadingFiles = true;
 
     this.fileService.upload(
       this.config.entityId!,
-      this.config.module,
-      formData,
-      this.config.baseFolder
+      formData
     ).subscribe({
       next: () => {
         this.uploadingFiles = false;
@@ -238,7 +238,7 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   }
 
   startInlineFolderCreation(): void {
-    if (this.readOnly) {
+    if (this.readOnly || !this.hasValidConfig) {
       this.notify?.show?.(
         this.translate.instant('fileManager.messages.saveBeforeUse'),
         '',
@@ -274,7 +274,7 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   }
 
   confirmCreateFolder(): void {
-    if (this.creatingFolder || this.readOnly) return;
+    if (this.creatingFolder || this.readOnly || !this.hasValidConfig) return;
 
     const folderName = this.newFolderName?.trim();
 
@@ -287,12 +287,11 @@ export class FileManagerComponent implements OnInit, OnDestroy {
 
     this.fileService.createFolder(
       this.config.entityId!,
-      this.config.module,
       {
+        rootFolder: this.config.rootFolder,
         folderName,
         path: this.currentFilePath || ''
-      },
-      this.config.baseFolder
+      }
     ).subscribe({
       next: () => {
         this.creatingFolder = false;
@@ -313,13 +312,12 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   }
 
   downloadFile(item: FileManagerItem): void {
-    if ( item?.isDirectory) return;
+    if (!this.hasValidConfig || item?.isDirectory) return;
 
     this.fileService.download(
       this.config.entityId!,
-      this.config.module,
-      item.relativePath,
-      this.config.baseFolder
+      this.config.rootFolder,
+      item.relativePath
     ).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
@@ -336,13 +334,12 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   }
 
   deleteFileItem(item: FileManagerItem): void {
-    if ( this.readOnly || !item?.relativePath) return;
+    if (!this.hasValidConfig || this.readOnly || !item?.relativePath) return;
 
     this.fileService.delete(
       this.config.entityId!,
-      this.config.module,
-      item.relativePath,
-      this.config.baseFolder
+      this.config.rootFolder,
+      item.relativePath
     ).subscribe({
       next: () => {
         this.selectedItem = null;
@@ -439,14 +436,13 @@ export class FileManagerComponent implements OnInit, OnDestroy {
       x => !x.isDirectory && this.isImage(x)
     );
 
-    if ( !images.length) return;
+    if (!this.hasValidConfig || !images.length) return;
 
     for (const item of images) {
       this.fileService.download(
         this.config.entityId!,
-        this.config.module,
-        item.relativePath,
-        this.config.baseFolder
+        this.config.rootFolder,
+        item.relativePath
       ).subscribe({
         next: (blob: Blob) => {
           this.previewUrls[item.relativePath] = URL.createObjectURL(blob);
@@ -512,7 +508,7 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   }
 
   onRightClickBackground(event: MouseEvent): void {
-    if (this.readOnly) return;
+    if (this.readOnly || !this.hasValidConfig) return;
 
     const target = event.target as HTMLElement | null;
 
@@ -585,13 +581,14 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   }
 
   contextActionPaste(): void {
-    if (this.readOnly) return;
+    if (this.readOnly || !this.hasValidConfig) return;
 
     this.hideContextMenu();
 
     if (!this.clipboardItem || !this.clipboardMode) return;
 
     const body = {
+      rootFolder: this.config.rootFolder,
       sourcePath: this.clipboardItem.relativePath,
       destinationPath: this.currentFilePath || '',
       mode: this.clipboardMode
@@ -599,9 +596,7 @@ export class FileManagerComponent implements OnInit, OnDestroy {
 
     this.fileService.paste(
       this.config.entityId!,
-      this.config.module,
-      body,
-      this.config.baseFolder
+      body
     ).subscribe({
       next: () => {
         if (this.clipboardMode === 'cut') {
@@ -659,17 +654,16 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   onDropOnFolder(event: DragEvent, folder: FileManagerItem): void {
     event.preventDefault();
 
-    if (this.readOnly || !this.draggedItem) return;
+    if (this.readOnly || !this.draggedItem || !this.hasValidConfig) return;
 
     this.fileService.paste(
       this.config.entityId!,
-      this.config.module,
       {
+        rootFolder: this.config.rootFolder,
         sourcePath: this.draggedItem.relativePath,
         destinationPath: folder.relativePath,
         mode: 'cut'
-      },
-      this.config.baseFolder
+      }
     ).subscribe({
       next: () => {
         this.onDragEnd();
@@ -697,7 +691,7 @@ export class FileManagerComponent implements OnInit, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
 
-    if (this.readOnly || !this.draggedItem ) {
+    if (this.readOnly || !this.draggedItem || !this.hasValidConfig) {
       this.onDragEnd();
       return;
     }
@@ -721,13 +715,12 @@ export class FileManagerComponent implements OnInit, OnDestroy {
 
     this.fileService.paste(
       this.config.entityId!,
-      this.config.module,
       {
+        rootFolder: this.config.rootFolder,
         sourcePath,
         destinationPath,
         mode: 'cut'
-      },
-      this.config.baseFolder
+      }
     ).subscribe({
       next: () => {
         this.onDragEnd();
@@ -741,7 +734,7 @@ export class FileManagerComponent implements OnInit, OnDestroy {
   }
 
   onExternalDragOver(event: DragEvent): void {
-    if ( this.readOnly) return;
+    if (this.readOnly || !this.hasValidConfig) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -776,7 +769,7 @@ export class FileManagerComponent implements OnInit, OnDestroy {
 
     this.isExternalDragOver = false;
 
-    if ( this.readOnly) {
+    if (this.readOnly || !this.hasValidConfig) {
       return;
     }
 
@@ -791,15 +784,14 @@ export class FileManagerComponent implements OnInit, OnDestroy {
       formData.append('files', files[i]);
     }
 
+    formData.append('rootFolder', this.config.rootFolder);
     formData.append('path', this.currentFilePath || '');
 
     this.uploadingFiles = true;
 
     this.fileService.upload(
       this.config.entityId!,
-      this.config.module,
-      formData,
-      this.config.baseFolder
+      formData
     ).subscribe({
       next: () => {
         this.uploadingFiles = false;
