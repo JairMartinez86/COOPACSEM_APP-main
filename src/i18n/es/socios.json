@@ -75,8 +75,7 @@
         },
         "fileManager": {
           "title": "Almacenamiento de archivos",
-          "desc": "Carpetas y documentos del socio",
-           "myFiles": "Mis archivos"
+          "desc": "Carpetas y documentos del socio"
         }
       }
     },
@@ -108,54 +107,13 @@
       "afiliacion": {
         "title": "Afiliación",
         "subtitle": "Define el costo, la forma de pago y la distribución contable de la afiliación."
-      },
-      "fileManager": {
-        "title": "Almacenamiento de archivos",
-        "subtitle": "Administre carpetas, imágenes y documentos del socio"
       }
     },
-   "fileManager": {
-  "actions": {
-    "newFolder": "Nueva carpeta",
-    "upload": "Subir archivos",
-    "back": "Regresar"
-  },
-  "columns": {
-    "name": "Nombre",
-    "type": "Tipo",
-    "size": "Tamaño",
-    "modified": "Modificado",
-    "actions": "Acciones"
-  },
-  "types": {
-    "folder": "Carpeta",
-    "file": "Archivo"
-  },
-  "contextMenu": {
-  "newFolder": "Nueva carpeta",
-  "upload": "Subir archivos",
-  "rename": "Cambiar nombre",
-  "copy": "Copiar",
-  "cut": "Cortar",
-  "paste": "Pegar",
-  "delete": "Eliminar"
-},
-"messages": {
-  "itemCopied": "Elemento copiado.",
-  "itemCut": "Elemento cortado.",
-  "itemPasted": "Elemento pegado.",
-  "renamePrompt": "Ingrese el nuevo nombre",
-  "renamePending": "Renombrado pendiente de implementar",
-  "saveBeforeUse": "Debe guardar el socio antes de utilizar el administrador de archivos."
-},
-  "currentPath": "Ruta actual",
-  "emptyTitle": "No hay archivos ni carpetas",
-  "emptySubtitle": "Cree una carpeta o suba archivos para este socio",
-  "myFiles": "Mis archivos",
-  "prompts": {
-    "folderName": "Ingrese el nombre de la carpeta"
-  }
-},
+    "fileManager": {
+      "messages": {
+        "saveBeforeUse": "Debe guardar el socio antes de utilizar el administrador de archivos."
+      }
+    },
     "fields": {
       "nombreCompleto": {
         "label": "Nombre completo",
