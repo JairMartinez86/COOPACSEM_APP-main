@@ -982,15 +982,9 @@
                         <i class="bi bi-folder-fill"></i>
                       </div>
 
-                      <input
-  type="text"
-  class="fm-inline-input"
-  [(ngModel)]="newFolderName"
-  [ngModelOptions]="{ standalone: true }"
-  (keyup.enter)="confirmCreateFolder()"
-  (keydown.escape)="cancelCreateFolder()"
-  (focusout)="onInlineFolderFocusOut()"
-  placeholder="Nueva carpeta" />
+                      <input type="text" class="fm-inline-input" [(ngModel)]="newFolderName"
+                        [ngModelOptions]="{ standalone: true }" (keyup.enter)="confirmCreateFolder()"
+                        (keydown.escape)="cancelCreateFolder()" (focusout)="onInlineFolderFocusOut()" />
 
                     </div>
                     }
@@ -1020,7 +1014,7 @@
                     }
 
                     @if (fileOnlyItems.length > 0) {
-                    <div class="fm-section-title mt-4">Files</div>
+                    <div class="fm-section-title mt-4">{{ 'socios.fileManager.types.file' | translate }}</div>
 
                     <div class="fm-grid active">
                       @for (item of fileOnlyItems; track item.relativePath) {
