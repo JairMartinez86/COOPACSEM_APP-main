@@ -250,3 +250,16 @@
 .fm-context-menu.show {
   display: block !important;
 }
+
+
+.fm-inline-input {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 13px;
+}
+
+.fm-item.new-folder {
+  background: rgba(0, 0, 0, 0.03);
+}

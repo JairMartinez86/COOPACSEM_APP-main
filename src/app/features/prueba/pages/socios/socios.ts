@@ -1912,6 +1912,8 @@ fileItems: any[] = [];
 currentFilePath = '';
 uploadingFiles = false;
 creatingFolder = false;
+creatingInlineFolder = false;
+newFolderName = '';
 previewUrls: Record<string, string> = {};
 contextMenuMode: 'item' | 'background' | null = null;
 
@@ -2015,7 +2017,9 @@ onFileSelected(event: Event): void {
   });
 }
 
-openCreateFolderModal(): void {
+
+
+startInlineFolderCreation(): void {
   if (!this.isFileManagerAvailable || !this.socio?.id) {
     this.notify.show?.(
       this.translate.instant('socios.fileManager.messages.saveBeforeUse'),
@@ -2025,21 +2029,55 @@ openCreateFolderModal(): void {
     return;
   }
 
-  const folderName = prompt(
-    this.translate.instant('socios.fileManager.prompts.folderName')
-  );
+  this.hideContextMenu();
+  this.creatingInlineFolder = true;
+  this.newFolderName = '';
 
-  if (!folderName?.trim()) return;
+  setTimeout(() => {
+    const input = document.querySelector('.fm-inline-input') as HTMLInputElement | null;
+    input?.focus();
+    input?.select();
+  });
+}
+
+onInlineFolderFocusOut(): void {
+  // Espera un tick para que ngModel termine de actualizarse
+  setTimeout(() => {
+    if (!this.creatingInlineFolder) return;
+
+    const folderName = this.newFolderName?.trim();
+
+    if (!folderName) {
+      this.cancelCreateFolder();
+      return;
+    }
+
+    this.confirmCreateFolder();
+  });
+}
+
+confirmCreateFolder(): void {
+  if (this.creatingFolder) return;
+
+  const folderName = this.newFolderName?.trim();
+
+  console.log('confirmCreateFolder', folderName, this.socio?.id);
+
+  if (!folderName || !this.socio?.id) {
+    this.cancelCreateFolder();
+    return;
+  }
 
   this.creatingFolder = true;
 
   this.sociosService.createFolder(this.socio.id, {
-    folderName: folderName.trim(),
+    folderName,
     path: this.currentFilePath || ''
   }).subscribe({
-    next: (res: any) => {
+    next: () => {
       this.creatingFolder = false;
-      //this.notify.showFromApiResponse?.(res, 'success');
+      this.creatingInlineFolder = false;
+      this.newFolderName = '';
       this.loadFiles(this.currentFilePath);
     },
     error: (err) => {
@@ -2048,6 +2086,12 @@ openCreateFolderModal(): void {
     }
   });
 }
+
+cancelCreateFolder(): void {
+  this.creatingInlineFolder = false;
+  this.newFolderName = '';
+}
+
 
 downloadFile(item: any): void {
   if (!this.isFileManagerAvailable || !this.socio?.id || item?.isDirectory) return;
@@ -2263,8 +2307,25 @@ private hideContextMenu(): void {
 
 
 contextActionNewFolder(): void {
+  if (!this.isFileManagerAvailable || !this.socio?.id) {
+    this.notify.show?.(
+      this.translate.instant('socios.fileManager.messages.saveBeforeUse'),
+      '',
+      'warning'
+    );
+    return;
+  }
+
   this.hideContextMenu();
-  this.openCreateFolderModal();
+
+  this.creatingInlineFolder = true;
+  this.newFolderName = '';
+
+  setTimeout(() => {
+    const input = document.querySelector('.fm-inline-input') as HTMLInputElement;
+    input?.focus();
+    input?.select();
+  });
 }
 
 contextActionCopy(): void {

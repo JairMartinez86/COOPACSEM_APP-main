@@ -948,7 +948,7 @@
                       {{ 'socios.fileManager.actions.back' | translate }}
                     </button>
 
-                    <button type="button" class="btn btn-light btn-sm" (click)="openCreateFolderModal()">
+                    <button type="button" class="btn btn-light btn-sm" (click)="startInlineFolderCreation()">
                       <i class="bi bi-folder-plus me-1"></i>
                       {{ 'socios.fileManager.actions.newFolder' | translate }}
                     </button>
@@ -975,6 +975,25 @@
                       <i class="bi bi-chevron-right"></i>
                       <span>{{ currentFilePath || ('socios.fileManager.myFiles' | translate) }}</span>
                     </div>
+
+                    @if (creatingInlineFolder) {
+                    <div class="fm-item new-folder">
+                      <div class="fm-item-icon folder">
+                        <i class="bi bi-folder-fill"></i>
+                      </div>
+
+                      <input
+  type="text"
+  class="fm-inline-input"
+  [(ngModel)]="newFolderName"
+  [ngModelOptions]="{ standalone: true }"
+  (keyup.enter)="confirmCreateFolder()"
+  (keydown.escape)="cancelCreateFolder()"
+  (focusout)="onInlineFolderFocusOut()"
+  placeholder="Nueva carpeta" />
+
+                    </div>
+                    }
 
                     @if (folderItems.length > 0) {
                     <div class="fm-section-title">{{ 'socios.fileManager.types.folder' | translate }}</div>
