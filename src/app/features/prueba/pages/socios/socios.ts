@@ -1918,6 +1918,7 @@ previewUrls: Record<string, string> = {};
 draggedItem: any = null;
 dragOverFolderPath: string | null = null;
 isDragOverContent = false;
+isExternalDragOver = false;
 contextMenuMode: 'item' | 'background' | null = null;
 
 selectedItem: any = null;
@@ -2172,11 +2173,32 @@ getFileIconClass(item: any): string {
   const ext = (item?.extension || '').toLowerCase();
 
   switch (ext) {
+    // IMÁGENES
+    case '.jpg':
+    case '.jpeg':
+    case '.png':
+    case '.webp':
+      return 'fa-duotone fa-solid fa-image';
+
+    // PDF
     case '.pdf':
-      return 'bi-file-earmark-pdf';
+      return 'fa-duotone fa-solid fa-file-pdf';
+
+    // WORD
     case '.doc':
     case '.docx':
-      return 'bi-file-earmark-word';
+      return 'fa-duotone fa-solid fa-file-word';
+
+    // EXCEL
+    case '.xls':
+    case '.xlsx':
+      return 'fa-duotone fa-solid fa-file-excel';
+
+    // TEXTO
+    case '.txt':
+      return 'bi-file-earmark-text';
+
+    // DEFAULT
     default:
       return 'bi-file-earmark';
   }
@@ -2492,6 +2514,104 @@ onDropOnCurrentFolder(event: DragEvent): void {
       this.notify.showFromApiResponse?.(err, 'error');
     }
   });
+}
+
+onExternalDragOver(event: DragEvent): void {
+  if (!this.isFileManagerAvailable) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const hasFiles = Array.from(event.dataTransfer?.types ?? []).includes('Files');
+  if (!hasFiles) return;
+
+  this.isExternalDragOver = true;
+
+  if (event.dataTransfer) {
+    event.dataTransfer.dropEffect = 'copy';
+  }
+}
+
+onExternalDragLeave(event: DragEvent): void {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const relatedTarget = event.relatedTarget as HTMLElement | null;
+  const currentTarget = event.currentTarget as HTMLElement | null;
+
+  if (currentTarget && relatedTarget && currentTarget.contains(relatedTarget)) {
+    return;
+  }
+
+  this.isExternalDragOver = false;
+}
+
+onExternalDrop(event: DragEvent): void {
+  event.preventDefault();
+  event.stopPropagation();
+
+  this.isExternalDragOver = false;
+
+  if (!this.isFileManagerAvailable || !this.socio?.id) {
+    return;
+  }
+
+  const files = event.dataTransfer?.files;
+  if (!files?.length) {
+    return;
+  }
+
+  const formData = new FormData();
+
+  for (let i = 0; i < files.length; i++) {
+    formData.append('files', files[i]);
+  }
+
+  formData.append('path', this.currentFilePath || '');
+
+  this.uploadingFiles = true;
+
+  this.sociosService.uploadFiles(this.socio.id, formData).subscribe({
+    next: () => {
+      this.uploadingFiles = false;
+      this.loadFiles(this.currentFilePath);
+    },
+    error: (err) => {
+      this.uploadingFiles = false;
+      this.notify.showFromApiResponse?.(err, 'error');
+    }
+  });
+}
+
+onUnifiedDragOver(event: DragEvent): void {
+  const hasExternalFiles = Array.from(event.dataTransfer?.types ?? []).includes('Files');
+
+  if (hasExternalFiles && !this.draggedItem) {
+    this.onExternalDragOver(event);
+    return;
+  }
+
+  this.onDragOverContent(event);
+}
+
+onUnifiedDragLeave(event: DragEvent): void {
+  if (this.isExternalDragOver && !this.draggedItem) {
+    this.onExternalDragLeave(event);
+    return;
+  }
+
+  this.onDragLeaveContent();
+}
+
+onUnifiedDrop(event: DragEvent): void {
+  const hasExternalFiles = !!event.dataTransfer?.files?.length;
+
+  if (hasExternalFiles && !this.draggedItem) {
+    this.onExternalDrop(event);
+    return;
+  }
+
+  this.onDropOnCurrentFolder(event);
 }
 
 }

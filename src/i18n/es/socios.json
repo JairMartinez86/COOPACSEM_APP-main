@@ -133,6 +133,7 @@
   },
   "contextMenu": {
   "newFolder": "Nueva carpeta",
+  "upload": "Subir archivos",
   "rename": "Cambiar nombre",
   "copy": "Copiar",
   "cut": "Cortar",

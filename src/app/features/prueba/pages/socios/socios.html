@@ -972,13 +972,25 @@
   <div class="card-body p-0">
     <div class="fm-main">
 
-      <div class="fm-content"
-        [class.fm-drag-over]="isDragOverContent"
-        (click)="onLeftClickBackground($event)"
-        (contextmenu)="onRightClickBackground($event)"
-        (dragover)="onDragOverContent($event)"
-        (dragleave)="onDragLeaveContent()"
-        (drop)="onDropOnCurrentFolder($event)">
+    <div class="fm-content"
+  [class.fm-drag-over]="isDragOverContent"
+  [class.fm-external-drag-over]="isExternalDragOver"
+  (click)="onLeftClickBackground($event)"
+  (contextmenu)="onRightClickBackground($event)"
+  (dragover)="onUnifiedDragOver($event)"
+  (dragleave)="onUnifiedDragLeave($event)"
+  (drop)="onUnifiedDrop($event)">
+
+
+  @if (isExternalDragOver) {
+  <div class="fm-upload-overlay">
+    <div class="fm-upload-overlay-box">
+      <i class="bi bi-cloud-arrow-up"></i>
+      <div>{{ 'socios.fileManager.actions.upload' | translate }}</div>
+      <small>{{ currentFilePath || ('socios.fileManager.myFiles' | translate) }}</small>
+    </div>
+  </div>
+}
 
         <!-- BREADCRUMB -->
         <div class="fm-breadcrumb mb-3">
@@ -1067,7 +1079,7 @@
                 class="fm-item-thumbnail">
             } @else {
               <div class="fm-item-icon" [ngClass]="getFileTypeClass(item)">
-                <i class="bi" [ngClass]="getFileIconClass(item)"></i>
+                <i  [ngClass]="getFileIconClass(item)"></i>
               </div>
             }
 
@@ -1100,20 +1112,33 @@
   <div class="fm-context-menu" id="fmContextMenu">
 
     @if (contextMenuMode === 'background') {
-    <button type="button" class="fm-context-item"
-      (click)="contextActionNewFolder()">
-      <i class="bi bi-folder-plus"></i>
-      <span>{{ 'socios.fileManager.contextMenu.newFolder' | translate }}</span>
-    </button>
 
-    @if (clipboardItem) {
-    <button type="button" class="fm-context-item"
-      (click)="contextActionPaste()">
-      <i class="bi bi-clipboard"></i>
-      <span>{{ 'socios.fileManager.contextMenu.paste' | translate }}</span>
-    </button>
-    }
-    }
+  <!-- NUEVA CARPETA -->
+  <button type="button" class="fm-context-item"
+    (click)="contextActionNewFolder()">
+    <i class="bi bi-folder-plus"></i>
+    <span>{{ 'socios.fileManager.contextMenu.newFolder' | translate }}</span>
+  </button>
+
+  <!-- SUBIR ARCHIVO 🔥 -->
+  <label class="fm-context-item mb-0">
+    <i class="bi bi-cloud-upload"></i>
+    <span>{{ 'socios.fileManager.contextMenu.upload' | translate }}</span>
+    <input type="file" hidden multiple
+      accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xlsx,.xls,.txt"
+      (change)="onFileSelected($event)">
+  </label>
+
+  <!-- PEGAR -->
+  @if (clipboardItem) {
+  <button type="button" class="fm-context-item"
+    (click)="contextActionPaste()">
+    <i class="bi bi-clipboard"></i>
+    <span>{{ 'socios.fileManager.contextMenu.paste' | translate }}</span>
+  </button>
+  }
+
+}
 
     @if (contextMenuMode === 'item') {
     <button type="button" class="fm-context-item"

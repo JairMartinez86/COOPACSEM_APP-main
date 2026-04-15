@@ -132,6 +132,7 @@
   },
  "contextMenu": {
   "newFolder": "New folder",
+   "upload": "Upload files",
   "rename": "Rename",
   "copy": "Copy",
   "cut": "Cut",
