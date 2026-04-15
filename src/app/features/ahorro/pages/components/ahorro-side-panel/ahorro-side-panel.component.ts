@@ -49,8 +49,6 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
     return (this.planesRows || []).filter(x => x.tipoCuenta === 'Navidena');
   }
 
-  showPlanModal = false;
-
   private readonly router = inject(Router);
   private readonly appConfigService = inject(AppConfigService);
   private readonly notify = inject(NotificationService);
@@ -155,7 +153,7 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
         this.router.navigate(['/apertura-cuenta-navidena', this.selectedSocio.id]);
         break;
 
-      case 'ahorro.actions.viewChristmasPlan':
+      case 'ahorro.actions.affiliation':
         this.router.navigate(['/socio-afiliacion-pago/new', this.selectedSocio.id]);
         break;
 
@@ -173,7 +171,5 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
     return [...this.actions].sort((a, b) => a.order - b.order);
   }
 
-  closePlanModal(): void {
-    this.showPlanModal = false;
-  }
+
 }

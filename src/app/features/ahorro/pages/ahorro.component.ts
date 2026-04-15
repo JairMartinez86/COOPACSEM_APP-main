@@ -72,7 +72,7 @@ export class AhorroComponent implements OnInit {
   cards: SummaryCard[] = [];
   actions: ActionItem[] = [
   { icon: 'fa-regular fa-hand-holding-heart', titleKey: 'ahorro.actions.newSaving', accent: 'green', order: 1 },
-  { icon: 'fa-regular fa-gift', titleKey: 'ahorro.actions.viewChristmasPlan', accent: 'amber', order: 2 },
+  { icon: 'fa-duotone fa-light fa-file-invoice-dollar', titleKey: 'ahorro.actions.affiliation', accent: 'amber', order: 2 },
 
   { icon: 'fa-solid fa-arrow-down', titleKey: 'ahorro.actions.newDeposit', accent: 'blue', order: 3 },
   { icon: 'fa-solid fa-arrow-up', titleKey: 'ahorro.actions.newWithdrawal', accent: 'violet', order: 4 },
