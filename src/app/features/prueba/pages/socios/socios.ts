@@ -1464,7 +1464,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.removeOrphanChoicesWrapper(element);
 
-    element.disabled = !this.socio.departamentoId;
+  //  element.disabled = !this.socio.departamentoId;
 
     this.municipioChoices = new Choices(element, {
       searchEnabled: true,
@@ -1486,9 +1486,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const wrapper = element.closest('.choices');
     if (!this.socio.departamentoId) {
-      wrapper?.classList.add('is-disabled');
+      //wrapper?.classList.add('is-disabled');
     } else {
-      wrapper?.classList.remove('is-disabled');
+      //wrapper?.classList.remove('is-disabled');
     }
   }
 
