@@ -63,9 +63,11 @@ interface SocioResumen {
     correo?: string;
     direccionDomiciliar?: string;
     FechaIngreso?: string | null;
-    activo : boolean,
+    cuentaCorrienteActiva: boolean;
+    cuentaNavidenaActiva: boolean;
+    activo: boolean,
     dashboard?: SocioDashboard | null;
-    
+
 }
 
 // Formulario ahorro
@@ -83,7 +85,7 @@ interface SocioAhorroForm {
 // Historial
 interface HistorialItem {
     id: string;
-    fechaReg : string;
+    fechaReg: string;
     serieMov: string;
     noMov: string;
     noDeposito: string;
@@ -166,11 +168,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
     bancos: BancoOption[] = [];
 
     // Opciones destino
-    destinos = [
-        { value: 'ahorroCorriente', labelKey: 'socioAhorro.destinos.ahorroCorriente' },
-        { value: 'ahorroNavideno', labelKey: 'socioAhorro.destinos.ahorroNavideno' },
-        { value: 'creditoActivo', labelKey: 'socioAhorro.destinos.creditoActivo' }
-    ];
+    destinos: any = [];
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: object
@@ -357,6 +355,8 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                         direccionDomiciliar: data?.direccionDomiciliar ?? '',
                         FechaIngreso: data?.fechaIngreso ?? null,
                         activo: data?.activo ?? false,
+                        cuentaCorrienteActiva: data?.cuentaCorrienteActiva ?? false,
+                        cuentaNavidenaActiva: data?.cuentaNavidenaActiva ?? false,
                         dashboard: {
                             totalAhorro: Number(data?.dashboard?.totalAhorro ?? 0),
                             ahorroNavideno: Number(data?.dashboard?.ahorroNavideno ?? 0),
@@ -364,6 +364,21 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                             totalRetirado: Number(data?.dashboard?.totalRetirado ?? 0)
                         }
                     };
+
+
+                    if (this.socio?.cuentaCorrienteActiva) {
+                        this.destinos.push({ value: 'ahorroCorriente', labelKey: 'socioAhorro.destinos.ahorroCorriente' })
+                    }
+
+                    if (this.socio?.cuentaNavidenaActiva) {
+                        this.destinos.push({ value: 'ahorroNavideno', labelKey: 'socioAhorro.destinos.ahorroNavideno' })
+                    }
+
+                    // this.destinos.push({ value: 'creditoActivo', labelKey: 'socioAhorro.destinos.creditoActivo' })
+
+
+
+
                 },
                 error: (err) => {
                     this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -413,7 +428,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                     this.historialAll = Array.isArray(items)
                         ? items.map((x: any) => ({
                             id: String(x?.id ?? ''),
-                            fechaReg : String(x?.fechaReg ?? ''),
+                            fechaReg: String(x?.fechaReg ?? ''),
                             serieMov: String(x?.serieMov ?? ''),
                             noMov: String(x?.noMov ?? ''),
                             noDeposito: String(x?.noDeposito ?? ''),

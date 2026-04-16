@@ -176,8 +176,8 @@
 
                   <input #Vigencia type="text" class="form-control" [(ngModel)]="form.vigencia" id="Vigencia"
                     name="Vigencia" engineSync="Vigencia"
-                    [dateFormat]="appConfigService.getCurrentSettings().dateFormat" autoFocusNext
-                    [next]="AplicaDesde" [next-isdisable]="[AplicaDesde, Observacion]" />
+                    [dateFormat]="appConfigService.getCurrentSettings().dateFormat" autoFocusNext [next]="AplicaDesde"
+                    [next-isdisable]="[AplicaDesde, Observacion]" />
                 </div>
 
                 <div class="col-md-4" error-notify="AplicaDesde" error-display="inline">
@@ -257,7 +257,7 @@
                         {{ getTipoLabel(item.tipo) }}
                       </span>
 
-                       @if(item.tipoCuenta == 'Corriente')
+                      @if(item.tipoCuenta == 'Corriente')
                       { <span class="badge d-inline-flex align-items-center gap-1" class="badge badge-soft-success">
                         <i class="bi bi-check-circle-fill"></i>
                         {{ 'socios.accounts.current' | translate }}
@@ -266,11 +266,10 @@
                       }
 
                       @if(item.tipoCuenta == 'Navidena'){
-                       <span class="badge d-inline-flex align-items-center gap-1 badge-soft-warning">
-                          <i class="bi bi-check-circle-fill"
-                       ></i>
-                          {{ 'socios.accounts.christmas' | translate }}
-                        </span>
+                      <span class="badge d-inline-flex align-items-center gap-1 badge-soft-warning">
+                        <i class="bi bi-check-circle-fill"></i>
+                        {{ 'socios.accounts.christmas' | translate }}
+                      </span>
 
                       }
 
@@ -367,7 +366,11 @@
           <div class="card-body">
             <div class="d-flex flex-column gap-2">
 
+              @if(socio?.cuentaCorrienteActiva)
+              {
               <div class="form-check">
+
+
                 <input #TipoCuentaCorriente class="form-check-input" type="radio" name="TipoCuenta"
                   id="TipoCuentaCorriente" value="Corriente" [(ngModel)]="form.tipoCuenta"
                   (ngModelChange)="updateCuotaActual()" engineSync="TipoCuenta" />
@@ -376,6 +379,10 @@
                   {{ 'socioCambioCuota.options.corriente' | translate }}
                 </label>
               </div>
+              }
+
+              @if(socio?.cuentaNavidenaActiva)
+              {
 
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="TipoCuenta" id="TipoCuentaNavideno" value="Navidena"
@@ -385,6 +392,11 @@
                   {{ 'socioCambioCuota.options.navideno' | translate }}
                 </label>
               </div>
+              }
+
+
+
+
 
             </div>
           </div>

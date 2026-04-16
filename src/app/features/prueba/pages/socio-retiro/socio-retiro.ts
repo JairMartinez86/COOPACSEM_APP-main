@@ -57,6 +57,8 @@ interface SocioResumen {
     totalRetirado?: number;
     saldoActual?: number;
     indemnizacionEstimada?: number;
+    cuentaCorrienteActiva : boolean;
+    cuentaNavidenaActiva : boolean;
     activo : boolean;
     dashboard?: SocioDashboard | null;
 }
@@ -148,10 +150,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
 
     bancos: BancoOption[] = [];
 
-    destinos = [
-        { value: 'retiroCorriente', labelKey: 'socioRetiro.destinos.retiroCorriente' },
-        { value: 'retiroNavideno', labelKey: 'socioRetiro.destinos.retiroNavideno' }
-    ];
+    destinos : any = [];
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: object
@@ -303,6 +302,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
                     );
                     this.retiro.fechaRetiro = this.formatDate(this.appConfigService.getCurrentSettings().fechaServidor);
 
+                   
                     this.socio = {
                         id: data?.id ?? '',
                         codigoSocio: data?.codigoSocio ?? '',
@@ -314,6 +314,8 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
                         correo: data?.correo ?? '',
                         direccionDomiciliar: data?.direccionDomiciliar ?? '',
                         FechaIngreso: data?.fechaIngreso ?? null,
+                        cuentaCorrienteActiva : data?.cuentaCorrienteActiva ?? null,
+                        cuentaNavidenaActiva : data?.cuentaNavidenaActiva ?? null,
 
                         salarioMensual: Number(data?.salarioMensual ?? 0),
                         cuotaActual: Number(data?.cuotaActual ?? 0),
@@ -331,6 +333,16 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
                         }
                     };
 
+
+                     if(this.socio?.cuentaCorrienteActiva)
+                    {
+                        this.destinos.push({ value: 'retiroCorriente', labelKey: 'socioRetiro.destinos.retiroCorriente' })
+                    }
+
+                     if(this.socio?.cuentaNavidenaActiva)
+                    {
+                        this.destinos.push({ value: 'retiroNavideno', labelKey: 'socioRetiro.destinos.retiroNavideno' })
+                    }
 
                     this.NoConsecutivo();
 

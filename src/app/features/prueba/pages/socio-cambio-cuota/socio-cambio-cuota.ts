@@ -54,6 +54,8 @@ interface SocioResumen {
   numeroIdentificacion: string;
   sociedadLabora?: string;
   fechaIngreso?: string | null;
+  cuentaCorrienteActiva : boolean
+  cuentaNavidenaActiva : boolean
 }
 
 // Información de autorizaciones (workflow de aprobación)
@@ -432,6 +434,9 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
           }
 
           this.socio = data?.socio ?? null;
+
+
+          
 
           // Asignar cuotas
           this.cuotas = {
