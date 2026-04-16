@@ -357,14 +357,14 @@
             <div class="profile-actions mt-3">
 
               <!-- Ahorro -->
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoAhorro(selectedSocio.id)"
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoAhorro(selectedSocio.id, selectedSocio.cuentaCorrienteActiva)"
                 [appPermission]="['new']">
                 <i class="fa-duotone fa-piggy-bank me-1"></i>
                 {{ 'socios.profile.newSaving' | translate }}
               </button>
 
               <!-- Crédito -->
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoCredito(selectedSocio.id)"
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="onNuevoCredito(selectedSocio.id, selectedSocio.cuentaCorrienteActiva)"
                 [appPermission]="['new']">
                 <i class="fa-duotone fa-credit-card me-1"></i>
                 {{ 'socios.profile.newCredit' | translate }}
@@ -382,7 +382,7 @@
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li>
                     <button class="dropdown-item d-flex align-items-center gap-2"
-                      (click)="onIncrementoCuota(selectedSocio.id)">
+                      (click)="onIncrementoCuota(selectedSocio.id, selectedSocio.cuentaCorrienteActiva)">
                       <i class="fa-sharp fa-solid fa-arrow-trend-up"></i>
                       {{ 'socios.profile.increaseSavings' | translate }}
                     </button>
@@ -390,7 +390,7 @@
 
                   <li>
                     <button class="dropdown-item d-flex align-items-center gap-2"
-                      (click)="onDiminucionCuota(selectedSocio.id)">
+                      (click)="onDiminucionCuota(selectedSocio.id, selectedSocio.cuentaCorrienteActiva)">
                       <i class="fa-sharp fa-solid fa-arrow-trend-down"></i>
                       {{ 'socios.profile.decreaseSavings' | translate }}
                     </button>

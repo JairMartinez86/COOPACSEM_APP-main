@@ -522,20 +522,51 @@ export class SociosListComponent implements OnInit, OnDestroy {
     return pages;
   }
 
-  onNuevoAhorro(idSocio: string): void {
+  onNuevoAhorro(idSocio: string, cuentaCorrienteActiva: boolean): void {
+
+    if (!cuentaCorrienteActiva) {
+      this.notify.show(
+        this.translate.instant('socios.messages.noActiveCurrentAccount'),
+        this.translate.instant('socios.common.info'),
+        'warning'
+      );
+      return;
+    }
+
+
+
+
     this.router.navigate(['/apertura-cuenta-navidena', idSocio]);
   }
 
-  onNuevoCredito(id: string): void {
+  onNuevoCredito(id: string, cuentaCorrienteActiva: boolean): void {
     if (!id) return;
     console.log('Nuevo crédito para socio:', id);
   }
 
-  onIncrementoCuota(idSocio: string) {
+  onIncrementoCuota(idSocio: string, cuentaCorrienteActiva: boolean) {
+     if (!cuentaCorrienteActiva) {
+      this.notify.show(
+        this.translate.instant('socios.messages.noActiveCurrentAccount'),
+        this.translate.instant('socios.common.info'),
+        'warning'
+      );
+      return;
+    }
+
     this.router.navigate(['/cambio-cuota/new', idSocio, 'incremento']);
   }
 
-  onDiminucionCuota(idSocio: string) {
+  onDiminucionCuota(idSocio: string, cuentaCorrienteActiva: boolean) {
+     if (!cuentaCorrienteActiva) {
+      this.notify.show(
+        this.translate.instant('socios.messages.noActiveCurrentAccount'),
+        this.translate.instant('socios.common.info'),
+        'warning'
+      );
+      return;
+    }
+
     this.router.navigate(['/cambio-cuota/new', idSocio, 'disminucion']);
   }
 

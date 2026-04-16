@@ -152,6 +152,17 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
       return;
     }
 
+
+    if (!this.selectedSocio.cuentaCorrienteActiva) {
+      this.notify.show(
+        this.translate.instant('socios.messages.noActiveCurrentAccount'),
+        this.translate.instant('socios.common.info'),
+        'warning'
+      );
+      return;
+    }
+
+
     switch (action.titleKey) {
       case 'ahorro.actions.newDeposit':
         this.router.navigate(['/socio-ahorro/new', this.selectedSocio.id]);

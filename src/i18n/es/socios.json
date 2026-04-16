@@ -33,7 +33,8 @@
       "subtitle": "Complete la información del beneficiario."
     },
     "messages": {
-      "notFound": "No se encontraron datos del socio."
+      "notFound": "No se encontraron datos del socio.",
+      "noActiveCurrentAccount": "El socio no posee una cuenta corriente activa"
     },
     "statusActions": {
       "deactivateTitle": "Dar de baja socio",
@@ -1221,12 +1222,14 @@
       ]
     },
     "common": {
+      "info": "Información",
       "actions": {
         "clear": "Limpiar",
         "edit": "Editar",
         "delete": "Eliminar",
         "save": "Guardar",
         "cancel": "Cancelar"
+        
       },
       "status": {
         "active": "Activo",

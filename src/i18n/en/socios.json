@@ -33,7 +33,8 @@
       "subtitle": "Complete the beneficiary information."
     },
     "messages": {
-      "notFound": "Member data not found."
+      "notFound": "Member data not found.",
+      "noActiveCurrentAccount": "The member does not have an active current account"
     },
     "statusActions": {
       "deactivateTitle": "Deactivate member",
@@ -1221,12 +1222,14 @@
         ]
       },
       "common": {
+        "info": "Information",
         "actions": {
           "clear": "Clear",
           "edit": "Edit",
           "delete": "Delete",
           "save": "Save",
           "cancel": "Cancel"
+           
         },
         "status": {
           "active": "Active",
