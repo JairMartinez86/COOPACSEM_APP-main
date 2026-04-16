@@ -177,7 +177,7 @@
                   <input #Vigencia type="text" class="form-control" [(ngModel)]="form.vigencia" id="Vigencia"
                     name="Vigencia" engineSync="Vigencia"
                     [dateFormat]="appConfigService.getCurrentSettings().dateFormat" autoFocusNext
-                    [next]="AplicaDesde" />
+                    [next]="AplicaDesde" [next-isdisable]="[AplicaDesde, Observacion]" />
                 </div>
 
                 <div class="col-md-4" error-notify="AplicaDesde" error-display="inline">
@@ -186,7 +186,7 @@
                   </label>
 
                   <select #AplicaDesde class="form-select" [(ngModel)]="form.aplicaDesde" id="AplicaDesde"
-                    name="AplicaDesde" engineSync="AplicaDesde" autoFocusNext [next]="Observacion">
+                    name="AplicaDesde" engineSync="AplicaDesde" autoFocusNext [next]="Observacion" [disabled]="true">
 
                     <option value="Quincena">
                       {{ 'socioCambioCuota.options.quincena' | translate }}

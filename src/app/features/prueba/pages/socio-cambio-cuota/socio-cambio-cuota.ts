@@ -182,7 +182,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
     cuotaActual: 0,
     nuevaCuota: null,
     vigencia: '',
-    aplicaDesde: 'Quincena',
+    aplicaDesde: 'Inmediato',
     observacion: ''
   };
 
