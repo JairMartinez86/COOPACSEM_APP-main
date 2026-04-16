@@ -57,6 +57,7 @@
       "navideno": "Christmas Savings",
       "incremento": "Increase",
       "disminucion": "Decrease",
+      "apertura": "Opening",
       "quincena": "Next payroll period",
       "inmediato": "Immediate",
       "afiliacionCorriente": "Current Savings Enrollment",
@@ -187,13 +188,13 @@
             "2": {
               "rule": "NUM>",
               "value": "{CuotaActual}",
-              "when": "{TipoMovimiento}=incremento",
+              "when": "{TipoMovimiento}=Incremento",
               "msj": "The new quota must be greater than the current one"
             },
             "3": {
               "rule": "NUM<",
               "value": "{CuotaActual}",
-              "when": "{TipoMovimiento}=disminucion",
+              "when": "{TipoMovimiento}=Disminucion",
               "msj": "The new quota must be less than the current one"
             }
           }

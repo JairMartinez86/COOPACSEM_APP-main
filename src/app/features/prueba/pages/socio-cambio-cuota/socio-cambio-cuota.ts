@@ -61,13 +61,13 @@ interface AutorizacionItem {
   id: string;
   fecha: string;
   codigoSocio: string;
-  tipoCuenta: 'corriente' | 'navideno' | string;
-  tipoMovimiento: 'incremento' | 'disminucion' | string;
+  tipoCuenta: 'Corriente' | 'Navidena' | string;
+  tipoMovimiento: 'Incremento' | 'Disminucion' | string;
   cuotaActual: number;
   nuevaCuota: number;
   diferencia: number;
   vigencia: string;
-  aplicaDesde: 'inmediato' | 'quincena' | string;
+  aplicaDesde: 'Inmediato' | 'Quincena' | string;
   estado: number;
   estadoDescripcion: string;
   fechaRegistro?: string;
@@ -86,6 +86,7 @@ interface HistorialItem {
   diferencia: number;
   estado: string;
   estadoRaw: number;
+  tipoCuenta: string;
 }
 
 
@@ -134,7 +135,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
   // Estado del componente
   mode: 'create' | 'view' | 'edit' = 'create';
 
-  tipoMovimiento: 'incremento' | 'disminucion' = 'incremento';
+  tipoMovimiento: 'Incremento' | 'Disminucion' = 'Incremento';
   socioId = '';
 
   loading = false; // Indicador de carga
@@ -144,8 +145,8 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
   socio: SocioResumen | null = null;
 
   // Cuotas actuales
-  cuotas: { corriente: number; navideno: number } = {
-    corriente: 0,
+  cuotas: { Corriente: number; navideno: number } = {
+    Corriente: 0,
     navideno: 0
   };
 
@@ -176,12 +177,12 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
   // Formulario principal
   form: SocioCambioCuota = {
     socioId: '',
-    tipoCuenta: 'corriente',
-    tipoMovimiento: 'incremento',
+    tipoCuenta: 'Corriente',
+    tipoMovimiento: 'Incremento',
     cuotaActual: 0,
     nuevaCuota: null,
     vigencia: '',
-    aplicaDesde: 'quincena',
+    aplicaDesde: 'Quincena',
     observacion: ''
   };
 
@@ -315,7 +316,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
         this.socioId = params.get('socioId') ?? '';
 
         const routeTipo = params.get('tipoMovimiento');
-        this.tipoMovimiento = routeTipo === 'disminucion' ? 'disminucion' : 'incremento';
+        this.tipoMovimiento = routeTipo === 'Disminucion' ? 'Disminucion' : 'Incremento';
 
 
 
@@ -422,8 +423,8 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           const data = res?.data ?? {};
 
-    
-          if (this.form.tipoCuenta == 'corriente') {
+
+          if (this.form.tipoCuenta == 'Corriente') {
             this.form.cuotaActual = Number(data?.cuotas?.corriente ?? 0);
           }
           else {
@@ -434,7 +435,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
 
           // Asignar cuotas
           this.cuotas = {
-            corriente: Number(data?.cuotas?.corriente ?? 0),
+            Corriente: Number(data?.cuotas?.corriente ?? 0),
             navideno: Number(data?.cuotas?.navideno ?? 0)
           };
 
@@ -452,6 +453,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
             nuevaCuota: Number(x?.nuevaCuota ?? 0),
             diferencia: Number(x?.diferencia ?? 0),
             estado: String(x?.estadoDescripcion ?? ''),
+            tipoCuenta: String(x?.tipoCuenta ?? ''),
             estadoRaw: Number(x?.estado ?? 0)
           }));
 
@@ -503,7 +505,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
           };
 
           if (!this.form.tipoCuenta) {
-            this.form.tipoCuenta = 'corriente';
+            this.form.tipoCuenta = 'Corriente';
           }
 
           this.updateCuotaActual();
@@ -516,17 +518,45 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
 
   // Actualiza cuota actual según tipo
   updateCuotaActual(): void {
-    this.form.cuotaActual = this.form.tipoCuenta === 'corriente'
-      ? Number(this.cuotas.corriente ?? 0)
+
+    this.form.nuevaCuota = 0;
+
+    this.engine.setControlValue(
+      'CuotaActual',
+      this.form.nuevaCuota
+    );
+
+
+
+
+    this.engine.clearErrors();
+
+    this.form.cuotaActual = this.form.tipoCuenta === 'Corriente'
+      ? Number(this.cuotas.Corriente ?? 0)
       : Number(this.cuotas.navideno ?? 0);
 
 
-    if (this.form.tipoCuenta == 'corriente') {
-      this.form.cuotaActual = Number(this.cuotas.corriente ?? 0);
+    if (this.form.tipoCuenta == 'Corriente') {
+      this.form.cuotaActual = Number(this.cuotas.Corriente ?? 0);
+
     }
     else {
       this.form.cuotaActual = Number(this.cuotas.navideno ?? 0);
+
     }
+
+    this.engine.setControlValue(
+      'TipoCuenta',
+      this.form.tipoCuenta
+    );
+
+    this.engine.setControlValue(
+      'CuotaActual',
+      this.form.cuotaActual
+    );
+
+
+
 
   }
 
@@ -677,21 +707,22 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
 
   // Label de tipo
   getTipoLabel(tipo: string): string {
-    const t = (tipo || '').toLowerCase();
+    const t = (tipo || '');
 
-    if (t === 'incremento') return this.translate.instant('socioCambioCuota.options.incremento');
-    if (t === 'disminucion') return this.translate.instant('socioCambioCuota.options.disminucion');
+    if (t === 'Incremento') return this.translate.instant('socioCambioCuota.options.incremento');
+    if (t === 'Disminucion') return this.translate.instant('socioCambioCuota.options.disminucion');
+    if (t === 'Apertura') return this.translate.instant('socioCambioCuota.options.apertura');
 
     return tipo;
   }
 
   // Clase CSS
   getTipoClass(tipo: string): string {
-    const t = (tipo || '').toLowerCase();
+    const t = (tipo || '');
 
-    if (t === 'incremento') return 'badge-soft-success';
-    if (t === 'disminucion') return 'badge-soft-danger';
-    if (t.includes('afiliacion')) return 'badge-soft-primary';
+    if (t === 'Incremento') return 'badge badge-soft-success me-1';
+    if (t === 'Disminucion') return 'badge badge-soft-danger me-1';
+    if (t.includes('Apertura')) return 'badge badge-soft-primary me-1';
 
     return 'badge-soft-secondary';
   }

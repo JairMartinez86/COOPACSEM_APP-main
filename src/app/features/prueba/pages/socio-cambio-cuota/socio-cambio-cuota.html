@@ -6,13 +6,13 @@
     <div class="page-header mb-2">
       <div>
         <h1 class="page-title d-flex align-items-center gap-2">
-          <i [class]="tipoMovimiento === 'incremento'
+          <i [class]="tipoMovimiento === 'Incremento'
           ? 'bi bi-arrow-up-circle-fill text-success'
           : 'bi bi-arrow-down-circle-fill text-danger'">
           </i>
 
           {{ 'socioCambioCuota.title' | translate }}
-          ({{ tipoMovimiento === 'incremento'
+          ({{ tipoMovimiento === 'Incremento'
           ? ('socioCambioCuota.options.incremento' | translate)
           : ('socioCambioCuota.options.disminucion' | translate) }})
         </h1>
@@ -104,10 +104,10 @@
                     name="TipoMovimiento" engineSync="TipoMovimiento" autoFocusNext [next]="CuotaActual"
                     [disabled]="true">
 
-                    <option value="incremento">
+                    <option value="Incremento">
                       {{ 'socioCambioCuota.options.incremento' | translate }}
                     </option>
-                    <option value="disminucion">
+                    <option value="Disminucion">
                       {{ 'socioCambioCuota.options.disminucion' | translate }}
                     </option>
                   </select>
@@ -188,10 +188,10 @@
                   <select #AplicaDesde class="form-select" [(ngModel)]="form.aplicaDesde" id="AplicaDesde"
                     name="AplicaDesde" engineSync="AplicaDesde" autoFocusNext [next]="Observacion">
 
-                    <option value="quincena">
+                    <option value="Quincena">
                       {{ 'socioCambioCuota.options.quincena' | translate }}
                     </option>
-                    <option value="inmediato">
+                    <option value="Inmediato">
                       {{ 'socioCambioCuota.options.inmediato' | translate }}
                     </option>
                   </select>
@@ -253,9 +253,28 @@
                     <td>{{ formatDate(item.fecha) }}</td>
 
                     <td>
-                      <span class="badge" [ngClass]="getTipoClass(item.tipo)">
+                      <span [ngClass]="getTipoClass(item.tipo)">
                         {{ getTipoLabel(item.tipo) }}
                       </span>
+
+                       @if(item.tipoCuenta == 'Corriente')
+                      { <span class="badge d-inline-flex align-items-center gap-1" class="badge badge-soft-success">
+                        <i class="bi bi-check-circle-fill"></i>
+                        {{ 'socios.accounts.current' | translate }}
+                      </span>
+
+                      }
+
+                      @if(item.tipoCuenta == 'Navidena'){
+                       <span class="badge d-inline-flex align-items-center gap-1 badge-soft-warning">
+                          <i class="bi bi-check-circle-fill"
+                       ></i>
+                          {{ 'socios.accounts.christmas' | translate }}
+                        </span>
+
+                      }
+
+
                     </td>
 
                     <td>
@@ -350,7 +369,7 @@
 
               <div class="form-check">
                 <input #TipoCuentaCorriente class="form-check-input" type="radio" name="TipoCuenta"
-                  id="TipoCuentaCorriente" value="corriente" [(ngModel)]="form.tipoCuenta"
+                  id="TipoCuentaCorriente" value="Corriente" [(ngModel)]="form.tipoCuenta"
                   (ngModelChange)="updateCuotaActual()" engineSync="TipoCuenta" />
 
                 <label class="form-check-label" for="TipoCuentaCorriente">
@@ -359,7 +378,7 @@
               </div>
 
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="TipoCuenta" id="TipoCuentaNavideno" value="navideno"
+                <input class="form-check-input" type="radio" name="TipoCuenta" id="TipoCuentaNavideno" value="Navidena"
                   [(ngModel)]="form.tipoCuenta" (ngModelChange)="updateCuotaActual()" engineSync="TipoCuenta" />
 
                 <label class="form-check-label" for="TipoCuentaNavideno">

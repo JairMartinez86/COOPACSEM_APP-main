@@ -1,10 +1,10 @@
 export interface SocioCambioCuota {
   socioId: string;
-  tipoCuenta: 'corriente' | 'navideno';
-  tipoMovimiento: 'incremento' | 'disminucion';
+  tipoCuenta: 'Corriente' | 'Navideno';
+  tipoMovimiento: 'Incremento' | 'Disminucion';
   cuotaActual: number | null;
   nuevaCuota: number | null;
   vigencia: string;
-  aplicaDesde: 'inmediato' | 'quincena';
+  aplicaDesde: 'Inmediato' | 'Quincena';
   observacion: string;
 }

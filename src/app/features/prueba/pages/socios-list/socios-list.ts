@@ -554,7 +554,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.router.navigate(['/cambio-cuota/new', idSocio, 'incremento']);
+    this.router.navigate(['/cambio-cuota/new', idSocio, 'Incremento']);
   }
 
   onDiminucionCuota(idSocio: string, cuentaCorrienteActiva: boolean) {
@@ -567,7 +567,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.router.navigate(['/cambio-cuota/new', idSocio, 'disminucion']);
+    this.router.navigate(['/cambio-cuota/new', idSocio, 'Disminucion']);
   }
 
   getDestinoLabel(destino?: string | null): string {

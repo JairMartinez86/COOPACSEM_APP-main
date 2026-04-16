@@ -57,6 +57,7 @@
       "navideno": "Ahorro navideño",
       "incremento": "Incremento",
       "disminucion": "Disminución",
+      "apertura": "Apertura",
       "quincena": "Próxima quincena",
       "inmediato": "Inmediato",
       "afiliacionCorriente": "Afiliación Corriente",
@@ -187,13 +188,13 @@
             "2": {
               "rule": "NUM>",
               "value": "{CuotaActual}",
-              "when": "{TipoMovimiento}=incremento",
+              "when": "{TipoMovimiento}=Incremento",
               "msj": "La nueva cuota debe ser mayor a la actual"
             },
             "3": {
               "rule": "NUM<",
               "value": "{CuotaActual}",
-              "when": "{TipoMovimiento}=disminucion",
+              "when": "{TipoMovimiento}=Disminucion",
               "msj": "La nueva cuota debe ser menor a la actual"
             }
           }

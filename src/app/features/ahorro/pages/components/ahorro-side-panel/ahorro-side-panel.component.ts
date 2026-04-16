@@ -181,11 +181,11 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
         break;
 
       case 'ahorro.actions.increaseInstallment':
-        this.router.navigate(['/cambio-cuota/new', this.selectedSocio.id, 'incremento']);
+        this.router.navigate(['/cambio-cuota/new', this.selectedSocio.id, 'Incremento']);
         break;
 
       case 'ahorro.actions.decreaseInstallment':
-        this.router.navigate(['/cambio-cuota/new', this.selectedSocio.id, 'disminucion']);
+        this.router.navigate(['/cambio-cuota/new', this.selectedSocio.id, 'Disminucion']);
         break;
     }
   }

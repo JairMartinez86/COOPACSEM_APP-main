@@ -825,7 +825,7 @@
           "ingresosAnuales": {
             "data": {
               "1": {
-                "rule": "NUM>",
+                "rule": "NUM>=",
                 "value": "0",
                 "when": "",
                 "msj": "Enter a positive value (Total annual income)"
