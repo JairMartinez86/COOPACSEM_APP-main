@@ -104,8 +104,12 @@
         "amount": "Monto",
         "balance": "Saldo",
         "status": "Status",
-        "paid": "Paid"
+        "paid": "Paid",
+        "search": "Search",
+        "showing": "Showing",
+        "of": "of"
       },
+      
       "socios": {
         "code": "Code",
         "member": "Member",
@@ -115,11 +119,21 @@
         "lastMovement": "Last movement",
         "actions": "Actions"
       },
+      "savings": {
+        "searchPlaceholder": "Search by date, description, account type, amount or balance"
+      },
+      "withdrawals": {
+        "searchPlaceholder": "Search by date, description, account type or amount"
+      },
+      "requests": {
+        "searchPlaceholder": "Search by date, description, account type, status or amount"
+      },
       "deposits": {
         "depositNo": "Deposit no.",
         "date": "Fecha",
         "registerDate": "Registered date",
-        "bank": "Bank"
+        "bank": "Bank",
+        "searchPlaceholder": "Search by date, deposit number, bank, account type or amount"
       },
       "plans": {
         "installmentNumber": "Installment no.",

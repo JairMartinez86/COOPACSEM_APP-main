@@ -19,12 +19,14 @@ export class DepositosTableComponent implements OnChanges {
   page = 1;
   pageSize = 20;
   pagedRows: SimpleMovimientoRow[] = [];
+  filteredRows: SimpleMovimientoRow[] = [];
   totalPages = 1;
+  filterText = '';
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['rows']) {
       this.page = 1;
-      this.updatePagination();
+      this.applyFilter();
     }
   }
 
@@ -36,8 +38,48 @@ export class DepositosTableComponent implements OnChanges {
     })}`;
   }
 
+  onFilterChange(value: string): void {
+    this.filterText = value ?? '';
+    this.page = 1;
+    this.applyFilter();
+  }
+
+  applyFilter(): void {
+    const term = this.normalizeText(this.filterText);
+
+    if (!term) {
+      this.filteredRows = [...this.rows];
+      this.updatePagination();
+      return;
+    }
+
+    this.filteredRows = this.rows.filter(row => {
+      const cuentaTraducida =
+        row.tipoCuenta === 'Corriente'
+          ? 'corriente'
+          : 'navidad navideña navidena christmas';
+
+      const searchable = [
+        row.fechaRegistro,
+        row.noDeposito,
+        row.fecha,
+        row.banco,
+        row.tipoCuenta,
+        cuentaTraducida,
+        row.monto?.toString()
+      ]
+        .filter(Boolean)
+        .map(x => this.normalizeText(String(x)))
+        .join(' ');
+
+      return searchable.includes(term);
+    });
+
+    this.updatePagination();
+  }
+
   updatePagination(): void {
-    const total = this.rows.length;
+    const total = this.filteredRows.length;
     this.totalPages = Math.max(1, Math.ceil(total / this.pageSize));
 
     if (this.page > this.totalPages) {
@@ -46,7 +88,7 @@ export class DepositosTableComponent implements OnChanges {
 
     const start = (this.page - 1) * this.pageSize;
     const end = start + this.pageSize;
-    this.pagedRows = this.rows.slice(start, end);
+    this.pagedRows = this.filteredRows.slice(start, end);
   }
 
   goToPage(page: number): void {
@@ -88,11 +130,19 @@ export class DepositosTableComponent implements OnChanges {
   }
 
   get startRecord(): number {
-    if (this.rows.length === 0) return 0;
+    if (this.filteredRows.length === 0) return 0;
     return (this.page - 1) * this.pageSize + 1;
   }
 
   get endRecord(): number {
-    return Math.min(this.page * this.pageSize, this.rows.length);
+    return Math.min(this.page * this.pageSize, this.filteredRows.length);
+  }
+
+  private normalizeText(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
   }
 }

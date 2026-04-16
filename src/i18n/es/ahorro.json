@@ -105,7 +105,10 @@
         "amount": "Monto",
         "balance": "Saldo",
         "status": "Estado",
-        "paid" : "Pagado"
+        "paid" : "Pagado",
+         "search": "Buscar",
+        "showing": "Mostrando",
+        "of": "de"
       },
       "socios": {
         "code": "Código",
@@ -117,11 +120,23 @@
         "decreaseInstallment": "Disminución de cuota",
         "actions": "Acciones"
       },
+
+      "savings": {
+        "searchPlaceholder": "Buscar por fecha, descripción, tipo de cuenta, monto o saldo"
+      },
+      "withdrawals": {
+        "searchPlaceholder": "Buscar por fecha, descripción, tipo de cuenta o monto"
+      },
+      "requests": {
+        "searchPlaceholder": "Buscar por fecha, descripción, tipo de cuenta, estado o monto"
+      },
+
       "deposits": {
         "depositNo": "No. depósito",
         "date": "Fecha",
         "registerDate": "Fecha registro",
-        "bank": "Banco"
+        "bank": "Banco",
+         "searchPlaceholder": "Buscar por fecha, número de depósito, banco, tipo de cuenta o monto"
       },
       "plans": {
         "installmentNumber": "No. cuota",

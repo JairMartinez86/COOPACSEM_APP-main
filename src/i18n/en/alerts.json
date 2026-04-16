@@ -13,7 +13,8 @@
       "SOCIO_INACTIVE": "Inactive member",
       "MISSING_EMAIL": "Missing email",
       "MISSING_PHONE": "Missing phone",
-      "NO_ACTIVE_ACCOUNT": "No active account"
+      "NO_ACTIVE_ACCOUNT": "No active account",
+       "MISSING_DOCUMENTS": "Missing documents"
     },
     "socios": {
       "identificationExpiredRecently": "The identification expired {{months}} month ago ({{expirationDate}}).",
@@ -22,7 +23,8 @@
       "memberInactive": "The member is inactive.",
       "missingEmail": "The member does not have an email address registered.",
       "missingPhone": "The member does not have a phone number registered.",
-      "noActiveAccount": "The member does not have an active account."
+      "noActiveAccount": "The member does not have an active account.",
+       "missingDocuments": "The member does not have documents uploaded to the system."
     }
   },
   "ahorro": {
