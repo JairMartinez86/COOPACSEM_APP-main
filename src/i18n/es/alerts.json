@@ -1,11 +1,34 @@
 {
   "alerts": {
     "common": {
-      "title": "Alertas"
+      "title": "Alertas",
+      "infoTitle": "Información",
+      "warningTitle": "Advertencia",
+      "dangerTitle": "Alerta crítica"
+    },
+    "codes": {
+      "ID_EXPIRED": "Identificación vencida",
+      "ID_EXPIRED_RECENTLY": "Identificación vencida recientemente",
+      "MISSING_IDENTIFICATION": "Falta identificación",
+      "SOCIO_INACTIVE": "Socio inactivo",
+      "MISSING_EMAIL": "Falta correo",
+      "MISSING_PHONE": "Falta teléfono",
+      "NO_ACTIVE_ACCOUNT": "Sin cuenta activa"
     },
     "socios": {
-      "identificationExpiredRecently": "La identificación está vencida desde hace {{months}} mes. Fecha de vencimiento: {{expirationDate}}.",
-      "identificationExpired": "La identificación está vencida desde hace {{months}} meses. Fecha de vencimiento: {{expirationDate}}."
+      "identificationExpiredRecently": "La identificación venció hace {{months}} mes ({{expirationDate}}).",
+      "identificationExpired": "La identificación venció hace {{months}} meses ({{expirationDate}}).",
+      "missingIdentification": "El socio no tiene número de identificación registrado.",
+      "memberInactive": "El socio se encuentra inactivo.",
+      "missingEmail": "El socio no tiene correo electrónico registrado.",
+      "missingPhone": "El socio no tiene número de teléfono registrado.",
+      "noActiveAccount": "El socio no posee una cuenta activa."
+    }
+  },
+  "ahorro": {
+    "side": {
+      "alerts": "Alertas",
+      "noAlerts": "No hay alertas disponibles."
     }
   }
 }

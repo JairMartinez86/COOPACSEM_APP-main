@@ -12,7 +12,7 @@ import { NotificationService } from '../../../core/services/notification.service
 import {
   ActionItem,
   AfiliacionMembresiaRow,
-  AlertItem,
+  SocioAlerts,
   PaginationMeta,
   PlanRow,
   ReportItem,
@@ -62,7 +62,7 @@ export class AhorroComponent implements OnInit {
   solicitudRows: SimpleMovimientoRow[] = [];
   planesRows: PlanRow[] = [];
    afiliacionMembresiaRows: AfiliacionMembresiaRow[] = [];
-  alerts: AlertItem[] = [];
+  alerts: SocioAlerts[] = [];
 
   breadcrumbs = [
     { label: '', url: '/' },
@@ -202,6 +202,8 @@ get orderedActions() {
         this.planesRows = data?.detail?.planes ?? [];
         this.afiliacionMembresiaRows = data?.detail?.afiliacionMembresia ?? [];
         this.alerts = data?.alerts ?? [];
+
+    
 
       },
       error: (error) => {

@@ -1,11 +1,34 @@
 {
   "alerts": {
     "common": {
-      "title": "Alerts"
+      "title": "Alerts",
+      "infoTitle": "Information",
+      "warningTitle": "Warning",
+      "dangerTitle": "Critical alert"
+    },
+    "codes": {
+      "ID_EXPIRED": "Expired identification",
+      "ID_EXPIRED_RECENTLY": "Recently expired identification",
+      "MISSING_IDENTIFICATION": "Missing identification",
+      "SOCIO_INACTIVE": "Inactive member",
+      "MISSING_EMAIL": "Missing email",
+      "MISSING_PHONE": "Missing phone",
+      "NO_ACTIVE_ACCOUNT": "No active account"
     },
     "socios": {
-      "identificationExpiredRecently": "The identification expired {{months}} month ago. Expiration date: {{expirationDate}}.",
-      "identificationExpired": "The identification expired {{months}} months ago. Expiration date: {{expirationDate}}."
+      "identificationExpiredRecently": "The identification expired {{months}} month ago ({{expirationDate}}).",
+      "identificationExpired": "The identification expired {{months}} months ago ({{expirationDate}}).",
+      "missingIdentification": "The member does not have an identification number registered.",
+      "memberInactive": "The member is inactive.",
+      "missingEmail": "The member does not have an email address registered.",
+      "missingPhone": "The member does not have a phone number registered.",
+      "noActiveAccount": "The member does not have an active account."
+    }
+  },
+  "ahorro": {
+    "side": {
+      "alerts": "Alerts",
+      "noAlerts": "No alerts available."
     }
   }
 }

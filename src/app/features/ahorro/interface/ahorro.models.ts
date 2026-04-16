@@ -1,4 +1,3 @@
-import { SocioAlerts } from "../../../shared/interfaces/alert.model";
 
 export type SocioDetalleTab = 'ahorros' | 'retiros' | 'depositos' | 'solicitudes' | 'afiliacion' | 'planes';
 
@@ -87,13 +86,19 @@ export interface PlanRow {
   saldo: number;
 }
 
-export interface AlertItem {
-  socioId: string;
-  color: 'warning' | 'info';
-  titleKey: string;
-  descriptionKey: string;
+export interface SocioAlerts {
+  count: number;
+  hasAlerts: boolean;
+  isExpired: boolean;
+  highestSeverity: 'info' | 'warning' | 'danger';
+  items: SocioAlertItem[];
+}
+
+export interface SocioAlertItem {
   code: string;
-  date?: string | null;
+  messageKey: string;
+  severity: 'info' | 'warning' | 'danger';
+  params?: Record<string, string>;
 }
 
 export interface ReportItem {
@@ -162,5 +167,5 @@ export interface AhorroDashboardResponse {
     solicitudes: SimpleMovimientoRow[];
     planes: PlanRow[];
   };
-  alerts: AlertItem[];
+  alerts: SocioAlerts[];
 }

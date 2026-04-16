@@ -230,9 +230,29 @@
                       </select>
                     </div>
 
+                    
                     <div class="col-md-4" error-notify="numeroIdentificacion" error-display="inline">
-                      <label for="numeroIdentificacion" class="form-label required">{{
-                        'socios.fields.numeroIdentificacion.label' | translate }}</label>
+
+
+                       <label for="numeroIdentificacion" class="form-label d-flex align-items-center gap-1">
+
+                        <span>
+                          {{ 'socios.fields.numeroIdentificacion.label' | translate }}
+                        </span>
+
+                        <span class="text-danger">*</span>
+
+                        @if (socio.numeroIdentificacion == null  || socio.numeroIdentificacion == '') {
+                        <i class="fa-solid fa-triangle-exclamation text-warning ms-1">
+                        </i>
+                        }
+
+                      </label>
+
+
+            
+
+
                       <input #numeroIdentificacion id="numeroIdentificacion" name="numeroIdentificacion"
                         [(ngModel)]="socio.numeroIdentificacion" engineSync="numeroIdentificacion" autoFocusNext
                         [next]="paisEmisor" type="text" class="form-control"

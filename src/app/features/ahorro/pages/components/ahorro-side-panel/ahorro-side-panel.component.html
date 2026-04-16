@@ -31,70 +31,67 @@
     </div>
   </div>
 
- @if (selectedSocio) {
-  <div class="card">
-    <div class="card-header">
-      <h5 class="card-title mb-0">{{ 'ahorro.chart.chartTitle' | translate }}</h5>
+  @if (selectedSocio) {
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">{{ 'ahorro.chart.chartTitle' | translate }}</h5>
+      </div>
+
+      <div class="card-body">
+        <apx-chart
+          [series]="chartSeries"
+          [chart]="pieChart"
+          [labels]="pieLabels"
+          [colors]="pieColors"
+          [legend]="pieLegend"
+          [dataLabels]="pieDataLabels"
+          [tooltip]="pieTooltip"
+          [responsive]="pieResponsive">
+        </apx-chart>
+      </div>
     </div>
-
-    <div class="card-body">
-
-
-      <apx-chart
-        [series]="chartSeries"
-        [chart]="pieChart"
-        [labels]="pieLabels"
-        [colors]="pieColors"
-        [legend]="pieLegend"
-        [dataLabels]="pieDataLabels"
-        [tooltip]="pieTooltip"
-        [responsive]="pieResponsive">
-      </apx-chart>
-    </div>
-  </div>
-}
+  }
 
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center gap-2">
         <h5 class="card-title mb-0">{{ 'ahorro.side.alerts' | translate }}</h5>
-        <span class="badge badge-soft-warning">{{ alerts.length }}</span>
+        <span class="badge badge-soft-warning">{{ alerts?.count ?? 0 }}</span>
       </div>
     </div>
 
     <div class="card-body">
       <div class="d-flex flex-column gap-3">
 
-        @for (item of alerts; track $index) {
+        @for (item of alertItems; track $index) {
           <div class="d-flex align-items-start gap-3">
             <span
               class="badge rounded-pill d-inline-flex align-items-center justify-content-center"
-              [ngClass]="item.color === 'warning' ? 'badge-soft-warning' : 'badge-soft-info'">
+              [ngClass]="getAlertBadgeClass(item.severity)">
               <i
                 class="fa-solid"
-                [class.fa-triangle-exclamation]="item.color === 'warning'"
-                [class.fa-circle-info]="item.color === 'info'">
+                [class]="getAlertIcon(item.severity)">
               </i>
             </span>
 
             <div class="flex-grow-1">
               <div class="d-flex justify-content-between align-items-start gap-2">
-                <strong>{{ item.titleKey | translate }}</strong>
-                <span class="text-muted small">{{ item.code }}</span>
+                <strong>{{ 'alerts.common.title' | translate }}</strong>
+                <span class="text-muted small"> {{ ('alerts.codes.' + item.code) | translate }}</span>
               </div>
 
               <p class="text-muted small mb-1">
-                {{ item.descriptionKey | translate }}
+                {{ item.messageKey | translate:item.params }}
               </p>
 
-              @if (item.date) {
-                <small class="text-muted">{{ item.date }}</small>
+              @if (item.params && item.params['expirationDate']) {
+                <small class="text-muted">{{ item.params['expirationDate'] }}</small>
               }
             </div>
           </div>
         }
 
-        @if (alerts.length === 0) {
+        @if (!alertItems.length) {
           <div class="text-muted small">
             {{ 'ahorro.side.noAlerts' | translate }}
           </div>
@@ -133,4 +130,3 @@
     </div>
   </div>
 </div>
-

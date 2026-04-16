@@ -3,7 +3,6 @@ import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   ActionItem,
-  AlertItem,
   PlanRow,
   ReportItem,
   SocioDetail
@@ -24,6 +23,21 @@ import {
 } from 'ng-apexcharts';
 import { Subscription } from 'rxjs';
 
+export interface SocioAlertItem {
+  code: string;
+  messageKey: string;
+  severity: 'info' | 'warning' | 'danger';
+  params?: Record<string, string>;
+}
+
+export interface SocioAlerts {
+  count: number;
+  hasAlerts: boolean;
+  isExpired: boolean;
+  highestSeverity: 'info' | 'warning' | 'danger';
+  items: SocioAlertItem[];
+}
+
 @Component({
   selector: 'app-ahorro-side-panel',
   standalone: true,
@@ -38,16 +52,12 @@ import { Subscription } from 'rxjs';
 })
 export class AhorroSidePanelComponent implements OnInit, OnDestroy {
   @Input() actions: ActionItem[] = [];
-  @Input() alerts: AlertItem[] = [];
+  @Input() alerts: SocioAlerts | null = null;
   @Input() reports: ReportItem[] = [];
   @Input() planesRows: PlanRow[] = [];
   @Input() selectedSocio: SocioDetail | null = null;
 
   private langChangeSub?: Subscription;
-
-  get navidenaRows(): PlanRow[] {
-    return (this.planesRows || []).filter(x => x.tipoCuenta === 'Navidena');
-  }
 
   private readonly router = inject(Router);
   private readonly appConfigService = inject(AppConfigService);
@@ -55,6 +65,14 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
   private readonly translate = inject(TranslateService);
 
   public pieLabels: string[] = [];
+
+  get navidenaRows(): PlanRow[] {
+    return (this.planesRows || []).filter(x => x.tipoCuenta === 'Navidena');
+  }
+
+  get alertItems(): SocioAlertItem[] {
+    return this.alerts?.items ?? [];
+  }
 
   ngOnInit(): void {
     this.setLabels();
@@ -132,8 +150,28 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
     })}`;
   }
 
-  onActionClick(action: ActionItem): void {
+  getAlertBadgeClass(severity: 'info' | 'warning' | 'danger'): string {
+    switch (severity) {
+      case 'danger':
+        return 'badge-soft-danger';
+      case 'warning':
+        return 'badge-soft-warning';
+      default:
+        return 'badge-soft-info';
+    }
+  }
 
+  getAlertIcon(severity: 'info' | 'warning' | 'danger'): string {
+    switch (severity) {
+      case 'danger':
+      case 'warning':
+        return 'fa-triangle-exclamation';
+      default:
+        return 'fa-circle-info';
+    }
+  }
+
+  onActionClick(action: ActionItem): void {
     if (this.selectedSocio == null) {
       this.notify.show(
         this.translate.instant('ahorro.messages.selectRequired'),
@@ -152,7 +190,6 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
       return;
     }
 
-
     if (!this.selectedSocio.cuentaCorrienteActiva) {
       this.notify.show(
         this.translate.instant('socios.messages.noActiveCurrentAccount'),
@@ -161,7 +198,6 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
       );
       return;
     }
-
 
     switch (action.titleKey) {
       case 'ahorro.actions.newDeposit':
@@ -193,6 +229,4 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
   get orderedActions() {
     return [...this.actions].sort((a, b) => a.order - b.order);
   }
-
-
 }
