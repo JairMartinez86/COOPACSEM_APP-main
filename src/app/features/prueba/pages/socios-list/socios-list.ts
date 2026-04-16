@@ -20,7 +20,6 @@ import { PermissionService } from '../../../../core/services/permission.service'
 import { AppConfigService } from '../../../../core/services/app-config.service';
 import { SocioAlerts } from '../../../../shared/interfaces/alert.model';
 
-
 interface SocioMovimientoRow {
   fecha?: string | null;
   descripcion?: string | null;
@@ -40,7 +39,6 @@ interface SocioDashboardRow {
 
 interface SocioRow {
   id: string;
-
   codigoSocio: string;
   nombreCompleto: string;
   nombrePublico: string;
@@ -88,11 +86,11 @@ export class SociosListComponent implements OnInit, OnDestroy {
   private readonly filterKey = 'socios';
 
   public importingExcel = false;
-  sociosAll: SocioRow[] = [];
   socios: SocioRow[] = [];
   loading = false;
   currentTerm = '';
   selectedSocio: SocioRow | null = null;
+  totalRecords = 0;
 
   globalDashboard: any = {
     totalAhorro: 0,
@@ -101,12 +99,9 @@ export class SociosListComponent implements OnInit, OnDestroy {
     aprobacionesPendientes: 0
   };
 
-
-
-
   currentPage = 1;
   pageSize = 20;
-  readonly pageSizeOptions = [10, 20, 50];
+  readonly pageSizeOptions = [10, 20, 50, 100];
 
   breadcrumbs = [
     { label: '', url: '' },
@@ -117,8 +112,9 @@ export class SociosListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subs.add(
       this.filterSvc.query$(this.filterKey).subscribe(query => {
-        this.currentTerm = (query || '').trim().toLowerCase();
-        this.applyFilter();
+        this.currentTerm = (query || '').trim();
+        this.currentPage = 1;
+        this.loadData();
       })
     );
 
@@ -148,7 +144,6 @@ export class SociosListComponent implements OnInit, OnDestroy {
           proximoRetiro: Number(data?.proximoRetiro ?? 0),
           aprobacionesPendientes: Number(data?.aprobacionesPendientes ?? 0)
         };
-
       },
       error: () => {
         this.globalDashboard = {
@@ -161,17 +156,31 @@ export class SociosListComponent implements OnInit, OnDestroy {
     });
   }
 
-
   loadData(): void {
     this.loading = true;
 
-    this.sociosService.getAll()
+    this.sociosService.getAll(this.currentPage, this.pageSize, this.currentTerm)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (res: any) => {
-          const raw = Array.isArray(res?.data?.socios) ? res.data.socios : [];
-          this.sociosAll = raw.map((item: any) => this.normalizeSocio(item));
-          this.applyFilter();
+          const data = res?.data ?? {};
+          const raw = Array.isArray(data?.items) ? data.items : [];
+
+          this.socios = raw.map((item: any) => this.normalizeSocio(item));
+          this.totalRecords = Number(data?.totalRecords ?? 0);
+
+          if (!this.socios.length) {
+            this.selectedSocio = null;
+            return;
+          }
+
+          if (!this.selectedSocio) {
+            this.selectedSocio = this.socios[0] ?? null;
+            return;
+          }
+
+          const selected = this.socios.find(x => x.id === this.selectedSocio?.id);
+          this.selectedSocio = selected ?? this.socios[0] ?? null;
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -179,47 +188,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private applyFilter(): void {
-    const term = this.currentTerm;
-
-    this.socios = !term
-      ? [...this.sociosAll]
-      : this.sociosAll.filter((socio) =>
-        [
-          socio.codigoSocio ?? '',
-          socio.nombreCompleto ?? '',
-          socio.nombrePublico ?? '',
-          socio.numeroIdentificacion ?? '',
-          socio.correo ?? '',
-          socio.telefono ?? '',
-          socio.celular ?? '',
-          socio.direccionDomiciliar ?? '',
-          socio.activo ? 'activo' : 'inactivo'
-        ]
-          .join(' ')
-          .toLowerCase()
-          .includes(term)
-      );
-
-    this.currentPage = 1;
-
-    if (!this.socios.length) {
-      this.selectedSocio = null;
-      return;
-    }
-
-    if (!this.selectedSocio) {
-      this.selectedSocio = this.pagedSocios[0] ?? this.socios[0];
-      return;
-    }
-
-    const selected = this.socios.find(x => x.id === this.selectedSocio?.id);
-    this.selectedSocio = selected ?? this.pagedSocios[0] ?? this.socios[0];
-  }
-
   selectSocio(item: SocioRow): void {
     if (item.alerts?.count > 0) {
-
       const type =
         item.alerts.highestSeverity === 'danger'
           ? 'error'
@@ -232,18 +202,15 @@ export class SociosListComponent implements OnInit, OnDestroy {
       );
 
       this.translate.get('alerts.common.title').subscribe(title => {
-
         if (observables.length === 0) {
           this.notify.show('', title, type);
           return;
         }
 
-        // combinar todas las traducciones
         forkJoin(observables).subscribe(messages => {
           const message = messages.join('\n');
           this.notify.show(message, title, type);
         });
-
       });
     }
 
@@ -378,39 +345,32 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   get totalPages(): number {
-    return Math.max(1, Math.ceil(this.socios.length / this.pageSize));
+    return this.totalRecords > 0
+      ? Math.ceil(this.totalRecords / this.pageSize)
+      : 0;
   }
-
-  get pagedSocios(): SocioRow[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.socios.slice(start, start + this.pageSize);
-  }
-
-
 
   get visibleStart(): number {
-    if (!this.socios.length) return 0;
+    if (!this.totalRecords) return 0;
     return (this.currentPage - 1) * this.pageSize + 1;
   }
 
   get visibleEnd(): number {
-    return Math.min(this.currentPage * this.pageSize, this.socios.length);
+    return Math.min(this.currentPage * this.pageSize, this.totalRecords);
   }
 
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages || page === this.currentPage) return;
-    this.currentPage = page;
 
-    if (this.selectedSocio && !this.pagedSocios.some(x => x.id === this.selectedSocio?.id)) {
-      this.selectedSocio = this.pagedSocios[0] ?? null;
-    }
+    this.currentPage = page;
+    this.loadData();
   }
 
   changePageSize(event: Event): void {
-    const size = Number((event.target as HTMLSelectElement).value || 10);
+    const size = Number((event.target as HTMLSelectElement).value || 20);
     this.pageSize = size;
     this.currentPage = 1;
-    this.selectedSocio = this.pagedSocios[0] ?? this.socios[0] ?? null;
+    this.loadData();
   }
 
   formatDate(value?: string | null): string {
@@ -444,18 +404,21 @@ export class SociosListComponent implements OnInit, OnDestroy {
     let integerPart = parts[0];
     const decimalPart = parts[1];
 
-    // agregar separador de miles manual
     integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
 
     return `${integerPart}${decimalSeparator}${decimalPart}`;
   }
 
-
-
   private normalizeSocio(item: any): SocioRow {
     return {
       id: item?.id ?? '',
-      alerts: item?.alerts ?? 0,
+      alerts: item?.alerts ?? {
+        count: 0,
+        hasAlerts: false,
+        isExpired: false,
+        highestSeverity: 'info',
+        items: []
+      },
       codigoSocio: item?.codigoSocio ?? '',
       nombreCompleto: item?.nombreCompleto ?? '',
       nombrePublico: item?.nombrePublico ?? '',
@@ -465,8 +428,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
       celular: item?.celular ?? '',
       direccionDomiciliar: item?.direccionDomiciliar ?? null,
       fechaIngreso: item?.fechaIngreso ?? null,
-      cuentaCorrienteActiva: item?.cuentaCorrienteActiva ?? null,
-      cuentaNavidenaActiva: item?.cuentaNavidenaActiva ?? null,
+      cuentaCorrienteActiva: !!item?.cuentaCorrienteActiva,
+      cuentaNavidenaActiva: !!item?.cuentaNavidenaActiva,
       activo: !!item?.activo,
       createdAtUtc: item?.createdAtUtc ?? null,
       updatedAtUtc: item?.updatedAtUtc ?? null,
@@ -479,13 +442,13 @@ export class SociosListComponent implements OnInit, OnDestroy {
         aprobacionesPendientes: Number(item?.dashboard?.aprobacionesPendientes ?? 0),
         ultimosMovimientos: Array.isArray(item?.dashboard?.ultimosMovimientos)
           ? item.dashboard.ultimosMovimientos.map((mov: any) => ({
-            fecha: mov?.fecha ?? null,
-            descripcion: mov?.descripcion ?? null,
-            debito: Number(mov?.debito ?? 0),
-            credito: Number(mov?.credito ?? 0),
-            saldo: Number(mov?.saldo ?? 0),
-            tipoCuenta: mov?.tipoCuenta ?? null
-          }))
+              fecha: mov?.fecha ?? null,
+              descripcion: mov?.descripcion ?? null,
+              debito: Number(mov?.debito ?? 0),
+              credito: Number(mov?.credito ?? 0),
+              saldo: Number(mov?.saldo ?? 0),
+              tipoCuenta: mov?.tipoCuenta ?? null
+            }))
           : []
       }
     };
@@ -523,7 +486,6 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   onNuevoAhorro(idSocio: string, cuentaCorrienteActiva: boolean): void {
-
     if (!cuentaCorrienteActiva) {
       this.notify.show(
         this.translate.instant('socios.messages.noActiveCurrentAccount'),
@@ -533,9 +495,6 @@ export class SociosListComponent implements OnInit, OnDestroy {
       return;
     }
 
-
-
-
     this.router.navigate(['/apertura-cuenta-navidena', idSocio]);
   }
 
@@ -544,8 +503,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
     console.log('Nuevo crédito para socio:', id);
   }
 
-  onIncrementoCuota(idSocio: string, cuentaCorrienteActiva: boolean) {
-     if (!cuentaCorrienteActiva) {
+  onIncrementoCuota(idSocio: string, cuentaCorrienteActiva: boolean): void {
+    if (!cuentaCorrienteActiva) {
       this.notify.show(
         this.translate.instant('socios.messages.noActiveCurrentAccount'),
         this.translate.instant('socios.common.info'),
@@ -557,8 +516,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/cambio-cuota/new', idSocio, 'Incremento']);
   }
 
-  onDiminucionCuota(idSocio: string, cuentaCorrienteActiva: boolean) {
-     if (!cuentaCorrienteActiva) {
+  onDiminucionCuota(idSocio: string, cuentaCorrienteActiva: boolean): void {
+    if (!cuentaCorrienteActiva) {
       this.notify.show(
         this.translate.instant('socios.messages.noActiveCurrentAccount'),
         this.translate.instant('socios.common.info'),
@@ -584,5 +543,4 @@ export class SociosListComponent implements OnInit, OnDestroy {
         return destino || '';
     }
   }
-
 }

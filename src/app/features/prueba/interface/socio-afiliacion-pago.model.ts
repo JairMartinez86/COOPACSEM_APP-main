@@ -7,7 +7,7 @@ export interface AfiliacionMembresiaPagoRow {
   montoPagado: number;
   saldo: number;
   fechaPago?: string | null;
-  estado: 'Pagado' | 'Pendiente' | 'Vencido';
+  estado: 'Pagada' | 'Pendiente' | 'Vencido';
   estadoKey: string;
 }
 

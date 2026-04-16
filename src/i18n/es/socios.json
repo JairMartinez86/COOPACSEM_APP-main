@@ -34,7 +34,10 @@
     },
     "messages": {
       "notFound": "No se encontraron datos del socio.",
-      "noActiveCurrentAccount": "El socio no posee una cuenta corriente activa"
+      "noActiveCurrentAccount": "El socio no posee una cuenta corriente activa",
+       "afiliacionLockedByMovements": "La sección de afiliación ya no se puede modificar porque el socio tiene movimientos registrados aparte de la afiliación.",
+      "ahorroLockedByMovements": "La sección de ahorro ya no se puede modificar porque el socio tiene movimientos registrados aparte de la afiliación.",
+      "ahorroNavidenaLockedByYear": "La cuenta navideña no se puede modificar porque el socio ya tiene movimientos registrados para el año {{year}}."
     },
     "statusActions": {
       "deactivateTitle": "Dar de baja socio",

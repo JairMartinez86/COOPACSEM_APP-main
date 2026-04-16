@@ -1,162 +1,156 @@
 <div class="card">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-sm socios-table mb-0">
-                <thead>
-                    <tr>
-                        <th>{{ 'ahorro.tables.socios.code' | translate }}</th>
-                        <th>{{ 'ahorro.tables.socios.member' | translate }}</th>
-                        <th>{{ 'ahorro.tables.common.accountType' | translate }}</th>
-                        <th class="text-end">{{ 'ahorro.tables.socios.saved' | translate }}</th>
-                        <th class="text-end">{{ 'ahorro.tables.socios.withdrawn' | translate }}</th>
-                        <th class="text-end">{{ 'ahorro.tables.socios.deposited' | translate }}</th>
-                        <th>{{ 'ahorro.tables.socios.lastMovement' | translate }}</th>
-                        <th>{{ 'ahorro.tables.socios.actions' | translate }}</th>
-                    </tr>
-                </thead>
+  <div class="card-body p-0">
+    <div class="socios-table-wrapper">
+      <div class="table-responsive socios-table-scroll">
+        <table class="table table-sm socios-table mb-0">
+          <thead>
+            <tr>
+              <th>{{ 'ahorro.tables.socios.code' | translate }}</th>
+              <th>{{ 'ahorro.tables.socios.member' | translate }}</th>
+              <th>{{ 'ahorro.tables.common.accountType' | translate }}</th>
+              <th class="text-end">{{ 'ahorro.tables.socios.saved' | translate }}</th>
+              <th class="text-end">{{ 'ahorro.tables.socios.withdrawn' | translate }}</th>
+              <th class="text-end">{{ 'ahorro.tables.socios.deposited' | translate }}</th>
+              <th>{{ 'ahorro.tables.socios.lastMovement' | translate }}</th>
+              <th>{{ 'ahorro.tables.socios.actions' | translate }}</th>
+            </tr>
+          </thead>
 
-                <tbody>
-                    @for (row of rows; track row.id) {
-                    <tr class="socios-click-row" [class.socios-row-selected]="selectedId === row.id"
-                        (click)="selectSocio(row)">
+          <tbody>
+            @for (row of rows; track row.id) {
+            <tr class="socios-click-row" [class.socios-row-selected]="selectedId === row.id"
+              (click)="selectSocio(row)">
+              <td>
+                <div class="table-user">
+                  <div class="position-relative d-inline-block">
+                    <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
+                      {{ getInitials(row.nombre) }}
+                    </div>
 
-                        <td>
-
-                            <div class="table-user">
-
-                                <div class="position-relative d-inline-block">
-
-                                    <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
-                                        {{ getInitials(row.nombre) }}
-                                    </div>
-
-                                    @if (row.alerts.count) {
-                                    <i class="fa-solid fa-triangle-exclamation text-warning position-absolute top-0 start-100 translate-middle"
-                                        style="font-size: 14px;">
-                                    </i>
-                                    }
-
-                                </div>
-
-                                <div>
-                                    <div>{{ row.codigo || '-' }}</div>
-
-                                    <div>
-                                        <span class="badge"
-                                            [ngClass]="row?.activo ? 'badge-soft-success' : 'badge-soft-danger'">
-                                            <i class="bi bi-check-circle-fill"></i>
-                                            {{ (row?.activo ? 'socioRetiro.status.activo' :
-                                            'socioRetiro.status.inactive') |
-                                            translate }}
-                                        </span>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                        </td>
-
-                        <td>
-                            <div class="table-user-name">{{ row.nombre || '-' }}</div>
-                            <div class="text-muted small">{{ row.documento || '-' }}</div>
-                        </td>
-
-                        <td>
-                            <div class="d-flex flex-wrap gap-1">
-                                @if (row.tieneCuentaCorriente) {
-                                <span class="badge d-inline-flex align-items-center gap-1 badge-soft-success">
-                                    <i class="bi bi-check-circle-fill"></i>
-                                    {{ 'ahorro.accountTypes.current' | translate }}
-                                </span>
-                                }
-
-                                @if (row.tieneCuentaNavidena) {
-                                <span class="badge d-inline-flex align-items-center gap-1 badge-soft-warning">
-                                    <i class="bi bi-check-circle-fill"></i>
-                                    {{ 'ahorro.accountTypes.christmas' | translate }}
-                                </span>
-                                }
-
-                                @if (!row.tieneCuentaCorriente && !row.tieneCuentaNavidena) {
-                                <span class="text-muted small">
-                                    {{ 'ahorro.states.noAccounts' | translate }}
-                                </span>
-                                }
-                            </div>
-                        </td>
-
-                        <td class="text-end">{{ formatCurrency(row.ahorrado) }}</td>
-                        <td class="text-end">{{ formatCurrency(row.retirado) }}</td>
-                        <td class="text-end">{{ formatCurrency(row.depositos) }}</td>
-
-                        <td>
-                            <div>
-                                <div class="fw-semibold">{{ row.ultimoMovimiento || '-' }}</div>
-                                <small class="text-muted">
-                                    {{ row.movimientoTipoKey ? (row.movimientoTipoKey | translate) : '-' }}
-                                </small>
-                            </div>
-                        </td>
-
-                        <td class="text-end">
-                            <div class="table-actions" (click)="$event.stopPropagation()">
-                                <button type="button" class="btn btn-icon btn-sm btn-light"
-                                    (click)="$event.stopPropagation(); selectSocio(row)">
-                                    <button type="button" class="btn btn-icon btn-sm btn-light"
-                                        (click)="$event.stopPropagation(); selectSocio(row)">
-                                        <i class="fa-duotone fa-solid fa-magnifying-glass"></i>
-                                    </button>
-                                </button>
-
-                                <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(row.id)">
-                                    <i class="bi"
-                                        [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'">
-                                    </i>
-                                </button>
-
-
-
-
-                            </div>
-                        </td>
-                    </tr>
+                    @if (row.alerts.count) {
+                    <i class="fa-solid fa-triangle-exclamation text-warning position-absolute top-0 start-100 translate-middle"
+                      style="font-size: 14px;">
+                    </i>
                     }
+                  </div>
 
-                    @if (rows.length === 0) {
-                    <tr>
-                        <td colspan="8" class="text-center text-muted py-3">
-                            {{ 'ahorro.states.noMembers' | translate }}
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                  <div>
+                    <div>{{ row.codigo || '-' }}</div>
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 p-3">
-            <div class="text-muted">
-                {{ 'ahorro.pagination.showing' | translate:{ start: pagination.start, end: pagination.end, total:
-                pagination.total } }}
-            </div>
+                    <div>
+                      <span class="badge" [ngClass]="row?.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                        <i class="bi bi-check-circle-fill"></i>
+                        {{ (row?.activo ? 'socioRetiro.status.activo' : 'socioRetiro.status.inactive') | translate }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </td>
 
-            <ul class="pagination pagination-sm mb-0">
-                <li class="page-item" [class.disabled]="pagination.page <= 1">
-                    <button class="page-link" (click)="goToPage(pagination.page - 1)">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
-                </li>
+              <td>
+                <div class="table-user-name">{{ row.nombre || '-' }}</div>
+                <div class="text-muted small">{{ row.documento || '-' }}</div>
+              </td>
 
-                <li class="page-item active">
-                    <button class="page-link">{{ pagination.page }}</button>
-                </li>
+              <td>
+                <div class="d-flex flex-wrap gap-1">
+                  @if (row.tieneCuentaCorriente) {
+                  <span class="badge d-inline-flex align-items-center gap-1 badge-soft-success">
+                    <i class="bi bi-check-circle-fill"></i>
+                    {{ 'ahorro.accountTypes.current' | translate }}
+                  </span>
+                  }
 
-                <li class="page-item" [class.disabled]="pagination.page >= pagination.totalPages">
-                    <button class="page-link" (click)="goToPage(pagination.page + 1)">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-                </li>
-            </ul>
-        </div>
+                  @if (row.tieneCuentaNavidena) {
+                  <span class="badge d-inline-flex align-items-center gap-1 badge-soft-warning">
+                    <i class="bi bi-check-circle-fill"></i>
+                    {{ 'ahorro.accountTypes.christmas' | translate }}
+                  </span>
+                  }
+
+                  @if (!row.tieneCuentaCorriente && !row.tieneCuentaNavidena) {
+                  <span class="text-muted small">
+                    {{ 'ahorro.states.noAccounts' | translate }}
+                  </span>
+                  }
+                </div>
+              </td>
+
+              <td class="text-end">{{ formatCurrency(row.ahorrado) }}</td>
+              <td class="text-end">{{ formatCurrency(row.retirado) }}</td>
+              <td class="text-end">{{ formatCurrency(row.depositos) }}</td>
+
+              <td>
+                <div>
+                  <div class="fw-semibold">{{ row.ultimoMovimiento || '-' }}</div>
+                  <small class="text-muted">
+                    {{ row.movimientoTipoKey ? (row.movimientoTipoKey | translate) : '-' }}
+                  </small>
+                </div>
+              </td>
+
+              <td class="text-end">
+                <div class="table-actions" (click)="$event.stopPropagation()">
+                  <button type="button" class="btn btn-icon btn-sm btn-light"
+                    (click)="$event.stopPropagation(); selectSocio(row)">
+                    <i class="fa-duotone fa-solid fa-magnifying-glass"></i>
+                  </button>
+
+                  <button type="button" class="btn btn-icon btn-sm btn-light"
+                    (click)="$event.stopPropagation(); onEdit(row.id)">
+                    <i class="bi"
+                      [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'">
+                    </i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            }
+
+            @if (rows.length === 0) {
+            <tr>
+              <td colspan="8" class="text-center text-muted py-3">
+                {{ 'ahorro.states.noMembers' | translate }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 p-3">
+      <div class="text-muted">
+        {{ 'ahorro.pagination.showing' | translate:{ start: pagination.start, end: pagination.end, total: pagination.total } }}
+      </div>
+
+      <ul class="pagination pagination-sm mb-0">
+        <li class="page-item" [class.disabled]="pagination.page <= 1">
+          <button class="page-link" (click)="goToPage(pagination.page - 1)">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+        </li>
+
+        @for (page of pageNumbers; track page) {
+          @if (page === '...') {
+            <li class="page-item disabled">
+              <button class="page-link">...</button>
+            </li>
+          } @else {
+            <li class="page-item" [class.active]="page === pagination.page">
+              <button class="page-link" (click)="goToPage(+page)">
+                {{ page }}
+              </button>
+            </li>
+          }
+        }
+
+        <li class="page-item" [class.disabled]="pagination.page >= pagination.totalPages">
+          <button class="page-link" (click)="goToPage(pagination.page + 1)">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

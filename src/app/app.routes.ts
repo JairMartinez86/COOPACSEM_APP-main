@@ -136,7 +136,7 @@ export const routes: Routes = [
           import('./features/prueba/pages/socios-list/socios-list')
             .then(m => m.SociosListComponent),
         canActivate: [permissionGuard],
-        data: { permission: '/socios', action: 'view', tableFilterKey: 'socios' },
+        data: { permission: '/socios', action: 'view', tableFilterKey: 'socios', tableFilterEnter: true },
         providers: [JMartMassiveValidationService],
       },
       {

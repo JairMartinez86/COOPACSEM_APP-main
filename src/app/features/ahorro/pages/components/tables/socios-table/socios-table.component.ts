@@ -19,9 +19,8 @@ export class SociosTableComponent {
   private readonly appConfigService = inject(AppConfigService);
   public readonly permissionService = inject(PermissionService);
   private readonly router = inject(Router);
-   private readonly translate = inject(TranslateService);
-   private readonly notify = inject(NotificationService);
-
+  private readonly translate = inject(TranslateService);
+  private readonly notify = inject(NotificationService);
 
   @Input() rows: SocioRow[] = [];
   @Input() pagination: PaginationMeta = {
@@ -46,7 +45,11 @@ export class SociosTableComponent {
   }
 
   goToPage(page: number): void {
-    if (page < 1 || page > this.pagination.totalPages || page === this.pagination.page) {
+    if (
+      page < 1 ||
+      page > (this.pagination?.totalPages ?? 0) ||
+      page === this.pagination.page
+    ) {
       return;
     }
 
@@ -66,42 +69,39 @@ export class SociosTableComponent {
 
     return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
   }
-selectSocio(row: SocioRow): void {
 
-  if (row.alerts?.count > 0) {
-  
+  selectSocio(row: SocioRow): void {
+    if (row.alerts?.count > 0) {
+      const type =
+        row.alerts.highestSeverity === 'danger'
+          ? 'error'
+          : row.alerts.highestSeverity === 'warning'
+            ? 'warning'
+            : 'info';
 
-        const type =
-          row.alerts.highestSeverity === 'danger'
-            ? 'error'
-            : row.alerts.highestSeverity === 'warning'
-              ? 'warning'
-              : 'info';
-  
-        const observables = row.alerts.items.map(alert =>
-          this.translate.get(alert.messageKey, alert.params ?? {})
-        );
-  
-        this.translate.get('alerts.common.title').subscribe(title => {
-  
-          if (observables.length === 0) {
-            this.notify.show('', title, type);
-            return;
-          }
-  
-          // combinar todas las traducciones
-          forkJoin(observables).subscribe(messages => {
-            const message = messages.join('\n');
-            this.notify.show(message, title, type);
-          });
-  
+      const observables = row.alerts.items.map(alert =>
+        this.translate.get(alert.messageKey, alert.params ?? {})
+      );
+
+      this.translate.get('alerts.common.title').subscribe(title => {
+        if (observables.length === 0) {
+          this.notify.show('', title, type);
+          this.selectRow.emit(row);
+          return;
+        }
+
+        forkJoin(observables).subscribe(messages => {
+          const message = messages.join('\n');
+          this.notify.show(message, title, type);
+          this.selectRow.emit(row);
         });
-      }
-  
+      });
 
-  this.selectRow.emit(row);
-}
+      return;
+    }
 
+    this.selectRow.emit(row);
+  }
 
   onEdit(id: string): void {
     if (this.permissionService.has('edit', '/socios')) {
@@ -114,10 +114,10 @@ selectSocio(row: SocioRow): void {
     }
   }
 
-  
-    isDarkTheme(): boolean {
+  isDarkTheme(): boolean {
     return document.documentElement.getAttribute('data-theme') === 'dark';
   }
+
   getAvatarStyle(): Record<string, string> {
     if (this.isDarkTheme()) {
       return {};
@@ -130,4 +130,34 @@ selectSocio(row: SocioRow): void {
     };
   }
 
+  get pageNumbers(): (number | string)[] {
+    const total = this.pagination?.totalPages ?? 0;
+    const current = this.pagination?.page ?? 1;
+
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages: (number | string)[] = [];
+    pages.push(1);
+
+    if (current > 3) {
+      pages.push('...');
+    }
+
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (current < total - 2) {
+      pages.push('...');
+    }
+
+    pages.push(total);
+
+    return pages;
+  }
 }

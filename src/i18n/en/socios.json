@@ -34,7 +34,10 @@
     },
     "messages": {
       "notFound": "Member data not found.",
-      "noActiveCurrentAccount": "The member does not have an active current account"
+      "noActiveCurrentAccount": "The member does not have an active current account",
+       "afiliacionLockedByMovements": "The affiliation section can no longer be modified because the member has registered transactions other than affiliation.",
+      "ahorroLockedByMovements": "The savings section can no longer be modified because the member has registered transactions other than affiliation.",
+      "ahorroNavidenaLockedByYear": "The Christmas savings account cannot be modified because the member already has registered transactions for the year {{year}}."
     },
     "statusActions": {
       "deactivateTitle": "Deactivate member",

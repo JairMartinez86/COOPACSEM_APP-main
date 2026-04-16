@@ -27,7 +27,7 @@
                   <td>{{ formatCurrency(row.monto) }}</td>
                   <td>
                     <span class="badge"
-                      [ngClass]="row.estado === 'Pagado'
+                      [ngClass]="row.estado === 'Pagada'
                         ? 'badge-soft-success'
                         : row.estado === 'Vencido'
                         ? 'badge-soft-danger'
@@ -82,7 +82,7 @@
                   <td>{{ formatCurrency(row.monto) }}</td>
                   <td>
                     <span class="badge"
-                      [ngClass]="row.estado === 'Pagado'
+                      [ngClass]="row.estado === 'Pagada'
                         ? 'badge-soft-success'
                         : row.estado === 'Vencido'
                         ? 'badge-soft-danger'

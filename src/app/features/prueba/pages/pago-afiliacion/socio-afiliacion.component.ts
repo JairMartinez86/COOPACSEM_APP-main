@@ -324,7 +324,7 @@ private applyPreviewPaymentToRow(
         ...row,
         montoPagado: cuota,
         saldo: 0,
-        estado: 'Pagado',
+        estado: 'Pagada',
         estadoKey: 'ahorro.status.paid'
       },
       restante: restanteDisponible
@@ -337,7 +337,7 @@ private applyPreviewPaymentToRow(
         ...row,
         montoPagado: pagadoActual,
         saldo: saldoActual,
-        estado: saldoActual <= 0 ? 'Pagado' : 'Pendiente',
+        estado: saldoActual <= 0 ? 'Pagada' : 'Pendiente',
         estadoKey: saldoActual <= 0 ? 'ahorro.status.paid' : 'ahorro.status.pending'
       },
       restante: restanteDisponible
@@ -350,8 +350,8 @@ private applyPreviewPaymentToRow(
   const nuevoMontoPagado = pagadoActual + abono;
   const nuevoSaldo = Math.max(0, cuota - nuevoMontoPagado);
 
-  const nuevoEstado: 'Pagado' | 'Pendiente' =
-    nuevoSaldo <= 0 ? 'Pagado' : 'Pendiente';
+  const nuevoEstado: 'Pagada' | 'Pendiente' =
+    nuevoSaldo <= 0 ? 'Pagada' : 'Pendiente';
 
   const nuevoEstadoKey =
     nuevoSaldo <= 0 ? 'ahorro.status.paid' : 'ahorro.status.pending';

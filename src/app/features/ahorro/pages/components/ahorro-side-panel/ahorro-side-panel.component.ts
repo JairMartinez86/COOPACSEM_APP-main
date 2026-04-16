@@ -5,6 +5,7 @@ import {
   ActionItem,
   PlanRow,
   ReportItem,
+  SocioAlerts,
   SocioDetail
 } from '../../../interface/ahorro.models';
 import { Router } from '@angular/router';
@@ -30,13 +31,6 @@ export interface SocioAlertItem {
   params?: Record<string, string>;
 }
 
-export interface SocioAlerts {
-  count: number;
-  hasAlerts: boolean;
-  isExpired: boolean;
-  highestSeverity: 'info' | 'warning' | 'danger';
-  items: SocioAlertItem[];
-}
 
 @Component({
   selector: 'app-ahorro-side-panel',

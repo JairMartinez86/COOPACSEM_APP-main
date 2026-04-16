@@ -110,7 +110,14 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   public readonly permissionService = inject(PermissionService)
   fileService = inject(FileManagerService);
 
-    fileManagerConfig = {
+  public bloquearSeccionAfiliacion = false;
+  public bloquearAhorroCorriente = false;
+  public bloquearAhorroNavidena = false;
+  public bloquearSeccionAhorro = false;
+  public anioNavideno: number | null = null;
+
+
+  fileManagerConfig = {
     entityId: null as string | null,
     rootFolder: 'socios',
   };
@@ -248,7 +255,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadBreadcrumbs();
     this.loadCatalogos();
 
-   
+
 
     this.subs.add(
       this.translate.onLangChange.subscribe(() => {
@@ -262,12 +269,12 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-    private syncFileManagerConfig(): void {
+  private syncFileManagerConfig(): void {
     this.fileManagerConfig = {
       ...this.fileManagerConfig,
       entityId: this.socio?.codigoSocio ?? null,
 
-     
+
     };
   }
 
@@ -431,6 +438,12 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.formRef?.form.markAsPristine();
     this.formRef?.form.markAsUntouched();
 
+    this.bloquearSeccionAfiliacion = false;
+    this.bloquearAhorroCorriente = false;
+    this.bloquearAhorroNavidena = false;
+    this.bloquearSeccionAhorro = false;
+    this.anioNavideno = null;
+
     this.cdr.detectChanges();
 
     setTimeout(() => {
@@ -518,6 +531,12 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     const id = this.route.snapshot.paramMap.get('id');
     const url = this.router.url.toLowerCase();
 
+    this.bloquearSeccionAfiliacion = false;
+    this.bloquearAhorroCorriente = false;
+    this.bloquearAhorroNavidena = false;
+    this.bloquearSeccionAhorro = false;
+    this.anioNavideno = null;
+
     this.socioId = id;
     this.loadBreadcrumbs();
 
@@ -567,7 +586,13 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
           socioApi.cuentaCorrienteFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaCorrienteFechaInicioDeduccion);
           socioApi.cuentaNavidenaFechaInicioDeduccion = this.appConfigService.formatDate(socioApi.cuentaNavidenaFechaInicioDeduccion);
 
-
+          this.bloquearSeccionAfiliacion = !!socioApi?.bloquearSeccionAfiliacion;
+          this.bloquearAhorroCorriente = !!socioApi?.bloquearAhorroCorriente;
+          this.bloquearAhorroNavidena = !!socioApi?.bloquearAhorroNavidena;
+          this.bloquearSeccionAhorro = !!socioApi?.bloquearSeccionAhorro;
+          this.anioNavideno = socioApi?.anioNavideno != null
+            ? Number(socioApi.anioNavideno)
+            : null;
 
 
           this.FechaCreacion = socioApi.createdAtUtc;
@@ -1234,49 +1259,49 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.activeSection = current;
   }
 
- private updateActiveSectionFromEvent(event: Event): void {
-  if (!this.isBrowser) return;
+  private updateActiveSectionFromEvent(event: Event): void {
+    if (!this.isBrowser) return;
 
-  const target = event.target as HTMLElement | null;
-  if (!target) return;
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
 
-  // Si está abierto el modal de beneficiarios y el evento fue dentro del modal,
-  // mantener beneficiarios activo
-  const modal =
-    target.closest('.beneficiario-modal') ||
-    target.closest('.modal') ||
-    target.closest('[data-beneficiario-modal="true"]');
+    // Si está abierto el modal de beneficiarios y el evento fue dentro del modal,
+    // mantener beneficiarios activo
+    const modal =
+      target.closest('.beneficiario-modal') ||
+      target.closest('.modal') ||
+      target.closest('[data-beneficiario-modal="true"]');
 
-  if (this.beneficiarioModalOpen && modal) {
-    this.activeSection = 'beneficiarios';
-    return;
+    if (this.beneficiarioModalOpen && modal) {
+      this.activeSection = 'beneficiarios';
+      return;
+    }
+
+    // Caso especial: cualquier interacción dentro del file manager
+    const fileManagerRoot =
+      target.closest('#file-manager') ||
+      target.closest('[data-section-root="file-manager"]') ||
+      target.closest('.fm-shell');
+
+    if (fileManagerRoot) {
+      this.activeSection = 'file-manager';
+      return;
+    }
+
+    // Para el resto de secciones, aceptar clicks/focus sobre casi cualquier elemento interactivo
+    const interactive = target.closest(
+      'input, select, textarea, button, a, label, .form-check, .form-switch, .choices, .choices__inner, .choices__item, .choices__list, .card, .card-body, .card-header'
+    );
+
+    if (!interactive) return;
+
+    const section = target.closest('.socio-scroll-section') as HTMLElement | null;
+    if (!section?.id) return;
+
+    if (this.sections.includes(section.id)) {
+      this.activeSection = section.id;
+    }
   }
-
-  // Caso especial: cualquier interacción dentro del file manager
-  const fileManagerRoot =
-    target.closest('#file-manager') ||
-    target.closest('[data-section-root="file-manager"]') ||
-    target.closest('.fm-shell');
-
-  if (fileManagerRoot) {
-    this.activeSection = 'file-manager';
-    return;
-  }
-
-  // Para el resto de secciones, aceptar clicks/focus sobre casi cualquier elemento interactivo
-  const interactive = target.closest(
-    'input, select, textarea, button, a, label, .form-check, .form-switch, .choices, .choices__inner, .choices__item, .choices__list, .card, .card-body, .card-header'
-  );
-
-  if (!interactive) return;
-
-  const section = target.closest('.socio-scroll-section') as HTMLElement | null;
-  if (!section?.id) return;
-
-  if (this.sections.includes(section.id)) {
-    this.activeSection = section.id;
-  }
-}
 
   private updateWizardAffix(): void {
     if (!this.isBrowser || !this.wizardSlotRef || !this.wizardCardRef) return;
@@ -1464,7 +1489,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.removeOrphanChoicesWrapper(element);
 
-  //  element.disabled = !this.socio.departamentoId;
+    //  element.disabled = !this.socio.departamentoId;
 
     this.municipioChoices = new Choices(element, {
       searchEnabled: true,
