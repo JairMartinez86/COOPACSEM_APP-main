@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, NgZone, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -81,6 +81,8 @@ export class SocioAfiliacionPagoComponent implements OnInit, OnDestroy {
   private readonly socioAfiliacionService = inject(SocioAfiliacioPagoService);
   private readonly socioAhorroService = inject(SocioAhorroService);
   private readonly engine = inject(JMartMassiveValidationService);
+  private readonly cd = inject(ChangeDetectorRef);
+private readonly zone = inject(NgZone);
 
   public notify = inject(NotificationService);
   public appConfigService = inject(AppConfigService);
@@ -231,32 +233,52 @@ excedenteAhorro = 0;
   // =============================
   // DATA
   // =============================
- loadDetail(socioId: string): void {
+loadDetail(socioId: string): void {
   this.loading = true;
 
   this.socioAfiliacionService.getDetail(socioId, true)
-    .pipe(finalize(() => (this.loading = false)))
+    .pipe(finalize(() => {
+      this.zone.run(() => {
+        this.loading = false;
+        this.cd.detectChanges();
+      });
+    }))
     .subscribe({
       next: (res: any) => {
-        const data = res?.data ?? {};
-        this.socio = data?.socio ?? null;
+        this.zone.run(() => {
+          const data = res?.data ?? {};
 
-        this.originalAfiliacionRows = (data?.detail?.afiliacion ?? []).map((x: AfiliacionMembresiaPagoRow) => ({ ...x }));
-        this.originalMembresiaRows = (data?.detail?.membresia ?? []).map((x: AfiliacionMembresiaPagoRow) => ({ ...x }));
+          this.socio = data?.socio ?? null;
 
-        this.rebuildPreviewTables();
+          this.originalAfiliacionRows = [...(data?.detail?.afiliacion ?? [])]
+            .map((x: AfiliacionMembresiaPagoRow) => ({ ...x }));
+
+          this.originalMembresiaRows = [...(data?.detail?.membresia ?? [])]
+            .map((x: AfiliacionMembresiaPagoRow) => ({ ...x }));
+
+          this.rebuildPreviewTables();
+
+          this.afiliacionRows = [...this.afiliacionRows];
+          this.membresiaRows = [...this.membresiaRows];
+
+          this.cd.detectChanges();
+        });
       },
       error: (err) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-        this.socio = null;
-        this.originalAfiliacionRows = [];
-        this.originalMembresiaRows = [];
-        this.afiliacionRows = [];
-        this.membresiaRows = [];
-        this.excedenteAhorro = 0;
+        this.zone.run(() => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+          this.socio = null;
+          this.originalAfiliacionRows = [];
+          this.originalMembresiaRows = [];
+          this.afiliacionRows = [];
+          this.membresiaRows = [];
+          this.excedenteAhorro = 0;
+          this.cd.detectChanges();
+        });
       }
     });
 }
+
 
 private rebuildPreviewTables(): void {
   const montoIngresado = Number(this.pago.monto ?? 0);
