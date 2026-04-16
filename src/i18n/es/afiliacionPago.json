@@ -2,6 +2,10 @@
   "socioAfiliacionPago": {
     "title": "Pago de afiliación y membresía",
     "subtitle": "Registro de pagos aplicados a cuotas del socio.",
+     "status": {
+       "activo": "Activo",
+      "inactive": "Inactivo"
+    },
     "sections": {
       "socio": "Datos del socio",
       "detail": "Detalle del pago",
@@ -61,6 +65,12 @@
         "title": "Membresía"
       }
      
+    },
+     "messages": {
+      "remainingAmountWillBeSaved": {
+        "title": "Monto excedente detectado",
+        "description": "El monto restante de {{currency}} {{amount}} se registrará como depósito de ahorro aplicado a la cuenta corriente."
+      }
     },
      "form": {
         "fieldMeta": {

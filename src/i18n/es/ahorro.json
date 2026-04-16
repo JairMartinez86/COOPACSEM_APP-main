@@ -175,8 +175,13 @@
       "interests": "Intereses"
     }
     },
+    "messages": {
+      "selectRequired": "Seleccione un socio",
+      "inactive": "El socio está inactivo"
+    },
     "common": {
-      "close": "Cerrar"
+      "close": "Cerrar",
+       "info": "Información"
     },
     "breadcrumbs": [
       {

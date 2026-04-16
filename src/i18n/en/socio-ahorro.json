@@ -22,7 +22,8 @@
       "history": "Deposit history"
     },
     "status": {
-      "activo": "Active"
+      "activo": "Active",
+      "inactive": "Inactive"
     },
     "fields": {
       "codigo": "Code",

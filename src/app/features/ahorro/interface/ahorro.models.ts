@@ -136,6 +136,7 @@ export interface SocioDetail {
   totalAhorro: number;
   totalRetirado: number;
   totalDepositado: number;
+  activo : boolean;
 }
 
 export interface AhorroDashboardResponse {

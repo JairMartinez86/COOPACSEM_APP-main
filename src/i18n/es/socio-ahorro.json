@@ -20,8 +20,10 @@
       "detail": "Detalle del depósito",
       "history": "Historial de depósitos"
     },
-     "status": {
-    "activo": "Activo"
+   "status": {
+      "activo": "Activo",
+      "inactive": "Inactivo"
+   
   },
     "fields": {
       "codigo": "Código",

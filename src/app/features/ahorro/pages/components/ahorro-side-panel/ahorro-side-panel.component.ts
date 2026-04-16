@@ -134,9 +134,21 @@ export class AhorroSidePanelComponent implements OnInit, OnDestroy {
 
   onActionClick(action: ActionItem): void {
 
-
     if (this.selectedSocio == null) {
-      this.notify.show('Seleccione un socio', 'Información', 'info');
+      this.notify.show(
+        this.translate.instant('ahorro.messages.selectRequired'),
+        this.translate.instant('ahorro.common.info'),
+        'warning'
+      );
+      return;
+    }
+
+    if (!this.selectedSocio.activo) {
+      this.notify.show(
+        this.translate.instant('ahorro.messages.inactive'),
+        this.translate.instant('ahorro.common.info'),
+        'warning'
+      );
       return;
     }
 

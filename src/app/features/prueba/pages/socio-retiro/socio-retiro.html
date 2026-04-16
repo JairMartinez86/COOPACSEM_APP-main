@@ -32,10 +32,14 @@
                                 {{ 'socioRetiro.fields.estado' | translate }}
                             </small>
 
-                            <span class="badge badge-soft-success d-flex align-items-center gap-1">
+                            <span class="badge" [ngClass]="socio?.activo ? 'badge-soft-success' : 'badge-soft-danger'">
                                 <i class="bi bi-check-circle-fill"></i>
-                                {{ 'socioRetiro.status.activo' | translate }}
+                                {{ (socio?.activo ? 'socioRetiro.status.activo' : 'socioRetiro.status.inactive') |
+                                translate }}
                             </span>
+
+
+
                         </div>
                     </div>
 
@@ -503,7 +507,7 @@
                             </div>
                         </div>
 
-                                  <div class="socios-summary-strip socios-summary-strip--retirado mb-2">
+                        <div class="socios-summary-strip socios-summary-strip--retirado mb-2">
                             <div class="socios-summary-strip__label">
                                 {{ 'socioRetiro.summary.totalWithdrawn' | translate }}
                             </div>

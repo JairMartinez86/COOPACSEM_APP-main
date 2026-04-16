@@ -34,7 +34,7 @@
 
               <span class="badge" [ngClass]="socio?.activo ? 'badge-soft-success' : 'badge-soft-danger'">
                 <i class="bi bi-check-circle-fill"></i>
-                {{ (socio?.activo ? 'socioAhorro.status.activo' : 'common.inactive') | translate }}
+                {{ (socio?.activo ? 'socioAfiliacionPago.status.activo' : 'socioAfiliacionPago.status.inactive') | translate }}
               </span>
             </div>
           </div>
@@ -107,8 +107,9 @@
                     {{ appConfigService.getCurrentSettings().currency }}
                   </span>
 
-                  <input #Monto type="text" class="form-control text-center" [(ngModel)]="pago.monto" id="Monto"
-                    name="Monto" engineSync="Monto" autoFocusNext [next]="BancoCodigo" numberFormat [decimals]="2"
+                  <input #Monto type="text" class="form-control text-center" [(ngModel)]="pago.monto"
+                    (ngModelChange)="onMontoChange()" id="Monto" name="Monto" engineSync="Monto" autoFocusNext
+                    [next]="BancoCodigo" numberFormat [decimals]="2"
                     [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                     [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" JmartAutoFocus />
                 </div>
@@ -176,6 +177,20 @@
 
             </div>
           </form>
+          @if (excedenteAhorro > 0) {
+          <div class="alert alert-warning mt-3 mb-0">
+            <div class="fw-semibold">
+              {{ 'socioAfiliacionPago.messages.remainingAmountWillBeSaved.title' | translate }}
+            </div>
+            <div>
+              {{
+              'socioAfiliacionPago.messages.remainingAmountWillBeSaved.description'
+              | translate:{ amount: formatCurrency(excedenteAhorro), currency:
+              appConfigService.getCurrentSettings().currency }
+              }}
+            </div>
+          </div>
+          }
         </div>
 
         <!-- TABLAS -->
@@ -235,17 +250,17 @@
           <div class="card-body">
 
             <div class="socios-summary-strip socios-summary-strip--credito mb-2">
-                            <div class="socios-summary-strip__label">
-                                {{ 'socioRetiro.summary.activeCredit' | translate }}
-                            </div>
-                            <div class="socios-summary-strip__value">
-                                {{ appConfigService.getCurrentSettings().currency }}
-                                {{ formatCurrency(socio?.dashboard?.creditoPendiente) }}
-                            </div>
-                        </div>
+              <div class="socios-summary-strip__label">
+                {{ 'socioRetiro.summary.activeCredit' | translate }}
+              </div>
+              <div class="socios-summary-strip__value">
+                {{ appConfigService.getCurrentSettings().currency }}
+                {{ formatCurrency(socio?.dashboard?.creditoPendiente) }}
+              </div>
+            </div>
 
 
-        
+
           </div>
         </div>
 

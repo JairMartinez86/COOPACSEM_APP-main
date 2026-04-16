@@ -7,6 +7,10 @@
       "detail": "Payment Details",
       "history": "Installments"
     },
+     "status": {
+       "activo": "Active",
+      "inactive": "Inactive"
+    },
     "fields": {
       "estado": "Status",
       "codigo": "Code",
@@ -59,6 +63,12 @@
     "membership": {
       "plans": {
         "title": "Membership"
+      }
+    },
+     "messages": {
+      "remainingAmountWillBeSaved": {
+        "title": "Excess amount detected",
+        "description": "The remaining amount of {{currency}} {{amount}} will be recorded as a savings deposit applied to the current account."
       }
     },
     "form": {

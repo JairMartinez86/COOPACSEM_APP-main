@@ -57,6 +57,7 @@ interface SocioResumen {
     totalRetirado?: number;
     saldoActual?: number;
     indemnizacionEstimada?: number;
+    activo : boolean;
     dashboard?: SocioDashboard | null;
 }
 
@@ -320,6 +321,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
                         totalRetirado: Number(data?.totalRetirado ?? 0),
                         saldoActual: Number(data?.saldoActual ?? 0),
                         indemnizacionEstimada: Number(data?.indemnizacionEstimada ?? 0),
+                        activo: data?.activo ?? false,
 
                         dashboard: {
                             totalAhorro: Number(data?.dashboard?.totalAhorro ?? 0),

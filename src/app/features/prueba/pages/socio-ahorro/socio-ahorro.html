@@ -33,10 +33,12 @@
                                 {{ 'socioAhorro.fields.estado' | translate }}
                             </small>
 
-                            <span class="badge badge-soft-success d-flex align-items-center gap-1">
-                                <i class="bi bi-check-circle-fill"></i>
-                                {{ 'socioAhorro.status.activo' | translate }}
-                            </span>
+                            <span class="badge" [ngClass]="socio?.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                <i class="bi bi-check-circle-fill"></i>
+                {{ (socio?.activo ? 'socioAhorro.status.activo' : 'socioAhorro.status.inactive') | translate }}
+              </span>
+
+                          
                         </div>
                     </div>
 

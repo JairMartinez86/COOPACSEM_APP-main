@@ -9,7 +9,15 @@
             </div>
             <div>
               <h6 class="mb-0 fw-semibold">{{ socio.nombre }}</h6>
-              <small class="text-muted">{{ socio.codigo }}</small>
+              <small class="text-muted">{{ socio.codigo }}
+                <span class="badge"
+                                            [ngClass]="socio.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                            {{ (socio.activo ? 'socioRetiro.status.activo' :
+                                            'socioRetiro.status.inactive') |
+                                            translate }}
+                                        </span>
+              </small>
               <div class="d-flex gap-2 mt-1">
                 @if (socio.tieneCuentaCorriente) {
                   <span class="badge badge-soft-success">{{ 'ahorro.accountTypes.current' | translate }}</span>

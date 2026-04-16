@@ -173,8 +173,13 @@
         "interests": "Interests"
       }
     },
+    "messages": {
+      "selectRequired": "Please select a member",
+      "inactive": "The member is inactive"
+    },
     "common": {
-      "close": "Close"
+      "close": "Close",
+      "info": "Information"
     },
     "breadcrumbs": [
       {

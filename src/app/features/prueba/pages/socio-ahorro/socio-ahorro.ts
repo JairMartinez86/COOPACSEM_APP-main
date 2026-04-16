@@ -63,7 +63,9 @@ interface SocioResumen {
     correo?: string;
     direccionDomiciliar?: string;
     FechaIngreso?: string | null;
+    activo : boolean,
     dashboard?: SocioDashboard | null;
+    
 }
 
 // Formulario ahorro
@@ -354,6 +356,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
                         correo: data?.correo ?? '',
                         direccionDomiciliar: data?.direccionDomiciliar ?? '',
                         FechaIngreso: data?.fechaIngreso ?? null,
+                        activo: data?.activo ?? false,
                         dashboard: {
                             totalAhorro: Number(data?.dashboard?.totalAhorro ?? 0),
                             ahorroNavideno: Number(data?.dashboard?.ahorroNavideno ?? 0),

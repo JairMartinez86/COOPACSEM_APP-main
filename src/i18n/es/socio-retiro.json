@@ -52,7 +52,8 @@
       }
     },
     "status": {
-      "activo": "Activo"
+       "activo": "Activo",
+      "inactive": "Inactivo"
     },
     "destinos": {
       "retiroCorriente": "Retiro Cuenta Corriente",

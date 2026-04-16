@@ -52,7 +52,8 @@
       }
     },
     "status": {
-      "activo": "Active"
+       "activo": "Active",
+      "inactive": "Inactive"
     },
     "destinos": {
       "retiroCorriente": "Current Savings Withdrawal",

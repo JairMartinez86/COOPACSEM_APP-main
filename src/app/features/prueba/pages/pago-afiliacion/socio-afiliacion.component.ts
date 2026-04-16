@@ -87,6 +87,9 @@ export class SocioAfiliacionPagoComponent implements OnInit, OnDestroy {
 
   private readonly subs = new Subscription();
   private readonly isBrowser: boolean;
+  originalAfiliacionRows: AfiliacionMembresiaPagoRow[] = [];
+originalMembresiaRows: AfiliacionMembresiaPagoRow[] = [];
+excedenteAhorro = 0;
 
   // =============================
   // VARIABLES
@@ -228,26 +231,125 @@ export class SocioAfiliacionPagoComponent implements OnInit, OnDestroy {
   // =============================
   // DATA
   // =============================
-  loadDetail(socioId: string): void {
-    this.loading = true;
+ loadDetail(socioId: string): void {
+  this.loading = true;
 
-    this.socioAfiliacionService.getDetail(socioId, true)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe({
-        next: (res: any) => {
-          const data = res?.data ?? {};
-          this.socio = data?.socio ?? null;
-          this.afiliacionRows = data?.detail?.afiliacion ?? [];
-          this.membresiaRows = data?.detail?.membresia ?? [];
-        },
-        error: (err) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-          this.socio = null;
-          this.afiliacionRows = [];
-          this.membresiaRows = [];
-        }
-      });
+  this.socioAfiliacionService.getDetail(socioId, true)
+    .pipe(finalize(() => (this.loading = false)))
+    .subscribe({
+      next: (res: any) => {
+        const data = res?.data ?? {};
+        this.socio = data?.socio ?? null;
+
+        this.originalAfiliacionRows = (data?.detail?.afiliacion ?? []).map((x: AfiliacionMembresiaPagoRow) => ({ ...x }));
+        this.originalMembresiaRows = (data?.detail?.membresia ?? []).map((x: AfiliacionMembresiaPagoRow) => ({ ...x }));
+
+        this.rebuildPreviewTables();
+      },
+      error: (err) => {
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        this.socio = null;
+        this.originalAfiliacionRows = [];
+        this.originalMembresiaRows = [];
+        this.afiliacionRows = [];
+        this.membresiaRows = [];
+        this.excedenteAhorro = 0;
+      }
+    });
+}
+
+private rebuildPreviewTables(): void {
+  const montoIngresado = Number(this.pago.monto ?? 0);
+
+  const membresiaBase = this.originalMembresiaRows.map(x => ({ ...x }));
+  const afiliacionBase = this.originalAfiliacionRows.map(x => ({ ...x }));
+
+  let restante = montoIngresado > 0 ? montoIngresado : 0;
+
+  // Primero Membresía
+  const membresiaPreview = membresiaBase.map(row => {
+    const result = this.applyPreviewPaymentToRow(row, restante);
+    restante = result.restante;
+    return result.row;
+  });
+
+  // Luego Afiliación
+  const afiliacionPreview = afiliacionBase.map(row => {
+    const result = this.applyPreviewPaymentToRow(row, restante);
+    restante = result.restante;
+    return result.row;
+  });
+
+  this.membresiaRows = membresiaPreview;
+  this.afiliacionRows = afiliacionPreview;
+
+  // 🔥 sobrante para ahorro corriente
+  this.excedenteAhorro = Number(restante.toFixed(2));
+}
+private applyPreviewPaymentToRow(
+  row: AfiliacionMembresiaPagoRow,
+  restanteDisponible: number
+): { row: AfiliacionMembresiaPagoRow; restante: number } {
+
+  const cuota = Number(row.monto ?? 0);
+  const pagadoActual = Number(row.montoPagado ?? 0);
+  const saldoActual = Number(row.saldo ?? 0);
+
+  // Si ya está pagada, no tocar
+  if (saldoActual <= 0 || pagadoActual >= cuota) {
+    return {
+      row: {
+        ...row,
+        montoPagado: cuota,
+        saldo: 0,
+        estado: 'Pagado',
+        estadoKey: 'ahorro.status.paid'
+      },
+      restante: restanteDisponible
+    };
   }
+
+  if (restanteDisponible <= 0) {
+    return {
+      row: {
+        ...row,
+        montoPagado: pagadoActual,
+        saldo: saldoActual,
+        estado: saldoActual <= 0 ? 'Pagado' : 'Pendiente',
+        estadoKey: saldoActual <= 0 ? 'ahorro.status.paid' : 'ahorro.status.pending'
+      },
+      restante: restanteDisponible
+    };
+  }
+
+  const faltante = saldoActual;
+  const abono = Math.min(restanteDisponible, faltante);
+
+  const nuevoMontoPagado = pagadoActual + abono;
+  const nuevoSaldo = Math.max(0, cuota - nuevoMontoPagado);
+
+  const nuevoEstado: 'Pagado' | 'Pendiente' =
+    nuevoSaldo <= 0 ? 'Pagado' : 'Pendiente';
+
+  const nuevoEstadoKey =
+    nuevoSaldo <= 0 ? 'ahorro.status.paid' : 'ahorro.status.pending';
+
+  return {
+    row: {
+      ...row,
+      montoPagado: Number(nuevoMontoPagado.toFixed(2)),
+      saldo: Number(nuevoSaldo.toFixed(2)),
+      estado: nuevoEstado,
+      estadoKey: nuevoEstadoKey
+    },
+    restante: Number((restanteDisponible - abono).toFixed(2))
+  };
+}
+
+onMontoChange(): void {
+  this.rebuildPreviewTables();
+}
+
 
   // =============================
   // SAVE
@@ -267,11 +369,13 @@ export class SocioAfiliacionPagoComponent implements OnInit, OnDestroy {
       bancoCodigo: this.pago.bancoCodigo,
       noDeposito: this.pago.noDeposito,
       fechaDeposito: this.normalizeDate(this.pago.fechaDeposito),
-      observacion: this.pago.observacion
+      observacion: this.pago.observacion,
+      excedenteAhorro : this.excedenteAhorro
     };
 
     this.socioAfiliacionService.createPago(payload).subscribe({
       next: (res: any) => {
+        this.excedenteAhorro = 0;
 
         this.pago = {
           ...this.createEmptyForm(),
