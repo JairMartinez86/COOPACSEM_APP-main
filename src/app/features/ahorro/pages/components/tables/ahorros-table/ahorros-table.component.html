@@ -38,9 +38,11 @@
               <td>
                 <div class="fw-semibold">
                   {{
-                    row.descripcion === 'Ahorro ExtOrd'
+                    row.descripcion === 'Ahorro Plan'
+                    ? ('socioAhorro.destinos.ahorroCorriente' | translate)
+                    : row.descripcion === 'Ahorro ExtOrd'
                       ? ('socioAhorro.destinos.ahorroCorriente' | translate)
-                    : row.descripcion === 'Ahorro Nav'
+                    : row.descripcion === 'Ahorro Plan Nav'
                       ? ('socioAhorro.destinos.ahorroNavideno' | translate)
                     : row.descripcion === 'Retiro ExtOrd'
                       ? ('socioRetiro.destinos.retiroCorriente' | translate)

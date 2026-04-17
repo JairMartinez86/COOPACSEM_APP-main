@@ -170,7 +170,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
 
   form: AperturaCuentaNavidenaForm = {
     socioId: '',
-    tipoCuenta: 'Cuenta Navidena',
+    tipoCuenta: 'Navidena',
     fechaInicio: '',
     montoCuota: null,
     observacion: ''
@@ -839,7 +839,7 @@ public piePlotOptions: any = {
 
     const payload = {
       SocioId: this.socioId,
-      TipoCuenta: 'Cuenta Navidena',
+      TipoCuenta: 'Navidena',
       FechaInicio: this.normalizeDate(this.form.fechaInicio) ?? '',
       MontoCuota: Number(this.form.montoCuota ?? 0),
       Observacion: this.form.observacion?.trim() ?? ''
@@ -1018,7 +1018,7 @@ public piePlotOptions: any = {
   private normalizeForm(data: AperturaCuentaNavidenaForm): AperturaCuentaNavidenaForm {
     return {
       socioId: data?.socioId ?? '',
-      tipoCuenta: data?.tipoCuenta ?? 'Cuenta Navidena',
+      tipoCuenta: data?.tipoCuenta ?? 'Navidena',
       fechaInicio: data?.fechaInicio ?? '',
       montoCuota: data?.montoCuota == null ? null : Number(data.montoCuota),
       observacion: data?.observacion?.trim() ?? ''
