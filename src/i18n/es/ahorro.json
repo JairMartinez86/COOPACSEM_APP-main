@@ -140,8 +140,10 @@
          "searchPlaceholder": "Buscar por fecha, número de depósito, banco, tipo de cuenta o monto"
       },
       "installmentChanges": {
-        "searchPlaceholder": "Buscar por fecha, tipo de cuenta o cuota...",
+        "title": "Cambios de cuota",
         "registerDate": "Fecha de registro",
+        "movementType": "Tipo de movimiento",
+        "accountType": "Tipo de cuenta",
         "previousInstallment": "Cuota anterior",
         "currentInstallment": "Actual"
       },

@@ -64,11 +64,11 @@ export interface SimpleMovimientoRow {
 export interface CambioCuotaRow {
   id: string;
   fechaRegistro: string;
+  tipoMovimiento: string;
   tipoCuenta: string;
   cuotaAnterior: number;
   actual: number;
 }
-
 export interface AfiliacionMembresiaRow {
   id: string;
   tipo: 'Afiliacion' | 'Membresia';

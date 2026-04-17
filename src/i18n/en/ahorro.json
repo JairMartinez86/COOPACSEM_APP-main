@@ -137,8 +137,10 @@
         "searchPlaceholder": "Search by date, deposit number, bank, account type or amount"
       },
        "installmentChanges": {
-        "searchPlaceholder": "Search by date, account type or installment...",
+        "title": "Installment changes",
         "registerDate": "Registration date",
+        "movementType": "Movement type",
+        "accountType": "Account type",
         "previousInstallment": "Previous installment",
         "currentInstallment": "Current"
       },
