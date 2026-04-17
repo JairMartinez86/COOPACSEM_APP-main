@@ -480,7 +480,7 @@
 
                 <td>
                   <span class="badge"
-                    [ngClass]="item.estado === 'Pagada' ? 'badge-soft-success' : 'badge-soft-warning'">
+                    [ngClass]="item.estado === 'Pagado' ? 'badge-soft-success' : 'badge-soft-warning'">
                     {{ item.estado }}
                   </span>
                 </td>
@@ -498,7 +498,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="closePlanModal()">
-          {{ 'common.close' | translate }}
+          {{ 'aperturaCuentaNavidena.common.close' | translate }}
         </button>
       </div>
     </div>
