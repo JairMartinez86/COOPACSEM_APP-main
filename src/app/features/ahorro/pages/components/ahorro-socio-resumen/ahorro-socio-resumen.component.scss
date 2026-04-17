@@ -1,9 +1,14 @@
-.resumen-kpis {
-  width: 100%;
-  min-width: 0;
+.resumen-kpis-card {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
-.resumen-kpis .row {
+.resumen-kpis-card .card-body {
+  padding-bottom: 0.5rem;
+}
+
+.resumen-kpis-card .row {
   --bs-gutter-x: 0.5rem;
   --bs-gutter-y: 0.5rem;
 }
@@ -12,21 +17,16 @@
   width: 100%;
   min-width: 0;
   border-radius: 10px;
-  padding: 10px 10px;
+  padding: 10px 12px;
   border: 1px solid transparent;
   color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   overflow: hidden;
-  text-align: center;
-  height: 100%;
 }
 
 .socios-summary-strip__label {
   font-size: 10px;
   opacity: 0.85;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   line-height: 1.1;
   white-space: normal;
   word-break: break-word;
@@ -36,9 +36,9 @@
   font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.15;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .socios-summary-strip--ahorro {
@@ -51,15 +51,33 @@
   border-color: rgba(191, 87, 0, 0.95);
 }
 
-.socios-summary-strip--total {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  border-color: rgba(37, 99, 235, 0.95);
+.resumen-kpis-footer {
+  background: rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: #fff;
 }
 
-/* Ajuste fino para 13xx */
+.resumen-kpis-footer__label {
+  font-size: 11px;
+  opacity: 0.85;
+  line-height: 1.1;
+}
+
+.resumen-kpis-footer__value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.min-w-0 {
+  min-width: 0;
+}
+
 @media (min-width: 1200px) and (max-width: 1399.98px) {
   .socios-summary-strip {
-    padding: 8px 8px;
+    padding: 8px 10px;
   }
 
   .socios-summary-strip__label {
@@ -67,15 +85,27 @@
   }
 
   .socios-summary-strip__value {
-    font-size: 0.72rem;
-    line-height: 1.1;
+    font-size: 0.75rem;
+  }
+
+  .resumen-kpis-footer__label {
+    font-size: 10px;
+  }
+
+  .resumen-kpis-footer__value {
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 991.98px) {
-  .resumen-kpis .col-4 {
-    width: 100%;
-    flex: 0 0 100%;
-    max-width: 100%;
+  .socios-summary-strip__value {
+    white-space: normal;
+    text-overflow: initial;
+  }
+
+  .resumen-kpis-footer {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.35rem;
   }
 }

@@ -50,61 +50,60 @@
         </div>
       </div>
 
-<div class="col-12 col-md-12 col-lg-4">
-  <div class="resumen-kpis">
-    <div class="row g-2">
+      <div class="col-12 col-md-12 col-lg-4">
+        <div class="resumen-kpis-card card h-100">
+          <div class="card-body py-2 px-2">
+            <div class="row g-2">
 
-      <!-- Corriente -->
-      <div class="col-6">
-        <div class="socios-summary-strip socios-summary-strip--ahorro h-100 d-flex align-items-center gap-2">
-          <i class="fa-duotone fa-solid fa-piggy-bank fa-2x"></i>
+              <!-- Corriente -->
+              <div class="col-6">
+                <div class="socios-summary-strip socios-summary-strip--ahorro h-100 d-flex align-items-center gap-2">
+                  <i class="fa-duotone fa-solid fa-piggy-bank fa-lg"></i>
 
-          <div>
-            <div class="socios-summary-strip__label">
-              {{ 'ahorro.accountTypes.current' | translate }}
-            </div>
-            <div class="socios-summary-strip__value">
-              {{ formatCurrency(socio.ahorroCorriente || 0) }}
+                  <div class="min-w-0">
+                    <div class="socios-summary-strip__label">
+                      {{ 'ahorro.accountTypes.current' | translate }}
+                    </div>
+                    <div class="socios-summary-strip__value">
+                      {{ formatCurrency(socio.ahorroCorriente || 0) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Navideña -->
+              <div class="col-6">
+                <div class="socios-summary-strip socios-summary-strip--credito h-100 d-flex align-items-center gap-2">
+                  <i class="fa-duotone fa-solid fa-gift fa-lg"></i>
+
+                  <div class="min-w-0">
+                    <div class="socios-summary-strip__label">
+                      {{ 'ahorro.accountTypes.christmas' | translate }}
+                    </div>
+                    <div class="socios-summary-strip__value">
+                      {{ formatCurrency(socio.ahorroNavidena || 0) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Navideña -->
-      <div class="col-6">
-        <div class="socios-summary-strip socios-summary-strip--credito h-100 d-flex align-items-center gap-2">
-          <i class="fa-duotone fa-solid fa-gift fa-2x"></i>
-
-          <div>
-            <div class="socios-summary-strip__label">
-              {{ 'ahorro.accountTypes.christmas' | translate }}
+          <div class="card-footer  resumen-kpis-footer py-2 px-3 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+              <i class="fa-duotone fa-solid fa-coins"></i>
+              <span class="resumen-kpis-footer__label">
+                {{ 'ahorro.detail.totalSaved' | translate }}
+              </span>
             </div>
-            <div class="socios-summary-strip__value">
-              {{ formatCurrency(socio.ahorroNavidena || 0) }}
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- TOTAL -->
-      <div class="col-12 d-flex justify-content-center">
-        <div class="socios-summary-strip socios-summary-strip--total kpi-total d-flex align-items-center gap-2">
-          <i class="fa-duotone fa-solid fa-coins fa-2x"></i>
-
-          <div>
-            <div class="socios-summary-strip__label">
-              {{ 'ahorro.detail.totalSaved' | translate }}
-            </div>
-            <div class="socios-summary-strip__value">
+            <span class="resumen-kpis-footer__value">
               {{ formatCurrency(socio.totalAhorro || 0) }}
-            </div>
+            </span>
           </div>
         </div>
       </div>
-
-    </div>
-  </div>
-</div>
     </div>
   </div>
 
