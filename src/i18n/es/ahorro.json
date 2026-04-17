@@ -89,6 +89,7 @@
       "savings": "Ahorros",
       "withdrawals": "Retiros",
       "deposits": "Depósitos",
+      "installmentChanges": "Cambios de cuota",
       "requests": "Solicitudes",
       "membership": "Afiliación",
       "plans": "Planes"
@@ -137,6 +138,12 @@
         "registerDate": "Fecha registro",
         "bank": "Banco",
          "searchPlaceholder": "Buscar por fecha, número de depósito, banco, tipo de cuenta o monto"
+      },
+      "installmentChanges": {
+        "searchPlaceholder": "Buscar por fecha, tipo de cuenta o cuota...",
+        "registerDate": "Fecha de registro",
+        "previousInstallment": "Cuota anterior",
+        "currentInstallment": "Actual"
       },
       "plans": {
         "installmentNumber": "No. cuota",

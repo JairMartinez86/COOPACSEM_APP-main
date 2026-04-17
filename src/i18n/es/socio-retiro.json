@@ -56,8 +56,8 @@
       "inactive": "Inactivo"
     },
     "destinos": {
-      "retiroCorriente": "Retiro Cuenta Corriente",
-      "retiroNavideno": "Retiro Cuenta Navideña"
+      "retiroCorriente": "Retiro",
+      "retiroNavideno": "Retiro"
     },
     "summary": {
       "availability": "Disponibilidad",

@@ -19,7 +19,8 @@ import {
   SimpleMovimientoRow,
   SocioDetail,
   SocioRow,
-  SummaryCard
+  SummaryCard,
+  CambioCuotaRow
 } from '../interface/ahorro.models';
 import { Subscription, Subject, of, timer } from 'rxjs';
 import { switchMap, finalize } from 'rxjs/operators';
@@ -57,6 +58,7 @@ export class AhorroComponent implements OnInit, OnDestroy {
   ahorroRows: SimpleMovimientoRow[] = [];
   retiroRows: SimpleMovimientoRow[] = [];
   depositoRows: SimpleMovimientoRow[] = [];
+  cambioCuotaRows: CambioCuotaRow[] = [];
   solicitudRows: SimpleMovimientoRow[] = [];
   planesRows: PlanRow[] = [];
   afiliacionMembresiaRows: AfiliacionMembresiaRow[] = [];
@@ -238,6 +240,7 @@ export class AhorroComponent implements OnInit, OnDestroy {
           this.ahorroRows = data?.detail?.ahorros ?? [];
           this.retiroRows = data?.detail?.retiros ?? [];
           this.depositoRows = data?.detail?.depositos ?? [];
+          this.cambioCuotaRows = data?.detail?.cambiosCuota ?? [];
           this.solicitudRows = data?.detail?.solicitudes ?? [];
           this.planesRows = data?.detail?.planes ?? [];
           this.afiliacionMembresiaRows = data?.detail?.afiliacionMembresia ?? [];
@@ -249,14 +252,15 @@ export class AhorroComponent implements OnInit, OnDestroy {
       });
   }
 
-  private clearDetail(): void {
-    this.selectedSocio = null;
-    this.ahorroRows = [];
-    this.retiroRows = [];
-    this.depositoRows = [];
-    this.solicitudRows = [];
-    this.afiliacionMembresiaRows = [];
-    this.planesRows = [];
-    this.alerts = null;
-  }
+ private clearDetail(): void {
+  this.selectedSocio = null;
+  this.ahorroRows = [];
+  this.retiroRows = [];
+  this.depositoRows = [];
+  this.cambioCuotaRows = [];
+  this.solicitudRows = [];
+  this.afiliacionMembresiaRows = [];
+  this.planesRows = [];
+  this.alerts = null;
+}
 }

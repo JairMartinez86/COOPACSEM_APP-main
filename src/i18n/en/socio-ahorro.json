@@ -52,8 +52,8 @@
       }
     },
     "destinos": {
-      "ahorroCorriente": "Deposit to Current Savings",
-      "ahorroNavideno": "Deposit to Christmas Savings",
+      "ahorroCorriente": "Savings",
+      "ahorroNavideno": "Savings",
       "creditoActivo": "Apply to Credit",
        "ahorroIntereses": "Generated Interest"
     },

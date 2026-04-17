@@ -56,8 +56,8 @@
       "inactive": "Inactive"
     },
     "destinos": {
-      "retiroCorriente": "Current Savings Withdrawal",
-      "retiroNavideno": "Christmas Savings Withdrawal"
+      "retiroCorriente": "Withdrawal",
+      "retiroNavideno": "Withdrawal"
     },
     "summary": {
       "availability": "Availability",

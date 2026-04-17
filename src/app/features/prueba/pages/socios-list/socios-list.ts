@@ -529,18 +529,5 @@ export class SociosListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/cambio-cuota/new', idSocio, 'Disminucion']);
   }
 
-  getDestinoLabel(destino?: string | null): string {
-    switch ((destino || '').trim()) {
-      case 'Ahorro ExtOrd':
-        return 'socios.destinos.saving';
-      case 'Retiro ExtOrd':
-        return 'socios.destinos.withdrawal';
-      case 'Afiliacion':
-        return 'socios.destinos.membership';
-      case 'Pago Afiliacion':
-        return 'socios.destinos.membPayment';
-      default:
-        return destino || '';
-    }
-  }
+ 
 }

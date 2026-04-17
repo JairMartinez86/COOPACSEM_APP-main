@@ -1,0 +1,100 @@
+<div class="card">
+  <div class="card-body p-0">
+
+    <div class="p-3 border-bottom">
+      <div class="row g-2 align-items-center">
+        <div class="col-12 col-md-6 col-lg-5">
+          <label class="form-label mb-1">
+            {{ 'ahorro.tables.common.search' | translate }}
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            [value]="filterText"
+            (input)="onFilterChange($any($event.target).value)"
+            [placeholder]="'ahorro.tables.installmentChanges.searchPlaceholder' | translate" />
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-sm mb-0">
+        <thead>
+          <tr>
+            <th>{{ 'ahorro.tables.installmentChanges.registerDate' | translate }}</th>
+            <th>{{ 'ahorro.tables.common.accountType' | translate }}</th>
+            <th class="text-end">{{ 'ahorro.tables.installmentChanges.previousInstallment' | translate }}</th>
+            <th class="text-end">{{ 'ahorro.tables.installmentChanges.currentInstallment' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of pagedRows; track $index) {
+            <tr>
+              <td>{{ row.fechaRegistro || '-' }}</td>
+              <td>
+                <span
+                  class="badge"
+                  [ngClass]="row.tipoCuenta === 'Corriente' ? 'badge-soft-success' : 'badge-soft-warning'">
+                  {{
+                    row.tipoCuenta === 'Corriente'
+                      ? ('ahorro.accountTypes.current' | translate)
+                      : ('ahorro.accountTypes.christmas' | translate)
+                  }}
+                </span>
+              </td>
+              <td class="text-end">{{ formatCurrency(row.cuotaAnterior) }}</td>
+              <td class="text-end">{{ formatCurrency(row.actual) }}</td>
+            </tr>
+          }
+
+          @if (pagedRows.length === 0) {
+            <tr>
+              <td colspan="4" class="text-center text-muted py-3">
+                {{ 'ahorro.states.noRecords' | translate }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  @if (filteredRows.length > 0) {
+    <div class="card-footer bg-transparent d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+      <div class="small text-muted">
+        {{ 'ahorro.tables.common.showing' | translate }}
+        {{ startRecord }} - {{ endRecord }}
+        {{ 'ahorro.tables.common.of' | translate }}
+        {{ filteredRows.length }}
+      </div>
+
+      <nav aria-label="Paginación de cambios de cuota">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="page === 1">
+            <button type="button" class="page-link" (click)="goToPage(1)" [disabled]="page === 1">«</button>
+          </li>
+
+          <li class="page-item" [class.disabled]="page === 1">
+            <button type="button" class="page-link" (click)="prevPage()" [disabled]="page === 1">‹</button>
+          </li>
+
+          @for (p of visiblePages; track p) {
+            <li class="page-item" [class.active]="p === page">
+              <button type="button" class="page-link" (click)="goToPage(p)">
+                {{ p }}
+              </button>
+            </li>
+          }
+
+          <li class="page-item" [class.disabled]="page === totalPages">
+            <button type="button" class="page-link" (click)="nextPage()" [disabled]="page === totalPages">›</button>
+          </li>
+
+          <li class="page-item" [class.disabled]="page === totalPages">
+            <button type="button" class="page-link" (click)="goToPage(totalPages)" [disabled]="page === totalPages">»</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  }
+</div>

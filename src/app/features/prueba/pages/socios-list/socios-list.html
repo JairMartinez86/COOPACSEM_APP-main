@@ -449,7 +449,19 @@
                       @for (mov of (selectedSocio.dashboard?.ultimosMovimientos ?? []); track $index) {
                         <tr>
                           <td>{{ formatDate(mov.fecha) }}</td>
-                          <td>{{ getDestinoLabel(mov.descripcion) | translate }}</td>
+                          <td> {{
+                    mov.descripcion === 'Ahorro ExtOrd'
+                      ? ('socioAhorro.destinos.ahorroCorriente' | translate)
+                    : mov.descripcion === 'Ahorro Nav'
+                      ? ('socioAhorro.destinos.ahorroNavideno' | translate)
+                    : mov.descripcion === 'Retiro ExtOrd'
+                      ? ('socioRetiro.destinos.retiroCorriente' | translate)
+                    : mov.descripcion === 'Retiro Nav'
+                      ? ('socioRetiro.destinos.retiroNavideno' | translate)
+                    : mov.descripcion === 'Ahorro Intereses'
+                      ? ('socioAhorro.destinos.ahorroIntereses' | translate)
+                    : mov.descripcion
+                  }}</td>
                           <td>{{ formatCurrency(mov.debito) }}</td>
                           <td>{{ formatCurrency(mov.credito) }}</td>
                           <td>

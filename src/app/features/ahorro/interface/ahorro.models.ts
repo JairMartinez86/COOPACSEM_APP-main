@@ -1,5 +1,12 @@
 
-export type SocioDetalleTab = 'ahorros' | 'retiros' | 'depositos' | 'solicitudes' | 'afiliacion' | 'planes';
+export type SocioDetalleTab =
+  | 'ahorros'
+  | 'retiros'
+  | 'depositos'
+  | 'cambiosCuota'
+  | 'solicitudes'
+  | 'afiliacion'
+  | 'planes';
 
 export interface SummaryCard {
   icon: string;
@@ -17,7 +24,6 @@ export interface PaginationMeta {
   start: number;
   end: number;
 }
-
 
 export interface SocioRow {
   id: string;
@@ -38,6 +44,7 @@ export interface SocioRow {
   movimientoTipoKey?: string | null;
   alerts: SocioAlerts;
 }
+
 export interface SimpleMovimientoRow {
   id?: string;
   fecha: string;
@@ -54,25 +61,24 @@ export interface SimpleMovimientoRow {
   estado?: string;
 }
 
+export interface CambioCuotaRow {
+  id: string;
+  fechaRegistro: string;
+  tipoCuenta: string;
+  cuotaAnterior: number;
+  actual: number;
+}
+
 export interface AfiliacionMembresiaRow {
   id: string;
-
   tipo: 'Afiliacion' | 'Membresia';
-
   noCuota: number;
-
   fecha: string;
-
   monto: number;
-
   montoPagado: number;
-
   saldo: number;
-
   fechaPago?: string | null;
-
   estado: 'Pagado' | 'Pendiente' | 'Vencido';
-
   estadoKey: string;
 }
 
@@ -110,22 +116,21 @@ export interface ActionItem {
   icon: string;
   titleKey: string;
   accent:
-  | 'green'
-  | 'blue'
-  | 'violet'
-  | 'cyan'
-  | 'amber'
-  | 'emerald'
-  | 'red'
-  | 'orange'
-  | 'pink'
-  | 'indigo'
-  | 'teal'
-  | 'gray'
-  | 'teal'; 
+    | 'green'
+    | 'blue'
+    | 'violet'
+    | 'cyan'
+    | 'amber'
+    | 'emerald'
+    | 'red'
+    | 'orange'
+    | 'pink'
+    | 'indigo'
+    | 'teal'
+    | 'gray'
+    | 'teal';
   order: number;
 }
-
 
 export interface SocioDetail {
   id: string;
@@ -141,8 +146,8 @@ export interface SocioDetail {
   totalAhorro: number;
   totalRetirado: number;
   totalDepositado: number;
-  cuentaCorrienteActiva : boolean;
-  activo : boolean;
+  cuentaCorrienteActiva: boolean;
+  activo: boolean;
 }
 
 export interface AhorroDashboardResponse {
@@ -164,8 +169,10 @@ export interface AhorroDashboardResponse {
     ahorros: SimpleMovimientoRow[];
     retiros: SimpleMovimientoRow[];
     depositos: SimpleMovimientoRow[];
+    cambiosCuota: CambioCuotaRow[];
     solicitudes: SimpleMovimientoRow[];
     planes: PlanRow[];
+    afiliacionMembresia: AfiliacionMembresiaRow[];
   };
-  alerts: SocioAlerts[];
+  alerts: SocioAlerts | null;
 }

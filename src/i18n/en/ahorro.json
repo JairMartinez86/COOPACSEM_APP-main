@@ -88,6 +88,7 @@
       "savings": "Savingss",
       "withdrawals": "Withdrawals",
       "deposits": "Deposits",
+      "installmentChanges": "Installment changes",
       "requests": "Requests",
       "membership": "Membership",
       "plans": "Plans"
@@ -134,6 +135,12 @@
         "registerDate": "Registered date",
         "bank": "Bank",
         "searchPlaceholder": "Search by date, deposit number, bank, account type or amount"
+      },
+       "installmentChanges": {
+        "searchPlaceholder": "Search by date, account type or installment...",
+        "registerDate": "Registration date",
+        "previousInstallment": "Previous installment",
+        "currentInstallment": "Current"
       },
       "plans": {
         "installmentNumber": "Installment no.",
