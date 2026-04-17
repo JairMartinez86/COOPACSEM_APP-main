@@ -36,9 +36,9 @@
   font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.15;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .socios-summary-strip--ahorro {
@@ -85,7 +85,13 @@
   }
 
   .socios-summary-strip__value {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
+    line-height: 1.05;
+  }
+
+  .socios-summary-strip i {
+    font-size: 1rem !important;
+    flex-shrink: 0;
   }
 
   .resumen-kpis-footer__label {
