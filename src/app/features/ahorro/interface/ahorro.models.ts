@@ -147,6 +147,8 @@ export interface SocioDetail {
   totalRetirado: number;
   totalDepositado: number;
   cuentaCorrienteActiva: boolean;
+  ahorroCorriente: number;
+  ahorroNavidena: number;
   activo: boolean;
 }
 

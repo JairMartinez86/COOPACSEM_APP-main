@@ -34,7 +34,8 @@
 
               <span class="badge" [ngClass]="socio?.activo ? 'badge-soft-success' : 'badge-soft-danger'">
                 <i class="bi bi-check-circle-fill"></i>
-                {{ (socio?.activo ? 'socioAfiliacionPago.status.activo' : 'socioAfiliacionPago.status.inactive') | translate }}
+                {{ (socio?.activo ? 'socioAfiliacionPago.status.activo' : 'socioAfiliacionPago.status.inactive') |
+                translate }}
               </span>
             </div>
           </div>
@@ -111,7 +112,7 @@
                     (ngModelChange)="onMontoChange()" id="Monto" name="Monto" engineSync="Monto" autoFocusNext
                     [next]="BancoCodigo" numberFormat [decimals]="2"
                     [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                    [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" JmartAutoFocus />
+                    [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" JmartAutoFocus [disabled]=" socio?.dashboard?.creditoPendiente ==  0 " />
                 </div>
               </div>
 
@@ -124,7 +125,7 @@
                   </label>
 
                   <select #BancoCodigo class="form-select" [(ngModel)]="pago.bancoCodigo" id="BancoCodigo"
-                    name="BancoCodigo" engineSync="BancoCodigo" autoFocusNext [next]="NoDeposito">
+                    name="BancoCodigo" engineSync="BancoCodigo" autoFocusNext [next]="NoDeposito" [disabled]=" socio?.dashboard?.creditoPendiente ==  0 " >
 
                     <option value="">
                       {{ 'socioAfiliacionPago.fields.banco.placeholder' | translate }}
@@ -147,7 +148,7 @@
                   </label>
 
                   <input #NoDeposito type="text" class="form-control" [(ngModel)]="pago.noDeposito" id="NoDeposito"
-                    name="NoDeposito" engineSync="NoDeposito" autoFocusNext [next]="FechaDeposito" />
+                    name="NoDeposito" engineSync="NoDeposito" autoFocusNext [next]="FechaDeposito" [disabled]=" socio?.dashboard?.creditoPendiente ==  0 " />
                 </div>
 
                 <!-- FECHA DEPOSITO -->
@@ -158,7 +159,7 @@
 
                   <input #FechaDeposito type="text" class="form-control" [(ngModel)]="pago.fechaDeposito"
                     id="FechaDeposito" name="FechaDeposito" engineSync="FechaDeposito" autoFocusNext
-                    [next]="Observacion" [dateFormat]="appConfigService.getCurrentSettings().dateFormat" />
+                    [next]="Observacion" [dateFormat]="appConfigService.getCurrentSettings().dateFormat" [disabled]=" socio?.dashboard?.creditoPendiente ==  0 " />
                 </div>
 
               </div>
@@ -172,7 +173,7 @@
                 <textarea #Observacion class="form-control" rows="2" style="resize: none;"
                   placeholder="{{ 'socioAfiliacionPago.fields.observacion.placeholder' | translate }}"
                   [(ngModel)]="pago.observacion" id="Observacion" name="Observacion"
-                  engineSync="Observacion"></textarea>
+                  engineSync="Observacion" [disabled]=" socio?.dashboard?.creditoPendiente ==  0 " ></textarea>
               </div>
 
             </div>
@@ -266,6 +267,9 @@
 
         <div class="card">
           <div class="card-body">
+
+            @if(socio?.dashboard?.creditoPendiente != 0)
+            {
             <button #btn type="button" class="btn btn-success w-100 mb-2" (click)="onSave()"
               [permissionRoute]="['/socios', '/socio-afiliacion-pago']" [appPermission]="['create']" autoFocusNext
               [disableClickButton]="true" [unlockOn]="notify.closed$">
@@ -273,6 +277,8 @@
               <i class="bi bi-plus-circle me-1"></i>
               {{ 'socioAfiliacionPago.actions.save' | translate }}
             </button>
+            }
+
 
             <button type="button" class="btn btn-outline-secondary w-100" (click)="onCancel()"
               [permissionRoute]="['/socios', '/socio-afiliacion-pago']" [appPermission]="['create']">
