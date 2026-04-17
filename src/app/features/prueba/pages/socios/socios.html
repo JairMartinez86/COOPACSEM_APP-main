@@ -1061,7 +1061,7 @@
 
 
 
-            @if (mode !== 'create') {
+            @if (mode !== 'create' && fileManagerConfig.entityId) {
 
             <app-file-manager [config]="fileManagerConfig" [fileService]="fileService">
             </app-file-manager>
