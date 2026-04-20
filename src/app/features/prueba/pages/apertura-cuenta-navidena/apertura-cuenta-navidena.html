@@ -506,14 +506,9 @@
           {{ formatCurrency(item.retiro ?? 0) }}
         </td>
 
-        <td>
-          <span class="badge"
-            [ngClass]="item.estado === 'Pagado'
-              ? 'badge-soft-success'
-              : 'badge-soft-warning'">
-            {{ item.estado }}
-          </span>
-        </td>
+         <td><span class="badge"
+                                        [ngClass]="item.estado === 'Pagado' ? 'badge-soft-success' : item.estado === 'Vencido' ? 'badge-soft-danger' : 'badge-soft-warning'">{{
+                                        item.estado | translate }}</span></td>
 
         <!-- SALDO -->
         <td class="text-end fw-bold">
