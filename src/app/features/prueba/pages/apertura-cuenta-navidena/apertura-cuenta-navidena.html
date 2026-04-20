@@ -181,15 +181,15 @@
             <div class="card-footer bg-transparent">
               <div class="d-flex justify-content-end gap-2 flex-wrap">
 
-                <button type="button" class="btn btn-light" (click)="onCancel()" [permissionRoute]="['/socios', '/ahorro']"
-                  [appPermission]="['create']">
+                <button type="button" class="btn btn-light" (click)="onCancel()"
+                  [permissionRoute]="['/socios', '/ahorro']" [appPermission]="['create']">
                   {{ 'aperturaCuentaNavidena.common.cancel' | translate }}
                 </button>
 
                 @if (!tieneMovimiento) {
                 <button #saveButton type="button" class="btn btn-primary" (click)="onSave()"
-                  [permissionRoute]="['/socios', '/ahorro']" [appPermission]="['create']" autoFocusNext [disableClickButton]="true"
-                  [unlockOn]="notify.closed$">
+                  [permissionRoute]="['/socios', '/ahorro']" [appPermission]="['create']" autoFocusNext
+                  [disableClickButton]="true" [unlockOn]="notify.closed$">
 
                   {{
                   yaAperturada
@@ -201,8 +201,8 @@
                 }
 
                 @if (yaAperturada && !tieneMovimiento) {
-                <button type="button" class="btn btn-outline-danger" (click)="onDelete()" [permissionRoute]="['/socios', '/ahorro']"
-                  [appPermission]="['delete']">
+                <button type="button" class="btn btn-outline-danger" (click)="onDelete()"
+                  [permissionRoute]="['/socios', '/ahorro']" [appPermission]="['delete']">
 
                   <i class="fa-thin fa-trash me-1"></i>
                   {{ 'aperturaCuentaNavidena.actions.delete' | translate }}
@@ -234,7 +234,7 @@
 
           <div class="card-body p-0">
             <div class="table-responsive">
-              <table class="table table-sm align-middle mb-0">
+              <table class="table table-sm   align-middle mb-0">
                 <thead>
                   <tr>
                     <th>{{ 'aperturaCuentaNavidena.movements.columns.fecha' | translate }}</th>
@@ -371,7 +371,7 @@
 
           <div class="card-body p-0">
             <div class="table-responsive">
-              <table class="table table-hover align-middle mb-0">
+              <table class="table  align-middle mb-0">
 
                 <thead class="table-light">
                   <tr>
@@ -438,62 +438,95 @@
 
       <div class="modal-body">
         <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead>
-              <tr>
-                <th style="width: 90px;">
-                  {{ 'aperturaCuentaNavidena.modal.columns.noCuota' | translate }}
-                </th>
-                <th>{{ 'aperturaCuentaNavidena.modal.columns.fecha' | translate }}</th>
-                <th class="text-end">
-                  {{ 'aperturaCuentaNavidena.modal.columns.cuota' | translate }}
-                </th>
-                <th>{{ 'aperturaCuentaNavidena.modal.columns.estado' | translate }}</th>
+  <table class="table  align-middle">
+    <thead>
+      <tr>
+        <th style="width: 90px;">
+          {{ 'aperturaCuentaNavidena.modal.columns.noCuota' | translate }}
+        </th>
 
-                <!-- NUEVA -->
-                <th class="text-end">
-                  {{ 'aperturaCuentaNavidena.modal.columns.saldoAcumulado' | translate }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              @if (displayedPlan.length === 0) {
-              <tr>
-                <td colspan="5" class="text-center py-4 text-muted">
-                  {{ 'aperturaCuentaNavidena.states.emptyPlan' | translate }}
-                </td>
-              </tr>
-              }
+        <th>
+          {{ 'aperturaCuentaNavidena.modal.columns.fecha' | translate }}
+        </th>
 
-              @for (item of displayedPlan; track item.id; let i = $index) {
-              <tr>
-                <td>
-                  <span>{{ i + 1 }}</span>
-                </td>
+        <th class="text-end">
+          {{ 'aperturaCuentaNavidena.modal.columns.cuota' | translate }}
+        </th>
 
-                <td>{{ formatDate(item.fechaProgramada) }}</td>
+        <!-- NUEVO -->
+        <th class="text-end">
+          {{ 'aperturaCuentaNavidena.modal.columns.deposito' | translate }}
+        </th>
 
-                <td class="text-end">
-                  {{ appConfigService.getCurrentSettings().currency }}
-                  {{ formatCurrency(item.montoCuota) }}
-                </td>
+        <!-- NUEVO -->
+        <th class="text-end">
+          {{ 'aperturaCuentaNavidena.modal.columns.retiro' | translate }}
+        </th>
 
-                <td>
-                  <span class="badge"
-                    [ngClass]="item.estado === 'Pagado' ? 'badge-soft-success' : 'badge-soft-warning'">
-                    {{ item.estado }}
-                  </span>
-                </td>
+        <th>
+          {{ 'aperturaCuentaNavidena.modal.columns.estado' | translate }}
+        </th>
 
-                <td class="text-end fw-semibold">
-                  {{ appConfigService.getCurrentSettings().currency }}
-                  {{ formatCurrency(getSaldoAcumulado(i)) }}
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+        <th class="text-end">
+          {{ 'aperturaCuentaNavidena.modal.columns.saldoAcumulado' | translate }}
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @if (displayedPlan.length === 0) {
+      <tr>
+        <td colspan="7" class="text-center py-4 text-muted">
+          {{ 'aperturaCuentaNavidena.states.emptyPlan' | translate }}
+        </td>
+      </tr>
+      }
+
+      @for (item of displayedPlan; track item.id; let i = $index) {
+      <tr>
+
+        <td>{{ i + 1 }}</td>
+
+        <td>{{ formatDate(item.fechaProgramada) }}</td>
+
+        <td class="text-end">
+          {{ appConfigService.getCurrentSettings().currency }}
+          {{ formatCurrency(item.montoCuota) }}
+        </td>
+
+        <!-- DEPÓSITO -->
+        <td class="text-end text-success fw-semibold">
+          {{ appConfigService.getCurrentSettings().currency }}
+          {{ formatCurrency(item.deposito) }}
+        </td>
+
+        <!-- RETIRO -->
+        <td class="text-end text-danger fw-semibold">
+          {{ appConfigService.getCurrentSettings().currency }}
+          {{ formatCurrency(item.retiro ?? 0) }}
+        </td>
+
+        <td>
+          <span class="badge"
+            [ngClass]="item.estado === 'Pagado'
+              ? 'badge-soft-success'
+              : 'badge-soft-warning'">
+            {{ item.estado }}
+          </span>
+        </td>
+
+        <!-- SALDO -->
+        <td class="text-end fw-bold">
+          {{ appConfigService.getCurrentSettings().currency }}
+          {{  formatCurrency(getSaldoAcumulado(i)) }}
+          
+        </td>
+
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
       </div>
 
       <div class="modal-footer">

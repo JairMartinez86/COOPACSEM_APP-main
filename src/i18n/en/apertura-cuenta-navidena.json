@@ -84,6 +84,8 @@
         "noCuota": "Installment No.",
         "fecha": "Date",
         "cuota": "Installment",
+         "deposito": "Deposit",
+      "retiro": "Withdrawal",
         "estado": "Status",
          "saldoAcumulado": "Balance"
       }

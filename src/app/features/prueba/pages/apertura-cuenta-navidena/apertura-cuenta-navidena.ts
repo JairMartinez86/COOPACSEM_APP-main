@@ -79,6 +79,8 @@ interface MovimientoPlanItem {
   fecha: string;
   descripcion: string;
   monto: number;
+  deposito : number,
+  retiro: number,
   estado: string;
   referencia?: string | null;
   fechaPago?: string | null;
@@ -90,7 +92,9 @@ interface PlanItem {
   fechaProgramada: string;
   montoCuota: number;
   estado: string;
-  pagado: boolean;
+  deposito : number,
+  retiro: number | null,
+  pagado: boolean | null,
   fechaPago?: string | null;
   usuarioPago?: string | null;
 }
@@ -145,6 +149,9 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   public readonly appConfigService = inject(AppConfigService);
   public readonly notify = inject(NotificationService);
   private readonly engine = inject(JMartMassiveValidationService);
+
+
+  selected: MovimientoPlanItem | null = null;
 
   /* =========================================================
    * ESTADO GENERAL
@@ -1088,6 +1095,9 @@ public piePlotOptions: any = {
     return this.previewPlan;
   }
 
+
+
+
   /* =========================================================
    * EVENTOS DE CAMBIO DE FORMULARIO
    * ========================================================= */
@@ -1153,6 +1163,8 @@ public piePlotOptions: any = {
         fechaProgramada: this.toIsoDate(current),
         montoCuota: monto,
         estado: 'Pendiente',
+        deposito: 0,
+        retiro: 0,
         pagado: false,
         fechaPago: null,
         usuarioPago: null

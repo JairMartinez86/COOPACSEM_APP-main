@@ -85,6 +85,8 @@
         "noCuota": "No. Cuota",
         "fecha": "Fecha",
         "cuota": "Cuota",
+        "deposito": "Depósito",
+      "retiro": "Retiro",
         "estado": "Estado",
          "saldoAcumulado": "Saldo"
       }
