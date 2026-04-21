@@ -131,6 +131,7 @@
             </h5>
           </div>
 
+
           <form #formRef="ngForm" autocomplete="off" novalidate>
             <div class="card-body">
               <div class="row g-3">
@@ -260,23 +261,26 @@
                       {{ appConfigService.getCurrentSettings().currency }}
                       {{ formatCurrency(item.monto) }}
                     </td>
-                    <td>
-                      <span class="badge" [ngClass]="{
+                   <td>
+  <span class="badge" [ngClass]="{
     'badge-soft-primary': item.tipoMovimiento === 'Ahorro Plan Nav',
-    'badge-soft-success': item.tipoMovimiento === 'Ahorro Nav',
+    'badge-soft-success': item.tipoMovimiento === 'Ahorro ExtraOrd Nav',
+    'badge-soft-danger': item.tipoMovimiento === 'Retiro Nav',
     'badge-soft-secondary': !item.tipoMovimiento
   }">
 
-                        {{
-                        item.tipoMovimiento === 'Ahorro Plan Nav'
-                        ? ('aperturaCuentaNavidena.types.plan' | translate)
-                        : item.tipoMovimiento === 'Ahorro Nav'
-                        ? ('aperturaCuentaNavidena.types.extraordinario' | translate)
-                        : item.estado
-                        }}
+    {{
+      item.tipoMovimiento === 'Ahorro Plan Nav'
+        ? ('aperturaCuentaNavidena.types.plan' | translate)         
+      : item.tipoMovimiento === 'Ahorro ExtraOrd Nav'
+        ? ('aperturaCuentaNavidena.types.extraordinary' | translate)
+      : item.tipoMovimiento === 'Retiro Nav'
+        ? ('aperturaCuentaNavidena.types.withdrawal' | translate)
+      : '-'
+    }}
 
-                      </span>
-                    </td>
+  </span>
+</td>
                   </tr>
                   }
                 </tbody>

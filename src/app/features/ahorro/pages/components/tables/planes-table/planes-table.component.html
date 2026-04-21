@@ -169,7 +169,7 @@
 
                   <td>{{ row.numero != null ? row.numero : '-' }}</td>
 
-                  <td>{{ row.fecha }}</td>
+                  <td>{{ formatDate(row.fecha) }}</td>
 
                   <td class="text-end">
                     @if ((row.cuota ?? 0) > 0) {

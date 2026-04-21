@@ -185,9 +185,10 @@
       }
     },
     "types": {
-      "plan": "Payroll",
-      "extraordinario": "Extraordinary"
-    },
+  "plan": "Nómina",
+  "extraordinary": "Extraordinario",
+  "retiro": "Retiro"
+},
       "common": {
     "search": "Search",
     "close": "Close",

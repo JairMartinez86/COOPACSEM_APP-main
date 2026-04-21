@@ -184,10 +184,11 @@
         }
       }
     },
-    "types": {
-      "plan": "Nómina",
-      "extraordinario": "Extraordinario"
-    },
+   "types": {
+  "plan": "Nómina",
+  "extraordinary": "Extraordinario",
+  "retiro": "Retiro"
+},
     "common": {
       "search": "Buscar",
       "close": "Cerrar",
