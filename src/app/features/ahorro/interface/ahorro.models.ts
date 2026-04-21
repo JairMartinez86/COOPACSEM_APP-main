@@ -85,13 +85,16 @@ export interface AfiliacionMembresiaRow {
 export interface PlanRow {
   numero: number;
   fecha: string;
-  cuota: number;
+  cuota: number | null;
   estado: 'Pendiente' | 'Pagado' | 'Vencido';
   estadoKey: string;
   tipoCuenta: 'Corriente' | 'Navidena';
-  saldo: number;
+  deposito: number | null;
+  retiro: number | null;
+  interes: number | null;
+  saldo: number | null;
+  saldoInteres: number | null;
 }
-
 export interface SocioAlerts {
   count: number;
   hasAlerts: boolean;

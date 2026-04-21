@@ -438,90 +438,135 @@
 
       <div class="modal-body">
         <div class="table-responsive">
-  <table class="table  align-middle">
-    <thead>
-      <tr>
-        <th style="width: 90px;">
-          {{ 'aperturaCuentaNavidena.modal.columns.noCuota' | translate }}
-        </th>
+          <table class="table  align-middle">
 
-        <th>
-          {{ 'aperturaCuentaNavidena.modal.columns.fecha' | translate }}
-        </th>
+            <thead>
+              <tr>
+                <th style="width: 90px;">
+                  {{ 'aperturaCuentaNavidena.modal.columns.noCuota' | translate }}
+                </th>
 
-        <th class="text-end">
-          {{ 'aperturaCuentaNavidena.modal.columns.cuota' | translate }}
-        </th>
+                <th>
+                  {{ 'aperturaCuentaNavidena.modal.columns.fecha' | translate }}
+                </th>
 
-        <!-- NUEVO -->
-        <th class="text-end">
-          {{ 'aperturaCuentaNavidena.modal.columns.deposito' | translate }}
-        </th>
+                <th class="text-end">
+                  {{ 'aperturaCuentaNavidena.modal.columns.cuota' | translate }}
+                </th>
 
-        <!-- NUEVO -->
-        <th class="text-end">
-          {{ 'aperturaCuentaNavidena.modal.columns.retiro' | translate }}
-        </th>
+                <th class="text-end">
+                  {{ 'aperturaCuentaNavidena.modal.columns.deposito' | translate }}
+                </th>
 
-        <th>
-          {{ 'aperturaCuentaNavidena.modal.columns.estado' | translate }}
-        </th>
+                <th class="text-end">
+                  {{ 'aperturaCuentaNavidena.modal.columns.retiro' | translate }}
+                </th>
 
-        <th class="text-end">
-          {{ 'aperturaCuentaNavidena.modal.columns.saldoAcumulado' | translate }}
-        </th>
-      </tr>
-    </thead>
+                <th class="text-end">
+                  {{ 'aperturaCuentaNavidena.modal.columns.interes' | translate }}
+                </th>
 
-    <tbody>
-      @if (displayedPlan.length === 0) {
-      <tr>
-        <td colspan="7" class="text-center py-4 text-muted">
-          {{ 'aperturaCuentaNavidena.states.emptyPlan' | translate }}
-        </td>
-      </tr>
-      }
+                <th>
+                  {{ 'aperturaCuentaNavidena.modal.columns.estado' | translate }}
+                </th>
 
-      @for (item of displayedPlan; track item.id; let i = $index) {
-      <tr>
+                <th class="text-end">
+                  {{ 'aperturaCuentaNavidena.modal.columns.saldoAcumulado' | translate }}
+                </th>
 
-        <td>{{ i + 1 }}</td>
+                <th class="text-end">
+                  {{ 'aperturaCuentaNavidena.modal.columns.saldoInteres' | translate }}
+                </th>
+              </tr>
+            </thead>
 
-        <td>{{ formatDate(item.fechaProgramada) }}</td>
+            <tbody>
+              @if (displayedPlan.length === 0) {
+              <tr>
+                <td colspan="9" class="text-center py-4 text-muted">
+                  {{ 'aperturaCuentaNavidena.states.emptyPlan' | translate }}
+                </td>
+              </tr>
+              }
 
-        <td class="text-end">
-          {{ appConfigService.getCurrentSettings().currency }}
-          {{ formatCurrency(item.montoCuota) }}
-        </td>
+              @for (item of displayedPlan; track $index; let i = $index) {
+              <tr>
 
-        <!-- DEPÓSITO -->
-        <td class="text-end text-success fw-semibold">
-          {{ appConfigService.getCurrentSettings().currency }}
-          {{ formatCurrency(item.deposito) }}
-        </td>
+                <td>{{ item.noCuota ?? '-' }}</td>
 
-        <!-- RETIRO -->
-        <td class="text-end text-danger fw-semibold">
-          {{ appConfigService.getCurrentSettings().currency }}
-          {{ formatCurrency(item.retiro ?? 0) }}
-        </td>
+                <td>{{ formatDate(item.fechaProgramada) }}</td>
 
-         <td><span class="badge"
-                                        [ngClass]="item.estado === 'Pagado' ? 'badge-soft-success' : item.estado === 'Vencido' ? 'badge-soft-danger' : 'badge-soft-warning'">{{
-                                        item.estado | translate }}</span></td>
+                <td class="text-end">
+                  @if ((item.montoCuota ?? 0) > 0) {
+                  {{ appConfigService.getCurrentSettings().currency }}
+                  {{ formatCurrency(item.montoCuota) }}
+                  } @else {
+                  -
+                  }
+                </td>
 
-        <!-- SALDO -->
-        <td class="text-end fw-bold">
-          {{ appConfigService.getCurrentSettings().currency }}
-          {{  formatCurrency(getSaldoAcumulado(i)) }}
-          
-        </td>
+                <td class="text-end text-success fw-semibold">
+                  @if ((item.deposito ?? 0) > 0) {
+                  {{ appConfigService.getCurrentSettings().currency }}
+                  {{ formatCurrency(item.deposito) }}
+                  } @else {
+                  -
+                  }
+                </td>
 
-      </tr>
-      }
-    </tbody>
-  </table>
-</div>
+                <td class="text-end text-danger fw-semibold">
+                  @if ((item.retiro ?? 0) > 0) {
+                  {{ appConfigService.getCurrentSettings().currency }}
+                  {{ formatCurrency(item.retiro) }}
+                  } @else {
+                  -
+                  }
+                </td>
+
+                <td class="text-end text-primary fw-semibold">
+                  @if ((item.interes ?? 0) > 0) {
+                  {{ appConfigService.getCurrentSettings().currency }}
+                  {{ formatCurrency(item.interes) }}
+                  } @else {
+                  -
+                  }
+                </td>
+
+                <td>
+                  @if (item.estado) {
+                  <span class="badge" [ngClass]="item.estado === 'Pagado'
+            ? 'badge-soft-success'
+            : item.estado === 'Vencido'
+            ? 'badge-soft-danger'
+            : 'badge-soft-warning'">
+                    {{ item.estado | translate }}
+                  </span>
+                  } @else {
+                  -
+                  }
+                </td>
+
+                <td class="text-end fw-bold">
+                  {{ appConfigService.getCurrentSettings().currency }}
+                  {{ formatCurrency(getSaldoAcumulado(i)) }}
+                </td>
+
+                <td class="text-end fw-bold text-success">
+                  @if (item.saldoInteres != null) {
+                  {{ appConfigService.getCurrentSettings().currency }}
+                  {{ formatCurrency(item.saldoInteres) }}
+                  } @else {
+                  -
+                  }
+                </td>
+
+              </tr>
+              }
+            </tbody>
+
+
+          </table>
+        </div>
       </div>
 
       <div class="modal-footer">

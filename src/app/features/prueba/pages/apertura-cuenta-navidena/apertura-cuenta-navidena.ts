@@ -79,22 +79,30 @@ interface MovimientoPlanItem {
   fecha: string;
   descripcion: string;
   monto: number;
-  deposito : number,
+  deposito: number,
   retiro: number,
   estado: string;
   referencia?: string | null;
   fechaPago?: string | null;
   tipoMovimiento?: string | null;
 }
-
-interface PlanItem {
-  id: string;
+export interface PlanItem {
+  id?: string | null;
+  noCuota: number | null;
   fechaProgramada: string;
-  montoCuota: number;
-  estado: string;
-  deposito : number,
-  retiro: number | null,
-  pagado: boolean | null,
+  tipoLinea: string | null;
+  descripcion: string | null;
+
+  montoCuota: number | null;
+  deposito: number | null;
+  retiro: number | null;
+  interes: number | null;
+
+  estado: string | null;
+  saldo: number | null;
+  saldoInteres: number | null;
+
+  pagado: boolean | null;
   fechaPago?: string | null;
   usuarioPago?: string | null;
 }
@@ -244,38 +252,38 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     }
   ];
 
-public piePlotOptions: any = {
-  pie: {
-    donut: {
-      size: '68%',
-      labels: {
-        show: true,
-        name: {
-          show: true
-        },
-        value: {
+  public piePlotOptions: any = {
+    pie: {
+      donut: {
+        size: '68%',
+        labels: {
           show: true,
-          formatter: (value: string) => {
-            const currency = this.appConfigService.getCurrentSettings().currency;
-            return `${currency} ${this.formatCurrency(Number(value || 0))}`;
-          }
-        },
-        total: {
-          show: true,
-          showAlways: true,
-          label: this.translate.instant('aperturaCuentaNavidena.common.total'),
-          formatter: (w: any) => {
-            const total = (w?.globals?.seriesTotals || [])
-              .reduce((a: number, b: number) => a + b, 0);
+          name: {
+            show: true
+          },
+          value: {
+            show: true,
+            formatter: (value: string) => {
+              const currency = this.appConfigService.getCurrentSettings().currency;
+              return `${currency} ${this.formatCurrency(Number(value || 0))}`;
+            }
+          },
+          total: {
+            show: true,
+            showAlways: true,
+            label: this.translate.instant('aperturaCuentaNavidena.common.total'),
+            formatter: (w: any) => {
+              const total = (w?.globals?.seriesTotals || [])
+                .reduce((a: number, b: number) => a + b, 0);
 
-            const currency = this.appConfigService.getCurrentSettings().currency;
-            return `${currency} ${this.formatCurrency(total)}`;
+              const currency = this.appConfigService.getCurrentSettings().currency;
+              return `${currency} ${this.formatCurrency(total)}`;
+            }
           }
         }
       }
     }
-  }
-};
+  };
 
 
   public pieTooltip: any = {
@@ -283,7 +291,7 @@ public piePlotOptions: any = {
       const value = series[seriesIndex];
       const currency = this.appConfigService.getCurrentSettings().currency;
 
- return `
+      return `
   <div style="padding:10px; color:write;">
     <strong>${this.pieLabels[seriesIndex]}</strong><br/>
     ${currency} ${this.formatCurrency(value)}
@@ -652,8 +660,13 @@ public piePlotOptions: any = {
           this.plan = Array.isArray(data?.plan)
             ? data.plan.map((x: any) => ({
               id: String(x?.id ?? `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`),
+              noCuota: String(x?.noCuota ?? ''),
               fechaProgramada: String(x?.fechaProgramada ?? ''),
               montoCuota: Number(x?.montoCuota ?? 0),
+              deposito: Number(x?.deposito ?? 0),
+              retiro: Number(x?.retiro ?? 0),
+              interes: Number(x?.interes ?? 0),
+              saldoInteres: Number(x?.saldoInteres ?? 0),
               estado: String(x?.estado ?? ''),
               pagado: !!x?.pagado || String(x?.estado ?? '').toLowerCase() === 'pagada',
               fechaPago: x?.fechaPago ?? null,
@@ -1160,12 +1173,24 @@ public piePlotOptions: any = {
     while (current <= end) {
       rows.push({
         id: `preview-${i}`,
+        noCuota: i + 1,
         fechaProgramada: this.toIsoDate(current),
+
+        tipoLinea: 'PLAN',
+        descripcion: 'PLAN',
+
         montoCuota: monto,
+
+        deposito: null,
+        retiro: null,
+        interes: null,
+
         estado: 'Pendiente',
-        deposito: 0,
-        retiro: 0,
         pagado: false,
+
+        saldo: 0,
+        saldoInteres: 0,
+
         fechaPago: null,
         usuarioPago: null
       });

@@ -108,7 +108,11 @@
         "paid": "Paid",
         "search": "Search",
         "showing": "Showing",
-        "of": "of"
+        "of": "of",
+        "deposit": "Deposit",
+        "withdrawal": "Withdrawal",
+        "interest": "Interest",
+        "balanceInterest": "Balance + Interest"
       },
       
       "socios": {

@@ -87,7 +87,9 @@
          "deposito": "Deposit",
       "retiro": "Withdrawal",
         "estado": "Status",
-         "saldoAcumulado": "Balance"
+         "saldoAcumulado": "Balance",
+         "interes": "Interest",
+        "saldoInteres": "Balance + Interest"
       }
     },
     "states": {

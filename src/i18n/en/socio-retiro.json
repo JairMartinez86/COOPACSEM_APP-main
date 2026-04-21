@@ -57,12 +57,12 @@
     },
     "destinos": {
       "retiroCorriente": "Withdrawal",
-      "retiroNavideno": "Withdrawal"
+      "retiroNavideno": "Christmas Withdrawal"
     },
     "summary": {
       "availability": "Availability",
-      "currentSaving": "Current savings",
-      "christmasSaving": "Christmas savings",
+      "currentSaving": "Current Withdrawal",
+      "christmasSaving": "Christmas Withdrawal",
       "activeCredit": "Active credit",
        "totalWithdrawn": "Total withdrawn"
     },

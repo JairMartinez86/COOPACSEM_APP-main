@@ -35,11 +35,10 @@
       "summary": "Resumen"
     },
     "delete": {
-  "title": "Eliminar cuenta navideña",
-  "message": "Se eliminará la cuenta navideña de {nombre} ({identificacion}).",
-  "warning": "Esta acción eliminará la apertura y el plan si no existen movimientos."
-},
-
+      "title": "Eliminar cuenta navideña",
+      "message": "Se eliminará la cuenta navideña de {nombre} ({identificacion}).",
+      "warning": "Esta acción eliminará la apertura y el plan si no existen movimientos."
+    },
     "fields": {
       "fechaInicio": {
         "label": "Fecha de inicio deducción",
@@ -86,9 +85,11 @@
         "fecha": "Fecha",
         "cuota": "Cuota",
         "deposito": "Depósito",
-      "retiro": "Retiro",
+        "retiro": "Retiro",
         "estado": "Estado",
-         "saldoAcumulado": "Saldo"
+        "saldoAcumulado": "Saldo",
+        "interes": "Interés",
+         "saldoInteres": "Saldo + Interés"
       }
     },
     "states": {
@@ -187,16 +188,15 @@
       "plan": "Nómina",
       "extraordinario": "Extraordinario"
     },
-      "common": {
-    "search": "Buscar",
-    "close": "Cerrar",
-    "cancel": "Cancelar",
-    "yes": "Sí",
-    "no": "No",
-    "showing": "Mostrando",
-    "total": "Total",
-    "of": "de"
+    "common": {
+      "search": "Buscar",
+      "close": "Cerrar",
+      "cancel": "Cancelar",
+      "yes": "Sí",
+      "no": "No",
+      "showing": "Mostrando",
+      "total": "Total",
+      "of": "de"
+    }
   }
-  }
-
 }

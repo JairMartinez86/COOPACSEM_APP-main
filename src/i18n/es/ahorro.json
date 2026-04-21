@@ -109,7 +109,11 @@
         "paid" : "Pagado",
          "search": "Buscar",
         "showing": "Mostrando",
-        "of": "de"
+        "of": "de",
+         "deposit": "Depósito",
+        "withdrawal": "Retiro",
+        "interest": "Interés",
+        "balanceInterest": "Saldo + Interés"
       },
       "socios": {
         "code": "Código",
