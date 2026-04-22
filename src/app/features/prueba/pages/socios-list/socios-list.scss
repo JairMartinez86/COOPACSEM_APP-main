@@ -5,7 +5,7 @@
 
 .two-column-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
+  grid-template-columns: minmax(0, 1fr) 500px;
   gap: 1rem;
   align-items: start;
   width: 100%;
@@ -198,50 +198,6 @@
 }
 
 
-
-//BOTONES SOCIO AHORRO, CREDITO, HISTORIAL
-.profile-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
-  align-items: stretch;
-  width: 100%;
-}
-
-.profile-actions > .btn,
-.profile-actions > .dropdown {
-  min-width: 0;
-}
-
-.profile-actions .btn,
-.profile-actions .dropdown-toggle {
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0.35rem 0.55rem;
-  font-size: 0.72rem;
-}
-
-.profile-actions .btn i,
-.profile-actions .dropdown-toggle i,
-.profile-actions .dropdown-item i {
-  font-size: 0.8rem;
-}
-
-.profile-history-dropdown {
-  grid-column: 1 / -1;
-  position: relative;
-}
-
-.profile-history-dropdown .dropdown-menu {
-  width: 100%;
-  min-width: 100%;
-  right: 0;
-  left: auto;
-  z-index: 1055;
-}
-
 .card,
 .card-body,
 .two-column-layout,
@@ -252,6 +208,171 @@
 
 
 
+
+/* ACCESO RAPIDO BOTONES */
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* BOTÓN BASE */
+.quick-action-btn {
+  width: 100%;
+  min-height: 56px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.9rem 1rem;
+  font-weight: 600;
+  text-align: left;
+  background: var(--bs-tertiary-bg);
+  color: var(--bs-body-color);
+  transition: all 0.2s ease;
+}
+
+/* ICONO */
+.quick-action-btn i {
+  width: 18px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* HOVER */
+.quick-action-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* 🔥 COLORES INTENSOS */
+
+/* VERDE */
+.quick-action-btn.is-green {
+  background: rgba(var(--bs-success-rgb), 0.28);
+  border-color: rgba(var(--bs-success-rgb), 0.45);
+  color: var(--bs-success);
+}
+
+/* AZUL */
+.quick-action-btn.is-blue {
+  background: rgba(var(--bs-primary-rgb), 0.28);
+  border-color: rgba(var(--bs-primary-rgb), 0.45);
+  color: var(--bs-primary);
+}
+
+/* VIOLETA */
+.quick-action-btn.is-violet {
+  background: rgba(var(--bs-purple-rgb), 0.28);
+  border-color: rgba(var(--bs-purple-rgb), 0.45);
+  color: var(--bs-purple);
+}
+
+/* CYAN */
+.quick-action-btn.is-cyan {
+  background: rgba(var(--bs-info-rgb), 0.28);
+  border-color: rgba(var(--bs-info-rgb), 0.45);
+  color: var(--bs-info);
+}
+
+/* AMBAR */
+.quick-action-btn.is-amber {
+  background: rgba(var(--bs-warning-rgb), 0.32);
+  border-color: rgba(var(--bs-warning-rgb), 0.5);
+  color: #c47f00;
+}
+
+/* ESMERALDA */
+.quick-action-btn.is-emerald {
+  background: rgba(var(--bs-success-rgb), 0.24);
+  border-color: rgba(var(--bs-success-rgb), 0.4);
+  color: #198754;
+}
+
+/* ORANGE */
+.quick-action-btn.is-orange {
+  background: rgba(253, 126, 20, 0.24); /* equivalente a --bs-orange */
+  border-color: rgba(253, 126, 20, 0.4);
+  color: #fd7e14;
+}
+
+/* TEAL */
+.quick-action-btn.is-teal {
+  background: rgba(20, 184, 166, 0.24); /* teal base */
+  border-color: rgba(20, 184, 166, 0.4);
+  color: #0f766e;
+}
+
+/* RESPONSIVE */
+@media (max-width: 575px) {
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== CONTENEDOR ===== */
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+/* ===== BOTONES ===== */
+.quick-action-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+
+  width: 100%;
+  min-height: 42px;
+
+  padding: 8px 12px;
+  border-radius: 8px;
+
+  font-size: 13px;
+  text-align: left;
+
+  gap: 8px;
+  overflow: hidden;
+}
+
+/* ===== ICONO ===== */
+.quick-action-btn i {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ===== TEXTO ===== */
+.quick-action-btn span {
+  white-space: normal;      /* permite varias líneas */
+  overflow: visible;
+  text-overflow: unset;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* ===== HOVER ===== */
+.quick-action-btn:hover {
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+  opacity: 0.95;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 
 

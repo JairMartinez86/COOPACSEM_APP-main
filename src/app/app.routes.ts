@@ -140,6 +140,17 @@ export const routes: Routes = [
         providers: [JMartMassiveValidationService],
       },
       {
+        path: 'socios/:id/ficha',
+        loadComponent: () =>
+          import('./features/prueba/pages/ficha-socio/ficha-socio.component')
+            .then(m => m.FichaSocioComponent),
+        canActivate: [permissionGuard],
+        data: { permission: '/socios', action: 'view' },
+      },
+      
+
+
+      {
         path: 'socios/new',
         loadComponent: () =>
           import('./features/prueba/pages/socios/socios')

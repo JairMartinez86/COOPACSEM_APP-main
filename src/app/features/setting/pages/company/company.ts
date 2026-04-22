@@ -261,27 +261,22 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
   // =============================
 
   // Construye URL completa del logo
-  private buildLogoUrl(path?: string | null): string | null {
-    if (!path || !String(path).trim()) return null;
+private buildLogoUrl(path?: string | null): string | null {
+  if (!path || !String(path).trim()) return null;
 
-    const cleanPath = String(path).trim();
+  const cleanPath = String(path).trim();
 
-    if (
-      cleanPath.startsWith('http://') ||
-      cleanPath.startsWith('https://') ||
-      cleanPath.startsWith('data:')
-    ) {
-      return cleanPath;
-    }
-
-    const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
-
-    try {
-      return new URL(normalizedPath, this.api.baseUrl).toString();
-    } catch {
-      return normalizedPath;
-    }
+  if (
+    cleanPath.startsWith('http://') ||
+    cleanPath.startsWith('https://') ||
+    cleanPath.startsWith('data:')
+  ) {
+    return cleanPath;
   }
+
+  const apiHost = 'http://localhost:5251';
+  return `${apiHost}${cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`}`;
+}
 
   // Normaliza objeto company (evita nulls)
   private normalizeCompany(
@@ -330,80 +325,84 @@ export class CompanyComponent implements OnInit, AfterViewInit, OnDestroy, CanCo
   // =============================
   // API
   // =============================
-  loadCompany(): void {
-    this.companyService.getCompany()
-      .pipe(finalize(() => { }))
-      .subscribe({
-        next: (res: any) => {
-          const apiCompany = res?.data?.company ?? {};
-  
-          // Mapeo de datos API → modelo
-          this.copy = {
-            CompanyName: apiCompany.CompanyName ?? apiCompany.companyName ?? '',
-            TradeName: apiCompany.TradeName ?? apiCompany.tradeName ?? '',
-            Ruc: apiCompany.Ruc ?? apiCompany.ruc ?? '',
-            BusinessType: apiCompany.BusinessType ?? apiCompany.businessType ?? '',
-            Status: apiCompany.Status ?? apiCompany.status ?? 'Active',
-            Description: apiCompany.Description ?? apiCompany.description ?? '',
-            LogoUrl: apiCompany.LogoUrl ?? apiCompany.logoUrl ?? '',
-            LogoFileName: apiCompany.LogoFileName ?? apiCompany.logoFileName ?? '',
-            Email: apiCompany.Email ?? apiCompany.email ?? '',
-            Phone: apiCompany.Phone ?? apiCompany.phone ?? '',
-            Mobile: apiCompany.Mobile ?? apiCompany.mobile ?? '',
-            Website: apiCompany.Website ?? apiCompany.website ?? '',
-            Address: apiCompany.Address ?? apiCompany.address ?? '',
-            Country: apiCompany.Country ?? apiCompany.country ?? '',
-            City: apiCompany.City ?? apiCompany.city ?? '',
-            DateFormat: apiCompany.DateFormat ?? apiCompany.dateFormat ?? 'dd/MM/yyyy',
-            Currency: apiCompany.Currency ?? apiCompany.currency ?? 'NIO',
-            DecimalSeparator: apiCompany.DecimalSeparator ?? apiCompany.decimalSeparator ?? '.',
-            ThousandSeparator: apiCompany.ThousandSeparator ?? apiCompany.thousandSeparator ?? ',', 
-            SmtpHost: apiCompany.SmtpHost ?? apiCompany.smtpHost ?? '',
-            SmtpPort: apiCompany.SmtpPort ?? apiCompany.smtpPort ?? 0,
-            SmtpUsername: apiCompany.SmtpUsername ?? apiCompany.smtpUsername ?? '',
-            SmtpPassword: apiCompany.SmtpPassword ?? apiCompany.smtpPassword ?? '',
-            SmtpFrom: apiCompany.SmtpFrom ?? apiCompany.smtpFrom ?? '',
-            TwoFactorCodeExpirationMinutes:
-              apiCompany.TwoFactorCodeExpirationMinutes ??
-              apiCompany.twoFactorCodeExpirationMinutes ??
-              5,
-            PasswordResetExpirationMinutes:
-              apiCompany.PasswordResetExpirationMinutes ??
-              apiCompany.passwordResetExpirationMinutes ??
-              30,
-            TrustedDeviceExpirationDays:
-              apiCompany.TrustedDeviceExpirationDays ??
-              apiCompany.trustedDeviceExpirationDays ??
-              30,
-            LoginLockMinutes:
-              apiCompany.LoginLockMinutes ??
-              apiCompany.loginLockMinutes ??
-              10,
-            JwtExpiresMinutes:
-              apiCompany.JwtExpiresMinutes ??
-              apiCompany.jwtExpiresMinutes ??
-              60,
-            RefreshExpiresMinutes:
-              apiCompany.RefreshExpiresMinutes ??
-              apiCompany.refreshExpiresMinutes ??
-              1440
-          };
+loadCompany(): void {
+  this.companyService.getCompany()
+    .pipe(finalize(() => { }))
+    .subscribe({
+      next: (res: any) => {
+        const apiCompany = res?.data?.company ?? res?.data ?? {};
 
-          this.company = { ...this.copy };
-          this.logoPreview = this.buildLogoUrl(this.company.LogoUrl);
 
-          this.patchEngineFromCompany();
-          this.engine.clearErrors();
+        this.copy = {
+          CompanyName: apiCompany.CompanyName ?? apiCompany.companyName ?? '',
+          TradeName: apiCompany.TradeName ?? apiCompany.tradeName ?? '',
+          Ruc: apiCompany.Ruc ?? apiCompany.ruc ?? '',
+          BusinessType: apiCompany.BusinessType ?? apiCompany.businessType ?? '',
+          Status: apiCompany.Status ?? apiCompany.status ?? 'Active',
+          Description: apiCompany.Description ?? apiCompany.description ?? '',
+          LogoUrl: apiCompany.LogoUrl ?? apiCompany.logoUrl ?? '',
+          LogoFileName: apiCompany.LogoFileName ?? apiCompany.logoFileName ?? '',
+          Email: apiCompany.Email ?? apiCompany.email ?? '',
+          Phone: apiCompany.Phone ?? apiCompany.phone ?? '',
+          Mobile: apiCompany.Mobile ?? apiCompany.mobile ?? '',
+          Website: apiCompany.Website ?? apiCompany.website ?? '',
+          Address: apiCompany.Address ?? apiCompany.address ?? '',
+          Country: apiCompany.Country ?? apiCompany.country ?? '',
+          City: apiCompany.City ?? apiCompany.city ?? '',
+          DateFormat: apiCompany.DateFormat ?? apiCompany.dateFormat ?? 'dd/MM/yyyy',
+          Currency: apiCompany.Currency ?? apiCompany.currency ?? 'NIO',
+          DecimalSeparator: apiCompany.DecimalSeparator ?? apiCompany.decimalSeparator ?? '.',
+          ThousandSeparator: apiCompany.ThousandSeparator ?? apiCompany.thousandSeparator ?? ',',
+          SmtpHost: apiCompany.SmtpHost ?? apiCompany.smtpHost ?? '',
+          SmtpPort: apiCompany.SmtpPort ?? apiCompany.smtpPort ?? 0,
+          SmtpUsername: apiCompany.SmtpUsername ?? apiCompany.smtpUsername ?? '',
+          SmtpPassword: apiCompany.SmtpPassword ?? apiCompany.smtpPassword ?? '',
+          SmtpFrom: apiCompany.SmtpFrom ?? apiCompany.smtpFrom ?? '',
+          TwoFactorCodeExpirationMinutes:
+            apiCompany.TwoFactorCodeExpirationMinutes ??
+            apiCompany.twoFactorCodeExpirationMinutes ??
+            5,
+          PasswordResetExpirationMinutes:
+            apiCompany.PasswordResetExpirationMinutes ??
+            apiCompany.passwordResetExpirationMinutes ??
+            30,
+          TrustedDeviceExpirationDays:
+            apiCompany.TrustedDeviceExpirationDays ??
+            apiCompany.trustedDeviceExpirationDays ??
+            30,
+          LoginLockMinutes:
+            apiCompany.LoginLockMinutes ??
+            apiCompany.loginLockMinutes ??
+            10,
+          JwtExpiresMinutes:
+            apiCompany.JwtExpiresMinutes ??
+            apiCompany.jwtExpiresMinutes ??
+            60,
+          RefreshExpiresMinutes:
+            apiCompany.RefreshExpiresMinutes ??
+            apiCompany.refreshExpiresMinutes ??
+            1440
+        };
 
-          this.dataReady = true;
-          this.tryInitDraftManager();
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse(err?.error ?? err, 'Error');
-        }
-      });
-  }
+        this.company = { ...this.copy };
+        this.logoPreview = this.buildLogoUrl(this.company.LogoUrl);
 
+        console.log('RES COMPLETO', res);
+        console.log('apiCompany', apiCompany);
+        console.log('LogoUrl', this.company.LogoUrl);
+        console.log('logoPreview', this.logoPreview);
+
+        this.patchEngineFromCompany();
+        this.engine.clearErrors();
+
+        this.dataReady = true;
+        this.tryInitDraftManager();
+      },
+      error: (err: any) => {
+        this.notify.showFromApiResponse(err?.error ?? err, 'Error');
+      }
+    });
+}
   // Cancelar cambios
   onCancel(): void {
     this.notify.close();

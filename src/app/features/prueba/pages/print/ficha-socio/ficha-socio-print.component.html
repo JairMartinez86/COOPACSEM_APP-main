@@ -1,0 +1,236 @@
+<div class="print-page">
+
+  <!-- ENCABEZADO -->
+  <div class="rpt-header">
+    <div class="rpt-header-logo">
+      @if (logoUrl) {
+        <img [src]="logoUrl" alt="logo">
+      }
+    </div>
+
+    <div class="rpt-header-center">
+      <div class="rpt-header-line">COOPERATIVA DE AHORRO, CREDITOS Y SERVICIOS MULTIPLES</div>
+      <div class="rpt-header-line">DE TRABAJADORES DEL GRUPO MONGE R.L.</div>
+      <div class="rpt-header-title">EXPEDIENTE DE SOCIO</div>
+    </div>
+
+    <div class="rpt-header-right"></div>
+  </div>
+
+  <hr class="rpt-sep">
+
+  <!-- DATOS PERSONALES -->
+  <section class="rpt-section">
+    <h3 class="rpt-section-title">DATOS PERSONALES:</h3>
+
+    <div class="rpt-grid rpt-grid-personal-top">
+      <div>
+        <div class="rpt-label">Primer nombre</div>
+        <div class="rpt-value">{{ primerNombre }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Segundo nombre</div>
+        <div class="rpt-value">{{ segundoNombre }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Apellidos</div>
+        <div class="rpt-value">{{ apellidos }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Identificación</div>
+        <div class="rpt-value">
+          {{ getTipoIdentificacionLabel(socio?.tipoIdentificacion) }}:
+          {{ socio?.numeroIdentificacion || '-' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="rpt-grid rpt-grid-personal-bottom">
+      <div>
+        <div class="rpt-label">Nacionalidad</div>
+        <div class="rpt-value">{{ socio?.nacionalidad || '-' }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Número INSS</div>
+        <div class="rpt-value">{{ socio?.numeroInss || 'NO SUMINISTRADO' }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Estado civil</div>
+        <div class="rpt-value">{{ getEstadoCivilLabel(socio?.estadoCivil) }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Género</div>
+        <div class="rpt-value">{{ getSexoLabel(socio?.sexo) }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Fecha de nacimiento</div>
+        <div class="rpt-value">
+          {{ formatFechaCorta(socio?.fechaNacimiento) }}
+          @if (edad) { ({{ edad }} AÑOS) }
+        </div>
+      </div>
+    </div>
+
+    <div class="rpt-obs">
+      <div class="rpt-label">Observaciones</div>
+      <div class="rpt-value">{{ socio?.observaciones || '' }}</div>
+    </div>
+  </section>
+
+  <hr class="rpt-sep">
+
+  <!-- CONTACTO -->
+  <section class="rpt-section">
+    <h3 class="rpt-section-title">DOMICILIO E INFORMACIÓN DE CONTACTO</h3>
+
+    <div class="rpt-grid rpt-grid-contact">
+      <div>
+        <div class="rpt-label">Dirección</div>
+        @for (linea of getDireccionReporte(); track $index) {
+          <div class="rpt-value rpt-line">{{ linea }}</div>
+        }
+      </div>
+
+      <div>
+        <div class="rpt-contact-block">
+          <div class="rpt-label">Teléfono domicilio</div>
+          <div class="rpt-value">{{ socio?.telefono || '-' }}</div>
+        </div>
+
+        <div class="rpt-contact-block">
+          <div class="rpt-label">Teléfono celular</div>
+          <div class="rpt-value">{{ socio?.celular || '-' }}</div>
+        </div>
+
+        <div class="rpt-contact-block">
+          <div class="rpt-label">Correo electrónico</div>
+          <div class="rpt-value rpt-email">{{ socio?.correo || '-' }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rpt-sep">
+
+  <!-- INFORMACION LABORAL -->
+  <section class="rpt-section">
+    <h3 class="rpt-section-title">INFORMACIÓN LABORAL</h3>
+
+    <div class="rpt-grid rpt-grid-laboral">
+      <div>
+        <div class="rpt-labor-block">
+          <div class="rpt-label">Código de Socio</div>
+          <div class="rpt-value">{{ socio?.codigoSocio || '-' }}</div>
+        </div>
+
+        <div class="rpt-labor-block">
+          <div class="rpt-label">Fecha de ingreso</div>
+          <div class="rpt-value">
+            {{ formatFechaCorta(socio?.fechaIngreso) }}
+            @if (antiguedadIngreso) { ({{ antiguedadIngreso }} AÑOS) }
+          </div>
+        </div>
+
+        <div class="rpt-labor-block">
+          <div class="rpt-label">Ingreso mensual</div>
+          <div class="rpt-value">C$ {{ formatMoney(socio?.ingresosMensuales) }}</div>
+        </div>
+
+        <div class="rpt-labor-block">
+          <div class="rpt-label">Nombre del jefe</div>
+          <div class="rpt-value">{{ socio?.jefeInmediato || 'NO SUMINISTRADO' }}</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="rpt-labor-block">
+          <div class="rpt-label">Nómina</div>
+          <div class="rpt-value">{{ socio?.sociedadLabora || '-' }}</div>
+        </div>
+
+        <div class="rpt-labor-block">
+          <div class="rpt-label">Ubicación</div>
+          <div class="rpt-value">{{ socio?.numeroIp || '-' }}</div>
+        </div>
+
+        <div class="rpt-labor-block">
+          <div class="rpt-label">Departamento</div>
+          <div class="rpt-value">{{ socio?.area || '-' }}</div>
+        </div>
+
+        <div class="rpt-labor-block">
+          <div class="rpt-label">Cargo</div>
+          <div class="rpt-value">{{ socio?.cargo || '-' }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rpt-sep">
+
+  <!-- DATOS COOPACSEM -->
+  <section class="rpt-section">
+    <h3 class="rpt-section-title">DATOS COOPACSEM R.L.</h3>
+
+    <div class="rpt-grid rpt-grid-coop">
+      <div>
+        <div class="rpt-label">Fecha de ingreso</div>
+        <div class="rpt-value">{{ formatFechaCorta(socio?.fechaIngreso) }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Fecha inicio<br>Deducción Corriente</div>
+        <div class="rpt-value">{{ formatFechaCorta(socio?.cuentaCorrienteFechaInicioDeduccion) }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Cuota Quincenal<br>Cuenta Corriente</div>
+        <div class="rpt-value">{{ formatMoney(socio?.cuentaCorrienteMontoCuota) }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Fecha inicio<br>Deducción Navideña</div>
+        <div class="rpt-value">{{ formatFechaCorta(socio?.cuentaNavidenaFechaInicioDeduccion) }}</div>
+      </div>
+
+      <div>
+        <div class="rpt-label">Cuota Quincenal<br>Cuenta Navideña</div>
+        <div class="rpt-value">{{ formatMoney(socio?.cuentaNavidenaMontoCuota) }}</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rpt-sep">
+
+  <!-- OTROS INGRESOS -->
+  <section class="rpt-section">
+    <h3 class="rpt-section-title">OTROS INGRESOS</h3>
+    <div class="rpt-value rpt-no-upper">
+      @if ((socio?.otrosIngresos ?? 0) > 0) {
+        C$ {{ formatMoney(socio?.otrosIngresos) }}
+      } @else {
+        NO SE REGISTRARON OTROS INGRESOS PARA ESTE SOCIO
+      }
+    </div>
+  </section>
+
+  <!-- IMPORTANTE -->
+  <section class="rpt-important">
+    <div class="rpt-important-title">IMPORTANTE:</div>
+    <div>- Únicamente podrán ser socios de la cooperativa, los empleados activos de GMG COMERCIAL o GMG SERVICIOS NICARAGUA S.A.</div>
+    <div>- La cooperativa se reserva el derecho de verificar la información proporcionada por el asociado, en caso de determinarse que la información proporcionada es falsa o errónea, podrá ser negada su solicitud de ingreso o si la falta fuese detectada en cualquier</div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="rpt-footer">
+    <div>{{ fechaServidor }}</div>
+    <div>Page 1 of 2</div>
+  </div>
+</div>

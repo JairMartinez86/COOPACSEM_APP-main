@@ -25,19 +25,25 @@ export class SociosService extends BrowserApiService {
   }
 
   getAll(page: number = 1, pageSize: number = 20, search: string = '') {
-  return this.http.get<any>(`${this.api.baseUrl}/socios`, {
-    params: {
-      page,
-      pageSize,
-      search
-    },
-    withCredentials: true
-  });
-}
+    return this.http.get<any>(`${this.api.baseUrl}/socios`, {
+      params: {
+        page,
+        pageSize,
+        search
+      },
+      withCredentials: true
+    });
+  }
 
   getById(id: string): Observable<any> {
     return this.browserOnly(() =>
       this.http.get<any>(`${this.api.baseUrl}/socios/${id}`, { withCredentials: true })
+    );
+  }
+
+  getFicha(id: string): Observable<any> {
+    return this.browserOnly(() =>
+      this.http.get<any>(`${this.api.baseUrl}/socios/${id}/ficha`, { withCredentials: true })
     );
   }
 
@@ -116,6 +122,4 @@ export class SociosService extends BrowserApiService {
       { withCredentials: true }
     );
   }
-
-
 }

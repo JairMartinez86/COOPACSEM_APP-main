@@ -1,0 +1,386 @@
+
+
+<!-- ===================== -->
+<!-- VISTA NORMAL -->
+<!-- ===================== -->
+<div class="container-fluid px-0 page-ficha-socio no-print">
+    <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <div>
+      <h1 class="h3 mb-1 fw-bold">Ficha de socio</h1>
+      <p class="text-muted mb-0">Vista resumida estilo expediente</p>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-light border" (click)="back()">
+        <i class="bi bi-arrow-left me-1"></i>
+        Volver
+      </button>
+
+      <button type="button" class="btn btn-primary" (click)="imprimirDirecto()">
+        <i class="bi bi-printer me-1"></i>
+        Imprimir
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="card shadow-sm border-0">
+      <div class="card-body text-center py-5 text-muted">
+        Cargando ficha del socio...
+      </div>
+    </div>
+  }
+
+  @if (!loading && socio) {
+    <div class="card shadow-sm border-0 mb-3">
+      <div class="card-body p-4">
+        <div class="row align-items-center g-3">
+          <div class="col-12 col-md-auto text-center">
+            @if (logoUrl) {
+              <img
+                [src]="logoUrl"
+                [alt]="companyName"
+                style="max-width:72px; max-height:72px; object-fit:contain;"
+              >
+            } @else {
+              <div
+                class="border rounded d-inline-flex align-items-center justify-content-center"
+                style="width:72px; height:72px;"
+              >
+                <i class="bi bi-building text-muted"></i>
+              </div>
+            }
+          </div>
+
+          <div class="col">
+            <div class="text-uppercase small text-muted fw-semibold">{{ companyName }}</div>
+            <h2 class="h4 mb-1 fw-bold">Expediente de socio</h2>
+            <div class="text-muted">
+              {{ socio.codigoSocio || '-' }} - {{ socio.nombreCompleto || '-' }}
+            </div>
+          </div>
+
+          <div class="col-12 col-md-auto text-md-end">
+            <div class="small text-muted">Fecha: {{ fechaServidor || '-' }}</div>
+            <div class="mt-1">
+              <span class="badge" [ngClass]="socio.activo ? 'bg-success' : 'bg-secondary'">
+                {{ socio.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <div class="text-muted small text-uppercase fw-semibold mb-1">Código de socio</div>
+            <div class="fw-bold">{{ socio.codigoSocio || '-' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <div class="text-muted small text-uppercase fw-semibold mb-1">Identificación</div>
+            <div class="fw-bold">
+              {{ getTipoIdentificacionLabel(socio.tipoIdentificacion) }}:
+              {{ socio.numeroIdentificacion || '-' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <div class="text-muted small text-uppercase fw-semibold mb-1">Ingreso</div>
+            <div class="fw-bold">{{ socio.fechaIngreso || '-' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <div class="text-muted small text-uppercase fw-semibold mb-1">Saldo ahorro</div>
+            <div class="fw-bold">
+              {{ appConfigService.getCurrentSettings().currency }}
+              {{ formatMoney(socio.dashboard?.saldo) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-3">
+      <div class="card-header bg-transparent">
+        <h5 class="mb-0 fw-bold">Datos personales</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Nombre completo</div>
+            <div>{{ socio.nombreCompleto || '-' }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Nombre público</div>
+            <div>{{ socio.nombrePublico || '-' }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Número INSS</div>
+            <div>{{ socio.numeroInss || '-' }}</div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Sexo</div>
+            <div>{{ getSexoLabel(socio.sexo) }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Estado civil</div>
+            <div>{{ getEstadoCivilLabel(socio.estadoCivil) }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Fecha nacimiento</div>
+            <div>{{ socio.fechaNacimiento || '-' }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Edad</div>
+            <div>{{ edad ?? '-' }}</div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Nacionalidad</div>
+            <div>{{ socio.nacionalidad || '-' }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">País emisor</div>
+            <div>{{ socio.paisEmisor || '-' }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">País nacimiento</div>
+            <div>{{ socio.paisNacimiento || '-' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-muted small text-uppercase fw-semibold">Fecha emisión</div>
+            <div>{{ socio.fechaEmision || '-' }}</div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-muted small text-uppercase fw-semibold">Fecha vencimiento</div>
+            <div>{{ socio.fechaVencimiento || '-' }}</div>
+          </div>
+
+          <div class="col-12">
+            <div class="text-muted small text-uppercase fw-semibold">Observaciones</div>
+            <div>{{ socio.observaciones || 'No registradas' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-3">
+      <div class="card-header bg-transparent">
+        <h5 class="mb-0 fw-bold">Domicilio e información de contacto</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="text-muted small text-uppercase fw-semibold">Dirección</div>
+            <div>{{ socio.direccionDomiciliar || '-' }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Departamento</div>
+            <div>{{ socio.departamento || '-' }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Municipio</div>
+            <div>{{ socio.municipio || '-' }}</div>
+          </div>
+          <div class="col-md-2">
+            <div class="text-muted small text-uppercase fw-semibold">Teléfono</div>
+            <div>{{ socio.telefono || '-' }}</div>
+          </div>
+          <div class="col-md-2">
+            <div class="text-muted small text-uppercase fw-semibold">Celular</div>
+            <div>{{ socio.celular || '-' }}</div>
+          </div>
+          <div class="col-md-2">
+            <div class="text-muted small text-uppercase fw-semibold">Correo</div>
+            <div>{{ socio.correo || '-' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-3">
+      <div class="card-header bg-transparent">
+        <h5 class="mb-0 fw-bold">Información laboral</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Sociedad labora</div>
+            <div>{{ socio.sociedadLabora || '-' }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Área</div>
+            <div>{{ socio.area || '-' }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Cargo</div>
+            <div>{{ socio.cargo || '-' }}</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small text-uppercase fw-semibold">Fecha ingreso</div>
+            <div>{{ socio.fechaIngreso || '-' }}</div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Jefe inmediato</div>
+            <div>{{ socio.jefeInmediato || '-' }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Correo laboral</div>
+            <div>{{ socio.correoLaboral || '-' }}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Número IP / Nómina</div>
+            <div>{{ socio.numeroIp || '-' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-3">
+      <div class="card-header bg-transparent">
+        <h5 class="mb-0 fw-bold">Datos económicos y cooperativos</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Ingresos mensuales</div>
+            <div>
+              {{ appConfigService.getCurrentSettings().currency }}
+              {{ formatMoney(socio.ingresosMensuales) }}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Otros ingresos</div>
+            <div>
+              {{ appConfigService.getCurrentSettings().currency }}
+              {{ formatMoney(socio.otrosIngresos) }}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-muted small text-uppercase fw-semibold">Ingresos anuales</div>
+            <div>
+              {{ appConfigService.getCurrentSettings().currency }}
+              {{ formatMoney(socio.ingresosAnuales) }}
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="border rounded p-3 h-100">
+              <div class="fw-bold mb-2">Cuenta corriente</div>
+              <div class="small mb-1">
+                Estado:
+                <strong>{{ socio.cuentaCorrienteActiva ? 'Activa' : 'Inactiva' }}</strong>
+              </div>
+              <div class="small mb-1">
+                Fecha inicio:
+                <strong>{{ socio.cuentaCorrienteFechaInicioDeduccion || '-' }}</strong>
+              </div>
+              <div class="small">
+                Cuota:
+                <strong>
+                  {{ appConfigService.getCurrentSettings().currency }}
+                  {{ formatMoney(socio.cuentaCorrienteMontoCuota) }}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="border rounded p-3 h-100">
+              <div class="fw-bold mb-2">Cuenta navideña</div>
+              <div class="small mb-1">
+                Estado:
+                <strong>{{ socio.cuentaNavidenaActiva ? 'Activa' : 'Inactiva' }}</strong>
+              </div>
+              <div class="small mb-1">
+                Fecha inicio:
+                <strong>{{ socio.cuentaNavidenaFechaInicioDeduccion || '-' }}</strong>
+              </div>
+              <div class="small">
+                Cuota:
+                <strong>
+                  {{ appConfigService.getCurrentSettings().currency }}
+                  {{ formatMoney(socio.cuentaNavidenaMontoCuota) }}
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-3">
+      <div class="card-header bg-transparent">
+        <h5 class="mb-0 fw-bold">Beneficiarios</h5>
+      </div>
+      <div class="card-body">
+        @if ((socio.beneficiarios ?? []).length === 0) {
+          <div class="alert alert-light mb-0">
+            No se registraron beneficiarios para este socio.
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Identificación</th>
+                  <th>Parentesco</th>
+                  <th class="text-end">Beneficio</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of socio.beneficiarios; track $index) {
+                  <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ item.nombreCompleto || '-' }}</td>
+                    <td>{{ item.cedula || '-' }}</td>
+                    <td>{{ item.parentesco || '-' }}</td>
+                    <td class="text-end">{{ formatMoney(item.porcentaje) }} %</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="4" class="text-end">Total</th>
+                  <th class="text-end">{{ formatMoney(totalBeneficiarios) }} %</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+
+@if (mostrarPrint) {
+  <app-ficha-socio-print
+    [socio]="socio"
+    [companyName]="companyName"
+    [logoUrl]="logoUrl"
+    [fechaServidor]="fechaServidor">
+  </app-ficha-socio-print>
+}

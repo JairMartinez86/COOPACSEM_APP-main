@@ -19,14 +19,11 @@ import { TableFilterService } from '../../../../core/services/table-filter.servi
 import { PermissionService } from '../../../../core/services/permission.service';
 import { AppConfigService } from '../../../../core/services/app-config.service';
 import { SocioAlerts } from '../../../../shared/interfaces/alert.model';
+import { ActionItem } from '../../../ahorro/interface/ahorro.models';
 
 interface SocioMovimientoRow {
   fecha?: string | null;
   descripcion?: string | null;
-  debito?: number | null;
-  credito?: number | null;
-  saldo?: number | null;
-  tipoCuenta: string | null;
 }
 
 interface SocioDashboardRow {
@@ -34,7 +31,7 @@ interface SocioDashboardRow {
   creditoPendiente: number;
   proximoRetiro: number;
   aprobacionesPendientes: number;
-  ultimosMovimientos: SocioMovimientoRow[];
+
 }
 
 interface SocioRow {
@@ -57,6 +54,7 @@ interface SocioRow {
   updatedBy?: string | null;
   dashboard?: SocioDashboardRow | null;
   alerts: SocioAlerts;
+  ultimosMovimientos: SocioMovimientoRow[];
 }
 
 @Component({
@@ -73,6 +71,7 @@ interface SocioRow {
 })
 export class SociosListComponent implements OnInit, OnDestroy {
   @ViewChild('excelFileInput') excelFileInputRef?: ElementRef<HTMLInputElement>;
+
 
   private readonly sociosService = inject(SociosService);
   private readonly notify = inject(NotificationService);
@@ -92,6 +91,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
   selectedSocio: SocioRow | null = null;
   totalRecords = 0;
 
+
   globalDashboard: any = {
     totalAhorro: 0,
     creditoPendiente: 0,
@@ -102,6 +102,20 @@ export class SociosListComponent implements OnInit, OnDestroy {
   currentPage = 1;
   pageSize = 20;
   readonly pageSizeOptions = [10, 20, 50, 100];
+
+
+  actions: ActionItem[] = [
+    { icon: 'fa-regular fa-hand-holding-heart', titleKey: 'ahorro.actions.newSaving', accent: 'green', order: 1 },
+    { icon: 'fa-duotone fa-light fa-file-invoice-dollar', titleKey: 'ahorro.actions.affiliation', accent: 'amber', order: 2 },
+    { icon: 'fa-solid fa-arrow-down', titleKey: 'ahorro.actions.newDeposit', accent: 'blue', order: 3 },
+    { icon: 'fa-solid fa-arrow-up', titleKey: 'ahorro.actions.newWithdrawal', accent: 'violet', order: 4 },
+    { icon: 'fa-solid fa-arrow-trend-up', titleKey: 'ahorro.actions.increaseInstallment', accent: 'teal', order: 5 },
+    { icon: 'fa-solid fa-arrow-trend-down', titleKey: 'ahorro.actions.decreaseInstallment', accent: 'orange', order: 6 },
+    { icon: 'fa-solid fa-print', titleKey: 'ahorro.actions.printReport', accent: 'cyan', order: 7 },
+    { icon: 'fa-regular fa-file-excel', titleKey: 'ahorro.actions.exportExcel', accent: 'emerald', order: 8 },
+  ];
+
+
 
   breadcrumbs = [
     { label: '', url: '' },
@@ -220,6 +234,16 @@ export class SociosListComponent implements OnInit, OnDestroy {
   onCreate(): void {
     this.router.navigate(['/socios/new']);
   }
+
+  onView(id: string): void {
+    if (this.permissionService.has('view', '/socios')) {
+      this.router.navigate(['/socios', id, 'ficha']);
+      return;
+    }
+
+    this.notify.show?.('No tiene permisos para ver la ficha del socio.', '', 'warning');
+  }
+
 
   onEdit(id: string): void {
     if (this.permissionService.has('edit', '/socios')) {
@@ -410,8 +434,10 @@ export class SociosListComponent implements OnInit, OnDestroy {
   }
 
   private normalizeSocio(item: any): SocioRow {
+
     return {
       id: item?.id ?? '',
+
       alerts: item?.alerts ?? {
         count: 0,
         hasAlerts: false,
@@ -419,6 +445,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
         highestSeverity: 'info',
         items: []
       },
+
       codigoSocio: item?.codigoSocio ?? '',
       nombreCompleto: item?.nombreCompleto ?? '',
       nombrePublico: item?.nombrePublico ?? '',
@@ -428,28 +455,28 @@ export class SociosListComponent implements OnInit, OnDestroy {
       celular: item?.celular ?? '',
       direccionDomiciliar: item?.direccionDomiciliar ?? null,
       fechaIngreso: item?.fechaIngreso ?? null,
+
       cuentaCorrienteActiva: !!item?.cuentaCorrienteActiva,
       cuentaNavidenaActiva: !!item?.cuentaNavidenaActiva,
       activo: !!item?.activo,
+
       createdAtUtc: item?.createdAtUtc ?? null,
       updatedAtUtc: item?.updatedAtUtc ?? null,
       createdBy: item?.createdBy ?? null,
       updatedBy: item?.updatedBy ?? null,
+
+      ultimosMovimientos: Array.isArray(item?.ultimosMovimientos)
+        ? item.ultimosMovimientos.map((mov: any) => ({
+          fecha: mov?.fecha ?? null,
+          descripcion: mov?.descripcion ?? null
+        }))
+        : [],
+
       dashboard: {
         totalAhorro: Number(item?.dashboard?.totalAhorro ?? 0),
         creditoPendiente: Number(item?.dashboard?.creditoPendiente ?? 0),
         proximoRetiro: Number(item?.dashboard?.proximoRetiro ?? 0),
-        aprobacionesPendientes: Number(item?.dashboard?.aprobacionesPendientes ?? 0),
-        ultimosMovimientos: Array.isArray(item?.dashboard?.ultimosMovimientos)
-          ? item.dashboard.ultimosMovimientos.map((mov: any) => ({
-              fecha: mov?.fecha ?? null,
-              descripcion: mov?.descripcion ?? null,
-              debito: Number(mov?.debito ?? 0),
-              credito: Number(mov?.credito ?? 0),
-              saldo: Number(mov?.saldo ?? 0),
-              tipoCuenta: mov?.tipoCuenta ?? null
-            }))
-          : []
+        aprobacionesPendientes: Number(item?.dashboard?.aprobacionesPendientes ?? 0)
       }
     };
   }
@@ -485,8 +512,29 @@ export class SociosListComponent implements OnInit, OnDestroy {
     return pages;
   }
 
-  onNuevoAhorro(idSocio: string, cuentaCorrienteActiva: boolean): void {
-    if (!cuentaCorrienteActiva) {
+
+
+
+  onActionClick(action: ActionItem): void {
+    if (this.selectedSocio == null) {
+      this.notify.show(
+        this.translate.instant('ahorro.messages.selectRequired'),
+        this.translate.instant('ahorro.common.info'),
+        'warning'
+      );
+      return;
+    }
+
+    if (!this.selectedSocio.activo) {
+      this.notify.show(
+        this.translate.instant('ahorro.messages.inactive'),
+        this.translate.instant('ahorro.common.info'),
+        'warning'
+      );
+      return;
+    }
+
+    if (!this.selectedSocio.cuentaCorrienteActiva) {
       this.notify.show(
         this.translate.instant('socios.messages.noActiveCurrentAccount'),
         this.translate.instant('socios.common.info'),
@@ -495,39 +543,57 @@ export class SociosListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.router.navigate(['/apertura-cuenta-navidena', idSocio]);
+    switch (action.titleKey) {
+      case 'ahorro.actions.newDeposit':
+        this.router.navigate(['/socio-ahorro/new', this.selectedSocio.id]);
+        break;
+
+      case 'ahorro.actions.newWithdrawal':
+        this.router.navigate(['/socio-retiro/new', this.selectedSocio.id]);
+        break;
+
+      case 'ahorro.actions.newSaving':
+        this.router.navigate(['/apertura-cuenta-navidena', this.selectedSocio.id]);
+        break;
+
+      case 'ahorro.actions.affiliation':
+        this.router.navigate(['/socio-afiliacion-pago/new', this.selectedSocio.id]);
+        break;
+
+      case 'ahorro.actions.increaseInstallment':
+        this.router.navigate(['/cambio-cuota/new', this.selectedSocio.id, 'Incremento']);
+        break;
+
+      case 'ahorro.actions.decreaseInstallment':
+        this.router.navigate(['/cambio-cuota/new', this.selectedSocio.id, 'Disminucion']);
+        break;
+    }
   }
 
-  onNuevoCredito(id: string, cuentaCorrienteActiva: boolean): void {
-    if (!id) return;
-    console.log('Nuevo crédito para socio:', id);
+
+
+  get orderedActions() {
+    return [...this.actions].sort((a, b) => a.order - b.order);
   }
 
-  onIncrementoCuota(idSocio: string, cuentaCorrienteActiva: boolean): void {
-    if (!cuentaCorrienteActiva) {
-      this.notify.show(
-        this.translate.instant('socios.messages.noActiveCurrentAccount'),
-        this.translate.instant('socios.common.info'),
-        'warning'
-      );
-      return;
+  formatDateTimeAmPm(value?: string | null): string {
+    if (!value) {
+      return this.translate.instant('common.noDate');
     }
 
-    this.router.navigate(['/cambio-cuota/new', idSocio, 'Incremento']);
-  }
-
-  onDiminucionCuota(idSocio: string, cuentaCorrienteActiva: boolean): void {
-    if (!cuentaCorrienteActiva) {
-      this.notify.show(
-        this.translate.instant('socios.messages.noActiveCurrentAccount'),
-        this.translate.instant('socios.common.info'),
-        'warning'
-      );
-      return;
+    const date = new Date(value);
+    if (isNaN(date.getTime())) {
+      return this.translate.instant('common.noDate');
     }
 
-    this.router.navigate(['/cambio-cuota/new', idSocio, 'Disminucion']);
+    return date.toLocaleString('es-NI', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
   }
 
- 
 }

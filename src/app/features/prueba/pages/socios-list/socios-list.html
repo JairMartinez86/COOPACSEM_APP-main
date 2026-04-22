@@ -9,72 +9,6 @@
       </div>
     </div>
 
-    <div class="dashboard-grid dashboard-grid-4 mb-2">
-      <div class="card widget-stat">
-        <div class="widget-stat-header">
-          <div>
-            <div class="widget-stat-value">
-              {{ appConfigService.getCurrentSettings().currency }} {{ formatCurrency(globalDashboard.totalAhorro) }}
-            </div>
-            <div class="widget-stat-label">
-              {{ 'socios.dashboard.totalSaving' | translate }}
-            </div>
-          </div>
-          <div class="widget-stat-icon success">
-            <i class="fa-sharp fa-thin fa-piggy-bank fa-2xl"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="card widget-stat">
-        <div class="widget-stat-header">
-          <div>
-            <div class="widget-stat-value">
-              {{ appConfigService.getCurrentSettings().currency }} {{ formatCurrency(globalDashboard.creditoPendiente)
-              }}
-            </div>
-            <div class="widget-stat-label">
-              {{ 'socios.dashboard.pendingCredit' | translate }}
-            </div>
-          </div>
-          <div class="widget-stat-icon danger">
-            <i class="fa-sharp fa-thin fa-credit-card-front fa-2xl"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="card widget-stat">
-        <div class="widget-stat-header">
-          <div>
-            <div class="widget-stat-value">
-              {{ globalDashboard.proximoRetiro }}
-            </div>
-            <div class="widget-stat-label">
-              {{ 'socios.dashboard.nextWithdrawal' | translate }}
-            </div>
-          </div>
-          <div class="widget-stat-icon warning">
-            <i class="fa-duotone fa-thin fa-calendar fa-2xl"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="card widget-stat">
-        <div class="widget-stat-header">
-          <div>
-            <div class="widget-stat-value">
-              {{ globalDashboard.aprobacionesPendientes }}
-            </div>
-            <div class="widget-stat-label">
-              {{ 'socios.dashboard.pendingApprovals' | translate }}
-            </div>
-          </div>
-          <div class="widget-stat-icon info">
-            <i class="fa-sharp fa-thin fa-clipboard-check fa-2xl"></i>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="two-column-layout">
       <div>
@@ -191,9 +125,14 @@
 
                       <td class="text-end">
                         <div class="table-actions" (click)="$event.stopPropagation()">
-                          <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(item.id)">
-                            <i class="bi"
-                              [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
+
+                           <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onView(item.id)" [permissionRoute]="['/socios']" [appPermission]="['view']">
+                            <i class="bi bi-eye"></i>
+                          </button>
+
+
+                          <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(item.id)" [permissionRoute]="['/socios']" [appPermission]="['edit']">
+                            <i class="bi bi-pencil"></i>
                           </button>
 
                           <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onToggleStatus(item)"
@@ -201,10 +140,14 @@
                             <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'"></i>
                           </button>
 
-                          <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onDelete(item)"
+
+                          <!--
+                           <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onDelete(item)"
                             [permissionRoute]="['/socios']" [appPermission]="['delete']">
                             <i class="bi bi-trash"></i>
                           </button>
+                          -->
+                         
                         </div>
                       </td>
                     </tr>
@@ -322,146 +265,76 @@
               </div>
             </div>
 
-            <div class="list-group list-group-flush socios-info-list">
-              <div class="list-group-item">
-                <i class="bi bi-telephone"></i>
-                <span>{{ selectedSocio.telefono || selectedSocio.celular || '-' }}</span>
-              </div>
-              <div class="list-group-item">
-                <i class="bi bi-envelope"></i>
-                <span>{{ selectedSocio.correo || '-' }}</span>
-              </div>
-              <div class="list-group-item">
-                <i class="bi bi-credit-card"></i>
-                <span>{{ selectedSocio.numeroIdentificacion || '-' }}</span>
-              </div>
-              <div class="list-group-item">
-                <i class="bi bi-geo-alt"></i>
-                <span>{{ selectedSocio.direccionDomiciliar || '-' }}</span>
-              </div>
-            </div>
 
-            <div class="profile-actions mt-3">
-              <button type="button" class="btn btn-sm btn-outline-primary"
-                (click)="onNuevoAhorro(selectedSocio.id, selectedSocio.cuentaCorrienteActiva)"
-                [appPermission]="['new']">
-                <i class="fa-duotone fa-piggy-bank me-1"></i>
-                {{ 'socios.profile.newSaving' | translate }}
-              </button>
 
-              <button type="button" class="btn btn-sm btn-outline-primary"
-                (click)="onNuevoCredito(selectedSocio.id, selectedSocio.cuentaCorrienteActiva)"
-                [appPermission]="['new']">
-                <i class="fa-duotone fa-credit-card me-1"></i>
-                {{ 'socios.profile.newCredit' | translate }}
-              </button>
-
-              <div class="dropdown profile-history-dropdown" [appPermission]="['new']">
-                <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1"
-                  type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                  <i class="fa-sharp fa-solid fa-angle-down"></i>
-                  {{ 'socios.profile.more' | translate }}
-                </button>
-
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <button class="dropdown-item d-flex align-items-center gap-2"
-                      (click)="onIncrementoCuota(selectedSocio.id, selectedSocio.cuentaCorrienteActiva)">
-                      <i class="fa-sharp fa-solid fa-arrow-trend-up"></i>
-                      {{ 'socios.profile.increaseSavings' | translate }}
-                    </button>
-                  </li>
-
-                  <li>
-                    <button class="dropdown-item d-flex align-items-center gap-2"
-                      (click)="onDiminucionCuota(selectedSocio.id, selectedSocio.cuentaCorrienteActiva)">
-                      <i class="fa-sharp fa-solid fa-arrow-trend-down"></i>
-                      {{ 'socios.profile.decreaseSavings' | translate }}
-                    </button>
-                  </li>
-
-                  <li>
-                    <button class="dropdown-item d-flex align-items-center gap-2">
-                      <i class="fa-duotone fa-credit-card"></i>
-                      {{ 'socios.profile.credits' | translate }}
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h5 class="card-title mb-0">{{ 'socios.movements.title' | translate }}</h5>
-          </div>
+ <div class="card h-100">
+    <div class="card-header border-0 pb-2">
+      <h5 class="card-title mb-0">{{ 'ahorro.side.quickActions' | translate }}</h5>
+    </div>
 
-          <div class="card-body p-0">
-            @if ((selectedSocio.dashboard?.ultimosMovimientos ?? []).length === 0) {
-            <div class="px-3 py-3 text-muted small text-center">
-              {{ 'socios.movements.empty' | translate }}
-            </div>
-            } @else {
-            <div class="table-responsive">
-              <table class="table mb-0 movimientos-table">
-                <thead>
-                  <tr>
-                    <th>{{ 'socios.movements.columns.date' | translate }}</th>
-                    <th>{{ 'socios.movements.columns.description' | translate }}</th>
-                    <th>{{ 'socios.movements.columns.debit' | translate }}</th>
-                    <th>{{ 'socios.movements.columns.credit' | translate }}</th>
-                    <th>{{ 'socios.movements.columns.account' | translate }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (mov of (selectedSocio.dashboard?.ultimosMovimientos ?? []); track $index) {
-                  <tr>
-                    <td>{{ formatDate(mov.fecha) }}</td>
-                    <td>
-                      {{
-                      mov.descripcion === 'Ahorro Plan'
-                      ? ('socioAhorro.destinos.ahorroCorriente' | translate)
-                      : mov.descripcion === 'Ahorro ExtOrd'
-                      ? ('socioAhorro.destinos.ahorroCorriente' | translate)
-                      : mov.descripcion === 'Ahorro Plan Nav'
-                      ? ('socioAhorro.destinos.ahorroNavideno' | translate)
-                      : mov.descripcion === 'Ahorro ExtraOrd Nav'
-                      ? ('socioAhorro.destinos.ahorroNavideno' | translate)
-                      : mov.descripcion === 'Retiro ExtOrd'
-                      ? ('socioRetiro.destinos.retiroCorriente' | translate)
-                      : mov.descripcion === 'Retiro Nav'
-                      ? ('socioRetiro.destinos.retiroNavideno' | translate)
-                      : mov.descripcion === 'Ahorro Intereses'
-                      ? ('socioAhorro.destinos.ahorroIntereses' | translate)
-                      : mov.descripcion
-                      }}
-                    </td>
-                    <td>{{ formatCurrency(mov.debito) }}</td>
-                    <td>{{ formatCurrency(mov.credito) }}</td>
-                    <td>
-                      @if (mov.tipoCuenta == 'Corriente') {
-                      <span class="badge d-inline-flex align-items-center gap-1 badge badge-soft-success">
-                        <i class="bi bi-check-circle-fill"></i>
-                        {{ 'socios.accounts.current' | translate }}
-                      </span>
-                      }
+    <div class="card-body pt-0">
+      <div class="quick-actions-grid">
+        @for (action of orderedActions; track $index) {
+          <button
+            type="button"
+            class="quick-action-btn fa-lg"
+            [ngClass]="{
+              'is-green': action.accent === 'green',
+              'is-blue': action.accent === 'blue',
+              'is-violet': action.accent === 'violet',
+              'is-cyan': action.accent === 'cyan',
+              'is-amber': action.accent === 'amber',
+              'is-emerald': action.accent === 'emerald',
+              'is-orange': action.accent === 'orange',
+              'is-teal': action.accent === 'teal'
+            }"
+            (click)="onActionClick(action)"
+            [appPermission]="['create']"
+            [permissionRoute]="'/ahorro'">
+            <i [class]="action.icon"></i>
+            <span>{{ action.titleKey | translate }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
 
-                      @if (mov.tipoCuenta == 'Navidena') {
-                      <span class="badge d-inline-flex align-items-center gap-1 badge badge-soft-warning">
-                        <i class="bi bi-check-circle-fill"></i>
-                        {{ 'socios.accounts.christmas' | translate }}
-                      </span>
-                      }
-                    </td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-            }
-          </div>
-        </div>
+
+      <div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">{{ 'socios.movements.title' | translate }}</h5>
+  </div>
+
+  <div class="card-body p-0">
+  @if (selectedSocio.ultimosMovimientos.length === 0) {
+    <div class="px-3 py-3 text-muted small text-center">
+      {{ 'socios.movements.empty' | translate }}
+    </div>
+  } @else {
+    <div class="table-responsive">
+      <table class="table mb-0 movimientos-table">
+        <thead>
+          <tr>
+            <th>{{ 'socios.movements.columns.date' | translate }}</th>
+            <th>{{ 'socios.movements.columns.description' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (mov of selectedSocio.ultimosMovimientos; track $index) {
+          <tr>
+            <td>{{ formatDateTimeAmPm(mov.fecha) }}</td>
+            <td>{{ mov.descripcion || '-' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+</div>
         }
       </div>
     </div>
