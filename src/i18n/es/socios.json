@@ -32,6 +32,22 @@
       "editTitle": "Editar beneficiario",
       "subtitle": "Complete la información del beneficiario."
     },
+    "otrosIngresosTable": {
+      "title": "Otros ingresos",
+      "add": "Agregar",
+      "empty": "No se han registrado otros ingresos.",
+      "total": "Total",
+      "deleteTitle": "Eliminar ingreso",
+      "deleteMessage": "¿Desea eliminar el ingreso \"{{origen}}\"?",
+      "columns": {
+        "origen": "Origen",
+        "ingresoMensual": "Ingreso mensual",
+        "observaciones": "Observaciones"
+      },
+      "modal": {
+        "title": "Detalle de otro ingreso"
+      }
+    },
     "messages": {
       "notFound": "No se encontraron datos del socio.",
       "noActiveCurrentAccount": "El socio no posee una cuenta corriente activa",
@@ -975,7 +991,7 @@
         },
         "cuentaNavidenaFechaInicioDeduccion": {
           "data": {
-             "1": {
+            "1": {
               "rule": "IF({bloquearAhorroNavidena}=false)->{2,3,4}",
               "value": "0",
               "when": "",
@@ -1023,7 +1039,7 @@
         }
       }
     },
-    "table": {
+    "tableBeneficiario": {
       "fieldMeta": {
         "benefnombre": {
           "label": "Beneficiario",
@@ -1092,6 +1108,54 @@
               "when": "",
               "value": "14",
               "msj": "Debe tener exactamente 14 caracteres"
+            }
+          }
+        }
+      }
+    },
+    "tableOtrosIngresos": {
+      "fieldMeta": {
+        "origen": {
+          "label": "Otros Ingresos",
+          "tooltip": "Campo requerido"
+        },
+        "ingresoMensual": {
+          "label": "Otros Ingresos",
+          "tooltip": "Campo requerido"
+        },
+        "observaciones": {
+          "label": "Otros Ingresos",
+          "tooltip": "Campo requerido"
+        }
+      },
+      "validations": {
+        "origen": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Ingrese el origen del ingreso"
+            }
+          }
+        },
+        "ingresoMensual": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "El valor del ingreso debe de ser mayor a 0"
+            }
+          }
+        },
+        "observaciones": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "EL campo de observaciones es requerido"
             }
           }
         }

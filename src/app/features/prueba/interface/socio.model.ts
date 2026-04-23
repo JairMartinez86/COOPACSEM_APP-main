@@ -1,4 +1,5 @@
 import { BeneficiarioForm } from './beneficiario.model';
+import { OtroIngresoForm } from './otro-ingreso.model';
 
 export interface SocioForm {
   id: string | null;
@@ -59,6 +60,7 @@ export interface SocioForm {
   cuentaNavidenaFechaInicioDeduccion: string | null;
   cuentaNavidenaMontoCuota: number | null;
 
+  otrosIngresosDetalle?: OtroIngresoForm[];
   beneficiarios: BeneficiarioForm[];
   activo: boolean;
 
@@ -124,6 +126,7 @@ export const EMPTY_SOCIO: SocioForm = {
   cuentaNavidenaFechaInicioDeduccion: null,
   cuentaNavidenaMontoCuota: null,
 
+  otrosIngresosDetalle: [],
   beneficiarios: [],
   activo: true,
 

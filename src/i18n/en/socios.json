@@ -32,6 +32,22 @@
       "editTitle": "Edit beneficiary",
       "subtitle": "Complete the beneficiary information."
     },
+    "otrosIngresosTable": {
+      "title": "Other Income",
+      "add": "Add",
+      "empty": "No other income has been recorded.",
+      "total": "Total",
+      "deleteTitle": "Delete Income",
+      "deleteMessage": "Do you want to delete the income \"{{origen}}\"?",
+      "columns": {
+        "origen": "Source",
+        "ingresoMensual": "Monthly Income",
+        "observaciones": "Observations"
+      },
+      "modal": {
+        "title": "Other Income Details"
+      }
+    },
     "messages": {
       "notFound": "Member data not found.",
       "noActiveCurrentAccount": "The member does not have an active current account",
@@ -513,7 +529,6 @@
         }
       },
       "validations": {
-
         "nombreCompleto": {
           "data": {
             "1": {
@@ -938,7 +953,7 @@
         },
         "cuentaCorrienteFechaInicioDeduccion": {
           "data": {
-             "1": {
+            "1": {
               "rule": "IF({bloquearAhorroCorriente}=false)->{2,3,4}",
               "value": "0",
               "when": "",
@@ -1024,7 +1039,7 @@
         }
       }
     },
-    "table": {
+    "tableBeneficiario": {
       "fieldMeta": {
         "benefnombre": {
           "label": "Beneficiary",
@@ -1093,6 +1108,54 @@
               "when": "",
               "value": "14",
               "msj": "It must have exactly 14 characters"
+            }
+          }
+        }
+      }
+    },
+    "tableOtrosIngresos": {
+      "fieldMeta": {
+        "origen": {
+          "label": "Additional Income",
+          "tooltip": "Required field"
+        },
+        "ingresoMensual": {
+          "label": "Additional Income",
+          "tooltip": "Required field"
+        },
+        "observaciones": {
+          "label": "Additional Income",
+          "tooltip": "Required field"
+        }
+      },
+      "validations": {
+        "origen": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Enter the income source"
+            }
+          }
+        },
+        "ingresoMensual": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "value": "0",
+              "when": "",
+              "msj": "The income amount must be greater than 0"
+            }
+          }
+        },
+        "observaciones": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Observations field is required"
             }
           }
         }

@@ -26,7 +26,7 @@
 
               @if (mode !== 'view'){
 
-              <button type="button" class="btn btn-light border" (click)="onCancel()" [appPermission]="['new', 'edit']">
+              <button type="button" class="btn btn-light " (click)="onCancel()" [appPermission]="['new', 'edit']">
                 <i class="bi bi-arrow-counterclockwise me-1"></i>
                 {{ 'socios.common.actions.clear' | translate }}
               </button>
@@ -230,11 +230,11 @@
                       </select>
                     </div>
 
-                    
+
                     <div class="col-md-4" error-notify="numeroIdentificacion" error-display="inline">
 
 
-                       <label for="numeroIdentificacion" class="form-label d-flex align-items-center gap-1">
+                      <label for="numeroIdentificacion" class="form-label d-flex align-items-center gap-1">
 
                         <span>
                           {{ 'socios.fields.numeroIdentificacion.label' | translate }}
@@ -242,7 +242,7 @@
 
                         <span class="text-danger">*</span>
 
-                        @if (socio.numeroIdentificacion == null  || socio.numeroIdentificacion == '') {
+                        @if (socio.numeroIdentificacion == null || socio.numeroIdentificacion == '') {
                         <i class="fa-solid fa-triangle-exclamation text-warning ms-1">
                         </i>
                         }
@@ -250,7 +250,7 @@
                       </label>
 
 
-            
+
 
 
                       <input #numeroIdentificacion id="numeroIdentificacion" name="numeroIdentificacion"
@@ -426,297 +426,236 @@
             </div>
 
 
-<div id="afiliacion" class="card ue-shell-card socio-card socio-scroll-section">
-  <div class="card-header socio-card-header">
-    <h5 class="card-title mb-1">
-      {{ 'socios.wizard.steps.afiliacion.title' | translate }}
-    </h5>
-    <p class="card-subtitle mb-0">
-      {{ 'socios.wizard.steps.afiliacion.desc' | translate }}
-    </p>
-  </div>
-
-  <div class="card-body p-4">
-    @if (bloquearSeccionAfiliacion) {
-      <div class="alert alert-warning mb-4">
-        {{ 'socios.messages.afiliacionLockedByMovements' | translate }}
-      </div>
-    }
-
-    <div class="row g-4">
-      <div class="col-12">
-        <div class="rounded-3 p-3">
-          <h6 class="mb-3">{{ 'socios.fields.afiliacion.title' | translate }}</h6>
-
-          <div class="row g-3 align-items-end">
-            <div class="col-md-6">
-              <label class="form-label">{{ 'socios.fields.afiliacionMonto.label' | translate }}</label>
-              <div class="input-group">
-                <input
-                  class="form-control text-end"
-                  [(ngModel)]="socio.afiliacionCostoTotal"
-                  name="afiliacionCostoTotal"
-                  readonly
-                  numberFormat
-                  [decimals]="2"
-                  [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                  [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator">
-                <span class="input-group-text">
-                  {{ appConfigService.getCurrentSettings().currency }}
-                </span>
+            <div id="afiliacion" class="card ue-shell-card socio-card socio-scroll-section">
+              <div class="card-header socio-card-header">
+                <h5 class="card-title mb-1">
+                  {{ 'socios.wizard.steps.afiliacion.title' | translate }}
+                </h5>
+                <p class="card-subtitle mb-0">
+                  {{ 'socios.wizard.steps.afiliacion.desc' | translate }}
+                </p>
               </div>
-            </div>
 
-            <div class="col-md-6" error-notify="afiliacionCuotas" error-display="inline">
-              <label class="form-label required">
-                {{ 'socios.fields.afiliacionCuotas.label' | translate }}
-              </label>
-              <select
-                #afiliacionCuotas
-                class="form-select"
-                [(ngModel)]="socio.afiliacionCuotas"
-                name="afiliacionCuotas"
-                engineSync="afiliacionCuotas"
-                autoFocusNext
-                [next]="membresiaCuotas"
-                [disabled]="mode === 'view' || bloquearSeccionAfiliacion">
-                <option [ngValue]="null">
-                  {{ 'socios.common.selectOption' | translate }}
-                </option>
-                @for (item of afiliacionCuotasOptions; track item) {
-                  <option [ngValue]="item">{{ item }}</option>
+              <div class="card-body p-4">
+                @if (bloquearSeccionAfiliacion) {
+                <div class="alert alert-warning mb-4">
+                  {{ 'socios.messages.afiliacionLockedByMovements' | translate }}
+                </div>
                 }
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-12">
-        <div class="rounded-3 p-3">
-          <h6 class="mb-3">{{ 'socios.fields.membresia.title' | translate }}</h6>
+                <div class="row g-4">
+                  <div class="col-12">
+                    <div class="rounded-3 p-3">
+                      <h6 class="mb-3">{{ 'socios.fields.afiliacion.title' | translate }}</h6>
 
-          <div class="row g-3 align-items-end">
-            <div class="col-md-6">
-              <label class="form-label">{{ 'socios.fields.membresiaMonto.label' | translate }}</label>
-              <div class="input-group">
-                <input
-                  class="form-control text-end"
-                  [(ngModel)]="socio.membresiaCostoTotal"
-                  name="membresiaCostoTotal"
-                  readonly
-                  numberFormat
-                  [decimals]="2"
-                  [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                  [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator">
-                <span class="input-group-text">
-                  {{ appConfigService.getCurrentSettings().currency }}
-                </span>
+                      <div class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                          <label class="form-label">{{ 'socios.fields.afiliacionMonto.label' | translate }}</label>
+                          <div class="input-group">
+                            <input class="form-control text-end" [(ngModel)]="socio.afiliacionCostoTotal"
+                              name="afiliacionCostoTotal" readonly numberFormat [decimals]="2"
+                              [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                              [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator">
+                            <span class="input-group-text">
+                              {{ appConfigService.getCurrentSettings().currency }}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6" error-notify="afiliacionCuotas" error-display="inline">
+                          <label class="form-label required">
+                            {{ 'socios.fields.afiliacionCuotas.label' | translate }}
+                          </label>
+                          <select #afiliacionCuotas class="form-select" [(ngModel)]="socio.afiliacionCuotas"
+                            name="afiliacionCuotas" engineSync="afiliacionCuotas" autoFocusNext [next]="membresiaCuotas"
+                            [disabled]="mode === 'view' || bloquearSeccionAfiliacion">
+                            <option [ngValue]="null">
+                              {{ 'socios.common.selectOption' | translate }}
+                            </option>
+                            @for (item of afiliacionCuotasOptions; track item) {
+                            <option [ngValue]="item">{{ item }}</option>
+                            }
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="rounded-3 p-3">
+                      <h6 class="mb-3">{{ 'socios.fields.membresia.title' | translate }}</h6>
+
+                      <div class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                          <label class="form-label">{{ 'socios.fields.membresiaMonto.label' | translate }}</label>
+                          <div class="input-group">
+                            <input class="form-control text-end" [(ngModel)]="socio.membresiaCostoTotal"
+                              name="membresiaCostoTotal" readonly numberFormat [decimals]="2"
+                              [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                              [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator">
+                            <span class="input-group-text">
+                              {{ appConfigService.getCurrentSettings().currency }}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6" error-notify="membresiaCuotas" error-display="inline">
+                          <label class="form-label required">
+                            {{ 'socios.fields.membresiaCuotas.label' | translate }}
+                          </label>
+                          <select #membresiaCuotas class="form-select" [(ngModel)]="socio.membresiaCuotas"
+                            name="membresiaCuotas" engineSync="membresiaCuotas" autoFocusNext
+                            [next]="cuentaCorrienteActiva" [disabled]="mode === 'view' || bloquearSeccionAfiliacion">
+                            <option [ngValue]="null">
+                              {{ 'socios.common.selectOption' | translate }}
+                            </option>
+                            @for (item of membresiaCuotasOptions; track item) {
+                            <option [ngValue]="item">{{ item }}</option>
+                            }
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="col-md-6" error-notify="membresiaCuotas" error-display="inline">
-              <label class="form-label required">
-                {{ 'socios.fields.membresiaCuotas.label' | translate }}
-              </label>
-              <select
-                #membresiaCuotas
-                class="form-select"
-                [(ngModel)]="socio.membresiaCuotas"
-                name="membresiaCuotas"
-                engineSync="membresiaCuotas"
-                autoFocusNext
-                [next]="cuentaCorrienteActiva"
-                [disabled]="mode === 'view' || bloquearSeccionAfiliacion">
-                <option [ngValue]="null">
-                  {{ 'socios.common.selectOption' | translate }}
-                </option>
-                @for (item of membresiaCuotasOptions; track item) {
-                  <option [ngValue]="item">{{ item }}</option>
+            <div id="ahorro" class="card ue-shell-card socio-card socio-scroll-section">
+              <div class="card-header socio-card-header">
+                <h5 class="card-title mb-1">
+                  {{ 'socios.wizard.steps.ahorro.title' | translate }}
+                </h5>
+                <p class="card-subtitle mb-0">
+                  {{ 'socios.wizard.steps.ahorro.desc' | translate }}
+                </p>
+              </div>
+
+              <div class="card-body p-4">
+                @if (bloquearAhorroCorriente || bloquearAhorroNavidena) {
+                <div class="alert alert-warning mb-4">
+                  @if (bloquearAhorroCorriente && !bloquearAhorroNavidena) {
+                  {{ 'socios.messages.ahorroLockedByMovements' | translate }}
+                  }
+                  @if (!bloquearAhorroCorriente && bloquearAhorroNavidena) {
+                  {{ 'socios.messages.ahorroNavidenaLockedByYear' | translate:{ year: anioNavideno } }}
+                  }
+                  @if (bloquearAhorroCorriente && bloquearAhorroNavidena) {
+                  {{ 'socios.messages.ahorroLockedByMovements' | translate }}
+                  }
+                </div>
                 }
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<div id="ahorro" class="card ue-shell-card socio-card socio-scroll-section">
-  <div class="card-header socio-card-header">
-    <h5 class="card-title mb-1">
-      {{ 'socios.wizard.steps.ahorro.title' | translate }}
-    </h5>
-    <p class="card-subtitle mb-0">
-      {{ 'socios.wizard.steps.ahorro.desc' | translate }}
-    </p>
-  </div>
+                <div class="row g-4">
+                  <div class="col-12">
+                    <div class="rounded-3 p-3 ">
+                      <h6 class="mb-3">{{ 'socios.fields.cuentaCorrienteActiva.label' | translate }}</h6>
 
-  <div class="card-body p-4">
-    @if (bloquearAhorroCorriente || bloquearAhorroNavidena) {
-      <div class="alert alert-warning mb-4">
-        @if (bloquearAhorroCorriente && !bloquearAhorroNavidena) {
-          {{ 'socios.messages.ahorroLockedByMovements' | translate }}
-        }
-        @if (!bloquearAhorroCorriente && bloquearAhorroNavidena) {
-          {{ 'socios.messages.ahorroNavidenaLockedByYear' | translate:{ year: anioNavideno } }}
-        }
-        @if (bloquearAhorroCorriente && bloquearAhorroNavidena) {
-          {{ 'socios.messages.ahorroLockedByMovements' | translate }}
-        }
-      </div>
-    }
+                      <div class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                          <div class="form-check form-switch mt-4">
+                            <input #cuentaCorrienteActiva id="cuentaCorrienteActiva" name="cuentaCorrienteActiva"
+                              class="form-check-input" type="checkbox" [(ngModel)]="socio.cuentaCorrienteActiva"
+                              engineSync="cuentaCorrienteActiva"
+                              [disabled]="mode === 'view' || bloquearAhorroCorriente">
+                            <label class="form-check-label" for="cuentaCorrienteActiva">
+                              {{ 'socios.fields.cuentaCorrienteActiva.label' | translate }}
+                            </label>
+                          </div>
+                        </div>
 
-    <div class="row g-4">
-      <div class="col-12">
-        <div class="rounded-3 p-3 border">
-          <h6 class="mb-3">{{ 'socios.fields.cuentaCorrienteActiva.label' | translate }}</h6>
+                        <div class="col-md-4" error-notify="cuentaCorrienteFechaInicioDeduccion" error-display="inline">
+                          <label for="cuentaCorrienteFechaInicioDeduccion" class="form-label">
+                            {{ 'socios.fields.cuentaCorrienteFechaInicioDeduccion.label' | translate }}
+                          </label>
+                          <input #cuentaCorrienteFechaInicioDeduccion id="cuentaCorrienteFechaInicioDeduccion"
+                            name="cuentaCorrienteFechaInicioDeduccion"
+                            [(ngModel)]="socio.cuentaCorrienteFechaInicioDeduccion"
+                            engineSync="cuentaCorrienteFechaInicioDeduccion" autoFocusNext
+                            [next]="cuentaCorrienteMontoCuota" type="text" class="form-control" dateFormat
+                            [dateFormat]="appConfigService.getCurrentSettings().dateFormat"
+                            [disabled]="mode === 'view' || !socio.cuentaCorrienteActiva || bloquearAhorroCorriente" />
+                        </div>
 
-          <div class="row g-3 align-items-end">
-            <div class="col-md-3">
-              <div class="form-check form-switch mt-4">
-                <input
-                #cuentaCorrienteActiva
-                  id="cuentaCorrienteActiva"
-                  name="cuentaCorrienteActiva"
-                  class="form-check-input"
-                  type="checkbox"
-                  [(ngModel)]="socio.cuentaCorrienteActiva"
-                  engineSync="cuentaCorrienteActiva"
-                  [disabled]="mode === 'view' || bloquearAhorroCorriente">
-                <label class="form-check-label" for="cuentaCorrienteActiva">
-                  {{ 'socios.fields.cuentaCorrienteActiva.label' | translate }}
-                </label>
+                        <div class="col-md-5" error-notify="cuentaCorrienteMontoCuota" error-display="inline">
+                          <label for="cuentaCorrienteMontoCuota" class="form-label">
+                            {{ 'socios.fields.cuentaCorrienteMontoCuota.label' | translate }}
+                          </label>
+                          <div class="input-group">
+                            <input #cuentaCorrienteMontoCuota id="cuentaCorrienteMontoCuota"
+                              name="cuentaCorrienteMontoCuota" [(ngModel)]="socio.cuentaCorrienteMontoCuota"
+                              engineSync="cuentaCorrienteMontoCuota" autoFocusNext [next]="cuentaNavidenaActiva"
+                              type="text" class="form-control text-end" numberFormat [decimals]="2"
+                              [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                              [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                              [disabled]="mode === 'view' || !socio.cuentaCorrienteActiva || bloquearAhorroCorriente" />
+                            <span class="input-group-text">
+                              {{ appConfigService.getCurrentSettings().currency }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="rounded-3 p-3 ">
+                      <h6 class="mb-3">{{ 'socios.fields.cuentaNavidenaActiva.label' | translate }}</h6>
+
+                      <div class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                          <div class="form-check form-switch mt-4">
+                            <input #cuentaNavidenaActiva id="cuentaNavidenaActiva" name="cuentaNavidenaActiva"
+                              class="form-check-input" type="checkbox" [(ngModel)]="socio.cuentaNavidenaActiva"
+                              engineSync="cuentaNavidenaActiva" [disabled]="mode === 'view' || bloquearAhorroNavidena">
+                            <label class="form-check-label" for="cuentaNavidenaActiva">
+                              {{ 'socios.fields.cuentaNavidenaActiva.label' | translate }}
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4" error-notify="cuentaNavidenaFechaInicioDeduccion" error-display="inline">
+                          <label for="cuentaNavidenaFechaInicioDeduccion" class="form-label">
+                            {{ 'socios.fields.cuentaNavidenaFechaInicioDeduccion.label' | translate }}
+                          </label>
+                          <input #cuentaNavidenaFechaInicioDeduccion id="cuentaNavidenaFechaInicioDeduccion"
+                            name="cuentaNavidenaFechaInicioDeduccion"
+                            [(ngModel)]="socio.cuentaNavidenaFechaInicioDeduccion"
+                            engineSync="cuentaNavidenaFechaInicioDeduccion" autoFocusNext
+                            [next]="cuentaNavidenaMontoCuota" type="text" class="form-control" dateFormat
+                            [dateFormat]="appConfigService.getCurrentSettings().dateFormat"
+                            [disabled]="mode === 'view' || !socio.cuentaNavidenaActiva || bloquearAhorroNavidena" />
+                        </div>
+
+                        <div class="col-md-5" error-notify="cuentaNavidenaMontoCuota" error-display="inline">
+                          <label for="cuentaNavidenaMontoCuota" class="form-label">
+                            {{ 'socios.fields.cuentaNavidenaMontoCuota.label' | translate }}
+                          </label>
+                          <div class="input-group">
+                            <input #cuentaNavidenaMontoCuota id="cuentaNavidenaMontoCuota"
+                              name="cuentaNavidenaMontoCuota" [(ngModel)]="socio.cuentaNavidenaMontoCuota"
+                              engineSync="cuentaNavidenaMontoCuota" autoFocusNext [next]="sociedadLabora" type="text"
+                              class="form-control text-end" numberFormat [decimals]="2"
+                              [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                              [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                              [disabled]="mode === 'view' || !socio.cuentaNavidenaActiva || bloquearAhorroNavidena" />
+                            <span class="input-group-text">
+                              {{ appConfigService.getCurrentSettings().currency }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      @if (bloquearAhorroNavidena) {
+                      <div class="small text-warning mt-3">
+                        {{ 'socios.messages.ahorroNavidenaLockedByYear' | translate:{ year: anioNavideno } }}
+                      </div>
+                      }
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div class="col-md-4" error-notify="cuentaCorrienteFechaInicioDeduccion" error-display="inline">
-              <label for="cuentaCorrienteFechaInicioDeduccion" class="form-label">
-                {{ 'socios.fields.cuentaCorrienteFechaInicioDeduccion.label' | translate }}
-              </label>
-              <input
-                #cuentaCorrienteFechaInicioDeduccion
-                id="cuentaCorrienteFechaInicioDeduccion"
-                name="cuentaCorrienteFechaInicioDeduccion"
-                [(ngModel)]="socio.cuentaCorrienteFechaInicioDeduccion"
-                engineSync="cuentaCorrienteFechaInicioDeduccion"
-                autoFocusNext
-                [next]="cuentaCorrienteMontoCuota"
-                type="text"
-                class="form-control"
-                dateFormat
-                [dateFormat]="appConfigService.getCurrentSettings().dateFormat"
-                [disabled]="mode === 'view' || !socio.cuentaCorrienteActiva || bloquearAhorroCorriente" />
-            </div>
-
-            <div class="col-md-5" error-notify="cuentaCorrienteMontoCuota" error-display="inline">
-              <label for="cuentaCorrienteMontoCuota" class="form-label">
-                {{ 'socios.fields.cuentaCorrienteMontoCuota.label' | translate }}
-              </label>
-              <div class="input-group">
-                <input
-                  #cuentaCorrienteMontoCuota
-                  id="cuentaCorrienteMontoCuota"
-                  name="cuentaCorrienteMontoCuota"
-                  [(ngModel)]="socio.cuentaCorrienteMontoCuota"
-                  engineSync="cuentaCorrienteMontoCuota"
-                  autoFocusNext
-                  [next]="cuentaNavidenaActiva"
-                  type="text"
-                  class="form-control text-end"
-                  numberFormat
-                  [decimals]="2"
-                  [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                  [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                  [disabled]="mode === 'view' || !socio.cuentaCorrienteActiva || bloquearAhorroCorriente" />
-                <span class="input-group-text">
-                  {{ appConfigService.getCurrentSettings().currency }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12">
-        <div class="rounded-3 p-3 border">
-          <h6 class="mb-3">{{ 'socios.fields.cuentaNavidenaActiva.label' | translate }}</h6>
-
-          <div class="row g-3 align-items-end">
-            <div class="col-md-3">
-              <div class="form-check form-switch mt-4">
-                <input
-                #cuentaNavidenaActiva
-                  id="cuentaNavidenaActiva"
-                  name="cuentaNavidenaActiva"
-                  class="form-check-input"
-                  type="checkbox"
-                  [(ngModel)]="socio.cuentaNavidenaActiva"
-                  engineSync="cuentaNavidenaActiva"
-                  [disabled]="mode === 'view' || bloquearAhorroNavidena">
-                <label class="form-check-label" for="cuentaNavidenaActiva">
-                  {{ 'socios.fields.cuentaNavidenaActiva.label' | translate }}
-                </label>
-              </div>
-            </div>
-
-            <div class="col-md-4" error-notify="cuentaNavidenaFechaInicioDeduccion" error-display="inline">
-              <label for="cuentaNavidenaFechaInicioDeduccion" class="form-label">
-                {{ 'socios.fields.cuentaNavidenaFechaInicioDeduccion.label' | translate }}
-              </label>
-              <input
-                #cuentaNavidenaFechaInicioDeduccion
-                id="cuentaNavidenaFechaInicioDeduccion"
-                name="cuentaNavidenaFechaInicioDeduccion"
-                [(ngModel)]="socio.cuentaNavidenaFechaInicioDeduccion"
-                engineSync="cuentaNavidenaFechaInicioDeduccion"
-                autoFocusNext
-                [next]="cuentaNavidenaMontoCuota"
-                type="text"
-                class="form-control"
-                dateFormat
-                [dateFormat]="appConfigService.getCurrentSettings().dateFormat"
-                [disabled]="mode === 'view' || !socio.cuentaNavidenaActiva || bloquearAhorroNavidena" />
-            </div>
-
-            <div class="col-md-5" error-notify="cuentaNavidenaMontoCuota" error-display="inline">
-              <label for="cuentaNavidenaMontoCuota" class="form-label">
-                {{ 'socios.fields.cuentaNavidenaMontoCuota.label' | translate }}
-              </label>
-              <div class="input-group">
-                <input
-                  #cuentaNavidenaMontoCuota
-                  id="cuentaNavidenaMontoCuota"
-                  name="cuentaNavidenaMontoCuota"
-                  [(ngModel)]="socio.cuentaNavidenaMontoCuota"
-                  engineSync="cuentaNavidenaMontoCuota"
-                  autoFocusNext
-                  [next]="sociedadLabora"
-                  type="text"
-                  class="form-control text-end"
-                  numberFormat
-                  [decimals]="2"
-                  [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
-                  [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
-                  [disabled]="mode === 'view' || !socio.cuentaNavidenaActiva || bloquearAhorroNavidena" />
-                <span class="input-group-text">
-                  {{ appConfigService.getCurrentSettings().currency }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          @if (bloquearAhorroNavidena) {
-            <div class="small text-warning mt-3">
-              {{ 'socios.messages.ahorroNavidenaLockedByYear' | translate:{ year: anioNavideno } }}
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 
             <div id="actividad-economica" class="card ue-shell-card socio-card socio-scroll-section">
@@ -793,7 +732,7 @@
                     <div class="input-group">
                       <input #ingresosMensuales id="ingresosMensuales" name="ingresosMensuales"
                         [(ngModel)]="socio.ingresosMensuales" engineSync="ingresosMensuales" autoFocusNext
-                        [next]="otrosIngresos" class="form-control" numberFormat [decimals]="2"
+                        [next]="conyugeNombreCompleto" class="form-control" numberFormat [decimals]="2"
                         [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                         [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" placeholder="0.00"
                         (ngModelChange)="onIngresosChange()" />
@@ -806,11 +745,11 @@
                       }}</label>
                     <div class="input-group">
                       <input #otrosIngresos id="otrosIngresos" name="otrosIngresos" [(ngModel)]="socio.otrosIngresos"
-                        engineSync="otrosIngresos" autoFocusNext [next]="ingresosAnuales" type="text"
+                        engineSync="otrosIngresos" autoFocusNext [next]="conyugeNombreCompleto" type="text"
                         class="form-control" numberFormat [decimals]="2"
                         [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
                         [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator" placeholder="0.00"
-                        (ngModelChange)="onIngresosChange()" />
+                        (ngModelChange)="onIngresosChange()" [disabled]="true" />
                       <span class="input-group-text">{{ appConfigService.getCurrentSettings().currency }}</span>
                     </div>
                   </div>
@@ -825,7 +764,104 @@
                   </div>
                 </div>
               </div>
+
+
+
+              <div class="card-footer bg-transparent">
+
+                <div class="card  shadow-sm mt-3">
+                  <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold">
+                      {{ 'socios.otrosIngresosTable.title' | translate }}
+                    </h6>
+
+                    @if (mode !== 'view') {
+                    <button type="button" class="btn btn-primary btn-sm" (click)="openOtroIngresoModal()">
+                      <i class="bi bi-plus-circle me-1"></i>
+                      {{ 'socios.otrosIngresosTable.add' | translate }}
+                    </button>
+                    }
+                  </div>
+
+                  <div class="card-body">
+                    @if (otrosIngresosDetalle.length === 0) {
+                    <div class="alert mb-0">
+                      {{ 'socios.otrosIngresosTable.empty' | translate }}
+                    </div>
+                    } @else {
+                    <div class="table-responsive">
+                      <table class="table table-hover align-middle mb-0">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>{{ 'socios.otrosIngresosTable.columns.origen' | translate }}</th>
+                            <th class="text-end">{{ 'socios.otrosIngresosTable.columns.ingresoMensual' | translate }}
+                            </th>
+                            <th>{{ 'socios.otrosIngresosTable.columns.observaciones' | translate }}</th>
+                            @if (mode !== 'view') {
+                            <th class="text-end">{{ 'socios.common.actions' | translate }}</th>
+                            }
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (item of otrosIngresosDetalle; track $index) {
+                          <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ item.origen || '-' }}</td>
+                            <td class="text-end">
+                              {{ appConfigService.getCurrentSettings().currency }}
+                              {{ formatMoneyValue(item.ingresoMensual) }}
+                            </td>
+                            <td>{{ item.observaciones || '-' }}</td>
+
+                            @if (mode !== 'view') {
+                            <td class="text-end">
+                              <button type="button" class="btn btn-sm btn-light  me-1"
+                                (click)="openOtroIngresoModal(item)">
+                                <i class="bi bi-pencil"></i>
+                              </button>
+
+                              <button type="button" class="btn btn-sm btn-light  text-danger"
+                                (click)="removeOtroIngreso(item)">
+                                <i class="bi bi-trash"></i>
+                              </button>
+                            </td>
+                            }
+                          </tr>
+                          }
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <th colspan="2" class="text-end">
+                              {{ 'socios.otrosIngresosTable.total' | translate }}
+                            </th>
+                            <th class="text-end">
+                              {{ appConfigService.getCurrentSettings().currency }}
+                              {{ formatMoneyValue(totalOtrosIngresos) }}
+                            </th>
+                            <th></th>
+                            @if (mode !== 'view') {
+                            <th></th>
+                            }
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                    }
+                  </div>
+                </div>
+
+              </div>
+
+
             </div>
+
+            
+              <app-otro-ingreso-modal [open]="otroIngresoModalOpen" [saving]="otroIngresoSaving"
+                [model]="otroIngresoEditing" (closed)="closeOtroIngresoModal()"
+                (saved)="onOtroIngresoModalSaved($event)">
+              </app-otro-ingreso-modal>
+
 
             <div id="datos-conyuge" class="card ue-shell-card socio-card socio-scroll-section">
               <div class="card-header socio-card-header">
@@ -1091,7 +1127,7 @@
 
               @if(this.mode != "view"){
 
-              <button type="button" class="btn btn-light border" (click)="onCancel()">
+              <button type="button" class="btn btn-light " (click)="onCancel()">
                 <i class="bi bi-arrow-counterclockwise me-1"></i>
                 {{ 'socios.common.actions.clear' | translate }}
               </button>

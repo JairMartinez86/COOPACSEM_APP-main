@@ -1,5 +1,8 @@
 @use '@jairmartinez86/jmartinez-validator/styles/massive-forms' as *;
 
+body.modal-open {
+  overflow: hidden;
+}
 
 .header-logo-img {
   width: 42px;
@@ -40,6 +43,7 @@
    FIX: LISTAS HTML DENTRO DEL MODAL
    ===================================================== */
 
+
 .mf-error-group-title {
   color: #ffffff;
 }
@@ -51,57 +55,6 @@
 }
 
 
-/*
-.validation-list,
-.validation-list * {
-  text-align: left !important;
-  box-sizing: border-box;
-}
-
-.validation-list {
-  list-style: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.validation-list > li {
-  list-style: none !important;
-  margin: 0 0 10px 0 !important;
-  padding: 0 !important;
-}
-
-.validation-list > li > .validation-label {
-  display: block;
-  margin: 0 0 6px 0 !important;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.validation-list > li > ul {
-  list-style: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.validation-list > li > ul > li {
-  position: relative;
-  list-style: none !important;
-  margin: 0 0 6px 0 !important;
-  padding: 0 0 0 18px !important;
-  color: #d7deed;
-  line-height: 1.4;
-}
-
-.validation-list > li > ul > li::before {
-  content: "✕";
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: #ff5c74;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.4;
-}*/
 /* =========================================================
    NGX MASSIVE FORMS – TOOLTIP THEME OVERRIDE
    ---------------------------------------------------------

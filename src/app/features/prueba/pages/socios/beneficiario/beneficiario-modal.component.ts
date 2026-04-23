@@ -65,6 +65,9 @@ export class BeneficiarioModalComponent implements OnChanges {
     }
   }
 
+
+  
+
   private initModalState(): void {
     this.notify.close?.();
 
@@ -83,8 +86,8 @@ export class BeneficiarioModalComponent implements OnChanges {
     this.engine.clearFieldsMeta?.();
     this.engine.clearErrors?.();
 
-    const fieldMeta = this.translate.instant('socios.table.fieldMeta') || {};
-    const validations = this.translate.instant('socios.table.validations') || {};
+    const fieldMeta = this.translate.instant('socios.tableBeneficiario.fieldMeta') || {};
+    const validations = this.translate.instant('socios.tableBeneficiario.validations') || {};
 
     for (const [fieldId, meta] of Object.entries(fieldMeta as Record<string, any>)) {
       this.engine.addFieldMeta?.({

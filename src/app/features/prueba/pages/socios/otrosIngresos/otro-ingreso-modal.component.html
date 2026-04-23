@@ -1,0 +1,86 @@
+@if (open) {
+<div class="modal-backdrop fade show"></div>
+
+<div class="modal fade show d-block" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    {{ 'socios.otrosIngresosTable.modal.title' | translate }}
+                </h5>
+                <button type="button" class="btn-close" aria-label="Close" (click)="close()">
+                </button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body">
+                <div class="row g-3">
+
+                    <!-- ORIGEN -->
+                    <div class="col-md-6" error-notify="origen" error-display="inline">
+
+                        <label for="origen" class="form-label required">
+                            {{ 'socios.otrosIngresosTable.columns.origen' | translate }}
+                        </label>
+
+                        <input #origen id="origen" name="origen" [(ngModel)]="draft.origen" engineSync="origen"
+                            type="text" class="form-control" JmartAutoFocus autoFocusNext [next]="ingresoMensual"
+                            required>
+                    </div>
+
+                    <!-- INGRESO MENSUAL -->
+                    <div class="col-md-6" error-notify="ingresoMensual" error-display="inline">
+
+                        <label for="ingresoMensual" class="form-label required">
+                            {{ 'socios.otrosIngresosTable.columns.ingresoMensual' | translate }}
+                        </label>
+
+                        <div class="input-group">
+                            <input #ingresoMensual id="ingresoMensual" name="ingresoMensual"
+                                [(ngModel)]="draft.ingresoMensual" engineSync="ingresoMensual" type="text"
+                                class="form-control text-end" numberFormat [decimals]="2"
+                                [decimalSeparator]="appConfigService.getCurrentSettings().decimalSeparator"
+                                [thousandSeparator]="appConfigService.getCurrentSettings().thousandSeparator"
+                                autoFocusNext [next]="observaciones" placeholder="0.00" required>
+
+                            <span class="input-group-text">
+                                {{ appConfigService.getCurrentSettings().currency }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- OBSERVACIONES -->
+                    <div class="col-12" error-notify="observaciones" error-display="inline">
+
+                        <label for="observaciones" class="form-label">
+                            {{ 'socios.otrosIngresosTable.columns.observaciones' | translate }}
+                        </label>
+
+                        <textarea #observaciones id="observaciones" name="observaciones"
+                            [(ngModel)]="draft.observaciones" engineSync="observaciones" class="form-control" rows="3"
+                            autoFocusNext [next]="btnGuardarOtrosIngresos">
+              </textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+                <button  type="button" class="btn btn-outline-secondary" (click)="close()"
+                    [permissionRoute]="['/socios', '/ahorro']" [appPermission]="['new', 'edit']">
+                    {{ 'socios.common.actions.cancel' | translate }}
+                </button>
+
+                <button #btnGuardarOtrosIngresos type="button" class="btn btn-primary" (click)="submit()"
+                    [permissionRoute]="['/socios', '/ahorro']" [appPermission]="['new', 'edit']">
+                    {{ 'socios.common.actions.save' | translate }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+}

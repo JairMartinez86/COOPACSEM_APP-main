@@ -45,6 +45,8 @@ import { PermissionService } from '../../../../core/services/permission.service'
 import { BeneficiarioModalComponent } from "./beneficiario/beneficiario-modal.component";
 import { FileManagerComponent } from "../../../../shared/components/file-manager/file-manager.component";
 import { FileManagerService } from '../../../../shared/service/FileManagerService';
+import { EMPTY_OTRO_INGRESO, OtroIngresoForm } from '../../interface/otro-ingreso.model';
+import { OtroIngresoModalComponent } from "./otrosIngresos/otro-ingreso-modal.component";
 
 declare const Choices: any;
 
@@ -71,8 +73,9 @@ type DraftRef<T> = {
     JMartNumberFormatDirective,
     Breadcrumb,
     BeneficiarioModalComponent,
-    FileManagerComponent
-  ],
+    FileManagerComponent,
+    OtroIngresoModalComponent
+],
   templateUrl: './socios.html',
   styleUrl: './socios.scss',
 })
@@ -140,6 +143,14 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   socio: SocioForm = { ...EMPTY_SOCIO };
   copy: SocioForm = { ...EMPTY_SOCIO };
+
+  otrosIngresosDetalle: OtroIngresoForm[] = [];
+otroIngresoModalOpen = false;
+otroIngresoSaving = false;
+otroIngresoEditing: OtroIngresoForm | null = null;
+otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
+
+
 
   breadcrumbs = [
     { label: '', url: '' },
@@ -1696,29 +1707,24 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     return isNaN(result) ? 0 : result;
   }
 
-  calcularIngresosAnuales(): void {
-    const mensualRaw = this.socio.ingresosMensuales;
-    const otrosRaw = this.socio.otrosIngresos;
+calcularIngresosAnuales(): void {
+  const mensual = this.toNumber(this.socio.ingresosMensuales);
+  const otros = this.totalOtrosIngresos;
 
-    const mensualTexto = String(mensualRaw ?? '').trim();
-    const otrosTexto = String(otrosRaw ?? '').trim();
+  const ambosVacios = !mensual && !otros;
 
-    const ambosVacios = mensualTexto === '' && otrosTexto === '';
+  const nuevoTotal = ambosVacios
+    ? null
+    : Number(((mensual + otros) * 12).toFixed(2));
 
-    const nuevoTotal = ambosVacios
-      ? null
-      : Number(((this.toNumber(mensualRaw) + this.toNumber(otrosRaw)) * 12).toFixed(2));
+  this.socio.otrosIngresos = otros;
+  this.socio.ingresosAnuales = nuevoTotal;
 
-    if (this.socio.ingresosAnuales === nuevoTotal) {
-      return;
-    }
-
-    this.socio.ingresosAnuales = nuevoTotal;
-
-    this.engine?.patchValues?.({
-      ingresosAnuales: nuevoTotal
-    });
-  }
+  this.engine?.patchValues?.({
+    otrosIngresos: otros,
+    ingresosAnuales: nuevoTotal
+  });
+}
 
 
   onIngresosChange(): void {
@@ -2007,6 +2013,89 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     return fecha >= hoy && fecha <= limite;
   }
 
+
+
+
+  get totalOtrosIngresos(): number {
+  return this.otrosIngresosDetalle
+    .filter(x => !x.isDeleted)
+    .reduce((sum, item) => sum + Number(item.ingresoMensual ?? 0), 0);
+}
+
+
+
+
+
+
+
+
+openOtroIngresoModal(item?: OtroIngresoForm | null): void {
+  this.activeSection = 'actividad-economica';
+  this.syncWizardHorizontalScroll();
+  this.cdr.detectChanges();
+
+  this.notify.close?.();
+  this.otroIngresoEditing = item ? { ...item } : null;
+  this.otroIngresoDraft = item ? { ...item } : { ...EMPTY_OTRO_INGRESO };
+  this.otroIngresoModalOpen = true;
+}
+
+closeOtroIngresoModal(): void {
+  this.otroIngresoModalOpen = false;
+  this.otroIngresoEditing = null;
+  this.otroIngresoDraft = { ...EMPTY_OTRO_INGRESO };
+  this.cdr.detectChanges();
+}
+
+onOtroIngresoModalSaved(payload: OtroIngresoForm): void {
+  if (payload.id) {
+    this.otrosIngresosDetalle = this.otrosIngresosDetalle.map(x =>
+      x.id === payload.id ? { ...payload, isNew: false, isDeleted: false } : x
+    );
+  } else {
+    this.otrosIngresosDetalle = [
+      ...this.otrosIngresosDetalle,
+      {
+        ...payload,
+        id: crypto.randomUUID(),
+        socioId: this.socio.id ?? null,
+        activo: true,
+        isNew: true,
+        isDeleted: false
+      }
+    ];
+  }
+
+  this.socio.otrosIngresosDetalle = [
+    ...this.otrosIngresosDetalle.filter(x => !x.isDeleted)
+  ];
+
+  this.socio.otrosIngresos = this.totalOtrosIngresos;
+  this.calcularIngresosAnuales();
+
+  this.formRef?.form.markAsDirty();
+  this.closeOtroIngresoModal();
+}
+
+removeOtroIngreso(item: OtroIngresoForm): void {
+  const title = this.translate.instant('socios.otrosIngresosTable.deleteTitle');
+  const message = this.translate.instant(
+    'socios.otrosIngresosTable.deleteMessage',
+    { origen: item.origen || '' }
+  );
+
+  const ref = this.notify.confirm?.(message, title, 'warning');
+
+  ref?.subscribe((result: number) => {
+    if (result !== 1) return;
+
+    this.otrosIngresosDetalle = this.otrosIngresosDetalle.filter(x => x.id !== item.id);
+    this.socio.otrosIngresosDetalle = [...this.otrosIngresosDetalle];
+    this.socio.otrosIngresos = this.totalOtrosIngresos;
+    this.calcularIngresosAnuales();
+    this.formRef?.form.markAsDirty();
+  });
+}
 
 
 
