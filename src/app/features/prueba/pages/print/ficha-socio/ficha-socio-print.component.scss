@@ -1,9 +1,28 @@
+@page {
+  size: A4;
+  margin: 10mm 12mm;
+}
+
 .print-page {
   width: 100%;
+  min-height: calc(297mm - 20mm);
   color: #000;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
   line-height: 1.15;
+  box-sizing: border-box;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.print-page + .print-page {
+  page-break-before: always;
+  break-before: page;
 }
 
 .rpt-header {
@@ -42,8 +61,14 @@
   margin: 14px 0 10px;
 }
 
+.rpt-sep-tight {
+  margin: 10px 0 8px;
+}
+
 .rpt-section {
   margin-bottom: 4px;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .rpt-section-title {
@@ -72,6 +97,8 @@
 
 .rpt-obs {
   min-height: 32px;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .rpt-label {
@@ -129,6 +156,8 @@
   max-width: 760px;
   font-size: 10px;
   line-height: 1.25;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .rpt-important-title {
@@ -138,8 +167,127 @@
 }
 
 .rpt-footer {
-  margin-top: 14px;
+  margin-top: auto;
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
   font-size: 10px;
+
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.rpt-benef-intro {
+  font-size: 10px;
+  line-height: 1.25;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.rpt-benef-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  margin-bottom: 8px;
+
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.rpt-benef-table th,
+.rpt-benef-table td {
+  padding: 2px 4px;
+  vertical-align: top;
+  text-align: left;
+}
+
+.rpt-benef-table thead th {
+  font-weight: 700;
+  border-bottom: 1px solid #000;
+}
+
+.rpt-benef-table .col-item {
+  width: 8%;
+}
+
+.rpt-benef-table .col-nombre {
+  width: 34%;
+}
+
+.rpt-benef-table .col-id {
+  width: 24%;
+}
+
+.rpt-benef-table .col-parentesco {
+  width: 18%;
+}
+
+.rpt-benef-table .col-beneficio {
+  width: 16%;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.empty-row td {
+  padding-top: 6px;
+}
+
+.total-row td {
+  padding-top: 4px;
+  font-weight: 700;
+}
+
+.rpt-socio-line {
+  margin-top: 8px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.rpt-note {
+  margin-top: 10px;
+  font-size: 10px;
+  line-height: 1.25;
+
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.rpt-signature {
+  margin-top: 58px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.25;
+
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.rpt-signature-line {
+  width: 230px;
+  margin: 0 auto 4px;
+  border-top: 1px solid #666;
+}
+
+.rpt-important-page2 {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.rpt-footer-fixed {
+  margin-top: auto;
+}
+
+@media print {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+
+  .print-page {
+    width: 100%;
+  }
 }

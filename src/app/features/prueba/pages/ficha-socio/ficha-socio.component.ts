@@ -188,10 +188,7 @@ export class FichaSocioComponent implements OnInit {
 
 imprimirDirecto(): void {
   if (!this.socio) return;
-
-  const json = JSON.stringify(this.socio, null, 2);
-const parsed = JSON.parse(json);
-console.log(parsed);
+  
 
   const oldTitle = this.title.getTitle();
 
