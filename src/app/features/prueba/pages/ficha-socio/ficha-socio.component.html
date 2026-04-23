@@ -330,6 +330,40 @@
     </div>
 
     <div class="card shadow-sm border-0 mb-3">
+  <div class="card-header bg-transparent">
+    <h5 class="mb-0 fw-bold">Datos del cónyuge</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="text-muted small text-uppercase fw-semibold">Nombre completo</div>
+        <div>{{ socio.conyugeNombreCompleto || '-' }}</div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="text-muted small text-uppercase fw-semibold">Tipo identificación</div>
+        <div>{{ getTipoIdentificacionLabel(socio.conyugeTipoIdentificacion) || '-' }}</div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="text-muted small text-uppercase fw-semibold">Número identificación</div>
+        <div>{{ socio.conyugeNumeroIdentificacion || '-' }}</div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="text-muted small text-uppercase fw-semibold">País de nacimiento</div>
+        <div>{{ socio.conyugePaisNacimiento || '-' }}</div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="text-muted small text-uppercase fw-semibold">Nacionalidad</div>
+        <div>{{ socio.conyugeNacionalidad || '-' }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="card shadow-sm border-0 mb-3">
       <div class="card-header bg-transparent">
         <h5 class="mb-0 fw-bold">Beneficiarios</h5>
       </div>

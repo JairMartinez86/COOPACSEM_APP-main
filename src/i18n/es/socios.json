@@ -35,7 +35,7 @@
     "messages": {
       "notFound": "No se encontraron datos del socio.",
       "noActiveCurrentAccount": "El socio no posee una cuenta corriente activa",
-       "afiliacionLockedByMovements": "La sección de afiliación ya no se puede modificar porque el socio tiene movimientos registrados aparte de la afiliación.",
+      "afiliacionLockedByMovements": "La sección de afiliación ya no se puede modificar porque el socio tiene movimientos registrados aparte de la afiliación.",
       "ahorroLockedByMovements": "La sección de ahorro ya no se puede modificar porque el socio tiene movimientos registrados aparte de la afiliación.",
       "ahorroNavidenaLockedByYear": "La cuenta navideña no se puede modificar porque el socio ya tiene movimientos registrados para el año {{year}}."
     },
@@ -938,42 +938,28 @@
         "cuentaCorrienteFechaInicioDeduccion": {
           "data": {
             "1": {
+              "rule": "IF({bloquearAhorroCorriente}=false)->{2,3,4}",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            },
+            "2": {
               "rule": "LEN>",
               "value": "0",
               "when": "{cuentaCorrienteActiva}=true",
               "msj": "Ingrese la fecha de la deducción (Cuenta Corriente)"
             },
-            "2": {
+            "3": {
               "rule": "DAYIN_VALID_MONTH",
               "value": "15,30",
               "when": "{cuentaCorrienteActiva}=true && LEN>0",
               "msj": "La fecha debe ser día 15 o el último día permitido del mes"
             },
-            "3": {
+            "4": {
               "rule": "DATE>",
               "value": "{fechaIngreso}",
               "when": "{cuentaCorrienteActiva}=true && LEN>0 && {fechaIngreso}!=''",
               "msj": "La fecha de deducción debe ser mayor a la fecha de ingreso"
-            }
-          }
-        },
-        "cuentaCorrienteEsMensual": {
-          "data": {
-            "1": {
-              "rule": "LEN>=",
-              "value": "0",
-              "when": "",
-              "msj": ""
-            }
-          }
-        },
-        "cuentaNavidenaActiva": {
-          "data": {
-            "1": {
-              "rule": "LEN>=",
-              "value": "0",
-              "when": "",
-              "msj": ""
             }
           }
         },
@@ -989,19 +975,25 @@
         },
         "cuentaNavidenaFechaInicioDeduccion": {
           "data": {
-            "1": {
+             "1": {
+              "rule": "IF({bloquearAhorroNavidena}=false)->{2,3,4}",
+              "value": "0",
+              "when": "",
+              "msj": ""
+            },
+            "2": {
               "rule": "LEN>",
               "value": "0",
               "when": "{cuentaNavidenaActiva}=true",
               "msj": "Ingrese la fecha de la deducción (Cuenta Navideña)"
             },
-            "2": {
+            "3": {
               "rule": "DAYIN_VALID_MONTH",
               "value": "15,30",
               "when": "{cuentaNavidenaEsMensual}=true && LEN>0",
               "msj": "La fecha debe ser día 15 o el último día permitido del mes"
             },
-            "3": {
+            "4": {
               "rule": "DATE>",
               "value": "{fechaIngreso}",
               "when": "{cuentaNavidenaActiva}=true && LEN>0 && {fechaIngreso}!=''",
@@ -1232,7 +1224,6 @@
         "delete": "Eliminar",
         "save": "Guardar",
         "cancel": "Cancelar"
-        
       },
       "status": {
         "active": "Activo",

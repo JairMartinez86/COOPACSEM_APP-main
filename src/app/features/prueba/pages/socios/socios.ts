@@ -252,6 +252,21 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+     this.engine.addControl('bloquearAhorroCorriente');
+    this.engine.addControl('bloquearAhorroCorriente');
+    
+    this.engine.setControlValue(
+      'bloquearAhorroCorriente',
+      false
+    );
+
+    this.engine.setControlValue(
+      'bloquearAhorroCorriente',
+      false
+    );
+
+
+
     this.loadBreadcrumbs();
     this.loadCatalogos();
 
@@ -570,12 +585,40 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadSocioById(id: string): void {
     this.loading = true;
 
+
+  
+    this.engine.setControlValue(
+      'bloquearAhorroCorriente',
+      false
+    );
+
+    this.engine.setControlValue(
+      'bloquearAhorroCorriente',
+      false
+    );
+
+
     this.sociosService
       .getById(id)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (res: any) => {
           const socioApi = res?.data?.socio ?? null;
+
+          
+            this.engine.setControlValue(
+              'bloquearAhorroCorriente',
+              socioApi.bloquearAhorroCorriente
+            );
+
+            this.engine.setControlValue(
+              'bloquearAhorroCorriente',
+              socioApi.bloquearAhorroNavidena
+            );
+
+
+            console.log(socioApi.bloquearAhorroNavidena)
+
 
 
 

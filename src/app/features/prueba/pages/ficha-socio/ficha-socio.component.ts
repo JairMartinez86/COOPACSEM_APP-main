@@ -55,6 +55,8 @@ export class FichaSocioComponent implements OnInit {
       return;
     }
 
+    
+
     this.loadSocio(this.socioId);
   }
 
@@ -193,7 +195,7 @@ imprimirDirecto(): void {
   const oldTitle = this.title.getTitle();
 
 
-  this.title.setTitle('\u200B');
+  //this.title.setTitle('\u200B');
 
   this.mostrarPrint = true;
 
@@ -205,7 +207,7 @@ imprimirDirecto(): void {
         this.mostrarPrint = false;
 
         // 🔁 restaurar título normal
-        this.title.setTitle(oldTitle);
+      //  this.title.setTitle(oldTitle);
       }, 500);
     });
   });

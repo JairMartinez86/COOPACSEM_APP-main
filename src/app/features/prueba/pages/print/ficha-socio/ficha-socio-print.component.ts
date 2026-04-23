@@ -167,4 +167,21 @@ get antiguedadIngreso(): number | null {
   return years;
 }
 
+buildFirmaFecha(): string {
+  const fecha = this.fechaServidor
+    ? new Date(`${this.fechaServidor}T00:00:00`)
+    : new Date();
+
+  const meses = [
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+  ];
+
+  const dia = fecha.getDate();
+  const mes = meses[fecha.getMonth()];
+  const anio = fecha.getFullYear();
+
+  return `Día ${dia} del mes de ${mes} del año ${anio}`;
+}
+
 }
