@@ -42,7 +42,8 @@
       "columns": {
         "origen": "Origen",
         "ingresoMensual": "Ingreso mensual",
-        "observaciones": "Observaciones"
+        "observaciones": "Observaciones",
+        "actions": "Acciones"
       },
       "modal": {
         "title": "Detalle de otro ingreso"

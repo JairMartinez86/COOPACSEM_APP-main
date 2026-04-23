@@ -75,7 +75,7 @@ type DraftRef<T> = {
     BeneficiarioModalComponent,
     FileManagerComponent,
     OtroIngresoModalComponent
-],
+  ],
   templateUrl: './socios.html',
   styleUrl: './socios.scss',
 })
@@ -145,10 +145,10 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   copy: SocioForm = { ...EMPTY_SOCIO };
 
   otrosIngresosDetalle: OtroIngresoForm[] = [];
-otroIngresoModalOpen = false;
-otroIngresoSaving = false;
-otroIngresoEditing: OtroIngresoForm | null = null;
-otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
+  otroIngresoModalOpen = false;
+  otroIngresoSaving = false;
+  otroIngresoEditing: OtroIngresoForm | null = null;
+  otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
 
 
 
@@ -263,9 +263,9 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
   }
 
   ngOnInit(): void {
-     this.engine.addControl('bloquearAhorroCorriente');
     this.engine.addControl('bloquearAhorroCorriente');
-    
+    this.engine.addControl('bloquearAhorroCorriente');
+
     this.engine.setControlValue(
       'bloquearAhorroCorriente',
       false
@@ -597,7 +597,7 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
     this.loading = true;
 
 
-  
+
     this.engine.setControlValue(
       'bloquearAhorroCorriente',
       false
@@ -616,19 +616,19 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
         next: (res: any) => {
           const socioApi = res?.data?.socio ?? null;
 
-          
-            this.engine.setControlValue(
-              'bloquearAhorroCorriente',
-              socioApi.bloquearAhorroCorriente
-            );
 
-            this.engine.setControlValue(
-              'bloquearAhorroCorriente',
-              socioApi.bloquearAhorroNavidena
-            );
+          this.engine.setControlValue(
+            'bloquearAhorroCorriente',
+            socioApi.bloquearAhorroCorriente
+          );
+
+          this.engine.setControlValue(
+            'bloquearAhorroCorriente',
+            socioApi.bloquearAhorroNavidena
+          );
 
 
-            console.log(socioApi.bloquearAhorroNavidena)
+          console.log(socioApi.bloquearAhorroNavidena)
 
 
 
@@ -713,6 +713,7 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
           this.syncAfiliacionConfigValues();
 
           this.loadBeneficiarios(id);
+          this.loadOtrosIngresos(id);
 
 
           this.patchEngineFromSocio();
@@ -936,12 +937,14 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
 
         currentData: () => ({
           ...this.socio,
-          beneficiarios: this.mapBeneficiarios(this.beneficiarios)
+          beneficiarios: this.mapBeneficiarios(this.beneficiarios),
+          otrosIngresosDetalle: this.mapOtrosIngresos(this.otrosIngresosDetalle)
         }),
 
         savedData: () => ({
           ...this.copy,
-          beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios)
+          beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios),
+          otrosIngresosDetalle: this.mapOtrosIngresos(this.copy.otrosIngresosDetalle)
         }),
 
         restoreData: (data: Partial<SocioForm> | null | undefined) => {
@@ -951,8 +954,13 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
           });
 
           this.beneficiarios = this.mapBeneficiarios(data?.beneficiarios);
-
           this.socio.beneficiarios = [...this.beneficiarios];
+
+          this.otrosIngresosDetalle = this.mapOtrosIngresos(data?.otrosIngresosDetalle);
+          this.socio.otrosIngresosDetalle = [...this.otrosIngresosDetalle];
+          this.socio.otrosIngresos = this.totalOtrosIngresos;
+          this.calcularIngresosAnuales();
+
 
           this.syncAfiliacionConfigValues();
           this.patchEngineFromSocio();
@@ -972,6 +980,20 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
         restoreSavedData: (data: Partial<SocioForm> | null | undefined) => {
           this.copy = this.toSocioForm(data);
           this.copy.beneficiarios = this.mapBeneficiarios(data?.beneficiarios);
+          this.copy.otrosIngresosDetalle = this.mapOtrosIngresos(data?.otrosIngresosDetalle);
+
+          const totalOtros = this.copy.otrosIngresosDetalle
+            .filter(x => !x.isDeleted)
+            .reduce((sum, item) => sum + Number(item.ingresoMensual ?? 0), 0);
+
+          const mensual = this.toNumber(this.copy.ingresosMensuales);
+          const nuevoAnual = (!mensual && !totalOtros)
+            ? null
+            : Number(((mensual + totalOtros) * 12).toFixed(2));
+
+          this.copy.otrosIngresos = totalOtros;
+          this.copy.ingresosAnuales = nuevoAnual;
+
           this.syncAfiliacionConfigValues();
           this.syncCatalogValuesWithOptions();
         },
@@ -1038,6 +1060,7 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
         data?.cuentaNavidenaMontoCuota == null ? null : Number(data.cuentaNavidenaMontoCuota),
 
       beneficiarios: this.mapBeneficiarios(data?.beneficiarios).filter(x => !x.isDeleted),
+      otrosIngresosDetalle: this.mapOtrosIngresos(data?.otrosIngresosDetalle).filter(x => !x.isDeleted),
     };
   }
 
@@ -1060,12 +1083,18 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
   hasUnsavedChanges(): boolean {
     const current = this.normalize({
       ...this.socio,
-      beneficiarios: this.mapBeneficiarios(this.beneficiarios)
+      beneficiarios: this.mapBeneficiarios(this.beneficiarios),
+      otrosIngresosDetalle: this.mapOtrosIngresos(this.otrosIngresosDetalle),
+      otrosIngresos: this.totalOtrosIngresos,
+      ingresosAnuales: this.socio.ingresosAnuales
     });
 
     const saved = this.normalize({
       ...this.copy,
-      beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios)
+      beneficiarios: this.mapBeneficiarios(this.copy.beneficiarios),
+      otrosIngresosDetalle: this.mapOtrosIngresos(this.copy.otrosIngresosDetalle),
+      otrosIngresos: this.copy.otrosIngresos,
+      ingresosAnuales: this.copy.ingresosAnuales
     });
 
     return JSON.stringify(current) !== JSON.stringify(saved);
@@ -1173,6 +1202,11 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
 
     this.beneficiarios = this.mapBeneficiarios(this.copy.beneficiarios);
     this.socio.beneficiarios = [...this.beneficiarios];
+
+    this.otrosIngresosDetalle = this.mapOtrosIngresos(this.copy.otrosIngresosDetalle);
+    this.socio.otrosIngresosDetalle = [...this.otrosIngresosDetalle];
+    this.socio.otrosIngresos = this.totalOtrosIngresos;
+    this.calcularIngresosAnuales();
 
     this.syncAfiliacionConfigValues();
     this.syncCatalogValuesWithOptions();
@@ -1707,24 +1741,24 @@ otroIngresoDraft: OtroIngresoForm = { ...EMPTY_OTRO_INGRESO };
     return isNaN(result) ? 0 : result;
   }
 
-calcularIngresosAnuales(): void {
-  const mensual = this.toNumber(this.socio.ingresosMensuales);
-  const otros = this.totalOtrosIngresos;
+  calcularIngresosAnuales(): void {
+    const mensual = this.toNumber(this.socio.ingresosMensuales);
+    const otros = this.totalOtrosIngresos;
 
-  const ambosVacios = !mensual && !otros;
+    const ambosVacios = !mensual && !otros;
 
-  const nuevoTotal = ambosVacios
-    ? null
-    : Number(((mensual + otros) * 12).toFixed(2));
+    const nuevoTotal = ambosVacios
+      ? null
+      : Number(((mensual + otros) * 12).toFixed(2));
 
-  this.socio.otrosIngresos = otros;
-  this.socio.ingresosAnuales = nuevoTotal;
+    this.socio.otrosIngresos = otros;
+    this.socio.ingresosAnuales = nuevoTotal;
 
-  this.engine?.patchValues?.({
-    otrosIngresos: otros,
-    ingresosAnuales: nuevoTotal
-  });
-}
+    this.engine?.patchValues?.({
+      otrosIngresos: otros,
+      ingresosAnuales: nuevoTotal
+    });
+  }
 
 
   onIngresosChange(): void {
@@ -1757,6 +1791,20 @@ calcularIngresosAnuales(): void {
     }));
   }
 
+  private mapOtrosIngresos(items: any[] | null | undefined): OtroIngresoForm[] {
+    return (items ?? []).map((item: any) => ({
+      id: item?.id ?? null,
+      socioId: item?.socioId ?? this.socio?.id ?? null,
+      origen: item?.origen ?? null,
+      ingresoMensual: item?.ingresoMensual == null ? null : Number(item.ingresoMensual),
+      observaciones: item?.observaciones ?? null,
+      activo: item?.activo ?? true,
+      createdAtUtc: item?.createdAtUtc ?? null,
+      updatedAtUtc: item?.updatedAtUtc ?? null,
+      isNew: false,
+      isDeleted: false,
+    }));
+  }
 
 
 
@@ -1842,6 +1890,73 @@ calcularIngresosAnuales(): void {
     });
   }
 
+  private loadOtrosIngresos(socioId: string): void {
+    this.sociosService.getOtrosIngresos(socioId).subscribe({
+      next: (res: any) => {
+        const items = res?.data?.otrosIngresos ?? [];
+
+        this.otrosIngresosDetalle = this.mapOtrosIngresos(items);
+
+        this.socio.otrosIngresosDetalle = [...this.otrosIngresosDetalle];
+        this.copy.otrosIngresosDetalle = [...this.otrosIngresosDetalle];
+
+        const totalOtros = this.totalOtrosIngresos;
+        const mensual = this.toNumber(this.socio.ingresosMensuales);
+        const nuevoAnual = (!mensual && !totalOtros)
+          ? null
+          : Number(((mensual + totalOtros) * 12).toFixed(2));
+
+        // current
+        this.socio.otrosIngresos = totalOtros;
+        this.socio.ingresosAnuales = nuevoAnual;
+
+        // saved
+        this.copy.otrosIngresos = totalOtros;
+        this.copy.ingresosAnuales = nuevoAnual;
+
+        this.engine?.patchValues?.({
+          otrosIngresos: totalOtros,
+          ingresosAnuales: nuevoAnual
+        });
+
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+          this.formRef?.form.markAsPristine();
+          this.formRef?.form.markAsUntouched();
+        }, 0);
+      },
+      error: () => {
+        this.otrosIngresosDetalle = [];
+
+        this.socio.otrosIngresosDetalle = [];
+        this.copy.otrosIngresosDetalle = [];
+
+        const mensual = this.toNumber(this.socio.ingresosMensuales);
+        const nuevoAnual = !mensual ? null : Number((mensual * 12).toFixed(2));
+
+        // current
+        this.socio.otrosIngresos = 0;
+        this.socio.ingresosAnuales = nuevoAnual;
+
+        // saved
+        this.copy.otrosIngresos = 0;
+        this.copy.ingresosAnuales = nuevoAnual;
+
+        this.engine?.patchValues?.({
+          otrosIngresos: 0,
+          ingresosAnuales: nuevoAnual
+        });
+
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+          this.formRef?.form.markAsPristine();
+          this.formRef?.form.markAsUntouched();
+        }, 0);
+      }
+    });
+  }
 
 
   onBeneficiarioModalSaved(payload: BeneficiarioForm): void {
@@ -2017,86 +2132,145 @@ calcularIngresosAnuales(): void {
 
 
   get totalOtrosIngresos(): number {
-  return this.otrosIngresosDetalle
-    .filter(x => !x.isDeleted)
-    .reduce((sum, item) => sum + Number(item.ingresoMensual ?? 0), 0);
-}
-
-
-
-
-
-
-
-
-openOtroIngresoModal(item?: OtroIngresoForm | null): void {
-  this.activeSection = 'actividad-economica';
-  this.syncWizardHorizontalScroll();
-  this.cdr.detectChanges();
-
-  this.notify.close?.();
-  this.otroIngresoEditing = item ? { ...item } : null;
-  this.otroIngresoDraft = item ? { ...item } : { ...EMPTY_OTRO_INGRESO };
-  this.otroIngresoModalOpen = true;
-}
-
-closeOtroIngresoModal(): void {
-  this.otroIngresoModalOpen = false;
-  this.otroIngresoEditing = null;
-  this.otroIngresoDraft = { ...EMPTY_OTRO_INGRESO };
-  this.cdr.detectChanges();
-}
-
-onOtroIngresoModalSaved(payload: OtroIngresoForm): void {
-  if (payload.id) {
-    this.otrosIngresosDetalle = this.otrosIngresosDetalle.map(x =>
-      x.id === payload.id ? { ...payload, isNew: false, isDeleted: false } : x
-    );
-  } else {
-    this.otrosIngresosDetalle = [
-      ...this.otrosIngresosDetalle,
-      {
-        ...payload,
-        id: crypto.randomUUID(),
-        socioId: this.socio.id ?? null,
-        activo: true,
-        isNew: true,
-        isDeleted: false
-      }
-    ];
+    return this.otrosIngresosDetalle
+      .filter(x => !x.isDeleted)
+      .reduce((sum, item) => sum + Number(item.ingresoMensual ?? 0), 0);
   }
 
-  this.socio.otrosIngresosDetalle = [
-    ...this.otrosIngresosDetalle.filter(x => !x.isDeleted)
-  ];
 
-  this.socio.otrosIngresos = this.totalOtrosIngresos;
-  this.calcularIngresosAnuales();
 
-  this.formRef?.form.markAsDirty();
-  this.closeOtroIngresoModal();
-}
 
-removeOtroIngreso(item: OtroIngresoForm): void {
-  const title = this.translate.instant('socios.otrosIngresosTable.deleteTitle');
-  const message = this.translate.instant(
-    'socios.otrosIngresosTable.deleteMessage',
-    { origen: item.origen || '' }
-  );
 
-  const ref = this.notify.confirm?.(message, title, 'warning');
 
-  ref?.subscribe((result: number) => {
-    if (result !== 1) return;
 
-    this.otrosIngresosDetalle = this.otrosIngresosDetalle.filter(x => x.id !== item.id);
-    this.socio.otrosIngresosDetalle = [...this.otrosIngresosDetalle];
-    this.socio.otrosIngresos = this.totalOtrosIngresos;
-    this.calcularIngresosAnuales();
-    this.formRef?.form.markAsDirty();
-  });
-}
 
+  openOtroIngresoModal(item?: OtroIngresoForm | null): void {
+    this.activeSection = 'actividad-economica';
+    this.syncWizardHorizontalScroll();
+    this.cdr.detectChanges();
+
+    this.notify.close?.();
+    this.otroIngresoEditing = item ? { ...item } : null;
+    this.otroIngresoDraft = item ? { ...item } : { ...EMPTY_OTRO_INGRESO };
+    this.otroIngresoModalOpen = true;
+  }
+
+  closeOtroIngresoModal(): void {
+    this.otroIngresoModalOpen = false;
+    this.otroIngresoEditing = null;
+    this.otroIngresoDraft = { ...EMPTY_OTRO_INGRESO };
+    this.cdr.detectChanges();
+  }
+
+  onOtroIngresoModalSaved(payload: OtroIngresoForm): void {
+    if (this.mode === 'create' || !this.socio.id) {
+      if (payload.id) {
+        this.otrosIngresosDetalle = this.otrosIngresosDetalle.map(x =>
+          x.id === payload.id ? { ...payload, isNew: true, isDeleted: false } : x
+        );
+      } else {
+        this.otrosIngresosDetalle = [
+          ...this.otrosIngresosDetalle,
+          {
+            ...payload,
+            id: crypto.randomUUID(),
+            socioId: null,
+            activo: true,
+            isNew: true,
+            isDeleted: false
+          }
+        ];
+      }
+
+      this.socio.otrosIngresosDetalle = [...this.otrosIngresosDetalle.filter(x => !x.isDeleted)];
+      this.socio.otrosIngresos = this.totalOtrosIngresos;
+      this.calcularIngresosAnuales();
+      this.formRef?.form.markAsDirty();
+      this.closeOtroIngresoModal();
+      return;
+    }
+
+    this.otroIngresoSaving = true;
+
+    const request$ = payload.id
+      ? this.sociosService.updateOtroIngreso(this.socio.id, payload.id, payload)
+      : this.sociosService.createOtroIngreso(this.socio.id, payload);
+
+    request$.subscribe({
+      next: (res: any) => {
+        const saved = res?.data?.otroIngreso ?? payload;
+
+        if (payload.id) {
+          this.otrosIngresosDetalle = this.otrosIngresosDetalle.map(x =>
+            x.id === saved.id ? { ...saved, isNew: false, isDeleted: false } : x
+          );
+        } else {
+          this.otrosIngresosDetalle = [
+            ...this.otrosIngresosDetalle,
+            { ...saved, isNew: false, isDeleted: false }
+          ];
+        }
+
+        this.socio.otrosIngresosDetalle = [...this.otrosIngresosDetalle.filter(x => !x.isDeleted)];
+        this.copy.otrosIngresosDetalle = [...this.socio.otrosIngresosDetalle];
+        this.socio.otrosIngresos = this.totalOtrosIngresos;
+        this.calcularIngresosAnuales();
+
+        this.formRef?.form.markAsPristine();
+        this.notify.showFromApiResponse?.(res, 'success');
+
+        this.otroIngresoSaving = false;
+        this.closeOtroIngresoModal();
+      },
+      error: (err: any) => {
+        this.otroIngresoSaving = false;
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      }
+    });
+  }
+
+
+  removeOtroIngreso(item: OtroIngresoForm): void {
+    this.otroIngresoModalOpen = false;
+    this.otroIngresoEditing = null;
+    this.otroIngresoDraft = { ...EMPTY_OTRO_INGRESO };
+
+    const title = this.translate.instant('socios.otrosIngresosTable.deleteTitle');
+    const message = this.translate.instant(
+      'socios.otrosIngresosTable.deleteMessage',
+      { origen: item.origen || '' }
+    );
+
+    const ref = this.notify.confirm?.(message, title, 'warning');
+
+    ref?.subscribe((result: number) => {
+      if (result !== 1) return;
+
+      if (this.mode === 'create' || !this.socio.id || !item.id || item.isNew) {
+        this.otrosIngresosDetalle = this.otrosIngresosDetalle.filter(x => x.id !== item.id);
+        this.socio.otrosIngresosDetalle = [...this.otrosIngresosDetalle];
+        this.socio.otrosIngresos = this.totalOtrosIngresos;
+        this.calcularIngresosAnuales();
+        this.formRef?.form.markAsDirty();
+        return;
+      }
+
+      this.sociosService.deleteOtroIngreso(this.socio.id, item.id).subscribe({
+        next: (res: any) => {
+          this.otrosIngresosDetalle = this.otrosIngresosDetalle.filter(x => x.id !== item.id);
+          this.socio.otrosIngresosDetalle = [...this.otrosIngresosDetalle];
+          this.copy.otrosIngresosDetalle = [...this.socio.otrosIngresosDetalle];
+          this.socio.otrosIngresos = this.totalOtrosIngresos;
+          this.calcularIngresosAnuales();
+          this.formRef?.form.markAsPristine();
+          this.notify.showFromApiResponse?.(res, 'success');
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        }
+      });
+    });
+  }
 
 
 

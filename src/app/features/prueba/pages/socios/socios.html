@@ -799,7 +799,7 @@
                             </th>
                             <th>{{ 'socios.otrosIngresosTable.columns.observaciones' | translate }}</th>
                             @if (mode !== 'view') {
-                            <th class="text-end">{{ 'socios.common.actions' | translate }}</th>
+                            <th>{{ 'socios.otrosIngresosTable.columns.actions' | translate }}</th>
                             }
                           </tr>
                         </thead>
@@ -814,20 +814,37 @@
                             </td>
                             <td>{{ item.observaciones || '-' }}</td>
 
-                            @if (mode !== 'view') {
-                            <td class="text-end">
-                              <button type="button" class="btn btn-sm btn-light  me-1"
-                                (click)="openOtroIngresoModal(item)">
-                                <i class="bi bi-pencil"></i>
-                              </button>
 
-                              <button type="button" class="btn btn-sm btn-light  text-danger"
-                                (click)="removeOtroIngreso(item)">
-                                <i class="bi bi-trash"></i>
-                              </button>
-                            </td>
+                            
+                          <div class="table-actions">
+
+
+
+
+
+                            @if(this.mode != "view"){
+
+                            <button type="button" class="btn btn-icon btn-sm btn-light"
+                              [appPermission]="['new', 'edit']" [permissionRoute]="['/socios', '/ahorro']"
+                              [title]="'common.actions.edit' | translate" (click)="openOtroIngresoModal(item)">
+                              <i class="bi"
+                                [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-icon btn-sm btn-light"
+                              [appPermission]="['new', 'delete']" [permissionRoute]="['/socios', '/ahorro']"
+                              [title]="'common.actions.delete' | translate" (click)="removeOtroIngreso(item)">
+                              <i class="bi bi-trash"></i>
+                            </button>
                             }
-                          </tr>
+
+
+                          </div>
+
+
+
+                          </tr
+                          >
                           }
                         </tbody>
                         <tfoot>
