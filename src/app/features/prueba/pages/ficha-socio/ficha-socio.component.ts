@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { TranslateModule } from '@ngx-translate/core';
@@ -9,13 +9,13 @@ import { NotificationService } from '../../../../core/services/notification.serv
 import { AppConfigService } from '../../../../core/services/app-config.service';
 import { SociosService } from '../../services/socios.service';
 import { Breadcrumb } from '../../../../shared/components/breadcrumb/breadcrumb';
-import { FichaSocioPrintComponent } from "../print/ficha-socio/ficha-socio-print.component";
 import { Title } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-ficha-socio',
   standalone: true,
-  imports: [CommonModule, TranslateModule, Breadcrumb, FichaSocioPrintComponent],
+  imports: [CommonModule, FormsModule, TranslateModule, Breadcrumb],
   templateUrl: './ficha-socio.component.html',
   styleUrl: './ficha-socio.component.scss'
 })
@@ -26,12 +26,17 @@ export class FichaSocioComponent implements OnInit {
   private notify = inject(NotificationService);
   private title = inject(Title);
 
+
   public appConfigService = inject(AppConfigService);
 
-  mostrarPrint = false;
+  mostrarPrintFicha = false;
+  mostrarPrintAfiliacion = false;
 
   loading = false;
   socioId: string | null = null;
+
+  modalExportacionOpen = false;
+  tipoReporte: any = null;
 
   companyName = 'Mi Empresa S.A.';
   logoUrl = '';
@@ -44,6 +49,11 @@ export class FichaSocioComponent implements OnInit {
 
   socio: any = null;
 
+  constructor(
+    private cdr: ChangeDetectorRef
+  ) { }
+
+
   ngOnInit(): void {
     this.socioId = this.route.snapshot.paramMap.get('id');
 
@@ -55,7 +65,7 @@ export class FichaSocioComponent implements OnInit {
       return;
     }
 
-    
+
 
     this.loadSocio(this.socioId);
   }
@@ -86,6 +96,9 @@ export class FichaSocioComponent implements OnInit {
         next: (res: any) => {
           const socioApi = res?.data?.socio;
 
+
+
+
           if (!socioApi) {
             this.notify.show?.('No se encontró información del socio.', '', 'warning');
             this.router.navigate(['/socios']);
@@ -102,6 +115,10 @@ export class FichaSocioComponent implements OnInit {
             cuentaNavidenaFechaInicioDeduccion: this.appConfigService.formatDate(socioApi.cuentaNavidenaFechaInicioDeduccion),
             createdAtUtc: this.appConfigService.formatDate(socioApi.createdAtUtc)
           };
+
+
+
+
         },
         error: () => {
           this.notify.show?.('Error cargando la ficha del socio.', '', 'error');
@@ -188,32 +205,211 @@ export class FichaSocioComponent implements OnInit {
 
 
 
-imprimirDirecto(): void {
-  if (!this.socio) return;
-  
 
-  const oldTitle = this.title.getTitle();
+  imprimirPdfFicha(): void {
+    const base64 = this.socio?.pdf_ficha;
+
+    if (!base64) return;
+
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const win = window.open(url, '_blank');
+
+    if (!win) return;
+
+    win.onload = () => {
+      win.focus();
+      win.print();
+    };
+  }
 
 
-  //this.title.setTitle('\u200B');
+  imprimirAfiliacion(): void {
+    const base64 = this.socio?.pdf_afiliacion;
 
-  this.mostrarPrint = true;
+    if (!base64) return;
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      window.print();
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
 
-      setTimeout(() => {
-        this.mostrarPrint = false;
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
 
-        // 🔁 restaurar título normal
-      //  this.title.setTitle(oldTitle);
-      }, 500);
-    });
-  });
-}
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const win = window.open(url, '_blank');
+
+    if (!win) return;
+
+    win.onload = () => {
+      win.focus();
+      win.print();
+    };
+  }
+
+
+
+
+
+  abrirModalExportacion(): void {
+    this.modalExportacionOpen = true;
+  }
+
+  cerrarModalExportacion(): void {
+    this.modalExportacionOpen = false;
+    this.tipoReporte = null;
+  }
 
   back(): void {
     this.router.navigate(['/socios']);
   }
+
+
+  private buildPrintFileName(tipo: string): string {
+    const codigo = (this.socio?.codigoSocio || 'SIN-CODIGO').trim();
+
+    const nombre = (this.socio?.nombreCompleto || 'SOCIO')
+      .trim()
+      .replace(/[\\/:*?"<>|]/g, ''); // solo quitamos caracteres inválidos
+
+    return `COOPACSEM - ${tipo} - ${codigo} - ${nombre}`;
+  }
+
+
+  exportarComoPdf(): void {
+    const tipo = this.tipoReporte;
+
+  if (!tipo) return;
+
+  this.cerrarModalExportacion();
+
+  if (tipo === 'ficha') {
+    this.descargarPdfBase64(
+      this.socio?.pdf_ficha,
+      this.buildPrintFileName('EXPEDIENTE SOCIO')
+    );
+    return;
+  }
+
+  if (tipo === 'afiliacion') {
+    this.descargarPdfBase64(
+      this.socio?.pdf_afiliacion,
+      this.buildPrintFileName('CARTA AFILIACION')
+    );
+    return;
+  }
+  
+  }
+
+  exportarComoExcel(): void {
+  const tipo = this.tipoReporte;
+
+  if (!tipo) return;
+
+  this.cerrarModalExportacion();
+
+  if (tipo === 'ficha') {
+    this.descargarExcelBase64(
+      this.socio?.excel_ficha,
+      this.buildPrintFileName('EXPEDIENTE SOCIO')
+    );
+    return;
+  }
+
+  if (tipo === 'afiliacion') {
+    this.descargarExcelBase64(
+      this.socio?.excel_afiliacion,
+      this.buildPrintFileName('CARTA AFILIACION')
+    );
+    return;
+  }
+}
+
+private descargarExcelBase64(base64: string | null | undefined, fileName: string): void {
+  if (!base64) {
+    return;
+  }
+
+  const cleanBase64 = base64.includes(',')
+    ? base64.split(',')[1]
+    : base64;
+
+  const byteCharacters = atob(cleanBase64);
+  const byteNumbers = new Array(byteCharacters.length);
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  const byteArray = new Uint8Array(byteNumbers);
+
+  const blob = new Blob([byteArray], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  });
+
+  const url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${fileName}.xlsx`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  window.URL.revokeObjectURL(url);
+}
+
+
+private descargarPdfBase64(base64: string | null | undefined, fileName: string): void {
+  if (!base64) {
+    console.log('No viene PDF');
+    return;
+  }
+
+  const cleanBase64 = base64.includes(',')
+    ? base64.split(',')[1]
+    : base64;
+
+  const byteCharacters = atob(cleanBase64);
+  const byteNumbers = new Array(byteCharacters.length);
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  const byteArray = new Uint8Array(byteNumbers);
+
+  const blob = new Blob([byteArray], {
+    type: 'application/pdf'
+  });
+
+  const url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${fileName}.pdf`;
+
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  window.URL.revokeObjectURL(url);
+}
+
+
+
+
+
 }

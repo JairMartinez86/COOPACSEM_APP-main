@@ -1,0 +1,30 @@
+.print-area {
+  display: none;
+}
+
+body.print-ficha .ficha-print {
+  display: block;
+}
+
+body.print-afiliacion .afiliacion-print {
+  display: block;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    display: block;
+  }
+}
