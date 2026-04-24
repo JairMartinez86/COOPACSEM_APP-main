@@ -24,6 +24,7 @@ import socio_cambio_cuota from './es/socio-cambio-cuota.json';
 import socio_apertura_nav from './es/apertura-cuenta-navidena.json';
 import ahorro from './es/ahorro.json';
 import afiliacion_pago from './es/afiliacionPago.json';
+import fichaSocio from './es/fichaSocio.json';
 
 export const es = Object.assign({}, interceptor, alerts, file_manager, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, socio_ahorro, socio_retiro, socio_cambio_cuota, socio_apertura_nav, ahorro,
-    afiliacion_pago,  draft);
+    afiliacion_pago, fichaSocio,  draft);

@@ -1,0 +1,119 @@
+{
+  "fichaSocio": {
+    "title": "Ficha de socio",
+    "subtitle": "Vista resumida estilo expediente",
+    "recordTitle": "Expediente de socio",
+    "loading": "Cargando ficha del socio...",
+    "breadcrumbs": {
+      "socios": "Socios",
+      "ficha": "Ficha de socio"
+    },
+    "buttons": {
+      "back": "Volver",
+      "export": "Exportar",
+      "record": "Expediente",
+      "affiliation": "Afiliación",
+      "cancel": "Cancelar"
+    },
+    "messages": {
+      "noId": "No se recibió el id del socio.",
+      "notFound": "No se encontró información del socio.",
+      "loadError": "Error cargando la ficha del socio."
+    },
+    "sections": {
+      "personalData": "Datos personales",
+      "contactData": "Domicilio e información de contacto",
+      "workData": "Información laboral",
+      "economicData": "Datos económicos y cooperativos",
+      "spouseData": "Datos del cónyuge",
+      "otherIncome": "Otros ingresos",
+      "beneficiaries": "Beneficiarios"
+    },
+    "fields": {
+      "date": "Fecha",
+      "memberCode": "Código de socio",
+      "identification": "Identificación",
+      "identificationType": "Tipo identificación",
+      "identificationNumber": "Número identificación",
+      "admission": "Ingreso",
+      "savingsBalance": "Saldo ahorro",
+      "fullName": "Nombre completo",
+      "publicName": "Nombre público",
+      "inssNumber": "Número INSS",
+      "gender": "Sexo",
+      "maritalStatus": "Estado civil",
+      "birthDate": "Fecha nacimiento",
+      "age": "Edad",
+      "nationality": "Nacionalidad",
+      "issuingCountry": "País emisor",
+      "birthCountry": "País nacimiento",
+      "issueDate": "Fecha emisión",
+      "expirationDate": "Fecha vencimiento",
+      "observations": "Observaciones",
+      "address": "Dirección",
+      "department": "Departamento",
+      "municipality": "Municipio",
+      "phone": "Teléfono",
+      "mobile": "Celular",
+      "email": "Correo",
+      "companyWorksFor": "Sociedad labora",
+      "area": "Área",
+      "position": "Cargo",
+      "admissionDate": "Fecha ingreso",
+      "directSupervisor": "Jefe inmediato",
+      "workEmail": "Correo laboral",
+      "payrollNumber": "Número IP / Nómina",
+      "monthlyIncome": "Ingresos mensuales",
+      "otherIncome": "Otros ingresos",
+      "annualIncome": "Ingresos anuales",
+      "status": "Estado",
+      "startDate": "Fecha inicio",
+      "installment": "Cuota",
+      "source": "Origen",
+      "amount": "Monto",
+      "name": "Nombre",
+      "relationship": "Parentesco"
+    },
+    "accounts": {
+      "current": "Cuenta corriente",
+      "christmas": "Cuenta navideña"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "identificationTypes": {
+      "cedula": "Cédula",
+      "pasaporte": "Pasaporte",
+      "residencia": "Residencia",
+      "otro": "Otro"
+    },
+    "gender": {
+      "M": "Masculino",
+      "F": "Femenino"
+    },
+    "maritalStatus": {
+      "soltero": "Soltero(a)",
+      "casado": "Casado(a)",
+      "divorciado": "Divorciado(a)",
+      "viudo": "Viudo(a)",
+      "union_libre": "Unión libre"
+    },
+    "empty": {
+      "notRegisteredFemale": "No registrada",
+      "otherIncome": "No se registraron otros ingresos",
+      "beneficiaries": "No se registraron beneficiarios"
+    },
+    "exportModal": {
+      "title": "Seleccionar formato",
+      "selectDocumentType": "Seleccione el tipo de documento:",
+      "memberRecord": "Expediente de Socio",
+      "affiliationLetter": "Carta de Afiliación",
+      "selectFormat": "Seleccione el formato:"
+    },
+    "fileNames": {
+      "memberRecord": "EXPEDIENTE SOCIO",
+      "affiliationLetter": "CARTA AFILIACION"
+    }
+  }
+}

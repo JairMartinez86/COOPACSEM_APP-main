@@ -3,32 +3,32 @@
 <!-- ===================== -->
 <div class="container-fluid px-0 page-ficha-socio no-print">
   <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
   <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
     <div>
-      <h1 class="h3 mb-1 fw-bold">Ficha de socio</h1>
-      <p class="text-muted mb-0">Vista resumida estilo expediente</p>
+      <h1 class="h3 mb-1 fw-bold">{{ 'fichaSocio.title' | translate }}</h1>
+      <p class="text-muted mb-0">{{ 'fichaSocio.subtitle' | translate }}</p>
     </div>
 
     <div class="d-flex gap-2">
       <button type="button" class="btn btn-light border" (click)="back()">
         <i class="bi bi-arrow-left me-1"></i>
-        Volver
+        {{ 'fichaSocio.buttons.back' | translate }}
       </button>
 
       <button type="button" class="btn btn-primary" (click)="abrirModalExportacion()">
         <i class="bi bi-download me-1"></i>
-        Exportar
+        {{ 'fichaSocio.buttons.export' | translate }}
       </button>
-
 
       <button type="button" class="btn btn-primary" (click)="imprimirPdfFicha()">
         <i class="bi bi-printer me-1"></i>
-        Imprimir Ficha
+        {{ 'fichaSocio.buttons.record' | translate }}
       </button>
 
       <button type="button" class="btn btn-primary" (click)="imprimirAfiliacion()">
         <i class="bi bi-printer me-1"></i>
-        Imprimir Afiliación
+        {{ 'fichaSocio.buttons.affiliation' | translate }}
       </button>
     </div>
   </div>
@@ -36,7 +36,7 @@
   @if (loading) {
   <div class="card shadow-sm border-0">
     <div class="card-body text-center py-5 text-muted">
-      Cargando ficha del socio...
+      {{ 'fichaSocio.loading' | translate }}
     </div>
   </div>
   }
@@ -58,17 +58,19 @@
 
         <div class="col">
           <div class="text-uppercase small text-muted fw-semibold">{{ companyName }}</div>
-          <h2 class="h4 mb-1 fw-bold">Expediente de socio</h2>
+          <h2 class="h4 mb-1 fw-bold">{{ 'fichaSocio.recordTitle' | translate }}</h2>
           <div class="text-muted">
             {{ socio.codigoSocio || '-' }} - {{ socio.nombreCompleto || '-' }}
           </div>
         </div>
 
         <div class="col-12 col-md-auto text-md-end">
-          <div class="small text-muted">Fecha: {{ fechaServidor || '-' }}</div>
+          <div class="small text-muted">
+            {{ 'fichaSocio.fields.date' | translate }}: {{ fechaServidor || '-' }}
+          </div>
           <div class="mt-1">
             <span class="badge" [ngClass]="socio.activo ? 'bg-success' : 'bg-secondary'">
-              {{ socio.activo ? 'Activo' : 'Inactivo' }}
+              {{ getStatusLabel(socio.activo) }}
             </span>
           </div>
         </div>
@@ -80,7 +82,9 @@
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="card h-100 shadow-sm border-0">
         <div class="card-body">
-          <div class="text-muted small text-uppercase fw-semibold mb-1">Código de socio</div>
+          <div class="text-muted small text-uppercase fw-semibold mb-1">
+            {{ 'fichaSocio.fields.memberCode' | translate }}
+          </div>
           <div class="fw-bold">{{ socio.codigoSocio || '-' }}</div>
         </div>
       </div>
@@ -89,7 +93,9 @@
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="card h-100 shadow-sm border-0">
         <div class="card-body">
-          <div class="text-muted small text-uppercase fw-semibold mb-1">Identificación</div>
+          <div class="text-muted small text-uppercase fw-semibold mb-1">
+            {{ 'fichaSocio.fields.identification' | translate }}
+          </div>
           <div class="fw-bold">
             {{ getTipoIdentificacionLabel(socio.tipoIdentificacion) }}:
             {{ socio.numeroIdentificacion || '-' }}
@@ -101,7 +107,9 @@
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="card h-100 shadow-sm border-0">
         <div class="card-body">
-          <div class="text-muted small text-uppercase fw-semibold mb-1">Ingreso</div>
+          <div class="text-muted small text-uppercase fw-semibold mb-1">
+            {{ 'fichaSocio.fields.admission' | translate }}
+          </div>
           <div class="fw-bold">{{ socio.fechaIngreso || '-' }}</div>
         </div>
       </div>
@@ -110,7 +118,9 @@
     <div class="col-12 col-sm-6 col-xl-3">
       <div class="card h-100 shadow-sm border-0">
         <div class="card-body">
-          <div class="text-muted small text-uppercase fw-semibold mb-1">Saldo ahorro</div>
+          <div class="text-muted small text-uppercase fw-semibold mb-1">
+            {{ 'fichaSocio.fields.savingsBalance' | translate }}
+          </div>
           <div class="fw-bold">
             {{ appConfigService.getCurrentSettings().currency }}
             {{ formatMoney(socio.dashboard?.saldo) }}
@@ -122,65 +132,65 @@
 
   <div class="card shadow-sm border-0 mb-3">
     <div class="card-header bg-transparent">
-      <h5 class="mb-0 fw-bold">Datos personales</h5>
+      <h5 class="mb-0 fw-bold">{{ 'fichaSocio.sections.personalData' | translate }}</h5>
     </div>
     <div class="card-body">
       <div class="row g-3">
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Nombre completo</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.fullName' | translate }}</div>
           <div>{{ socio.nombreCompleto || '-' }}</div>
         </div>
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Nombre público</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.publicName' | translate }}</div>
           <div>{{ socio.nombrePublico || '-' }}</div>
         </div>
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Número INSS</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.inssNumber' | translate }}</div>
           <div>{{ socio.numeroInss || '-' }}</div>
         </div>
 
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Sexo</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.gender' | translate }}</div>
           <div>{{ getSexoLabel(socio.sexo) }}</div>
         </div>
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Estado civil</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.maritalStatus' | translate }}</div>
           <div>{{ getEstadoCivilLabel(socio.estadoCivil) }}</div>
         </div>
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Fecha nacimiento</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.birthDate' | translate }}</div>
           <div>{{ socio.fechaNacimiento || '-' }}</div>
         </div>
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Edad</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.age' | translate }}</div>
           <div>{{ edad ?? '-' }}</div>
         </div>
 
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Nacionalidad</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.nationality' | translate }}</div>
           <div>{{ socio.nacionalidad || '-' }}</div>
         </div>
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">País emisor</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.issuingCountry' | translate }}</div>
           <div>{{ socio.paisEmisor || '-' }}</div>
         </div>
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">País nacimiento</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.birthCountry' | translate }}</div>
           <div>{{ socio.paisNacimiento || '-' }}</div>
         </div>
 
         <div class="col-md-6">
-          <div class="text-muted small text-uppercase fw-semibold">Fecha emisión</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.issueDate' | translate }}</div>
           <div>{{ socio.fechaEmision || '-' }}</div>
         </div>
         <div class="col-md-6">
-          <div class="text-muted small text-uppercase fw-semibold">Fecha vencimiento</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.expirationDate' | translate }}</div>
           <div>{{ socio.fechaVencimiento || '-' }}</div>
         </div>
 
         <div class="col-12">
-          <div class="text-muted small text-uppercase fw-semibold">Observaciones</div>
-          <div>{{ socio.observaciones || 'No registradas' }}</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.observations' | translate }}</div>
+          <div>{{ socio.observaciones || ('fichaSocio.empty.notRegisteredFemale' | translate) }}</div>
         </div>
       </div>
     </div>
@@ -188,32 +198,32 @@
 
   <div class="card shadow-sm border-0 mb-3">
     <div class="card-header bg-transparent">
-      <h5 class="mb-0 fw-bold">Domicilio e información de contacto</h5>
+      <h5 class="mb-0 fw-bold">{{ 'fichaSocio.sections.contactData' | translate }}</h5>
     </div>
     <div class="card-body">
       <div class="row g-3">
         <div class="col-12">
-          <div class="text-muted small text-uppercase fw-semibold">Dirección</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.address' | translate }}</div>
           <div>{{ socio.direccionDomiciliar || '-' }}</div>
         </div>
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Departamento</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.department' | translate }}</div>
           <div>{{ socio.departamento || '-' }}</div>
         </div>
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Municipio</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.municipality' | translate }}</div>
           <div>{{ socio.municipio || '-' }}</div>
         </div>
         <div class="col-md-2">
-          <div class="text-muted small text-uppercase fw-semibold">Teléfono</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.phone' | translate }}</div>
           <div>{{ socio.telefono || '-' }}</div>
         </div>
         <div class="col-md-2">
-          <div class="text-muted small text-uppercase fw-semibold">Celular</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.mobile' | translate }}</div>
           <div>{{ socio.celular || '-' }}</div>
         </div>
         <div class="col-md-2">
-          <div class="text-muted small text-uppercase fw-semibold">Correo</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.email' | translate }}</div>
           <div>{{ socio.correo || '-' }}</div>
         </div>
       </div>
@@ -222,37 +232,37 @@
 
   <div class="card shadow-sm border-0 mb-3">
     <div class="card-header bg-transparent">
-      <h5 class="mb-0 fw-bold">Información laboral</h5>
+      <h5 class="mb-0 fw-bold">{{ 'fichaSocio.sections.workData' | translate }}</h5>
     </div>
     <div class="card-body">
       <div class="row g-3">
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Sociedad labora</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.companyWorksFor' | translate }}</div>
           <div>{{ socio.sociedadLabora || '-' }}</div>
         </div>
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Área</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.area' | translate }}</div>
           <div>{{ socio.area || '-' }}</div>
         </div>
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Cargo</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.position' | translate }}</div>
           <div>{{ socio.cargo || '-' }}</div>
         </div>
         <div class="col-md-3">
-          <div class="text-muted small text-uppercase fw-semibold">Fecha ingreso</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.admissionDate' | translate }}</div>
           <div>{{ socio.fechaIngreso || '-' }}</div>
         </div>
 
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Jefe inmediato</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.directSupervisor' | translate }}</div>
           <div>{{ socio.jefeInmediato || '-' }}</div>
         </div>
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Correo laboral</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.workEmail' | translate }}</div>
           <div>{{ socio.correoLaboral || '-' }}</div>
         </div>
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Número IP / Nómina</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.payrollNumber' | translate }}</div>
           <div>{{ socio.numeroIp || '-' }}</div>
         </div>
       </div>
@@ -261,26 +271,26 @@
 
   <div class="card shadow-sm border-0 mb-3">
     <div class="card-header bg-transparent">
-      <h5 class="mb-0 fw-bold">Datos económicos y cooperativos</h5>
+      <h5 class="mb-0 fw-bold">{{ 'fichaSocio.sections.economicData' | translate }}</h5>
     </div>
     <div class="card-body">
       <div class="row g-3">
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Ingresos mensuales</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.monthlyIncome' | translate }}</div>
           <div>
             {{ appConfigService.getCurrentSettings().currency }}
             {{ formatMoney(socio.ingresosMensuales) }}
           </div>
         </div>
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Otros ingresos</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.otherIncome' | translate }}</div>
           <div>
             {{ appConfigService.getCurrentSettings().currency }}
             {{ formatMoney(socio.otrosIngresos) }}
           </div>
         </div>
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Ingresos anuales</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.annualIncome' | translate }}</div>
           <div>
             {{ appConfigService.getCurrentSettings().currency }}
             {{ formatMoney(socio.ingresosAnuales) }}
@@ -289,17 +299,17 @@
 
         <div class="col-md-6">
           <div class="border rounded p-3 h-100">
-            <div class="fw-bold mb-2">Cuenta corriente</div>
+            <div class="fw-bold mb-2">{{ 'fichaSocio.accounts.current' | translate }}</div>
             <div class="small mb-1">
-              Estado:
-              <strong>{{ socio.cuentaCorrienteActiva ? 'Activa' : 'Inactiva' }}</strong>
+              {{ 'fichaSocio.fields.status' | translate }}:
+              <strong>{{ getStatusLabel(socio.cuentaCorrienteActiva) }}</strong>
             </div>
             <div class="small mb-1">
-              Fecha inicio:
+              {{ 'fichaSocio.fields.startDate' | translate }}:
               <strong>{{ socio.cuentaCorrienteFechaInicioDeduccion || '-' }}</strong>
             </div>
             <div class="small">
-              Cuota:
+              {{ 'fichaSocio.fields.installment' | translate }}:
               <strong>
                 {{ appConfigService.getCurrentSettings().currency }}
                 {{ formatMoney(socio.cuentaCorrienteMontoCuota) }}
@@ -310,17 +320,17 @@
 
         <div class="col-md-6">
           <div class="border rounded p-3 h-100">
-            <div class="fw-bold mb-2">Cuenta navideña</div>
+            <div class="fw-bold mb-2">{{ 'fichaSocio.accounts.christmas' | translate }}</div>
             <div class="small mb-1">
-              Estado:
-              <strong>{{ socio.cuentaNavidenaActiva ? 'Activa' : 'Inactiva' }}</strong>
+              {{ 'fichaSocio.fields.status' | translate }}:
+              <strong>{{ getStatusLabel(socio.cuentaNavidenaActiva) }}</strong>
             </div>
             <div class="small mb-1">
-              Fecha inicio:
+              {{ 'fichaSocio.fields.startDate' | translate }}:
               <strong>{{ socio.cuentaNavidenaFechaInicioDeduccion || '-' }}</strong>
             </div>
             <div class="small">
-              Cuota:
+              {{ 'fichaSocio.fields.installment' | translate }}:
               <strong>
                 {{ appConfigService.getCurrentSettings().currency }}
                 {{ formatMoney(socio.cuentaNavidenaMontoCuota) }}
@@ -334,63 +344,57 @@
 
   <div class="card shadow-sm border-0 mb-3">
     <div class="card-header bg-transparent">
-      <h5 class="mb-0 fw-bold">Datos del cónyuge</h5>
+      <h5 class="mb-0 fw-bold">{{ 'fichaSocio.sections.spouseData' | translate }}</h5>
     </div>
     <div class="card-body">
       <div class="row g-3">
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Nombre completo</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.fullName' | translate }}</div>
           <div>{{ socio.conyugeNombreCompleto || '-' }}</div>
         </div>
 
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Tipo identificación</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.identificationType' | translate }}</div>
           <div>{{ getTipoIdentificacionLabel(socio.conyugeTipoIdentificacion) || '-' }}</div>
         </div>
 
         <div class="col-md-4">
-          <div class="text-muted small text-uppercase fw-semibold">Número identificación</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.identificationNumber' | translate }}</div>
           <div>{{ socio.conyugeNumeroIdentificacion || '-' }}</div>
         </div>
 
         <div class="col-md-6">
-          <div class="text-muted small text-uppercase fw-semibold">País de nacimiento</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.birthCountry' | translate }}</div>
           <div>{{ socio.conyugePaisNacimiento || '-' }}</div>
         </div>
 
         <div class="col-md-6">
-          <div class="text-muted small text-uppercase fw-semibold">Nacionalidad</div>
+          <div class="text-muted small text-uppercase fw-semibold">{{ 'fichaSocio.fields.nationality' | translate }}</div>
           <div>{{ socio.conyugeNacionalidad || '-' }}</div>
         </div>
       </div>
     </div>
   </div>
 
-
   <div class="row mt-3">
-
-  
-    <!-- OTROS INGRESOS -->
     <div class="col-md-6">
       <div class="card h-100">
         <div class="card-header">
-          <h6 class="mb-0">Otros ingresos</h6>
+          <h6 class="mb-0">{{ 'fichaSocio.sections.otherIncome' | translate }}</h6>
         </div>
 
         <div class="card-body p-0">
-
           @if ((socio?.otrosIngresosDetalle ?? []).length === 0) {
           <div class="px-3 py-3 text-muted small text-center">
-            No se registraron otros ingresos
+            {{ 'fichaSocio.empty.otherIncome' | translate }}
           </div>
           } @else {
-
           <div class="table-responsive">
             <table class="table mb-0">
               <thead>
                 <tr>
-                  <th>Origen</th>
-                  <th class="text-end">Monto</th>
+                  <th>{{ 'fichaSocio.fields.source' | translate }}</th>
+                  <th class="text-end">{{ 'fichaSocio.fields.amount' | translate }}</th>
                 </tr>
               </thead>
 
@@ -398,40 +402,38 @@
                 @for (item of (socio?.otrosIngresosDetalle ?? []); track $index) {
                 <tr>
                   <td>{{ item.origen }}</td>
-                  <td class="text-end">C$ {{ formatMoney(item.ingresoMensual) }}</td>
+                  <td class="text-end">
+                    {{ appConfigService.getCurrentSettings().currency }}
+                    {{ formatMoney(item.ingresoMensual) }}
+                  </td>
                 </tr>
                 }
               </tbody>
             </table>
           </div>
-
           }
-
         </div>
       </div>
     </div>
 
-     <!-- BENEFICIARIOS -->
     <div class="col-md-6">
       <div class="card h-100">
         <div class="card-header">
-          <h6 class="mb-0">Beneficiarios</h6>
+          <h6 class="mb-0">{{ 'fichaSocio.sections.beneficiaries' | translate }}</h6>
         </div>
 
         <div class="card-body p-0">
-
           @if ((socio?.beneficiarios ?? []).length === 0) {
           <div class="px-3 py-3 text-muted small text-center">
-            No se registraron beneficiarios
+            {{ 'fichaSocio.empty.beneficiaries' | translate }}
           </div>
           } @else {
-
           <div class="table-responsive">
             <table class="table mb-0">
               <thead>
                 <tr>
-                  <th>Nombre</th>
-                  <th>Parentesco</th>
+                  <th>{{ 'fichaSocio.fields.name' | translate }}</th>
+                  <th>{{ 'fichaSocio.fields.relationship' | translate }}</th>
                   <th class="text-end">%</th>
                 </tr>
               </thead>
@@ -447,43 +449,32 @@
               </tbody>
             </table>
           </div>
-
           }
-
         </div>
       </div>
     </div>
-
   </div>
-
-
   }
 </div>
 
-
-
-
-
 @if (modalExportacionOpen) {
-
 <div class="modal fade show d-block" tabindex="-1" aria-modal="true" role="dialog">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">Seleccionar formato</h5>
+        <h5 class="modal-title">{{ 'fichaSocio.exportModal.title' | translate }}</h5>
         <button type="button" class="btn-close" (click)="cerrarModalExportacion()"></button>
       </div>
 
       <div class="modal-body">
-
-        <p class="mb-2">Seleccione el tipo de documento:</p>
+        <p class="mb-2">{{ 'fichaSocio.exportModal.selectDocumentType' | translate }}</p>
 
         <div class="form-check">
           <input class="form-check-input" type="radio" name="tipoReporte" id="radioFicha" value="ficha"
             [(ngModel)]="tipoReporte">
           <label class="form-check-label" for="radioFicha">
-            Expediente de Socio
+            {{ 'fichaSocio.exportModal.memberRecord' | translate }}
           </label>
         </div>
 
@@ -491,13 +482,13 @@
           <input class="form-check-input" type="radio" name="tipoReporte" id="radioAfiliacion" value="afiliacion"
             [(ngModel)]="tipoReporte">
           <label class="form-check-label" for="radioAfiliacion">
-            Carta de Afiliación
+            {{ 'fichaSocio.exportModal.affiliationLetter' | translate }}
           </label>
         </div>
 
         <hr>
 
-        <p class="mb-2">Seleccione el formato:</p>
+        <p class="mb-2">{{ 'fichaSocio.exportModal.selectFormat' | translate }}</p>
 
         <div class="d-flex gap-2">
           <button class="btn btn-danger" [disabled]="!tipoReporte" (click)="exportarComoPdf()">
@@ -508,12 +499,11 @@
             Excel
           </button>
         </div>
-
       </div>
 
       <div class="modal-footer">
         <button class="btn btn-light" (click)="cerrarModalExportacion()">
-          Cancelar
+          {{ 'fichaSocio.buttons.cancel' | translate }}
         </button>
       </div>
 
