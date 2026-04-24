@@ -16,10 +16,10 @@
       </button>
 
       <button type="button" class="btn btn-primary" (click)="abrirModalExportacion()">
-  <i class="bi bi-download me-1"></i>
-  Exportar
-</button>
- 
+        <i class="bi bi-download me-1"></i>
+        Exportar
+      </button>
+
 
       <button type="button" class="btn btn-primary" (click)="imprimirPdfFicha()">
         <i class="bi bi-printer me-1"></i>
@@ -366,49 +366,97 @@
     </div>
   </div>
 
-  <div class="card shadow-sm border-0 mb-3">
-    <div class="card-header bg-transparent">
-      <h5 class="mb-0 fw-bold">Beneficiarios</h5>
-    </div>
-    <div class="card-body">
-      @if ((socio.beneficiarios ?? []).length === 0) {
-      <div class="alert alert-light mb-0">
-        No se registraron beneficiarios para este socio.
+
+  <div class="row mt-3">
+
+  
+    <!-- OTROS INGRESOS -->
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header">
+          <h6 class="mb-0">Otros ingresos</h6>
+        </div>
+
+        <div class="card-body p-0">
+
+          @if ((socio?.otrosIngresosDetalle ?? []).length === 0) {
+          <div class="px-3 py-3 text-muted small text-center">
+            No se registraron otros ingresos
+          </div>
+          } @else {
+
+          <div class="table-responsive">
+            <table class="table mb-0">
+              <thead>
+                <tr>
+                  <th>Origen</th>
+                  <th class="text-end">Monto</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (item of (socio?.otrosIngresosDetalle ?? []); track $index) {
+                <tr>
+                  <td>{{ item.origen }}</td>
+                  <td class="text-end">C$ {{ formatMoney(item.ingresoMensual) }}</td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          }
+
+        </div>
       </div>
-      } @else {
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nombre</th>
-              <th>Identificación</th>
-              <th>Parentesco</th>
-              <th class="text-end">Beneficio</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of socio.beneficiarios; track $index) {
-            <tr>
-              <td>{{ $index + 1 }}</td>
-              <td>{{ item.nombreCompleto || '-' }}</td>
-              <td>{{ item.cedula || '-' }}</td>
-              <td>{{ item.parentesco || '-' }}</td>
-              <td class="text-end">{{ formatMoney(item.porcentaje) }} %</td>
-            </tr>
-            }
-          </tbody>
-          <tfoot>
-            <tr>
-              <th colspan="4" class="text-end">Total</th>
-              <th class="text-end">{{ formatMoney(totalBeneficiarios) }} %</th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      }
     </div>
+
+     <!-- BENEFICIARIOS -->
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header">
+          <h6 class="mb-0">Beneficiarios</h6>
+        </div>
+
+        <div class="card-body p-0">
+
+          @if ((socio?.beneficiarios ?? []).length === 0) {
+          <div class="px-3 py-3 text-muted small text-center">
+            No se registraron beneficiarios
+          </div>
+          } @else {
+
+          <div class="table-responsive">
+            <table class="table mb-0">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Parentesco</th>
+                  <th class="text-end">%</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (item of (socio?.beneficiarios ?? []); track $index) {
+                <tr>
+                  <td>{{ item.nombreCompleto }}</td>
+                  <td>{{ item.parentesco }}</td>
+                  <td class="text-end">{{ item.porcentaje }}%</td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          }
+
+        </div>
+      </div>
+    </div>
+
   </div>
+
+
   }
 </div>
 
@@ -418,80 +466,60 @@
 
 @if (modalExportacionOpen) {
 
-  <div class="modal fade show d-block" tabindex="-1" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+<div class="modal fade show d-block" tabindex="-1" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
 
-        <div class="modal-header">
-          <h5 class="modal-title">Seleccionar formato</h5>
-          <button type="button" class="btn-close" (click)="cerrarModalExportacion()"></button>
+      <div class="modal-header">
+        <h5 class="modal-title">Seleccionar formato</h5>
+        <button type="button" class="btn-close" (click)="cerrarModalExportacion()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <p class="mb-2">Seleccione el tipo de documento:</p>
+
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="tipoReporte" id="radioFicha" value="ficha"
+            [(ngModel)]="tipoReporte">
+          <label class="form-check-label" for="radioFicha">
+            Expediente de Socio
+          </label>
         </div>
 
-        <div class="modal-body">
-
-          <p class="mb-2">Seleccione el tipo de documento:</p>
-
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="tipoReporte"
-              id="radioFicha"
-              value="ficha"
-              [(ngModel)]="tipoReporte"
-            >
-            <label class="form-check-label" for="radioFicha">
-              Expediente de Socio
-            </label>
-          </div>
-
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="tipoReporte"
-              id="radioAfiliacion"
-              value="afiliacion"
-              [(ngModel)]="tipoReporte"
-            >
-            <label class="form-check-label" for="radioAfiliacion">
-              Carta de Afiliación
-            </label>
-          </div>
-
-          <hr>
-
-          <p class="mb-2">Seleccione el formato:</p>
-
-          <div class="d-flex gap-2">
-            <button
-              class="btn btn-danger"
-              [disabled]="!tipoReporte"
-              (click)="exportarComoPdf()"
-            >
-              PDF
-            </button>
-
-            <button
-              class="btn btn-success"
-              [disabled]="!tipoReporte"
-              (click)="exportarComoExcel()"
-            >
-              Excel
-            </button>
-          </div>
-
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="tipoReporte" id="radioAfiliacion" value="afiliacion"
+            [(ngModel)]="tipoReporte">
+          <label class="form-check-label" for="radioAfiliacion">
+            Carta de Afiliación
+          </label>
         </div>
 
-        <div class="modal-footer">
-          <button class="btn btn-light" (click)="cerrarModalExportacion()">
-            Cancelar
+        <hr>
+
+        <p class="mb-2">Seleccione el formato:</p>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-danger" [disabled]="!tipoReporte" (click)="exportarComoPdf()">
+            PDF
+          </button>
+
+          <button class="btn btn-success" [disabled]="!tipoReporte" (click)="exportarComoExcel()">
+            Excel
           </button>
         </div>
 
       </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-light" (click)="cerrarModalExportacion()">
+          Cancelar
+        </button>
+      </div>
+
     </div>
   </div>
+</div>
 
-  <div class="modal-backdrop fade show"></div>
+<div class="modal-backdrop fade show"></div>
 }
