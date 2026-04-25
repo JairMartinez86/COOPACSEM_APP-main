@@ -231,34 +231,30 @@
 
         <div class="card-body">
 
-          <div class="row mb-3">
-            <div class="col-12 text-center">
+          <div class="d-flex justify-content-center gap-4">
 
-              <div class="d-flex justify-content-center gap-4">
+            @if (tieneCorriente) {
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="TipoCuenta" value="Corriente"
+                [(ngModel)]="retiro.tipoCuenta" required [disabled]="retiro.estado != 'Pendiente'">
 
-                <div class="form-check">
-                  <input #TipoCuentaCorriente class="form-check-input" type="radio" name="TipoCuenta"
-                    id="TipoCuentaCorriente" value="Corriente" [(ngModel)]="retiro.tipoCuenta" engineSync="TipoCuenta"
-                    autoFocusNext [next]="TipoSolicitud" required [disabled]="retiro.estado != 'Pendiente'">
-
-                  <label class="form-check-label" for="TipoCuentaCorriente">
-                    {{ 'socioRetiro.tiposCuenta.corriente' | translate }}
-                  </label>
-                </div>
-
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="TipoCuenta" id="TipoCuentaNavidena"
-                    value="NAVIDENA" [(ngModel)]="retiro.tipoCuenta" engineSync="TipoCuenta" autoFocusNext
-                    [next]="TipoSolicitud" required>
-
-                  <label class="form-check-label" for="TipoCuentaNavidena">
-                    {{ 'socioRetiro.tiposCuenta.navidena' | translate }}
-                  </label>
-                </div>
-
-              </div>
-
+              <label class="form-check-label">
+                {{ 'socioRetiro.tiposCuenta.corriente' | translate }}
+              </label>
             </div>
+            }
+
+            @if (tieneNavidena) {
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="TipoCuenta" value="Navidena"
+                [(ngModel)]="retiro.tipoCuenta" required [disabled]="retiro.estado != 'Pendiente'">
+
+              <label class="form-check-label">
+                {{ 'socioRetiro.tiposCuenta.navidena' | translate }}
+              </label>
+            </div>
+            }
+
           </div>
 
           <div class="row g-4">
@@ -279,8 +275,7 @@
                       <i class="fa-duotone fa-solid fa-calendar"></i>
                     </span>
                     <input #FechaSolicitud type="text" class="form-control" id="FechaSolicitud" name="FechaSolicitud"
-                      [(ngModel)]="retiro.fechaSolicitud" engineSync="FechaSolicitud" autoFocusNext
-                      [next]="TipoCuentaCorriente" readonly />
+                      [(ngModel)]="retiro.fechaSolicitud" engineSync="FechaSolicitud" autoFocusNext readonly />
                   </div>
 
 
@@ -344,14 +339,15 @@
                     <input #Monto type="text" class="form-control text-end" id="Monto" name="Monto"
                       [(ngModel)]="retiro.monto" engineSync="Monto" autoFocusNext [next]="Comentario" numberFormat
                       [decimals]="2" [decimalSeparator]="settings.decimalSeparator"
-                      [thousandSeparator]="settings.thousandSeparator" required JmartAutoFocus  [disabled]="retiro.estado != 'Pendiente'"/>
+                      [thousandSeparator]="settings.thousandSeparator" required JmartAutoFocus
+                      [disabled]="retiro.estado != 'Pendiente'" />
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- CONCEPTO -->
-             <!--
+            <!--
             <div class="col-md-12" error-notify="Concepto" error-display="inline">
               <div class="d-flex align-items-start gap-3">
 
@@ -388,7 +384,8 @@
           <textarea #Comentario class="form-control" rows="2" id="Comentario" name="Comentario"
             [(ngModel)]="retiro.comentario" engineSync="Comentario" autoFocusNext [next]="saveButton"
             [disableClickButton]="true" [unlockOn]="notify.closed$"
-            [placeholder]="'socioRetiro.fields.comentario.placeholder' | translate" [disabled]="retiro.estado != 'Pendiente'"></textarea>
+            [placeholder]="'socioRetiro.fields.comentario.placeholder' | translate"
+            [disabled]="retiro.estado != 'Pendiente'"></textarea>
         </div>
 
         <!-- AUTORIZACIONES -->
@@ -477,7 +474,7 @@
           }
 
 
-          
+
 
 
           <button #saveButton type="button" class="btn btn-success" [permissionRoute]="['/socios', '/ahorro']"

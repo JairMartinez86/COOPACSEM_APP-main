@@ -100,6 +100,9 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
   private readonly subs = new Subscription();
   private readonly isBrowser: boolean;
 
+  tieneCorriente = false;
+  tieneNavidena = false;
+
   breadcrumbs: any[] = [];
   socioId = '';
 
@@ -289,6 +292,10 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
             activo: Boolean(socio?.activo ?? true)
           };
 
+          this.tieneCorriente = socio.tieneCorriente ?? false;
+          this.tieneNavidena = socio.tieneNavidena ?? false;
+
+
           this.engine.addControl('Ahorro');
 
 
@@ -343,6 +350,8 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
 
   private loadSolicitud(): void {
     this.loading = true;
+    this.tieneCorriente = false;
+    this.tieneNavidena = false;
 
     this.socioRetiroService.getSolicitud(this.socioId, this.solicitudId)
       .pipe(finalize(() => (this.loading = false)))
@@ -405,6 +414,27 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
             fecha: x?.fecha ? this.formatDate(x.fecha) : '',
             orden: Number(x?.orden ?? 0)
           }));
+
+
+
+          if (this.retiro.estado == "Pendiente") {
+            this.tieneCorriente = socio.tieneCorriente ?? false;
+            this.tieneNavidena = socio.tieneNavidena ?? false;
+
+          }
+          else {
+            if (this.retiro.tipoCuenta == "Corriente") {
+              this.tieneCorriente = true;
+
+            }
+            else {
+              this.tieneNavidena = true;
+            }
+
+          }
+
+
+
 
 
           this.engine.addControl('Ahorro');
@@ -495,24 +525,24 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
     this.engine.clearErrors();
     this.notify.close();
 
-const payload = {
-  socioId: this.socioId,
-  noSolicitud: this.retiro.noSolicitud,
-  tipoSolicitud: this.retiro.tipoSolicitud,
-  tipoCuenta: this.retiro.tipoCuenta,
-  destino: this.retiro.tipoSolicitud,
-  monto: Number(this.retiro.monto ?? 0),
-  fechaRetiro: this.toIsoDateFromFormatted(this.retiro.fechaSolicitud),
-  fechaSolicitud: this.toIsoDateFromFormatted(this.retiro.fechaSolicitud),
-  concepto: this.retiro.concepto?.trim() ?? '',
-  comentario: this.retiro.comentario?.trim() ?? ''
-};
+    const payload = {
+      socioId: this.socioId,
+      noSolicitud: this.retiro.noSolicitud,
+      tipoSolicitud: this.retiro.tipoSolicitud,
+      tipoCuenta: this.retiro.tipoCuenta,
+      destino: this.retiro.tipoSolicitud,
+      monto: Number(this.retiro.monto ?? 0),
+      fechaRetiro: this.toIsoDateFromFormatted(this.retiro.fechaSolicitud),
+      fechaSolicitud: this.toIsoDateFromFormatted(this.retiro.fechaSolicitud),
+      concepto: this.retiro.concepto?.trim() ?? '',
+      comentario: this.retiro.comentario?.trim() ?? ''
+    };
 
     this.saving = true;
 
-   const request$ = this.isEdit
-  ? this.socioRetiroService.updateSolicitud(this.socioId, this.solicitudId, payload)
-  : this.socioRetiroService.createSolicitud(this.socioId, payload);
+    const request$ = this.isEdit
+      ? this.socioRetiroService.updateSolicitud(this.socioId, this.solicitudId, payload)
+      : this.socioRetiroService.createSolicitud(this.socioId, payload);
 
     request$
       .pipe(finalize(() => (this.saving = false)))
