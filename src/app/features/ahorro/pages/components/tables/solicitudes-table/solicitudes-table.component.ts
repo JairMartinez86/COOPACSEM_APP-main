@@ -4,11 +4,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SimpleMovimientoRow } from '../../../../interface/ahorro.models';
 import { AppConfigService } from '../../../../../../core/services/app-config.service';
 import { Router } from '@angular/router';
+import { AppPermissionDirective } from '../../../../../../core/services/app-permission.directive';
 
 @Component({
   selector: 'app-solicitudes-table',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, AppPermissionDirective],
   templateUrl: './solicitudes-table.component.html',
   styleUrl: './solicitudes-table.component.scss'
 })
