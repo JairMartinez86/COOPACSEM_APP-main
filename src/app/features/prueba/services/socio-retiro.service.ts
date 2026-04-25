@@ -25,13 +25,14 @@ export class SocioRetiroService extends BrowserApiService {
     );
   }
 
-  createSolicitud(body: any): Observable<any> {
-    return this.http.post<any>(
-      `${this.api.baseUrl}/socios/${body.socioId}/retiro-extraordinario/solicitud`,
-      body,
-      { withCredentials: true }
-    );
-  }
+  
+createSolicitud(socioId: string, body: any): Observable<any> {
+  return this.http.post<any>(
+    `${this.api.baseUrl}/socios/${socioId}/retiro-extraordinario/solicitud`,
+    body,
+    { withCredentials: true }
+  );
+}
 
   getSolicitud(socioId: string, solicitudId: string): Observable<any> {
     return this.browserOnly(() =>

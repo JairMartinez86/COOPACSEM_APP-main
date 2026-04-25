@@ -56,7 +56,7 @@ interface SocioRetiroForm {
   concepto: string;
   comentario: string;
   estado: string;
-  pdf : any;
+  pdf: any;
 }
 
 interface AutorizacionRetiro {
@@ -246,12 +246,14 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
       concepto: '',
       comentario: '',
       estado: 'Pendiente',
-      pdf : null
+      pdf: null
     };
   }
 
   private loadRetiroNuevo(): void {
     this.loading = true;
+    this.retiro = this.createEmptyForm();
+
 
 
     // Registrar fecha servidor
@@ -364,10 +366,10 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
             concepto: String(solicitud?.concepto ?? ''),
             comentario: String(solicitud?.comentario ?? ''),
             estado: String(solicitud?.estado ?? ''),
-            pdf: root?.pdf 
+            pdf: root?.pdf
           };
 
-       
+
 
           this.socio = {
             id: String(socio?.id ?? this.socioId),
@@ -419,7 +421,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
             this.socio.totalAhorrado
           );
 
-    
+
 
           this.patchEngine();
         },
@@ -493,24 +495,24 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
     this.engine.clearErrors();
     this.notify.close();
 
-    const payload = {
-      socioId: this.retiro.socioId,
-      noSolicitud: this.retiro.noSolicitud,
-      tipoSolicitud: this.retiro.tipoSolicitud,
-      tipoCuenta: this.retiro.tipoCuenta,
-      destino: this.retiro.tipoSolicitud,
-      monto: Number(this.retiro.monto ?? 0),
-      fechaRetiro: this.toIsoDateFromFormatted(this.retiro.fechaSolicitud),
-      fechaSolicitud: this.toIsoDateFromFormatted(this.retiro.fechaSolicitud),
-      concepto: this.retiro.concepto?.trim() ?? '',
-      comentario: this.retiro.comentario?.trim() ?? ''
-    };
+const payload = {
+  socioId: this.socioId,
+  noSolicitud: this.retiro.noSolicitud,
+  tipoSolicitud: this.retiro.tipoSolicitud,
+  tipoCuenta: this.retiro.tipoCuenta,
+  destino: this.retiro.tipoSolicitud,
+  monto: Number(this.retiro.monto ?? 0),
+  fechaRetiro: this.toIsoDateFromFormatted(this.retiro.fechaSolicitud),
+  fechaSolicitud: this.toIsoDateFromFormatted(this.retiro.fechaSolicitud),
+  concepto: this.retiro.concepto?.trim() ?? '',
+  comentario: this.retiro.comentario?.trim() ?? ''
+};
 
     this.saving = true;
 
-    const request$ = this.isEdit
-      ? this.socioRetiroService.updateSolicitud(this.socioId, this.solicitudId, payload)
-      : this.socioRetiroService.createSolicitud(payload);
+   const request$ = this.isEdit
+  ? this.socioRetiroService.updateSolicitud(this.socioId, this.solicitudId, payload)
+  : this.socioRetiroService.createSolicitud(this.socioId, payload);
 
     request$
       .pipe(finalize(() => (this.saving = false)))
@@ -518,11 +520,23 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           this.notify.showFromApiResponse?.(res, 'success');
 
+
           if (this.isEdit) {
             this.loadSolicitud();
           } else {
+            const retiroCreado = res?.data?.retiro;
+
+            if (retiroCreado?.pdf) {
+              this.retiro.pdf = retiroCreado.pdf;
+              this.onPrint();
+            }
+
+
             this.loadRetiroNuevo();
+            this.engine.clearErrors();
+
           }
+
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -534,34 +548,34 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
     this.router.navigate(['/socios']);
   }
 
-onPrint(): void {
-  if (!this.isBrowser) return;
-  if (!this.retiro?.pdf) return;
+  onPrint(): void {
+    if (!this.isBrowser) return;
+    if (!this.retiro?.pdf) return;
 
- 
-  const base64 = this.retiro.pdf;
-  const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
 
-  const byteCharacters = atob(cleanBase64);
-  const byteNumbers = new Array(byteCharacters.length);
+    const base64 = this.retiro.pdf;
+    const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
 
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
+    const byteCharacters = atob(cleanBase64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const win = window.open(url, '_blank');
+
+    if (!win) return;
+
+    win.onload = () => {
+      win.focus();
+      win.print();
+    };
   }
-
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: 'application/pdf' });
-  const url = window.URL.createObjectURL(blob);
-
-  const win = window.open(url, '_blank');
-
-  if (!win) return;
-
-  win.onload = () => {
-    win.focus();
-    win.print();
-  };
-}
 
 
   formatDate(value: any): string {
@@ -620,19 +634,21 @@ onPrint(): void {
     }
   }
 
-onTipoSolicitudChange(value: string) {
+  onTipoSolicitudChange(value: string) {
 
-  if (!value) {
-    this.retiro.concepto = this.translate.instant('socioRetiro.fields.tipoSolicitud.placeholder');
-    return;
+    if (!value) {
+      this.retiro.concepto = this.translate.instant('socioRetiro.fields.tipoSolicitud.placeholder');
+      return;
+    }
+
+    const tipo = this.tiposSolicitud.find(x => x.value === value);
+
+    if (!tipo) return;
+
+    this.retiro.concepto = this.translate.instant(tipo.labelKey);
   }
 
-  const tipo = this.tiposSolicitud.find(x => x.value === value);
 
-  if (!tipo) return;
-
-  this.retiro.concepto = this.translate.instant(tipo.labelKey);
-}
 
 
 }
