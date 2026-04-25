@@ -147,7 +147,7 @@ export const routes: Routes = [
         canActivate: [permissionGuard],
         data: { permission: '/socios', action: 'view' },
       },
-      
+
 
 
       {
@@ -192,12 +192,37 @@ export const routes: Routes = [
       {
         path: 'socio-retiro/new/:socioId',
         loadComponent: () =>
-          import('./features/prueba/pages/socio-retiro/socio-retiro').then(m => m.SocioRetiroComponent),
+          import('./features/prueba/pages/socio-retiro/socio-retiro.component').then(m => m.SocioRetiroComponent),
         data: { permission: '/socio-retiro', action: ['view', 'create'], tableFilterKey: 'socio-retiro' },
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },
-
+     {
+  path: 'socio-retiro/view/:socioId/:solicitudId',
+  loadComponent: () =>
+    import('./features/prueba/pages/socio-retiro/socio-retiro.component')
+      .then(m => m.SocioRetiroComponent),
+  data: {
+    permission: '/socio-retiro',
+    action: ['view'],
+    tableFilterKey: 'socio-retiro'
+  },
+  providers: [JMartMassiveValidationService],
+  canDeactivate: [pendingChangesGuard],
+},
+      {
+  path: 'socio-retiro/edit/:socioId/:solicitudId',
+  loadComponent: () =>
+    import('./features/prueba/pages/socio-retiro/socio-retiro.component')
+      .then(m => m.SocioRetiroComponent),
+  data: {
+    permission: '/socio-retiro',
+    action: ['edit'],
+    tableFilterKey: 'socio-retiro'
+  },
+  providers: [JMartMassiveValidationService],
+  canDeactivate: [pendingChangesGuard],
+},
       {
         path: 'cambio-cuota/new/:socioId/:tipoMovimiento',
         loadComponent: () =>

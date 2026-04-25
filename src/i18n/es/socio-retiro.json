@@ -1,184 +1,158 @@
 {
   "socioRetiro": {
-    "title": "Retiro de ahorro",
-    "subtitle": "Gestiona retiros de ahorro del socio",
+    "title": "Solicitud de retiro de ahorro",
     "breadcrumbs": [
       {
-        "label": "Inicio",
-        "url": "/"
+        "label": "Ahorros",
+        "url": "/ahorros"
       },
       {
-        "label": "Socios",
-        "url": "/socios"
+        "label": "Retiros de ahorro",
+        "url": "/ahorros/retiros"
       },
       {
-        "label": "Retiro de ahorro"
+        "label": "Solicitud"
       }
     ],
     "sections": {
-      "socio": "Datos del socio",
-      "detail": "Detalle del retiro",
-      "history": "Historial de retiros"
+      "disponibilidad": "Disponibilidad de ahorros",
+      "solicitudRetiro": "Solicitud de retiro",
+      "comentarios": "Comentarios",
+      "autorizaciones": "Autorizaciones"
+    },
+    "labels": {
+      "cuotas": "CUOTAS",
+      "retiros": "RETIROS"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "approved": "Aprobado",
+      "paid": "Pagado"
     },
     "fields": {
-      "codigo": "Código",
-      "nombres": "Nombres",
-      "cedula": "Cédula",
-      "empresa": "Empresa",
       "estado": "Estado",
+      "fechaSolicitud": "Fecha de solicitud",
       "salarioMensual": "Salario mensual",
+      "porcentajeAhorro": "Porcentaje ahorro",
       "cuotaActual": "Cuota actual",
       "totalAhorrado": "Total ahorrado",
       "totalRetirado": "Total retirado",
       "saldoActual": "Saldo actual",
+      "ahorro": "Ahorro (Deducciones + extraordinario)",
+      "dividendos": "Dividendos",
       "indemnizacionEstimada": "Indemnización estimada",
-      "empleadoDesde": "Empleado desde",
+      "disponibleAhorro": "Disponible ahorro",
+      "disponibleDividendos": "Disponible dividendos",
+      "obligacionesPendientes": "Obligaciones pendientes",
+      "tipoSolicitud": {
+        "label": "Tipo de solicitud",
+        "placeholder": "Seleccione"
+      },
       "monto": {
-        "label": "Monto"
+        "label": "Monto solicitado"
       },
-      "banco": {
-        "label": "Banco",
-        "placeholder": "Seleccione un banco"
+      "concepto": {
+        "label": "Concepto",
+        "placeholder": "Ingrese el concepto"
       },
-      "noRetiro": {
-        "label": "No. retiro"
-      },
-      "fechaRetiro": {
-        "label": "Fecha de retiro"
-      },
-      "observacion": {
-        "label": "Observación",
-        "placeholder": "Ingrese una observación"
+      "comentario": {
+        "placeholder": "Sin comentarios registrados."
       }
     },
-    "status": {
-       "activo": "Activo",
-      "inactive": "Inactivo"
+    "tiposSolicitud": {
+      "retiroAhorro": "RETIRO DE AHORRO COOPACSEM RL",
+      "retiroAbonoCredito": "RETIRO DE AHORRO POR ABONO A CRÉDITO",
+      "trasladoNavidena": "TRASLADO DE SALDOS HACIA CUENTA NAVIDEÑA",
+      "retiroParcial": "RETIRO PARCIAL DE AHORRO COOPACSEM RL",
+      "reembolsoDeduccion": "REEMBOLSO POR DEDUCCIÓN DE MÁS AHORRO",
+      "trasladoCorriente": "TRASLADO DE SALDOS HACIA CUENTA CORRIENTE",
+      "trasladoAporteSolidario": "TRASLADO DE AHORROS PARA APORTE PROGRAMA SOLIDARIO"
     },
-    "destinos": {
-      "retiroCorriente": "Retiro",
-      "retiroNavideno": "Retiro navideño"
-    },
-    "summary": {
-      "availability": "Disponibilidad",
-      "currentSaving": "Retiro corriente",
-      "christmasSaving": "Retiro navideño",
-      "activeCredit": "Crédito activo",
-       "totalWithdrawn": "Total retirado"
-    },
-    "history": {
-      "columns": {
-        "seq": "No.",
-        "date": "Fecha",
-        "amount": "Monto",
-        "destination": "Destino",
-        "status": "Estado"
-      },
-      "pagination": {
-        "showing": "Mostrando",
-        "of": "de",
-        "records": "registros"
-      }
-    },
-    "states": {
-      "historyPending": "No hay retiros registrados."
+    "autorizaciones": {
+      "comiteCredito": "Comité de crédito",
+      "comiteVigilancia": "Comité de vigilancia",
+      "presidente": "Junta Directiva (Presidente)",
+      "vicepresidente": "Junta Directiva (Vicepresidente)"
     },
     "actions": {
-      "save": "Guardar retiro",
-      "cancel": "Cancelar"
+      "save": "Guardar",
+      "close": "Cerrar",
+      "print": "Imprimir"
+    },
+    "tiposCuenta": {
+      "corriente": "Cuenta corriente",
+      "navidena": "Cuenta navideña"
     },
     "form": {
       "fieldMeta": {
+        "FechaSolicitud": {
+          "label": "Solicitud de Retiro"
+        },
+        "TipoSolicitud": {
+          "label": "Solicitud de Retiro"
+        },
         "Monto": {
-          "label": "Monto",
-          "tooltip": "",
-          "tooltipIconClass": ""
+          "label": "Solicitud de Retiro"
         },
-        "Destino": {
-          "label": "Destino",
-          "tooltip": "",
-          "tooltipIconClass": ""
+        "Concepto": {
+          "label": "Solicitud de Retiro"
         },
-        "BancoCodigo": {
-          "label": "Banco",
-          "tooltip": "",
-          "tooltipIconClass": ""
-        },
-        "NoRetiro": {
-          "label": "No. retiro",
-          "tooltip": "",
-          "tooltipIconClass": ""
-        },
-        "FechaRetiro": {
-          "label": "Fecha de retiro",
-          "tooltip": "",
-          "tooltipIconClass": ""
-        },
-        "Observacion": {
-          "label": "Observación",
-          "tooltip": "",
-          "tooltipIconClass": ""
+        "Comentario": {
+          "label": "Solicitud de Retiro"
         }
       },
       "validations": {
-        "Monto": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Ingrese el monto"
-            },
-            "2": {
-              "rule": "NUM>",
-              "value": "0",
-              "when": "",
-              "msj": "El monto debe ser mayor a 0"
-            }
-          }
-        },
-        "Destino": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Seleccione un destino"
-            }
-          }
-        },
-        "BancoCodigo": {
-          "data": {
-            "1": {
-              "rule": "LEN>",
-              "value": "0",
-              "when": "",
-              "msj": "Seleccione un banco"
-            }
-          }
-        },
-        "NoRetiro": {
-          "data": {
-            "1": {
-              "rule": "REGEX",
-              "value": "^[0-9]+$",
-              "when": "",
-              "msj": "Ingrese el número de retiro"
-            }
-          }
-        },
-        "FechaRetiro": {
+        "FechaSolicitud": {
           "data": {
             "1": {
               "rule": "REGEX",
               "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
               "when": "",
-              "msj": "Ingrese la fecha de retiro"
+              "msj": "Ingrese una fecha válida"
+            },
+            "2": {
+              "rule": "DATE=",
+              "value": "{FechaServidor}",
+              "when": "",
+              "msj": "La fecha debe de ser igual al del servidor."
             }
           }
         },
-        "Observacion": {
-          "data": {}
+        "TipoSolicitud": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "when": "",
+              "value": 1,
+              "msj": "Debe seleccionar el tipo de solicitud"
+            }
+          }
+        },
+        "Monto": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "when": "",
+              "value": "0",
+              "msj": "El monto debe ser mayor a 0"
+            },
+            "2": {
+              "rule": "NUM<=",
+              "when": "",
+              "value": "{Ahorro}",
+              "msj": "El monto debe ser menor o igual a {value}"
+            }
+          }
+        },
+        "Concepto": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "Debe ingresar el concepto"
+            }
+          }
         }
       }
     }

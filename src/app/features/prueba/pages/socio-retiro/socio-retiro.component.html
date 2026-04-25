@@ -1,0 +1,496 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+  <div class="main-content">
+
+    <div class="page-header mb-3 d-flex justify-content-between align-items-start flex-wrap gap-2">
+      <div>
+        <h1 class="page-title mb-2">
+          <i class="fa-duotone fa-solid fa-piggy-bank fa-2x"></i>
+          {{ 'socioRetiro.title' | translate }}
+        </h1>
+
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-check-circle text-success"></i>
+          <span class="text-muted">
+            {{ 'socioRetiro.fields.estado' | translate }}:
+          </span>
+          <span class="badge badge-soft-warning">
+            {{ 'socioRetiro.status.pending' | translate }}
+          </span>
+        </div>
+      </div>
+
+      <div class="text-end">
+        <div class="d-flex align-items-center justify-content-end gap-2 mb-2">
+          <h4 class="text-danger mb-0">
+            {{ retiro.serie || 'RT' }}-{{ retiro.noSolicitud || '000000' }}
+          </h4>
+
+          @if (!isNew){
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="onPrint()">
+            <i class="fa-duotone fa-solid fa-print"></i>
+          </button>
+          }
+
+        </div>
+
+        <div class="text-muted">
+          {{ 'socioRetiro.fields.fechaSolicitud' | translate }}:
+          {{ retiro.fechaSolicitud }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">
+        <strong>
+          {{ socio?.codigoSocio || '-' }} - {{ socio?.nombreCompleto || '-' }}
+        </strong>
+      </div>
+
+      <div class="card-body">
+        <div class="row g-4">
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-success fa-lg">
+                <i class="fa-duotone fa-solid fa-wallet"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.salarioMensual' | translate }}</div>
+                <div>{{ currency }} {{ formatCurrency(socio?.salarioMensual ?? 0) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-warning fa-lg">
+                <i class="fa-duotone fa-solid fa-percent"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.porcentajeAhorro' | translate }}</div>
+                <div>% {{ socio?.porcentajeAhorro ?? '-' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-success fa-lg">
+                <i class="fa-sharp fa-solid fa-diagram-project"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.cuotaActual' | translate }}</div>
+                <div>{{ currency }} {{ formatCurrency(socio?.cuotaActual ?? 0) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-success fa-lg">
+                <i class="fa-solid fa-piggy-bank"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.totalAhorrado' | translate }}</div>
+                <div>
+                  {{ currency }} {{ formatCurrency(socio?.totalAhorrado ?? 0) }}
+                  <span class="text-muted">
+                    ({{ socio?.totalNumAhorro ?? 0 }} - {{ 'socioRetiro.labels.cuotas' | translate }})
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-danger fa-lg">
+                <i class="fa-duotone fa-solid fa-hand-holding-circle-dollar"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.totalRetirado' | translate }}</div>
+                <div>
+                  {{ currency }} {{ formatCurrency(socio?.totalRetirado ?? 0) }}
+                  <span class="text-muted">
+                    ({{ socio?.totalNumRetiros ?? 0 }} - {{ 'socioRetiro.labels.retiros' | translate }})
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-success fa-lg">
+                <i class="fa-duotone fa-solid fa-scale-balanced"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.saldoActual' | translate }}</div>
+                <div>{{ currency }} {{ formatCurrency(socio?.saldoActual ?? 0) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-success fa-lg">
+                <i class="fa-duotone fa-solid fa-chart-pie"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.ahorro' | translate }}</div>
+                <div>{{ currency }} {{ formatCurrency(socio?.saldoActual ?? 0) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-success fa-lg">
+                <i class="fa-sharp fa-solid fa-chart-column"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.dividendos' | translate }}</div>
+                <div>{{ currency }} {{ formatCurrency(disponible.dividendos) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-success fa-lg">
+                <i class="fa-duotone fa-solid fa-gift"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.indemnizacionEstimada' | translate }}</div>
+                <div>{{ currency }} {{ formatCurrency(socio?.indemnizacionEstimada ?? 0) }}</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-header">
+        <strong>{{ 'socioRetiro.sections.disponibilidad' | translate }}</strong>
+      </div>
+
+      <div class="card-body">
+        <div class="row g-4">
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-success fa-lg">
+                <i class="fa-duotone fa-thin fa-piggy-bank"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.disponibleAhorro' | translate }}</div>
+                <div>{{ currency }} {{ formatCurrency(disponible.ahorro) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-success fa-lg">
+                <i class="fa-duotone fa-thin fa-gift"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.disponibleDividendos' | translate }}</div>
+                <div>{{ currency }} {{ formatCurrency(disponible.dividendos) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="d-flex align-items-center gap-3">
+              <span class="text-warning fa-lg">
+                <i class="fa-duotone fa-solid fa-receipt"></i>
+              </span>
+              <div>
+                <div class="text-muted">{{ 'socioRetiro.fields.obligacionesPendientes' | translate }}</div>
+                <div>{{ currency }} {{ formatCurrency(disponible.obligacionesPendientes) }}</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <form autocomplete="off" novalidate>
+      <div class="card mb-3">
+
+        <div class="card-header">
+          <strong>{{ 'socioRetiro.sections.solicitudRetiro' | translate }}</strong>
+        </div>
+
+        <div class="card-body">
+
+          <div class="row mb-3">
+            <div class="col-12 text-center">
+
+              <div class="d-flex justify-content-center gap-4">
+
+                <div class="form-check">
+                  <input #TipoCuentaCorriente class="form-check-input" type="radio" name="TipoCuenta"
+                    id="TipoCuentaCorriente" value="Corriente" [(ngModel)]="retiro.tipoCuenta" engineSync="TipoCuenta"
+                    autoFocusNext [next]="TipoSolicitud" required [disabled]="retiro.estado != 'Pendiente'">
+
+                  <label class="form-check-label" for="TipoCuentaCorriente">
+                    {{ 'socioRetiro.tiposCuenta.corriente' | translate }}
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="TipoCuenta" id="TipoCuentaNavidena"
+                    value="NAVIDENA" [(ngModel)]="retiro.tipoCuenta" engineSync="TipoCuenta" autoFocusNext
+                    [next]="TipoSolicitud" required>
+
+                  <label class="form-check-label" for="TipoCuentaNavidena">
+                    {{ 'socioRetiro.tiposCuenta.navidena' | translate }}
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row g-4">
+
+
+
+            <!-- FECHA -->
+            <div class="col-md-4" error-notify="FechaSolicitud" error-display="inline">
+              <div class="d-flex align-items-center gap-3">
+
+                <div class="w-100">
+                  <label for="FechaSolicitud" class="form-label mb-1">
+                    {{ 'socioRetiro.fields.fechaSolicitud' | translate }}
+                  </label>
+
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      <i class="fa-duotone fa-solid fa-calendar"></i>
+                    </span>
+                    <input #FechaSolicitud type="text" class="form-control" id="FechaSolicitud" name="FechaSolicitud"
+                      [(ngModel)]="retiro.fechaSolicitud" engineSync="FechaSolicitud" autoFocusNext
+                      [next]="TipoCuentaCorriente" readonly />
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+
+            <!-- TIPO SOLICITUD -->
+            <div class="col-md-4" error-notify="TipoSolicitud" error-display="inline">
+              <div class="d-flex align-items-center gap-3">
+
+
+                <div class="w-100">
+                  <label for="TipoSolicitud" class="form-label mb-1">
+                    {{ 'socioRetiro.fields.tipoSolicitud.label' | translate }}
+                  </label>
+
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      <i class="fa-light fa-list"></i>
+                    </span>
+                    <select #TipoSolicitud class="form-select" id="TipoSolicitud" name="TipoSolicitud"
+                      [(ngModel)]="retiro.tipoSolicitud" engineSync="TipoSolicitud" autoFocusNext [next]="Monto"
+                      required [disabled]="retiro.estado != 'Pendiente'">
+                      <option value="">
+                        {{ 'socioRetiro.fields.tipoSolicitud.placeholder' | translate }}
+                      </option>
+
+                      @for (item of tiposSolicitud; track item.value) {
+                      <option [value]="item.value">
+                        {{ item.labelKey | translate }}
+                      </option>
+                      }
+                    </select>
+
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+            <!-- MONTO -->
+            <div class="col-md-4" error-notify="Monto" error-display="inline">
+              <div class="d-flex align-items-center gap-3">
+
+
+
+                <div class="w-100">
+                  <label for="Monto" class="form-label mb-1">
+                    {{ 'socioRetiro.fields.monto.label' | translate }}
+                  </label>
+
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      <i class="fa-duotone fa-solid fa-hand-holding-circle-dollar me-1"></i>{{ currency }}
+                    </span>
+
+                    <input #Monto type="text" class="form-control text-end" id="Monto" name="Monto"
+                      [(ngModel)]="retiro.monto" engineSync="Monto" autoFocusNext [next]="Concepto" numberFormat
+                      [decimals]="2" [decimalSeparator]="settings.decimalSeparator"
+                      [thousandSeparator]="settings.thousandSeparator" required JmartAutoFocus  [disabled]="retiro.estado != 'Pendiente'"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONCEPTO -->
+            <div class="col-md-12" error-notify="Concepto" error-display="inline">
+              <div class="d-flex align-items-start gap-3">
+
+
+                <div class="w-100">
+                  <label for="Concepto" class="form-label mb-1">
+                    {{ 'socioRetiro.fields.concepto.label' | translate }}
+                  </label>
+
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      <i class="fa-duotone fa-solid fa-file"></i>
+                    </span>
+                    <input #Concepto type="text" class="form-control" id="Concepto" name="Concepto"
+                      [(ngModel)]="retiro.concepto" engineSync="Concepto" autoFocusNext [next]="Comentario"
+                      [placeholder]="'socioRetiro.fields.concepto.placeholder' | translate" required  [disabled]="retiro.estado != 'Pendiente'"/>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- COMENTARIOS -->
+        <div class="border-top p-3" error-notify="Comentario" error-display="inline">
+          <h6 class="text-uppercase mb-2">
+            {{ 'socioRetiro.sections.comentarios' | translate }}
+          </h6>
+
+          <textarea #Comentario class="form-control" rows="2" id="Comentario" name="Comentario"
+            [(ngModel)]="retiro.comentario" engineSync="Comentario" autoFocusNext [next]="saveButton"
+            [disableClickButton]="true" [unlockOn]="notify.closed$"
+            [placeholder]="'socioRetiro.fields.comentario.placeholder' | translate" [disabled]="retiro.estado != 'Pendiente'"></textarea>
+        </div>
+
+        <!-- AUTORIZACIONES -->
+        <div class="border-top p-3">
+          <h6 class="text-uppercase mb-3">
+            {{ 'socioRetiro.sections.autorizaciones' | translate }}
+          </h6>
+
+          <div class="row g-3 mb-3">
+            @for (auth of autorizaciones.slice(0, 3); track auth.codigo) {
+            <div class="col-md-4">
+              <ng-container [ngTemplateOutlet]="cardAuth" [ngTemplateOutletContext]="{ auth: auth }">
+              </ng-container>
+            </div>
+            }
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <ng-container [ngTemplateOutlet]="cardAuth" [ngTemplateOutletContext]="{ auth: autorizaciones[3] }">
+              </ng-container>
+            </div>
+
+            <div class="col-md-4"></div>
+
+            <div class="col-md-4">
+              <ng-container [ngTemplateOutlet]="cardAuth" [ngTemplateOutletContext]="{ auth: autorizaciones[4] }">
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #cardAuth let-auth="auth">
+          @if (auth) {
+          <div class="border rounded p-3 bg-light h-100">
+            <div class="d-flex align-items-start gap-3">
+
+              <div class="flex-shrink-0">
+                <span [ngClass]="{
+                  'text-success': auth.estadoKey === 'socioRetiro.status.approved',
+                  'text-warning': auth.estadoKey === 'socioRetiro.status.pending'
+                }">
+
+                  <i [ngClass]="{
+                    'fa-sharp fa-solid fa-circle-check': auth.estadoKey === 'socioRetiro.status.approved',
+                    'fa-light fa-circle': auth.estadoKey === 'socioRetiro.status.pending'
+                  }">
+                  </i>
+                </span>
+              </div>
+
+              <div class="flex-grow-1">
+                <div class="fw-semibold">
+                  {{ auth.titulo || '-' }}
+                </div>
+
+                <div class="text-muted small">
+                  {{ auth.nombreUsuario || '-' }}
+                </div>
+
+                <div class="fw-semibold mt-1" [ngClass]="{
+                  'text-success': auth.estadoKey === 'socioRetiro.status.approved',
+                  'text-warning': auth.estadoKey === 'socioRetiro.status.pending'
+                }">
+                  {{ auth.estadoKey | translate }}
+                </div>
+
+                <div class="text-muted small">
+                  {{ auth.fecha || '-' }}
+                </div>
+              </div>
+
+            </div>
+          </div>
+          }
+        </ng-template>
+
+        <!-- FOOTER -->
+        <div class="card-footer d-flex gap-2">
+
+          @if (!isNew) {
+          <button type="button" class="btn btn-outline-success" (click)="onPrint()">
+            <i class="bi bi-printer"></i>
+            {{ 'socioRetiro.actions.print' | translate }}
+          </button>
+          }
+
+
+          
+
+
+          <button #saveButton type="button" class="btn btn-success" [permissionRoute]="['/socios', '/ahorro']"
+            [appPermission]="['create']" [disabled]="saving" autoFocusNext [disableClickButton]="true"
+            [unlockOn]="notify.closed$" (click)="onSave()" [disabled]="isView || retiro.estado != 'Pendiente'">
+            <i class="bi bi-save"></i>
+            {{ 'socioRetiro.actions.save' | translate }}
+          </button>
+
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">
+            {{ 'socioRetiro.actions.close' | translate }}
+          </button>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+</section>

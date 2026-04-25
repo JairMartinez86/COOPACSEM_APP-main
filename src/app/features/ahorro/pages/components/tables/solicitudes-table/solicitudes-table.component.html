@@ -7,10 +7,7 @@
                     <label class="form-label mb-1">
                         {{ 'ahorro.tables.common.search' | translate }}
                     </label>
-                    <input
-                        type="text"
-                        class="form-control form-control-sm"
-                        [value]="filterText"
+                    <input type="text" class="form-control form-control-sm" [value]="filterText"
                         (input)="onFilterChange($any($event.target).value)"
                         [placeholder]="'ahorro.tables.requests.searchPlaceholder' | translate" />
                 </div>
@@ -22,10 +19,14 @@
                 <thead>
                     <tr>
                         <th>{{ 'ahorro.tables.common.date' | translate }}</th>
+                        <th>{{ 'ahorro.tables.common.no' | translate }}</th>
                         <th>{{ 'ahorro.tables.common.description' | translate }}</th>
                         <th>{{ 'ahorro.tables.common.accountType' | translate }}</th>
                         <th>{{ 'ahorro.tables.common.status' | translate }}</th>
                         <th class="text-end">{{ 'ahorro.tables.common.amount' | translate }}</th>
+                        <th class="text-center">
+                            {{ 'ahorro.tables.common.acction' | translate }}
+                        </th>
                     </tr>
                 </thead>
 
@@ -33,26 +34,39 @@
                     @for (row of pagedRows; track $index) {
                     <tr>
                         <td>{{ row.fechaRegistro }}</td>
+                        <td>{{ row.noDocumento }}</td>
 
                         <td>
                             <div class="fw-semibold">
                                 {{
-                                    row.descripcion === 'Retiro ExtOrd'
-                                        ? ('socioRetiro.destinos.retiroCorriente' | translate)
-                                    : row.descripcion === 'Retiro Nav'
-                                        ? ('socioRetiro.destinos.retiroNavideno' | translate)
-                                    : row.descripcion
+                                row.descripcion === 'RETIRO_AHORRO'
+                                ? ('socioRetiro.tiposSolicitud.retiroAhorro' | translate)
+                                : row.descripcion === 'RETIRO_ABONO_CREDITO'
+                                ? ('socioRetiro.tiposSolicitud.retiroAbonoCredito' | translate)
+                                : row.descripcion === 'TRASLADO_NAVIDENA'
+                                ? ('socioRetiro.tiposSolicitud.trasladoNavidena' | translate)
+                                : row.descripcion === 'RETIRO_PARCIAL'
+                                ? ('socioRetiro.tiposSolicitud.retiroParcial' | translate)
+                                : row.descripcion === 'REEMBOLSO_DEDUCCION'
+                                ? ('socioRetiro.tiposSolicitud.reembolsoDeduccion' | translate)
+                                : row.descripcion === 'TRASLADO_CORRIENTE'
+                                ? ('socioRetiro.tiposSolicitud.trasladoCorriente' | translate)
+                                : row.descripcion === 'TRASLADO_APORTE_SOLIDARIO'
+                                ? ('socioRetiro.tiposSolicitud.trasladoAporteSolidario' | translate)
+                                : row.descripcion
                                 }}
                             </div>
                         </td>
 
                         <td>
-                            <span class="badge"
-                                [ngClass]="row.tipoCuenta === 'Corriente' ? 'badge-soft-success' : 'badge-soft-warning'">
+                            <span class="badge" [ngClass]="row.tipoCuenta === 'Corriente'
+        ? 'badge-soft-success'
+        : 'badge-soft-warning'">
+
                                 {{
-                                    row.tipoCuenta === 'Corriente'
-                                        ? ('ahorro.accountTypes.current' | translate)
-                                        : ('ahorro.accountTypes.christmas' | translate)
+                                row.tipoCuenta === 'Corriente'
+                                ? ('ahorro.accountTypes.current' | translate)
+                                : ('ahorro.accountTypes.christmas' | translate)
                                 }}
                             </span>
                         </td>
@@ -65,6 +79,21 @@
 
                         <td class="text-end fw-semibold">
                             {{ formatCurrency(row.monto) }}
+                        </td>
+
+                        <!-- 🔥 BOTÓN -->
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-outline-primary me-3" (click)="verSolicitud(row)"
+                                [attr.title]="'socioRetiro.actions.view' | translate">
+
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-outline-warning" (click)="editarSolicitud(row)"
+                                [attr.title]="'socioRetiro.actions.edit' | translate">
+
+                                <i class="bi bi-pencil"></i>
+                            </button>
                         </td>
                     </tr>
                     }
@@ -82,7 +111,7 @@
     </div>
 
     @if (filteredRows.length > 0) {
-    <div class="card-footer bg-transparent d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+    <div class="card-footer  d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
         <div class="small text-muted">
             {{ 'ahorro.tables.common.showing' | translate }}
             {{ startRecord }} - {{ endRecord }}

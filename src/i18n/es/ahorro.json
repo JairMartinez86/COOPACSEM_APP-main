@@ -101,11 +101,13 @@
     "tables": {
       "common": {
         "date": "Fecha",
+        "no": "No.",
         "description": "Descripción",
         "accountType": "Tipo de cuenta",
         "amount": "Monto",
         "balance": "Saldo",
         "status": "Estado",
+        "acction": "Acción",
         "paid" : "Pagado",
          "search": "Buscar",
         "showing": "Mostrando",

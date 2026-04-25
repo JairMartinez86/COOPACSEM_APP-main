@@ -47,6 +47,8 @@ export interface SocioRow {
 
 export interface SimpleMovimientoRow {
   id?: string;
+  socioId : string;
+  noDocumento : string;
   fecha: string;
   fechaRegistro?: string | null;
   descripcion: string;

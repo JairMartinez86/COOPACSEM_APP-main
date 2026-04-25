@@ -3,6 +3,7 @@ import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/cor
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SimpleMovimientoRow } from '../../../../interface/ahorro.models';
 import { AppConfigService } from '../../../../../../core/services/app-config.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-solicitudes-table',
@@ -14,6 +15,7 @@ import { AppConfigService } from '../../../../../../core/services/app-config.ser
 export class SolicitudesTableComponent implements OnChanges {
   private readonly appConfigService = inject(AppConfigService);
   private readonly translate = inject(TranslateService);
+  private readonly router = inject(Router);
 
   @Input() rows: SimpleMovimientoRow[] = [];
 
@@ -164,5 +166,14 @@ export class SolicitudesTableComponent implements OnChanges {
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
       .trim();
+  }
+
+
+  verSolicitud(row: any): void {
+
+    this.router.navigate(['/socio-retiro/view', row.socioId, row.id]);
+  }
+  editarSolicitud(row: any) {
+    this.router.navigate(['/socio-retiro/edit', row.socioId, row.id]);
   }
 }
