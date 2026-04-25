@@ -305,7 +305,8 @@
                     </span>
                     <select #TipoSolicitud class="form-select" id="TipoSolicitud" name="TipoSolicitud"
                       [(ngModel)]="retiro.tipoSolicitud" engineSync="TipoSolicitud" autoFocusNext [next]="Monto"
-                      required [disabled]="retiro.estado != 'Pendiente'">
+                      required [disabled]="retiro.estado != 'Pendiente'"
+                      (ngModelChange)="onTipoSolicitudChange($event)">
                       <option value="">
                         {{ 'socioRetiro.fields.tipoSolicitud.placeholder' | translate }}
                       </option>
@@ -341,7 +342,7 @@
                     </span>
 
                     <input #Monto type="text" class="form-control text-end" id="Monto" name="Monto"
-                      [(ngModel)]="retiro.monto" engineSync="Monto" autoFocusNext [next]="Concepto" numberFormat
+                      [(ngModel)]="retiro.monto" engineSync="Monto" autoFocusNext [next]="Comentario" numberFormat
                       [decimals]="2" [decimalSeparator]="settings.decimalSeparator"
                       [thousandSeparator]="settings.thousandSeparator" required JmartAutoFocus  [disabled]="retiro.estado != 'Pendiente'"/>
                   </div>
@@ -350,6 +351,7 @@
             </div>
 
             <!-- CONCEPTO -->
+             <!--
             <div class="col-md-12" error-notify="Concepto" error-display="inline">
               <div class="d-flex align-items-start gap-3">
 
@@ -365,13 +367,14 @@
                     </span>
                     <input #Concepto type="text" class="form-control" id="Concepto" name="Concepto"
                       [(ngModel)]="retiro.concepto" engineSync="Concepto" autoFocusNext [next]="Comentario"
-                      [placeholder]="'socioRetiro.fields.concepto.placeholder' | translate" required  [disabled]="retiro.estado != 'Pendiente'"/>
+                      [placeholder]="'socioRetiro.fields.concepto.placeholder' | translate" required  [disabled]="true"/>
                   </div>
 
 
                 </div>
               </div>
             </div>
+          -->
 
           </div>
         </div>

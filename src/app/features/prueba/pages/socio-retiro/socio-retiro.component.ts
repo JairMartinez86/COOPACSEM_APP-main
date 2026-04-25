@@ -55,7 +55,8 @@ interface SocioRetiroForm {
   monto: number | null;
   concepto: string;
   comentario: string;
-  estado : string;
+  estado: string;
+  pdf : any;
 }
 
 interface AutorizacionRetiro {
@@ -244,7 +245,8 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
       monto: null,
       concepto: '',
       comentario: '',
-      estado : ''
+      estado: 'Pendiente',
+      pdf : null
     };
   }
 
@@ -361,8 +363,11 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
             monto: Number(solicitud?.monto ?? 0),
             concepto: String(solicitud?.concepto ?? ''),
             comentario: String(solicitud?.comentario ?? ''),
-            estado: String(solicitud?.estado ?? '')
+            estado: String(solicitud?.estado ?? ''),
+            pdf: root?.pdf 
           };
+
+       
 
           this.socio = {
             id: String(socio?.id ?? this.socioId),
@@ -388,17 +393,17 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
           };
 
 
-
           this.autorizaciones = (root?.autorizaciones ?? []).map((x: any) => ({
             codigo: x?.codigo ?? '',
             titulo: x?.titulo ?? '',
             nombreUsuario: x?.nombreUsuario ?? '',
-            estadoKey: x?.fecha
-              ? 'socioRetiro.status.approved'
-              : 'socioRetiro.status.pending',
+
+            estadoKey: this.getEstadoKey(x?.estado),
+
             fecha: x?.fecha ? this.formatDate(x.fecha) : '',
             orden: Number(x?.orden ?? 0)
           }));
+
 
           this.engine.addControl('Ahorro');
           this.engine.addControl('FechaServidor');
@@ -414,7 +419,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
             this.socio.totalAhorrado
           );
 
-
+    
 
           this.patchEngine();
         },
@@ -471,6 +476,8 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
       Concepto: this.retiro.concepto,
       Comentario: this.retiro.comentario
     });
+
+    this.engine.clearErrors();
   }
 
   onSave(): void {
@@ -527,10 +534,35 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
     this.router.navigate(['/socios']);
   }
 
-  onPrint(): void {
-    if (!this.isBrowser) return;
-    window.print();
+onPrint(): void {
+  if (!this.isBrowser) return;
+  if (!this.retiro?.pdf) return;
+
+ 
+  const base64 = this.retiro.pdf;
+  const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
+
+  const byteCharacters = atob(cleanBase64);
+  const byteNumbers = new Array(byteCharacters.length);
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
   }
+
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: 'application/pdf' });
+  const url = window.URL.createObjectURL(blob);
+
+  const win = window.open(url, '_blank');
+
+  if (!win) return;
+
+  win.onload = () => {
+    win.focus();
+    win.print();
+  };
+}
+
 
   formatDate(value: any): string {
     if (!value) return '';
@@ -575,6 +607,32 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
 
 
 
+  private getEstadoKey(estado?: string): string {
+    switch (estado) {
+      case 'Aprobado':
+        return 'socioRetiro.status.approved';
+      case 'Rechazado':
+        return 'socioRetiro.status.rejected';
+      case 'Pendiente':
+        return 'socioRetiro.status.pending';
+      default:
+        return 'socioRetiro.status.pending';
+    }
+  }
+
+onTipoSolicitudChange(value: string) {
+
+  if (!value) {
+    this.retiro.concepto = this.translate.instant('socioRetiro.fields.tipoSolicitud.placeholder');
+    return;
+  }
+
+  const tipo = this.tiposSolicitud.find(x => x.value === value);
+
+  if (!tipo) return;
+
+  this.retiro.concepto = this.translate.instant(tipo.labelKey);
+}
 
 
 }

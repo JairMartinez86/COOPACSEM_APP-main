@@ -27,6 +27,7 @@
     "status": {
       "pending": "Pending",
       "approved": "Approved",
+      "rejected": "Rejected",
       "paid": "Paid"
     },
     "tiposCuenta": {
@@ -101,62 +102,60 @@
           "label": "Withdrawal Request"
         }
       },
-
-  "validations": {
-    "FechaSolicitud": {
-      "data": {
-        "1": {
-          "rule": "REGEX",
-          "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
-          "when": "",
-          "msj": "Please enter a valid date"
+      "validations": {
+        "FechaSolicitud": {
+          "data": {
+            "1": {
+              "rule": "REGEX",
+              "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
+              "when": "",
+              "msj": "Please enter a valid date"
+            },
+            "2": {
+              "rule": "DATE=",
+              "value": "{FechaServidor}",
+              "when": "",
+              "msj": "The date must match the server date."
+            }
+          }
         },
-        "2": {
-          "rule": "DATE=",
-          "value": "{FechaServidor}",
-          "when": "",
-          "msj": "The date must match the server date."
-        }
-      }
-    },
-    "TipoSolicitud": {
-      "data": {
-        "1": {
-          "rule": "LEN>=",
-          "when": "",
-          "value": 1,
-          "msj": "You must select a request type"
-        }
-      }
-    },
-    "Monto": {
-      "data": {
-        "1": {
-          "rule": "NUM>",
-          "when": "",
-          "value": "0",
-          "msj": "The amount must be greater than 0"
+        "TipoSolicitud": {
+          "data": {
+            "1": {
+              "rule": "LEN>=",
+              "when": "",
+              "value": 1,
+              "msj": "You must select a request type"
+            }
+          }
         },
-        "2": {
-          "rule": "NUM<=",
-          "when": "",
-          "value": "{Ahorro}",
-          "msj": "The amount must be less than or equal to {value}"
+        "Monto": {
+          "data": {
+            "1": {
+              "rule": "NUM>",
+              "when": "",
+              "value": "0",
+              "msj": "The amount must be greater than 0"
+            },
+            "2": {
+              "rule": "NUM<=",
+              "when": "",
+              "value": "{Ahorro}",
+              "msj": "The amount must be less than or equal to {value}"
+            }
+          }
+        },
+        "Concepto": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "when": "",
+              "value": "0",
+              "msj": "Concept is required"
+            }
+          }
         }
       }
-    },
-    "Concepto": {
-      "data": {
-        "1": {
-          "rule": "LEN>",
-          "when": "",
-          "value": "0",
-          "msj": "Concept is required"
-        }
-      }
-    }
-  }
-
     }
   }
 }

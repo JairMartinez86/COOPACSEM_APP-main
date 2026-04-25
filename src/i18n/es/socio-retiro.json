@@ -27,6 +27,7 @@
     "status": {
       "pending": "Pendiente",
       "approved": "Aprobado",
+      "rejected": "Rechazado",
       "paid": "Pagado"
     },
     "fields": {
