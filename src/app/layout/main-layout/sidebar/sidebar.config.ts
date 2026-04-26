@@ -140,6 +140,20 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     }
   },
 
+   {
+    type: 'link',
+    titleKey: 'sidebar.items.estadoCuentaList',
+    iconclass: '',
+    router: '/estado-cuenta-lista',
+    permissions: {
+      view: false,
+      create: null,
+      edit: null,
+      delete: null
+    }
+  },
+  
+
      
     ]
   },

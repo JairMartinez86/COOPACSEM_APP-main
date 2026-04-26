@@ -25,6 +25,7 @@ import socio_apertura_nav from './en/apertura-cuenta-navidena.json';
 import ahorro from './en/ahorro.json';
 import afiliacion_pago from './en/afiliacionPago.json';
 import fichaSocio from './en/fichaSocio.json';
+import estadoCuentaLista from './en/estadoCuentaLista.json';
 
 export const en = Object.assign({}, interceptor, alerts, file_manager, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, socio_ahorro, socio_ahorro, socio_retiro, socio_cambio_cuota, socio_apertura_nav, ahorro,
-    afiliacion_pago, fichaSocio,  draft);
+    afiliacion_pago, fichaSocio, estadoCuentaLista,  draft);

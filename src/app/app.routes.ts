@@ -197,32 +197,32 @@ export const routes: Routes = [
         providers: [JMartMassiveValidationService],
         canDeactivate: [pendingChangesGuard],
       },
-     {
-  path: 'socio-retiro/view/:socioId/:solicitudId',
-  loadComponent: () =>
-    import('./features/prueba/pages/socio-retiro/socio-retiro.component')
-      .then(m => m.SocioRetiroComponent),
-  data: {
-    permission: '/socio-retiro',
-    action: ['view'],
-    tableFilterKey: 'socio-retiro'
-  },
-  providers: [JMartMassiveValidationService],
-  canDeactivate: [pendingChangesGuard],
-},
       {
-  path: 'socio-retiro/edit/:socioId/:solicitudId',
-  loadComponent: () =>
-    import('./features/prueba/pages/socio-retiro/socio-retiro.component')
-      .then(m => m.SocioRetiroComponent),
-  data: {
-    permission: '/socio-retiro',
-    action: ['edit'],
-    tableFilterKey: 'socio-retiro'
-  },
-  providers: [JMartMassiveValidationService],
-  canDeactivate: [pendingChangesGuard],
-},
+        path: 'socio-retiro/view/:socioId/:solicitudId',
+        loadComponent: () =>
+          import('./features/prueba/pages/socio-retiro/socio-retiro.component')
+            .then(m => m.SocioRetiroComponent),
+        data: {
+          permission: '/socio-retiro',
+          action: ['view'],
+          tableFilterKey: 'socio-retiro'
+        },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
+      {
+        path: 'socio-retiro/edit/:socioId/:solicitudId',
+        loadComponent: () =>
+          import('./features/prueba/pages/socio-retiro/socio-retiro.component')
+            .then(m => m.SocioRetiroComponent),
+        data: {
+          permission: '/socio-retiro',
+          action: ['edit'],
+          tableFilterKey: 'socio-retiro'
+        },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
       {
         path: 'cambio-cuota/new/:socioId/:tipoMovimiento',
         loadComponent: () =>
@@ -271,6 +271,21 @@ export const routes: Routes = [
         canActivate: [permissionGuard],
         data: { permission: '/ahorro', action: 'view', tableFilterKey: 'ahorro', tableFilterEnter: true },
         providers: [JMartMassiveValidationService],
+      },
+
+      //ESTADO DE CUENTA
+      {
+        path: 'estado-cuenta-lista',
+        loadComponent: () =>
+          import('./features/ahorro/pages/components/estado-cuenta/estado-cuenta-lista.component')
+            .then(m => m.EstadoCuentaListaComponent),
+        canActivate: [permissionGuard],
+        data: {
+          permission: '/estado-cuenta-lista',
+          action: 'view',
+          tableFilterKey: 'estado-cuenta-lista',
+          tableFilterEnter: true
+        }
       },
 
 

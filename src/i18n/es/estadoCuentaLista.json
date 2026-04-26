@@ -1,0 +1,64 @@
+{
+  "estadoCuentaLista": {
+    "title": "Estado de cuenta por socio",
+    "subtitle": "Consulta los socios disponibles para generar su estado de cuenta.",
+
+    "breadcrumbs": [
+      { "label": "Inicio", "url": "/" },
+      { "label": "Ahorro", "url": "" },
+      { "label": "Estado de cuenta" }
+    ],
+
+    "table": {
+      "title": "Listado de socios",
+      "subtitle": "Seleccione un socio para ver su estado de cuenta."
+    },
+
+    "columns": {
+      "code": "Código",
+      "member": "Socio",
+      "accounts": "Cuentas",
+      "entryDate": "Fecha ingreso",
+      "status": "Estado"
+    },
+
+    "accounts": {
+      "current": "Corriente",
+      "christmas": "Navideña"
+    },
+
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+
+    "actions": {
+      "accountStatement": "Estado de cuenta"
+    },
+
+    "filters": {
+      "searchPlaceholder": "Buscar socio...",
+      "accountType": "Tipo de cuenta",
+      "status": "Estado",
+      "all": "Todos",
+      "clear": "Limpiar filtros"
+    },
+
+    "side": {
+      "quickActions": "Acciones rápidas"
+    },
+
+    "messages": {
+      "selectSocio": "Debe seleccionar un socio"
+    },
+
+    "pagination": {
+      "showing": "Mostrando",
+      "of": "de",
+      "records": "registros"
+    },
+
+    "loading": "Cargando socios...",
+    "empty": "No se encontraron socios."
+  }
+}

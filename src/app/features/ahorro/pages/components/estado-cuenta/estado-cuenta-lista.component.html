@@ -1,0 +1,255 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+    <div class="main-content page-dashboard-finance">
+
+        <div class="page-header mb-1 flex-shrink-0">
+            <div>
+                <h1 class="page-title">{{ 'estadoCuentaLista.title' | translate }}</h1>
+                <p class="text-muted mb-0">{{ 'estadoCuentaLista.subtitle' | translate }}</p>
+            </div>
+        </div>
+
+        <div class="row g-3 estado-cuenta-layout">
+
+            <div class="col-xl-9 col-lg-8 col-md-12 d-flex flex-column min-h-0">
+                <div class="card estado-cuenta-card">
+
+                    <div
+                        class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2 flex-shrink-0">
+                        <div>
+                            <h5 class="card-title">{{ 'estadoCuentaLista.table.title' | translate }}</h5>
+                            <p class="card-subtitle mb-0">{{ 'estadoCuentaLista.table.subtitle' | translate }}</p>
+                        </div>
+                    </div>
+
+                    <div class="card-body estado-cuenta-card-body">
+
+                        <div class="row g-3 align-items-end mb-3 flex-shrink-0">
+                            <div class="col-xl-6 col-lg-12">
+                                <label class="form-label mb-1">&nbsp;</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </span>
+
+                                    <input type="text" class="form-control" [(ngModel)]="search"
+                                        (ngModelChange)="onSearchInputChange()" (keyup)="onSearchKeyup($event)"
+                                        [placeholder]="'estadoCuentaLista.filters.searchPlaceholder' | translate" />
+                                </div>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <label class="form-label">{{ 'estadoCuentaLista.filters.accountType' | translate
+                                    }}</label>
+                                <select class="form-select" [(ngModel)]="tipoCuenta"
+                                    (ngModelChange)="onTipoCuentaChange()">
+                                    <option value="">{{ 'estadoCuentaLista.filters.all' | translate }}</option>
+                                    <option value="Corriente">{{ 'estadoCuentaLista.accounts.current' | translate }}
+                                    </option>
+                                    <option value="Navidena">{{ 'estadoCuentaLista.accounts.christmas' | translate }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-6">
+                                <label class="form-label">{{ 'estadoCuentaLista.filters.status' | translate }}</label>
+                                <select class="form-select" [(ngModel)]="estado" (ngModelChange)="onEstadoChange()">
+                                    <option value="">{{ 'estadoCuentaLista.filters.all' | translate }}</option>
+                                    <option value="Activo">{{ 'estadoCuentaLista.status.active' | translate }}</option>
+                                    <option value="Inactivo">{{ 'estadoCuentaLista.status.inactive' | translate }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4 col-md-12">
+                                <button type="button" class="btn btn-secondary w-100" (click)="clearFilters()">
+                                    <i class="fa-duotone fa-solid fa-broom-wide fa-lg"></i>
+                                    {{ 'estadoCuentaLista.filters.clear' | translate }}
+                                </button>
+                            </div>
+                        </div>
+
+                        @if (loading) {
+                        <div class="py-4 text-center text-muted">
+                            {{ 'estadoCuentaLista.loading' | translate }}
+                        </div>
+                        } @else {
+                        @if (socios.length > 0) {
+
+                        <div class="table-responsive socios-table-scroll">
+                            <table class="table table-sm socios-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>{{ 'estadoCuentaLista.columns.code' | translate }}</th>
+                                        <th>{{ 'estadoCuentaLista.columns.member' | translate }}</th>
+                                        <th>{{ 'estadoCuentaLista.columns.accounts' | translate }}</th>
+                                        <th>{{ 'estadoCuentaLista.columns.entryDate' | translate }}</th>
+                                        <th>{{ 'estadoCuentaLista.columns.status' | translate }}</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @for (item of socios; track item.id) {
+                                    <tr class="socios-click-row"
+                                        [class.socios-row-selected]="selectedSocio && selectedSocio.id === item.id"
+                                        (click)="selectSocio(item)">
+
+                                        <td>{{ item.codigoSocio || '-' }}</td>
+
+                                        <td>
+                                            <div class="fw-semibold">{{ item.nombreCompleto || '-' }}</div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex flex-wrap gap-1">
+                                                <span class="badge d-inline-flex align-items-center gap-1"
+                                                    [ngClass]="item.cuentas.corriente ? 'badge-soft-success' : 'badge-soft-secondary'">
+                                                    <i class="bi"
+                                                        [ngClass]="item.cuentas.corriente ? 'bi-check-circle-fill' : 'bi-dash-circle'">
+                                                    </i>
+                                                    {{ 'estadoCuentaLista.accounts.current' | translate }}
+                                                </span>
+
+                                                <span class="badge d-inline-flex align-items-center gap-1"
+                                                    [ngClass]="item.cuentas.navidena ? 'badge-soft-warning' : 'badge-soft-secondary'">
+                                                    <i class="bi"
+                                                        [ngClass]="item.cuentas.navidena ? 'bi-check-circle-fill' : 'bi-dash-circle'">
+                                                    </i>
+                                                    {{ 'estadoCuentaLista.accounts.christmas' | translate }}
+                                                </span>
+                                            </div>
+                                        </td>
+
+                                        <td>{{ formatDate(item.fechaIngreso) }}</td>
+
+                                        <td>
+                                            <span class="badge"
+                                                [ngClass]="item.estado === 'Activo' ? 'badge-soft-success' : 'badge-soft-danger'">
+                                                {{
+                                                item.estado === 'Activo'
+                                                ? ('estadoCuentaLista.status.active' | translate)
+                                                : ('estadoCuentaLista.status.inactive' | translate)
+                                                }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div
+                            class="users-pagination estado-cuenta-pagination d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div class="users-pagination-info">
+                                {{ 'estadoCuentaLista.pagination.showing' | translate }}
+                                <strong>{{ visibleStart }}-{{ visibleEnd }}</strong>
+                                {{ 'estadoCuentaLista.pagination.of' | translate }}
+                                <strong>{{ totalRecords }}</strong>
+                                {{ 'estadoCuentaLista.pagination.records' | translate }}
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <select class="form-select form-select-sm" [ngModel]="pageSize"
+                                    (ngModelChange)="changePageSize($event)">
+                                    @for (size of pageSizeOptions; track size) {
+                                    <option [ngValue]="size">{{ size }}</option>
+                                    }
+                                </select>
+
+                                <nav>
+                                    <ul class="pagination pagination-sm mb-0">
+                                        <li class="page-item" [class.disabled]="currentPage === 1">
+                                            <a class="page-link" href="javascript:void(0)"
+                                                (click)="goToPage(currentPage - 1)">
+                                                <i class="bi bi-chevron-left"></i>
+                                            </a>
+                                        </li>
+
+                                        @for (page of pageNumbers; track page) {
+                                        @if (page === '...') {
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="javascript:void(0)">...</a>
+                                        </li>
+                                        } @else {
+                                        <li class="page-item" [class.active]="page === currentPage">
+                                            <a class="page-link" href="javascript:void(0)" (click)="goToPage(+page)">
+                                                {{ page }}
+                                            </a>
+                                        </li>
+                                        }
+                                        }
+
+                                        <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                            <a class="page-link" href="javascript:void(0)"
+                                                (click)="goToPage(currentPage + 1)">
+                                                <i class="bi bi-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        } @else {
+                        <div class="py-4 text-center text-muted">
+                            {{ 'estadoCuentaLista.empty' | translate }}
+                        </div>
+                        }
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-12 d-flex flex-column min-h-0">
+                <div class="d-flex flex-column gap-3 h-100 min-h-0">
+
+                    <div class="card flex-shrink-0">
+                        <div class="card-header border-0 pb-2">
+                            <h5 class="card-title mb-0">{{ 'estadoCuentaLista.side.quickActions' | translate }}</h5>
+                        </div>
+
+                        <div class="card-body pt-0">
+                            <div class="quick-actions-grid">
+                                @for (action of orderedActions; track action.titleKey) {
+                                <button type="button" class="quick-action-btn is-blue fa-lg"
+                                    (click)="onActionClick(action)" [disabled]="!selectedSocio"
+                                    [permissionRoute]="['/estado-cuenta-lista']" [appPermission]="['view']">
+
+
+                                    <i [class]="action.icon"></i>
+                                    <span>{{ action.titleKey | translate }}</span>
+                                </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (selectedSocio) {
+                    <div class="card flex-shrink-0">
+                        <div class="card-body">
+                            <h6 class="mb-1">{{ selectedSocio.nombreCompleto }}</h6>
+                            <div class="text-muted small">{{ selectedSocio.codigoSocio }}</div>
+
+                            <div class="d-flex flex-wrap gap-1 mt-2">
+                                <span class="badge"
+                                    [ngClass]="selectedSocio.cuentas.corriente ? 'badge-soft-success' : 'badge-soft-secondary'">
+                                    {{ 'estadoCuentaLista.accounts.current' | translate }}
+                                </span>
+
+                                <span class="badge"
+                                    [ngClass]="selectedSocio.cuentas.navidena ? 'badge-soft-warning' : 'badge-soft-secondary'">
+                                    {{ 'estadoCuentaLista.accounts.christmas' | translate }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
