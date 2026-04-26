@@ -1,0 +1,91 @@
+{
+  "estadoCuentaDetalle": {
+    "title": "Estado de cuenta",
+    "loading": "Cargando información...",
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/"
+      },
+      {
+        "label": "Ahorros",
+        "url": "/estado-cuenta-lista"
+      },
+      {
+        "label": "Estado de cuenta"
+      }
+    ],
+    "info": {
+      "identification": "Identificación",
+      "entryDate": "Ingreso a la cooperativa",
+      "firstDeduction": "Solicitud primera deducción",
+      "monthlySalary": "Salario mensual",
+      "savingPercent": "Porcentaje ahorro",
+      "installment": "Cuota Quincenal",
+      "installmentTotal": "Cuota quincenal total (Corriente + Navideña)"
+    },
+    "summary": {
+      "totalSaved": "Total ahorrado",
+      "totalWithdrawn": "Total retirado",
+      "currentBalance": "Saldo actual",
+      "installments": "CUOTAS",
+      "withdrawals": "RETIROS"
+    },
+    "accountSelector": {
+      "title": "Selecciona el tipo de ahorro"
+    },
+    "accounts": {
+      "currentSaving": "Ahorro Corriente",
+      "christmasSaving": "Ahorro Navideño",
+      "consolidatedSaving": "Ahorro Consolidado",
+      "current": "CUENTA CORRIENTE",
+      "christmas": "CUENTA NAVIDEÑA",
+      "current2": "Corriente",
+      "christmas2": "Navideña"
+    },
+    
+    "report": {
+      "title": "¿Cómo deseas generar el reporte?",
+      "subtitle": "Elige el período para visualizar o descargar el estado de cuenta.",
+      "accumulated": "Acumulado (al corte)",
+      "accumulatedText": "Muestra todo el historial de movimientos hasta la fecha seleccionada.",
+      "byRange": "Por rango de fechas",
+      "byRangeText": "Muestra los movimientos realizados dentro del rango de fechas.",
+      "byMonth": "Por mes",
+      "byMonthText": "Muestra los movimientos del mes seleccionado.",
+      "byYear": "Por año",
+      "byYearText": "Muestra los movimientos del año seleccionado.",
+      "cutoffDate": "Fecha de corte",
+      "from": "Fecha desde",
+      "to": "Fecha hasta",
+      "month": "Mes",
+      "year": "Año",
+      "accumulatedAt": "Acumulado al"
+    },
+    "movements": {
+      "title": "Detalle de movimientos",
+      "date": "FECHA",
+      "concept": "CONCEPTO",
+      "debit": "DÉBITO",
+      "credit": "CRÉDITO",
+      "balance": "SALDO",
+      "initialBalance": "SALDO INICIAL",
+      "empty": "No se encontraron movimientos para el tipo de ahorro seleccionado.",
+      "note": "Los saldos reflejados corresponden a la fecha de corte seleccionada.",
+      "accountType": "Tipo de cuenta"
+    },
+    "pagination": {
+      "showing": "Mostrando",
+      "of": "de",
+      "records": "registros"
+    },
+    "actions": {
+      "generateReport": "Generar reporte",
+      "export": "Exportar",
+      "refresh": "Actualizar datos"
+    },
+    "messages": {
+      "invalidSocio": "El socio no es válido"
+    }
+  }
+}

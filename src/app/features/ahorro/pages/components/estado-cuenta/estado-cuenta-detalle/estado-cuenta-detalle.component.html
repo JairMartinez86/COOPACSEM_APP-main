@@ -1,0 +1,479 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+  <div class="main-content page-dashboard-finance">
+
+    @if (loading) {
+    <div class="py-5 text-center text-muted">
+      {{ 'estadoCuentaDetalle.loading' | translate }}
+    </div>
+    } @else {
+    @if (socio) {
+
+    <div class="page-header mb-3">
+      <div>
+        <h1 class="page-title d-flex align-items-center gap-2">
+          <i class="fa-regular fa-file-lines text-success"></i>
+          {{ 'estadoCuentaDetalle.title' | translate }}
+        </h1>
+
+        <p class="mb-0">
+          {{ socio.codigoSocio }} - {{ socio.nombreCompleto }}
+          ({{ tipoCuentaTexto }})
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+
+      <div class="col-xl-4 col-lg-6 col-md-12">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="d-flex flex-column gap-4">
+
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-info fa-lg">
+                  <i class="fa-duotone fa-solid fa-id-card"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ 'estadoCuentaDetalle.info.identification' | translate }}</div>
+                  <div class="text-muted">{{ socio.numeroIdentificacion || '-' }}</div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-info fa-lg">
+                  <i class="fa-duotone fa-solid fa-calendar-day"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ 'estadoCuentaDetalle.info.entryDate' | translate }}</div>
+                  <div class="text-muted">{{ formatDate(socio.fechaIngreso) }}</div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-info fa-lg">
+                  <i class="fa-duotone fa-solid fa-calendar-check"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ 'estadoCuentaDetalle.info.firstDeduction' | translate }}</div>
+                  <div class="text-muted">{{ formatDate(fechaInicioSeleccionada) }}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-4 col-lg-6 col-md-12">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="d-flex flex-column gap-4">
+
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-success fa-lg">
+                  <i class="fa-duotone fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ 'estadoCuentaDetalle.info.monthlySalary' | translate }}</div>
+                  <div class="text-muted">{{ formatCurrency(socio.salarioMensual) }}</div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-warning fa-lg">
+                  <i class="fa-duotone fa-solid fa-percent"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ 'estadoCuentaDetalle.info.savingPercent' | translate }}</div>
+                  <div class="text-muted">- %</div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-success fa-lg">
+                  <i class="fa-duotone fa-solid fa-circle-dollar-to-slot"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold" style="text-transform: none;">
+                    {{
+                    (tipoCuentaSeleccionada === 'Consolidado'
+                    ? 'estadoCuentaDetalle.info.installmentTotal'
+                    : 'estadoCuentaDetalle.info.installment'
+                    ) | translate
+                    }}
+                  </div>
+
+                  <div class="text-muted">{{ formatCurrency(cuotaSeleccionada) }}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-4 col-lg-12 col-md-12">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="d-flex flex-column gap-4">
+
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-success fa-lg">
+                  <i class="fa-duotone fa-solid fa-piggy-bank"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ 'estadoCuentaDetalle.summary.totalSaved' | translate }}</div>
+                  <div class="text-muted">
+                    {{ formatCurrency(resumenActual.totalAhorrado) }}
+                    ({{ resumenActual.totalCuotas }} - {{ 'estadoCuentaDetalle.summary.installments' | translate }})
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-danger fa-lg">
+                  <i class="fa-duotone fa-solid fa-arrow-up-from-bracket"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ 'estadoCuentaDetalle.summary.totalWithdrawn' | translate }}</div>
+                  <div class="text-muted">
+                    {{ formatCurrency(resumenActual.totalRetirado) }}
+                    ({{ resumenActual.totalRetiros }} - {{ 'estadoCuentaDetalle.summary.withdrawals' | translate }})
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-success fa-lg">
+                  <i class="fa-duotone fa-solid fa-scale-balanced"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ 'estadoCuentaDetalle.summary.currentBalance' | translate }}</div>
+                  <div class="text-muted">{{ formatCurrency(resumenActual.saldoActual) }}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row g-3 align-items-center">
+          <div class="col-xl-3 col-lg-12">
+            {{ 'estadoCuentaDetalle.accountSelector.title' | translate }}
+          </div>
+
+          <div class="col-xl-3 col-lg-4 col-md-6">
+            <button type="button" class="btn w-100"
+              [ngClass]="tipoCuentaSeleccionada === 'Corriente' ? 'btn-success' : 'btn-outline-secondary'"
+              (click)="seleccionarTipoCuenta('Corriente')" [disabled]="!socio.cuentaCorrienteActiva">
+              <i class="fa-solid fa-piggy-bank me-2"></i>
+              {{ 'estadoCuentaDetalle.accounts.currentSaving' | translate }}
+            </button>
+          </div>
+
+          <div class="col-xl-3 col-lg-4 col-md-6">
+            <button type="button" class="btn w-100"
+              [ngClass]="tipoCuentaSeleccionada === 'Navidena' ? 'btn-success' : 'btn-outline-secondary'"
+              (click)="seleccionarTipoCuenta('Navidena')" [disabled]="!socio.cuentaNavidenaActiva">
+              <i class="fa-solid fa-gift me-2"></i>
+              {{ 'estadoCuentaDetalle.accounts.christmasSaving' | translate }}
+            </button>
+          </div>
+
+          <div class="col-xl-3 col-lg-4 col-md-6">
+            <button type="button" class="btn w-100"
+              [ngClass]="tipoCuentaSeleccionada === 'Consolidado' ? 'btn-success' : 'btn-outline-secondary'"
+              (click)="seleccionarTipoCuenta('Consolidado')">
+              <i class="fa-solid fa-coins me-2"></i>
+              {{ 'estadoCuentaDetalle.accounts.consolidatedSaving' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+
+        <h5 class="card-title mb-1">
+          {{ 'estadoCuentaDetalle.report.title' | translate }}
+        </h5>
+
+        <p class="text-muted mb-3">
+          {{ 'estadoCuentaDetalle.report.subtitle' | translate }}
+        </p>
+
+        <div class="row g-3">
+
+          <div class="col-xl-3 col-lg-6 col-md-12">
+            <div class="card h-100" [ngClass]="tipoReporte === 'Acumulado' ? 'border border-success' : ''">
+              <div class="card-body">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="tipoReporte"
+                    [checked]="tipoReporte === 'Acumulado'" (change)="tipoReporte = 'Acumulado'">
+
+                  <label class="form-check-label fw-semibold">
+                    {{ 'estadoCuentaDetalle.report.accumulated' | translate }}
+                  </label>
+                </div>
+
+                <input type="date" class="form-control" [(ngModel)]="fechaCorte">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-lg-6 col-md-12">
+            <div class="card h-100" [ngClass]="tipoReporte === 'Rango' ? 'border border-success' : ''">
+              <div class="card-body">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="tipoReporte" [checked]="tipoReporte === 'Rango'"
+                    (change)="tipoReporte = 'Rango'">
+
+                  <label class="form-check-label fw-semibold">
+                    {{ 'estadoCuentaDetalle.report.byRange' | translate }}
+                  </label>
+                </div>
+
+                <div class="row g-2">
+                  <div class="col-6">
+                    <input type="date" class="form-control" [(ngModel)]="fechaDesde">
+                  </div>
+                  <div class="col-6">
+                    <input type="date" class="form-control" [(ngModel)]="fechaHasta">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-lg-6 col-md-12">
+            <div class="card h-100" [ngClass]="tipoReporte === 'Mes' ? 'border border-success' : ''">
+              <div class="card-body">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="tipoReporte" [checked]="tipoReporte === 'Mes'"
+                    (change)="tipoReporte = 'Mes'">
+
+                  <label class="form-check-label fw-semibold">
+                    {{ 'estadoCuentaDetalle.report.byMonth' | translate }}
+                  </label>
+                </div>
+
+                <div class="row g-2">
+                  <div class="col-6">
+                    <select class="form-select" [(ngModel)]="mes">
+                      <option [ngValue]="1">Enero</option>
+                      <option [ngValue]="2">Febrero</option>
+                      <option [ngValue]="3">Marzo</option>
+                      <option [ngValue]="4">Abril</option>
+                      <option [ngValue]="5">Mayo</option>
+                      <option [ngValue]="6">Junio</option>
+                      <option [ngValue]="7">Julio</option>
+                      <option [ngValue]="8">Agosto</option>
+                      <option [ngValue]="9">Septiembre</option>
+                      <option [ngValue]="10">Octubre</option>
+                      <option [ngValue]="11">Noviembre</option>
+                      <option [ngValue]="12">Diciembre</option>
+                    </select>
+                  </div>
+
+                  <div class="col-6">
+                    <select class="form-select" [(ngModel)]="anio">
+                      <option [ngValue]="2024">2024</option>
+                      <option [ngValue]="2025">2025</option>
+                      <option [ngValue]="2026">2026</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-lg-6 col-md-12">
+            <div class="card h-100" [ngClass]="tipoReporte === 'Anio' ? 'border border-success' : ''">
+              <div class="card-body">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="tipoReporte" [checked]="tipoReporte === 'Anio'"
+                    (change)="tipoReporte = 'Anio'">
+
+                  <label class="form-check-label fw-semibold">
+                    {{ 'estadoCuentaDetalle.report.byYear' | translate }}
+                  </label>
+                </div>
+
+                <select class="form-select" [(ngModel)]="anio">
+                  @for (y of anios; track y) {
+                  <option [ngValue]="y">{{ y }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <button type="button" class="btn btn-outline-success" (click)="aplicarFiltros()">
+            <i class="fa-solid fa-filter me-1"></i>
+            {{ 'estadoCuentaDetalle.actions.refresh' | translate }}
+          </button>
+
+          <button type="button" class="btn btn-success" (click)="generarReporte()">
+            <i class="fa-regular fa-file-lines me-1"></i>
+            {{ 'estadoCuentaDetalle.actions.generateReport' | translate }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">
+          {{ tituloDetalleMovimientos }}
+        </h5>
+
+        <button type="button" class="btn btn-light">
+          <i class="fa-solid fa-download me-1"></i>
+          {{ 'estadoCuentaDetalle.actions.export' | translate }}
+        </button>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm mb-0">
+            <thead>
+              <tr>
+                <th>{{ 'estadoCuentaDetalle.movements.date' | translate }}</th>
+                <th>{{ 'estadoCuentaDetalle.movements.accountType' | translate }}</th>
+                <th>{{ 'estadoCuentaDetalle.movements.concept' | translate }}</th>
+                <th class="text-end">{{ 'estadoCuentaDetalle.movements.debit' | translate }}</th>
+                <th class="text-end">{{ 'estadoCuentaDetalle.movements.credit' | translate }}</th>
+                <th class="text-end">{{ 'estadoCuentaDetalle.movements.balance' | translate }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (mov of movimientosPaginados; track mov.id) {
+              <tr>
+                <td>{{ formatDate(mov.fecha) }}</td>
+
+                <td>
+                  <span class="badge" [ngClass]="{
+      'badge-soft-success': mov.tipoCuenta === 'Corriente',
+      'badge-soft-warning': mov.tipoCuenta === 'Navidena',
+      'badge-soft-secondary': !mov.tipoCuenta
+    }">
+
+                    {{
+                    mov.tipoCuenta === 'Corriente'
+                    ? ('estadoCuentaDetalle.accounts.current2' | translate)
+                    : mov.tipoCuenta === 'Navidena'
+                    ? ('estadoCuentaDetalle.accounts.christmas2' | translate)
+                    : ''
+                    }}
+
+                  </span>
+                </td>
+                <td>
+                  {{
+                  mov.tipoMovimiento === 'SaldoInicial'
+                  ? ('estadoCuentaDetalle.movements.initialBalance' | translate)
+                  : mov.concepto || mov.tipoMovimiento
+                  }}
+                </td>
+
+                <td class="text-end">
+                  {{ mov.debito > 0 ? formatAmount(mov.debito) : '-' }}
+                </td>
+
+                <td class="text-end">
+                  {{ mov.credito > 0 ? formatAmount(mov.credito) : '-' }}
+                </td>
+
+                <td class="text-end">
+                  {{ formatAmount(mov.saldo) }}
+                </td>
+              </tr>
+              }
+
+              @if (movTotalRecords === 0) {
+              <tr>
+                <td colspan="5" class="text-center text-muted py-3">
+                  {{ 'estadoCuentaDetalle.movements.empty' | translate }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (movTotalRecords > 0) {
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-3">
+          <div class="text-muted small">
+            {{ 'estadoCuentaDetalle.pagination.showing' | translate }}
+            <strong>{{ movVisibleStart }}-{{ movVisibleEnd }}</strong>
+            {{ 'estadoCuentaDetalle.pagination.of' | translate }}
+            <strong>{{ movTotalRecords }}</strong>
+            {{ 'estadoCuentaDetalle.pagination.records' | translate }}
+          </div>
+
+          <div class="d-flex align-items-center gap-2">
+            <select class="form-select form-select-sm" [ngModel]="movPageSize"
+              (ngModelChange)="changeMovPageSize($event)">
+              @for (size of movPageSizeOptions; track size) {
+              <option [ngValue]="size">{{ size }}</option>
+              }
+            </select>
+
+            <nav>
+              <ul class="pagination pagination-sm mb-0">
+                <li class="page-item" [class.disabled]="movPage === 1">
+                  <a class="page-link" href="javascript:void(0)" (click)="goToMovPage(movPage - 1)">
+                    <i class="bi bi-chevron-left"></i>
+                  </a>
+                </li>
+
+                @for (page of movPageNumbers; track page) {
+                @if (page === '...') {
+                <li class="page-item disabled">
+                  <a class="page-link" href="javascript:void(0)">...</a>
+                </li>
+                } @else {
+                <li class="page-item" [class.active]="page === movPage">
+                  <a class="page-link" href="javascript:void(0)" (click)="goToMovPage(+page)">
+                    {{ page }}
+                  </a>
+                </li>
+                }
+                }
+
+                <li class="page-item" [class.disabled]="movPage === movTotalPages">
+                  <a class="page-link" href="javascript:void(0)" (click)="goToMovPage(movPage + 1)">
+                    <i class="bi bi-chevron-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        }
+
+        <div class="alert alert-warning mt-3 mb-0">
+          <i class="fa-solid fa-circle-info me-1"></i>
+          {{ 'estadoCuentaDetalle.movements.note' | translate }}
+        </div>
+      </div>
+    </div>
+
+    }
+    }
+
+  </div>
+</section>

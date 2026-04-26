@@ -26,6 +26,8 @@ import ahorro from './es/ahorro.json';
 import afiliacion_pago from './es/afiliacionPago.json';
 import fichaSocio from './es/fichaSocio.json';
 import estadoCuentaLista from './es/estadoCuentaLista.json';
+import estadoCuentaDet from './es/estadoCuentaDetalle.json';
+
 
 export const es = Object.assign({}, interceptor, alerts, file_manager, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, socio_ahorro, socio_retiro, socio_cambio_cuota, socio_apertura_nav, ahorro,
-    afiliacion_pago, fichaSocio, estadoCuentaLista,  draft);
+    afiliacion_pago, fichaSocio, estadoCuentaLista, estadoCuentaDet,  draft);

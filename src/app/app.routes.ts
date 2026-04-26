@@ -273,18 +273,29 @@ export const routes: Routes = [
         providers: [JMartMassiveValidationService],
       },
 
-      //ESTADO DE CUENTA
+      // ESTADO DE CUENTA
       {
-        path: 'estado-cuenta-lista',
+        path: 'estado-cuenta',
         loadComponent: () =>
           import('./features/ahorro/pages/components/estado-cuenta/estado-cuenta-lista.component')
             .then(m => m.EstadoCuentaListaComponent),
         canActivate: [permissionGuard],
         data: {
-          permission: '/estado-cuenta-lista',
+          permission: '/estado-cuenta',
           action: 'view',
           tableFilterKey: 'estado-cuenta-lista',
           tableFilterEnter: true
+        }
+      },
+      {
+        path: 'estado-cuenta/:id/detalle',
+        loadComponent: () =>
+          import('./features/ahorro/pages/components/estado-cuenta/estado-cuenta-detalle/estado-cuenta-detalle.component')
+            .then(m => m.EstadoCuentaDetalleComponent),
+        canActivate: [permissionGuard],
+        data: {
+          permission: '/estado-cuenta',
+          action: 'view'
         }
       },
 

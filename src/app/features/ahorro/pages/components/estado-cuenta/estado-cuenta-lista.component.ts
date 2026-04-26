@@ -2,20 +2,20 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, forkJoin, Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Breadcrumb } from '../../../../../shared/components/breadcrumb/breadcrumb';
 import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
 import { NotificationService } from '../../../../../core/services/notification.service';
-import { EstadoCuentaListaService } from '../../../services/estado.cuenta.service';
+import { EstadoCuentaService } from '../../../services/estado.cuenta.service';
+import { SocioAlerts } from '../../../../../shared/interfaces/alert.model';
 
 
 interface CuentaSocio {
     corriente: boolean;
     navidena: boolean;
 }
-
 interface EstadoCuentaSocioRow {
     id: string;
     codigoSocio: string;
@@ -23,6 +23,7 @@ interface EstadoCuentaSocioRow {
     cuentas: CuentaSocio;
     fechaIngreso?: string | null;
     estado: string;
+    alerts: SocioAlerts;
 }
 
 interface ActionItem {
@@ -46,7 +47,7 @@ interface ActionItem {
     styleUrls: ['./estado-cuenta-lista.component.scss']
 })
 export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
-    private readonly service = inject(EstadoCuentaListaService);
+    private readonly service = inject(EstadoCuentaService);
     private readonly notify = inject(NotificationService);
     private readonly router = inject(Router);
     private readonly translate = inject(TranslateService);
@@ -143,9 +144,33 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
     }
 
     selectSocio(item: EstadoCuentaSocioRow): void {
+        if (item.alerts?.count > 0) {
+            const type =
+                item.alerts.highestSeverity === 'danger'
+                    ? 'error'
+                    : item.alerts.highestSeverity === 'warning'
+                        ? 'warning'
+                        : 'info';
+
+            const observables = item.alerts.items.map(alert =>
+                this.translate.get(alert.messageKey, alert.params ?? {})
+            );
+
+            this.translate.get('alerts.common.title').subscribe(title => {
+                if (observables.length === 0) {
+                    this.notify.show('', title, type);
+                    return;
+                }
+
+                forkJoin(observables).subscribe(messages => {
+                    this.notify.show(messages.join('\n'), title, type);
+                });
+            });
+        }
+
+
         this.selectedSocio = item;
     }
-
     onSearchInputChange(): void {
         clearTimeout(this.searchTimeout);
 
@@ -192,7 +217,11 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
         }
 
         if (action.titleKey === 'estadoCuentaLista.actions.accountStatement') {
-            this.router.navigate(['/ahorros', this.selectedSocio.id, 'estado-cuenta']);
+            this.router.navigate([
+                '/estado-cuenta',
+                this.selectedSocio.id,
+                'detalle'
+            ]);
         }
     }
 
@@ -290,9 +319,18 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
             nombreCompleto: item?.nombreCompleto ?? '',
             fechaIngreso: item?.fechaIngreso ?? null,
             estado: item?.estado ?? 'Inactivo',
+
             cuentas: {
                 corriente: !!item?.cuentas?.corriente,
                 navidena: !!item?.cuentas?.navidena
+            },
+
+            alerts: item?.alerts ?? {
+                count: 0,
+                hasAlerts: false,
+                isExpired: false,
+                highestSeverity: 'info',
+                items: []
             }
         };
     }

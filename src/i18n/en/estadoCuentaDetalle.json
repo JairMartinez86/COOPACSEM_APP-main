@@ -1,0 +1,90 @@
+{
+  "estadoCuentaDetalle": {
+    "title": "Account Statement",
+    "loading": "Loading information...",
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Savings",
+        "url": "/estado-cuenta-lista"
+      },
+      {
+        "label": "Account Statement"
+      }
+    ],
+    "info": {
+      "identification": "Identification",
+      "entryDate": "Cooperative Entry Date",
+      "firstDeduction": "First Deduction Request",
+      "monthlySalary": "Monthly Salary",
+      "savingPercent": "Saving Percentage",
+      "installment": "Biweekly Installment",
+      "installmentTotal": "Total biweekly installment (Current + Christmas)"
+    },
+    "summary": {
+      "totalSaved": "Total Saved",
+      "totalWithdrawn": "Total Withdrawn",
+      "currentBalance": "Current Balance",
+      "installments": "INSTALLMENTS",
+      "withdrawals": "WITHDRAWALS"
+    },
+    "accountSelector": {
+      "title": "Select saving type"
+    },
+    "accounts": {
+      "currentSaving": "Current Savings",
+      "christmasSaving": "Christmas Savings",
+      "consolidatedSaving": "Consolidated Savings",
+      "current": "CURRENT ACCOUNT",
+      "christmas": "CHRISTMAS ACCOUNT",
+      "current2": "Current",
+      "christmas2": "Christmas"
+    },
+    "report": {
+      "title": "How do you want to generate the report?",
+      "subtitle": "Choose the period to view or download the account statement.",
+      "accumulated": "Accumulated (cutoff)",
+      "accumulatedText": "Shows the full transaction history up to the selected date.",
+      "byRange": "By date range",
+      "byRangeText": "Shows transactions within the selected date range.",
+      "byMonth": "By month",
+      "byMonthText": "Shows transactions for the selected month.",
+      "byYear": "By year",
+      "byYearText": "Shows transactions for the selected year.",
+      "cutoffDate": "Cutoff date",
+      "from": "From date",
+      "to": "To date",
+      "month": "Month",
+      "year": "Year",
+      "accumulatedAt": "Accumulated as of"
+    },
+    "movements": {
+      "title": "Transaction details",
+      "date": "DATE",
+      "concept": "CONCEPT",
+      "debit": "DEBIT",
+      "credit": "CREDIT",
+      "balance": "BALANCE",
+      "initialBalance": "INITIAL BALANCE",
+      "empty": "No transactions were found for the selected savings type.",
+      "note": "Displayed balances correspond to the selected cutoff date.",
+      "accountType": "Account type"
+    },
+    "pagination": {
+      "showing": "Mostrando",
+      "of": "de",
+      "records": "registros"
+    },
+    "actions": {
+      "generateReport": "Generate report",
+      "export": "Export",
+      "refresh": "Refresh data"
+    },
+    "messages": {
+      "invalidSocio": "Invalid member"
+    }
+  }
+}

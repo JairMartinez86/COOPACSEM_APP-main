@@ -20,6 +20,7 @@ import { PermissionService } from '../../../../core/services/permission.service'
 import { AppConfigService } from '../../../../core/services/app-config.service';
 import { SocioAlerts } from '../../../../shared/interfaces/alert.model';
 import { ActionItem } from '../../../ahorro/interface/ahorro.models';
+import { FormsModule } from '@angular/forms';
 
 interface SocioMovimientoRow {
   fecha?: string | null;
@@ -62,6 +63,7 @@ interface SocioRow {
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     TranslateModule,
     Breadcrumb,
     AppPermissionDirective
@@ -99,8 +101,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
     aprobacionesPendientes: 0
   };
 
-  currentPage = 1;
-  pageSize = 20;
+      currentPage = 1;
+    pageSize = 20;
   readonly pageSizeOptions = [10, 20, 50, 100];
 
 
@@ -389,13 +391,18 @@ export class SociosListComponent implements OnInit, OnDestroy {
     this.currentPage = page;
     this.loadData();
   }
+  changePageSize(value: number | string): void {
+        const size = Number(value);
 
-  changePageSize(event: Event): void {
-    const size = Number((event.target as HTMLSelectElement).value || 20);
-    this.pageSize = size;
-    this.currentPage = 1;
-    this.loadData();
-  }
+        if (!size || size === this.pageSize) {
+            return;
+        }
+
+        this.pageSize = size;
+        this.currentPage = 1;
+        this.loadData();
+    }
+
 
   formatDate(value?: string | null): string {
     if (!value) {
