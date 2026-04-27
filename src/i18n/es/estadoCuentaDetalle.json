@@ -15,6 +15,10 @@
         "label": "Estado de cuenta"
       }
     ],
+    "exportModal": {
+      "title": "Seleccionar formato",
+      "selectFormat": "Seleccione el formato:"
+    },
     "info": {
       "identification": "Identificación",
       "entryDate": "Ingreso a la cooperativa",
@@ -82,7 +86,8 @@
     "actions": {
       "generateReport": "Generar reporte",
       "export": "Exportar",
-      "refresh": "Actualizar datos"
+      "refresh": "Actualizar datos",
+      "cancel" : "Cancelar" 
     },
     "messages": {
       "invalidSocio": "El socio no es válido"

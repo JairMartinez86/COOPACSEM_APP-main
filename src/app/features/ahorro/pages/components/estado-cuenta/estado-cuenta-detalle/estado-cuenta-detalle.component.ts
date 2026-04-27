@@ -35,6 +35,7 @@ interface EstadoCuentaResumen {
   saldoActual: number;
   totalCuotas: number;
   totalRetiros: number;
+  porcentajeAhorro: number;
 }
 
 interface EstadoCuentaMovimiento {
@@ -86,12 +87,16 @@ export class EstadoCuentaDetalleComponent implements OnInit, OnDestroy {
     totalRetirado: 0,
     saldoActual: 0,
     totalCuotas: 0,
-    totalRetiros: 0
+    totalRetiros: 0,
+    porcentajeAhorro: 0
   };
 
   movimientos: EstadoCuentaMovimiento[] = [];
 
   fechaServidor: Date = new Date();
+  modalExportacionOpen = false;
+  pdf: any;
+  excel: any;
 
   fechaCorte = '';
   fechaDesde = '';
@@ -196,16 +201,20 @@ export class EstadoCuentaDetalleComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: (res: any) => {
-          const data = res?.data ?? {};
+          const data = res?.data.data ?? {};
+
 
           this.socio = data?.socio ?? null;
+          this.pdf = res?.data?.pdf;
+          this.excel = res?.data?.excel;
 
           this.resumen = {
             totalAhorrado: Number(data?.resumen?.totalAhorrado ?? 0),
             totalRetirado: Number(data?.resumen?.totalRetirado ?? 0),
             saldoActual: Number(data?.resumen?.saldoActual ?? 0),
             totalCuotas: Number(data?.resumen?.totalCuotas ?? 0),
-            totalRetiros: Number(data?.resumen?.totalRetiros ?? 0)
+            totalRetiros: Number(data?.resumen?.totalRetiros ?? 0),
+            porcentajeAhorro: Number(data?.resumen?.totalRetiros ?? 0),
           };
 
           this.mostrarSaldoInicial = !!data?.mostrarSaldoInicial;
@@ -215,17 +224,28 @@ export class EstadoCuentaDetalleComponent implements OnInit, OnDestroy {
           }
 
           this.movimientos = Array.isArray(data?.movimientos)
-            ? data.movimientos.map((x: any) => ({
-              id: x?.id ?? '',
-              fecha: x?.fecha ?? null,
-              tipoCuenta: x?.tipoCuenta ?? 'Consolidado',
-              tipoMovimiento: x?.tipoMovimiento ?? '',
-              concepto: x?.concepto ?? '',
-              documento: x?.documento ?? null,
-              debito: Number(x?.debito ?? 0),
-              credito: Number(x?.credito ?? 0),
-              saldo: Number(x?.saldo ?? 0)
-            }))
+            ? data.movimientos
+              .map((x: any) => ({
+                id: x?.id ?? '',
+                fecha: x?.fecha ?? null,
+                tipoCuenta: x?.tipoCuenta ?? 'Consolidado',
+                tipoMovimiento: x?.tipoMovimiento ?? '',
+                concepto: x?.concepto ?? '',
+                documento: x?.documento ?? null,
+                debito: Number(x?.debito ?? 0),
+                credito: Number(x?.credito ?? 0),
+                saldo: Number(x?.saldo ?? 0)
+              }))
+              .sort((a: EstadoCuentaMovimiento, b: EstadoCuentaMovimiento) => {
+                const fechaA = new Date(a.fecha ?? '').getTime() || 0;
+                const fechaB = new Date(b.fecha ?? '').getTime() || 0;
+
+                if (fechaA !== fechaB) {
+                  return fechaB - fechaA; // fecha descendente
+                }
+
+                return Number(b.saldo ?? 0) - Number(a.saldo ?? 0); // saldo descendente
+              })
             : [];
 
           this.movPage = 1;
@@ -281,23 +301,20 @@ export class EstadoCuentaDetalleComponent implements OnInit, OnDestroy {
     this.breadcrumbs = this.translate.instant('estadoCuentaDetalle.breadcrumbs') || [];
   }
 
-seleccionarTipoCuenta(tipo: TipoCuentaSeleccionada): void {
-  this.tipoCuentaSeleccionada = tipo;
-  this.movPage = 1;
-  this.loadData(true);
-}
+  seleccionarTipoCuenta(tipo: TipoCuentaSeleccionada): void {
+    this.tipoCuentaSeleccionada = tipo;
+    this.movPage = 1;
+    this.loadData(true);
+  }
   aplicarFiltros(): void {
     this.movPage = 1;
     this.loadData(true);
   }
 
-  generarReporte(): void {
-    this.aplicarFiltros();
-  }
 
-get movimientosFiltrados(): EstadoCuentaMovimiento[] {
-  return this.movimientos;
-}
+  get movimientosFiltrados(): EstadoCuentaMovimiento[] {
+    return this.movimientos;
+  }
 
   get movimientosPaginados(): EstadoCuentaMovimiento[] {
     const start = (this.movPage - 1) * this.movPageSize;
@@ -375,12 +392,15 @@ get movimientosFiltrados(): EstadoCuentaMovimiento[] {
       ? Number(movimientos[0]?.saldo ?? 0)
       : totalAhorrado - totalRetirado;
 
+    const porcentajeAhorro = this.resumen?.porcentajeAhorro ?? 0;
+
     return {
       totalAhorrado,
       totalRetirado,
       saldoActual: saldoFinal,
       totalCuotas: movimientos.filter(x => Number(x.credito ?? 0) > 0).length,
-      totalRetiros: movimientos.filter(x => Number(x.debito ?? 0) > 0).length
+      totalRetiros: movimientos.filter(x => Number(x.debito ?? 0) > 0).length,
+      porcentajeAhorro
     };
   }
 
@@ -476,4 +496,140 @@ get movimientosFiltrados(): EstadoCuentaMovimiento[] {
 
     return this.translate.instant('estadoCuentaDetalle.accounts.consolidatedSaving');
   }
+
+
+  abrirModalExportacion(): void {
+    this.modalExportacionOpen = true;
+  }
+
+  cerrarModalExportacion(): void {
+    this.modalExportacionOpen = false;
+  }
+
+
+
+
+  exportarComoPdf(): void {
+    this.descargarPdfBase64(
+      this.pdf,
+      this.buildPrintFileName(this.translate.instant('fichaSocio.fileNames.affiliationLetter'))
+    );
+  }
+
+  exportarComoExcel(): void {
+
+    this.descargarExcelBase64(
+      this.excel,
+      this.buildPrintFileName(this.translate.instant('fichaSocio.fileNames.memberRecord'))
+    );
+  }
+
+
+  private buildPrintFileName(tipo: string): string {
+    const codigo = (this.socio?.codigoSocio || 'SIN-CODIGO').trim();
+
+    const nombre = (this.socio?.nombreCompleto || 'SOCIO')
+      .trim()
+      .replace(/[\\/:*?"<>|]/g, '');
+
+
+    return `${this.appConfig.getCurrentSettings().companyName} - ESTADO_DE_CUENTA_AHORROS_${codigo} - ${nombre}`;
+  }
+
+
+  private descargarExcelBase64(base64: string | null | undefined, fileName: string): void {
+    if (!base64) return;
+
+    const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
+    const byteCharacters = atob(cleanBase64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    const blob = new Blob([byteArray], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileName}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    window.URL.revokeObjectURL(url);
+  }
+
+  private descargarPdfBase64(base64: string | null | undefined, fileName: string): void {
+    if (!base64) return;
+
+    const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
+    const byteCharacters = atob(cleanBase64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    const blob = new Blob([byteArray], {
+      type: 'application/pdf'
+    });
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileName}.pdf`;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    window.URL.revokeObjectURL(url);
+  }
+
+
+
+  imprimirPdfFicha(): void {
+    const base64 = this.pdf;
+    if (!base64) return;
+
+    this.openBase64PdfForPrint(base64);
+  }
+
+
+  private openBase64PdfForPrint(base64: string): void {
+    const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
+    const byteCharacters = atob(cleanBase64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const win = window.open(url, '_blank');
+
+    if (!win) return;
+
+    win.onload = () => {
+      win.focus();
+      win.print();
+    };
+  }
+
+
+
+
 }

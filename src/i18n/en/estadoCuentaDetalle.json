@@ -15,6 +15,10 @@
         "label": "Account Statement"
       }
     ],
+    "exportModal": {
+      "title": "Select format",
+      "selectFormat": "Select the format:"
+    },
     "info": {
       "identification": "Identification",
       "entryDate": "Cooperative Entry Date",
@@ -81,7 +85,8 @@
     "actions": {
       "generateReport": "Generate report",
       "export": "Export",
-      "refresh": "Refresh data"
+      "refresh": "Refresh data",
+      "cancel": "Cancel"
     },
     "messages": {
       "invalidSocio": "Invalid member"

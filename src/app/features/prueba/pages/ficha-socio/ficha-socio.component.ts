@@ -266,7 +266,7 @@ export class FichaSocioComponent implements OnInit {
       .trim()
       .replace(/[\\/:*?"<>|]/g, '');
 
-    return `COOPACSEM - ${tipo} - ${codigo} - ${nombre}`;
+    return `${this.appConfigService.getCurrentSettings().companyName} - ${tipo} - ${codigo} - ${nombre}`;
   }
 
   exportarComoPdf(): void {

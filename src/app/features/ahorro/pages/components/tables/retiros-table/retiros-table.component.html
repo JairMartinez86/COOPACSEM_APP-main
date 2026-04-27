@@ -32,8 +32,9 @@
                     @for (row of pagedRows; track $index) {
                     <tr>
                         <td>{{ row.fechaRegistro }}</td>
+                        <td>{{ row.descripcion }}</td>
                         <!--<td>{{ row.fecha }}</td>-->
-                        <td>
+                        <!--<td>
                             <div class="fw-semibold">
                                 {{
                                     row.descripcion === 'Retiro ExtOrd'
@@ -43,7 +44,7 @@
                                     : row.descripcion
                                 }}
                             </div>
-                        </td>
+                        </td>-->
                         <td>
                             <span class="badge"
                                 [ngClass]="row.tipoCuenta === 'Corriente' ? 'badge-soft-success' : 'badge-soft-warning'">

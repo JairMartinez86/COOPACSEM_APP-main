@@ -87,7 +87,7 @@
                 </div>
                 <div>
                   <div class="fw-semibold">{{ 'estadoCuentaDetalle.info.savingPercent' | translate }}</div>
-                  <div class="text-muted">- %</div>
+                 {{ resumen.porcentajeAhorro | number:'1.2-2' }} %
                 </div>
               </div>
 
@@ -358,7 +358,7 @@
         {{ 'estadoCuentaDetalle.actions.refresh' | translate }}
       </button>
 
-      <button type="button" class="btn btn-success" (click)="generarReporte()">
+      <button type="button" class="btn btn-success" (click)="imprimirPdfFicha()">
         <i class="fa-regular fa-file-lines me-1"></i>
         {{ 'estadoCuentaDetalle.actions.generateReport' | translate }}
       </button>
@@ -372,7 +372,7 @@
           {{ tituloDetalleMovimientos }}
         </h5>
 
-        <button type="button" class="btn btn-light">
+        <button type="button" class="btn btn-light" (click)="abrirModalExportacion()">
           <i class="fa-solid fa-download me-1"></i>
           {{ 'estadoCuentaDetalle.actions.export' | translate }}
         </button>
@@ -510,3 +510,41 @@
 
   </div>
 </section>
+
+@if (modalExportacionOpen) {
+<div class="modal fade show d-block" tabindex="-1" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{ 'estadoCuentaDetalle.exportModal.title' | translate }}</h5>
+        <button type="button" class="btn-close" (click)="cerrarModalExportacion()"></button>
+      </div>
+
+      <div class="modal-body">
+       
+        <p class="mb-2">{{ 'estadoCuentaDetalle.exportModal.selectFormat' | translate }}</p>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-danger" [disabled]="!tipoReporte" (click)="exportarComoPdf()">
+            PDF
+          </button>
+
+          <button class="btn btn-success" [disabled]="!tipoReporte" (click)="exportarComoExcel()">
+            Excel
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-light" (click)="cerrarModalExportacion()">
+          {{ 'estadoCuentaDetalle.actions.cancel' | translate }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show"></div>
+}
