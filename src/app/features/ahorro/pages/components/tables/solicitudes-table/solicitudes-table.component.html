@@ -24,7 +24,7 @@
                         <th>{{ 'ahorro.tables.common.accountType' | translate }}</th>
                         <th>{{ 'ahorro.tables.common.status' | translate }}</th>
                         <th class="text-end">{{ 'ahorro.tables.common.amount' | translate }}</th>
-                        <th class="text-center">
+                        <th>
                             {{ 'ahorro.tables.common.acction' | translate }}
                         </th>
                     </tr>
@@ -82,20 +82,28 @@
                         </td>
 
                         <!-- 🔥 BOTÓN -->
+
+
                         <td class="text-center">
-                            <button type="button" class="btn btn-sm btn-outline-primary me-3" (click)="verSolicitud(row)"
-                                [attr.title]="'socioRetiro.actions.view' | translate"
-                                [permissionRoute]="['/ahorro']" [appPermission]="['view']">
 
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
 
-                            <button type="button" class="btn btn-sm btn-outline-warning" (click)="editarSolicitud(row)"
-                                [attr.title]="'socioRetiro.actions.edit' | translate"
-                                [permissionRoute]="['/ahorro']" [appPermission]="['create']">
 
-                                <i class="bi bi-pencil"></i>
-                            </button>
+                            <div class="table-actions" (click)="$event.stopPropagation()">
+                                <button type="button" class="btn btn-icon btn-sm btn-light" (click)="verSolicitud(row)"
+                                    [permissionRoute]="['/ahorro']" [appPermission]="['view']">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-icon btn-sm btn-light"
+                                    (click)="editarSolicitud(row)" [permissionRoute]="['/ahorro']"
+                                    [appPermission]="['edit']">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+
+                            </div>
+
+
+
                         </td>
                     </tr>
                     }

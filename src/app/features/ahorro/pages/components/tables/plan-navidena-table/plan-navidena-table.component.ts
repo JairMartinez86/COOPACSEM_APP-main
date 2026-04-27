@@ -5,13 +5,13 @@ import { AppConfigService } from '../../../../../../core/services/app-config.ser
 import { PlanRow } from '../../../../interface/ahorro.models';
 
 @Component({
-  selector: 'app-planes-table',
+  selector: 'app-navidena-table',
   standalone: true,
   imports: [CommonModule, TranslateModule],
-  templateUrl: './planes-table.component.html',
-  styleUrl: './planes-table.component.scss'
+  templateUrl: './plan-navidena-table.component.html',
+  styleUrl: './plan-navidena-table.component.scss'
 })
-export class PlanesTableComponent {
+export class PlanNavidenaComponent {
   private readonly appConfigService = inject(AppConfigService);
 
   @Input() rows: PlanRow[] = [];

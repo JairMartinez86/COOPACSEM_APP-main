@@ -9,9 +9,9 @@ import {
   inject
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 
 import { TableFilterService } from '../../../core/services/table-filter.service';
 import { AuthService } from '../../../core/auth/services/auth.service';
@@ -27,6 +27,7 @@ import { SIDEBAR_DATA, SidebarItem, SidebarPermissions } from './sidebar.config'
 export class Sidebar implements OnInit, OnDestroy {
   private filterSvc = inject(TableFilterService);
   private auth = inject(AuthService);
+  private router = inject(Router);
 
   private subs = new Subscription();
 
@@ -39,11 +40,22 @@ export class Sidebar implements OnInit, OnDestroy {
 
   private permissionsMap: Record<string, SidebarPermissions> = {};
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const raw = localStorage.getItem('user');
+
+
+      this.subs.add(
+        this.router.events
+          .pipe(filter(event => event instanceof NavigationEnd))
+          .subscribe(() => {
+            this.requestClose.emit();
+          })
+      );
+
+
 
       if (raw) {
         try {

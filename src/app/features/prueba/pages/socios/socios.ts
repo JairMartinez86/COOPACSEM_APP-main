@@ -628,8 +628,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
           );
 
 
-          console.log(socioApi.bloquearAhorroNavidena)
-
 
 
 
@@ -1139,7 +1137,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.syncAfiliacionConfigValues();
+
 
     this.engine.patchValues?.({
       ...this.socio,
@@ -2020,33 +2018,36 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   private syncAfiliacionConfigValues(): void {
-    const settings = this.appConfigService.getCurrentSettings();
+  const settings = this.appConfigService.getCurrentSettings();
 
+  const afiliacionMonto = Number(settings?.afiliacion?.total ?? 0);
+  const afiliacionCuentaMax = Number(settings?.afiliacion?.cuotaMax ?? 0);
 
-    const afiliacionMonto = Number(settings?.afiliacion?.total ?? 0);
-    const afiliacionCuentaMax = Number(settings?.afiliacion?.cuotaMax ?? 0);
+  const membresiaMonto = Number(settings?.membresia?.total ?? 0);
+  const membresiaCuentaMax = Number(settings?.membresia?.cuotaMax ?? 0);
 
-    const membresiaMonto = Number(settings?.membresia?.total ?? 0);
-    const membresiaCuentaMax = Number(settings?.membresia?.cuotaMax ?? 0);
-
+  // Solo usa la configuración actual cuando estás creando
+  if (this.mode === 'create') {
     this.socio.afiliacionCostoTotal = afiliacionMonto;
     this.socio.membresiaCostoTotal = membresiaMonto;
 
     this.copy.afiliacionCostoTotal = afiliacionMonto;
     this.copy.membresiaCostoTotal = membresiaMonto;
-
-    this.afiliacionCuotasOptions = Array.from(
-      { length: afiliacionCuentaMax },
-      (_, i) => i + 1
-    );
-
-    this.membresiaCuotasOptions = Array.from(
-      { length: membresiaCuentaMax },
-      (_, i) => i + 1
-    );
-
-    this.patchEngineFromSocio();
   }
+
+  this.afiliacionCuotasOptions = Array.from(
+    { length: afiliacionCuentaMax },
+    (_, i) => i + 1
+  );
+
+  this.membresiaCuotasOptions = Array.from(
+    { length: membresiaCuentaMax },
+    (_, i) => i + 1
+  );
+
+  this.patchEngineFromSocio();
+}
+
 
   private normalizeEmpty(value: any): any {
     return value === '' ? null : value;

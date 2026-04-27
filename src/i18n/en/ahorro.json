@@ -91,7 +91,8 @@
       "installmentChanges": "Installment changes",
       "requests": "Requests",
       "membership": "Membership",
-      "plans": "Plans"
+      "currentPlan": "Current Plan",
+  "christmasPlan": "Christmas Plan"
     },
     "detail": {
       "totalSaved": "Total savings",

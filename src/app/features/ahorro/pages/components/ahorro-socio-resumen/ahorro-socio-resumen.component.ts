@@ -6,11 +6,12 @@ import { AhorrosTableComponent } from '../tables/ahorros-table/ahorros-table.com
 import { RetirosTableComponent } from '../tables/retiros-table/retiros-table.component';
 import { DepositosTableComponent } from '../tables/depositos-table/depositos-table.component';
 import { SolicitudesTableComponent } from '../tables/solicitudes-table/solicitudes-table.component';
-import { PlanesTableComponent } from '../tables/planes-table/planes-table.component';
 import { AppConfigService } from '../../../../../core/services/app-config.service';
 import { AfiliacionMembresiaRow, CambioCuotaRow, PlanRow, SimpleMovimientoRow, SocioDetail, SocioDetalleTab } from '../../../interface/ahorro.models';
 import { AfiliacionTableComponent } from "../tables/afiliacion-table/afiliacion-table.component";
 import { CambiosCuotaTableComponent } from '../cambios-cuota-table/cambios-cuota-table.component';
+import { PlanNavidenaComponent } from "../tables/plan-navidena-table/plan-navidena-table.component";
+import { PlanCorrienteComponent } from "../tables/plan-corriente-table/plan-corriente-table.component";
 
 
 @Component({
@@ -24,9 +25,10 @@ import { CambiosCuotaTableComponent } from '../cambios-cuota-table/cambios-cuota
     DepositosTableComponent,
     CambiosCuotaTableComponent,
     SolicitudesTableComponent,
-    PlanesTableComponent,
-    AfiliacionTableComponent
-  ],
+    AfiliacionTableComponent,
+    PlanNavidenaComponent,
+    PlanCorrienteComponent
+],
   templateUrl: './ahorro-socio-resumen.component.html',
   styleUrl: './ahorro-socio-resumen.component.scss',
 })

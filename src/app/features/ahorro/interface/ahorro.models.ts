@@ -6,7 +6,9 @@ export type SocioDetalleTab =
   | 'cambiosCuota'
   | 'solicitudes'
   | 'afiliacion'
-  | 'planes';
+  | 'planCorriente'
+  | 'planNavidena';
+  
 
 export interface SummaryCard {
   icon: string;

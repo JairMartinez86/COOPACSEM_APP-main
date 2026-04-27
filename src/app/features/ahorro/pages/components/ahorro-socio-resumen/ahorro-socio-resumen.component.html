@@ -152,11 +152,19 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" [class.active]="detailTab === 'planes'" href="javascript:void(0)"
-          (click)="setDetailTab('planes')">
-          {{ 'ahorro.tabs.plans' | translate }}
+        <a class="nav-link" [class.active]="detailTab === 'planCorriente'" href="javascript:void(0)"
+          (click)="setDetailTab('planCorriente')">
+          {{ 'ahorro.tabs.currentPlan' | translate }}
         </a>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="detailTab === 'planNavidena'" href="javascript:void(0)"
+          (click)="setDetailTab('planNavidena')">
+          {{ 'ahorro.tabs.christmasPlan' | translate }}
+        </a>
+      </li>
+
     </ul>
 
     <div class="tab-content">
@@ -186,9 +194,16 @@
         <app-afiliacion-table [rows]="afiliacionMembresiaRows"></app-afiliacion-table>
       </div>
 
-      <div class="tab-pane fade" [class.show]="detailTab === 'planes'" [class.active]="detailTab === 'planes'">
-        <app-planes-table [rows]="planesRows"></app-planes-table>
+      <div class="tab-pane fade" [class.show]="detailTab === 'planCorriente'"
+        [class.active]="detailTab === 'planCorriente'">
+        <app-corriente-table [rows]="planesRows"></app-corriente-table>
       </div>
+
+      <div class="tab-pane fade" [class.show]="detailTab === 'planNavidena'"
+        [class.active]="detailTab === 'planNavidena'">
+        <app-navidena-table [rows]="planesRows"></app-navidena-table>
+      </div>
+
     </div>
   </div>
   } @else {

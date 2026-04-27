@@ -92,7 +92,8 @@
       "installmentChanges": "Cambios de cuota",
       "requests": "Solicitudes",
       "membership": "Afiliación",
-      "plans": "Planes"
+      "currentPlan": "Plan Corriente",
+  "christmasPlan": "Plan Navideña"
     },
     "detail": {
       "totalSaved": "Total ahorro",

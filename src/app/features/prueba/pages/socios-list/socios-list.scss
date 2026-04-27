@@ -1,8 +1,8 @@
 :host {
   display: block;
-  height: 90vh;
   min-width: 0;
-  overflow: hidden;
+  height: auto;
+  overflow: visible;
 }
 
 /* =========================
@@ -10,15 +10,14 @@
 ========================= */
 
 .section {
-  height: 100%;
-  overflow: hidden;
+  height: auto;
+  overflow: visible;
 }
 
 .page-dashboard-finance {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  height: auto;
+  display: block;
+  overflow: visible;
 }
 
 /* =========================
@@ -26,7 +25,7 @@
 ========================= */
 
 .page-header {
-  flex: 0 0 auto;
+  margin-bottom: 0.75rem;
 }
 
 /* =========================
@@ -35,46 +34,17 @@
 
 .two-column-layout,
 .socios-layout {
-  flex: 1 1 0;
-  min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 500px;
   gap: 1rem;
-  align-items: stretch;
+  align-items: start;
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .two-column-layout > div,
 .socios-layout > div {
   min-width: 0;
-  min-height: 0;
-}
-
-@media (max-width: 1400px) {
-  .two-column-layout,
-  .socios-layout {
-    grid-template-columns: minmax(0, 1fr) 380px;
-  }
-}
-
-@media (max-width: 1200px) {
-  :host {
-    height: auto;
-    overflow: visible;
-  }
-
-  .section,
-  .page-dashboard-finance {
-    height: auto;
-    overflow: visible;
-  }
-
-  .two-column-layout,
-  .socios-layout {
-    grid-template-columns: 1fr;
-    overflow: visible;
-  }
 }
 
 /* =========================
@@ -94,23 +64,14 @@
 ========================= */
 
 .socios-main-card {
-  height: 100%;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.socios-main-card > .card-header {
-  flex: 0 0 auto;
+  height: auto;
+  display: block;
+  overflow: visible;
 }
 
 .socios-main-card-body {
-  flex: 1 1 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  display: block;
+  overflow: visible;
 }
 
 /* =========================
@@ -118,12 +79,11 @@
 ========================= */
 
 .socios-table-scroll {
-  flex: 1 1 0;
-  min-height: 0;
   width: 100%;
   max-width: 100%;
-  overflow-y: auto;
+  max-height: none;
   overflow-x: auto;
+  overflow-y: visible;
   scrollbar-width: thin;
 }
 
@@ -176,16 +136,18 @@
 }
 
 /* =========================
-   PAGINACIÓN FIJA
+   PAGINACIÓN FIJA ABAJO
 ========================= */
 
 .socios-pagination {
-  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
   min-height: 52px;
   padding: 12px;
   background: var(--bs-card-bg);
   border-top: 1px solid rgba(0, 0, 0, 0.05);
-  z-index: 4;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
 }
 
 /* =========================
@@ -223,14 +185,13 @@
 ========================= */
 
 .socios-side-column {
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
+  height: auto;
+  overflow: visible;
 }
 
 .socios-side-column > .d-flex {
-  min-height: 0;
-  overflow: hidden;
+  height: auto !important;
+  overflow: visible;
 }
 
 /* =========================
@@ -285,16 +246,19 @@
   min-height: 42px;
   border-radius: 8px;
   border: 1px solid transparent;
+
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
+
   padding: 8px 12px;
   font-weight: 600;
   font-size: 13px;
   line-height: 1.2;
   text-align: left;
+
   background: var(--bs-tertiary-bg);
   color: var(--bs-body-color);
   transition: all 0.2s ease;
@@ -386,28 +350,18 @@
 ========================= */
 
 .socios-movements-card {
-  flex: 1 1 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.socios-movements-card > .card-header {
-  flex: 0 0 auto;
+  height: auto;
+  display: block;
+  overflow: visible;
 }
 
 .socios-movements-body {
-  flex: 1 1 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  display: block;
+  overflow: visible;
 }
 
 .socios-movements-scroll {
-  flex: 1 1 0;
-  min-height: 0;
+  max-height: 360px;
   overflow-y: auto;
   overflow-x: auto;
   scrollbar-width: thin;
@@ -553,7 +507,19 @@
    RESPONSIVE
 ========================= */
 
+@media (max-width: 1400px) {
+  .two-column-layout,
+  .socios-layout {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+}
+
 @media (max-width: 1200px) {
+  .two-column-layout,
+  .socios-layout {
+    grid-template-columns: 1fr;
+  }
+
   .dashboard-grid-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -562,25 +528,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .socios-main-card {
-    height: auto;
-  }
-
-  .socios-main-card-body {
-    overflow: visible;
-  }
-
-  .socios-table-scroll {
-    max-height: 500px;
-    flex: none;
-  }
-
-  .socios-side-column {
-    height: auto;
-    overflow: visible;
-  }
-
-  .socios-movements-card {
+  .socios-movements-scroll {
     max-height: 360px;
   }
 }
