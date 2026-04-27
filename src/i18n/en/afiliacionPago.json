@@ -37,7 +37,8 @@
       }
     },
     "summary": {
-      "availability": "Summary"
+      "availability": "Summary",
+      "activeCredit": "Active credit"
     },
     "actions": {
       "save": "Save",

@@ -37,7 +37,8 @@
       }
     },
     "summary": {
-      "availability": "Resumen"
+      "availability": "Resumen",
+      "activeCredit": "Crédito activo"
     },
     "actions": {
       "save": "Guardar",
