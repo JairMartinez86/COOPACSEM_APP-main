@@ -2,18 +2,23 @@
   "estadoCuentaLista": {
     "title": "Account statement by member",
     "subtitle": "View available members to generate their account statement.",
-
     "breadcrumbs": [
-      { "label": "Home", "url": "/" },
-      { "label": "Savings", "url": "" },
-      { "label": "Account statement" }
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Savings",
+        "url": ""
+      },
+      {
+        "label": "Account statement"
+      }
     ],
-
     "table": {
       "title": "Member list",
       "subtitle": "Select a member to view the account statement."
     },
-
     "columns": {
       "code": "Code",
       "member": "Member",
@@ -21,21 +26,52 @@
       "entryDate": "Entry date",
       "status": "Status"
     },
-
+    "reports": {
+      "saldosAhorroActual": {
+        "title": "Current Savings Balances",
+        "subtitle": "View current savings balances"
+      },
+      "saldosHistoricosAhorro": {
+        "title": "Historical Savings Balances",
+        "subtitle": "Savings balance history"
+      },
+      "integracionAhorro": {
+        "title": "Savings Integration",
+        "subtitle": "Detailed savings integration"
+      },
+      "saldosAfiliacion": {
+        "title": "Membership Balances",
+        "subtitle": "View balances by membership"
+      },
+      "deduccionesAfiliacion": {
+        "title": "Membership Deductions",
+        "subtitle": "Details of applied deductions"
+      }
+    },
+       "exportModal": {
+      "title": "Process report",
+      "report": "Selected report",
+      "processing": "Processing report:",
+      "accountType": "Account type",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "status": "Status",
+      "selectAction": "Select an action:",
+      "print": "Print",
+      "fileNotAvailable": "The file is not available",
+      "notImplemented": "This report is not yet available"
+    },
     "accounts": {
       "current": "Current",
       "christmas": "Christmas"
     },
-
     "status": {
       "active": "Active",
       "inactive": "Inactive"
     },
-
     "actions": {
       "accountStatement": "Account statement"
     },
-
     "filters": {
       "searchPlaceholder": "Search member...",
       "accountType": "Account type",
@@ -43,21 +79,17 @@
       "all": "All",
       "clear": "Clear filters"
     },
-
     "side": {
       "quickActions": "Quick actions"
     },
-
     "messages": {
       "selectSocio": "You must select a member"
     },
-
     "pagination": {
       "showing": "Showing",
       "of": "of",
       "records": "records"
     },
-
     "loading": "Loading members...",
     "empty": "No members found."
   }

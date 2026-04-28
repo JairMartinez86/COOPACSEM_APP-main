@@ -2,18 +2,23 @@
   "estadoCuentaLista": {
     "title": "Estado de cuenta por socio",
     "subtitle": "Consulta los socios disponibles para generar su estado de cuenta.",
-
     "breadcrumbs": [
-      { "label": "Inicio", "url": "/" },
-      { "label": "Ahorro", "url": "" },
-      { "label": "Estado de cuenta" }
+      {
+        "label": "Inicio",
+        "url": "/"
+      },
+      {
+        "label": "Ahorro",
+        "url": ""
+      },
+      {
+        "label": "Estado de cuenta"
+      }
     ],
-
     "table": {
       "title": "Listado de socios",
       "subtitle": "Seleccione un socio para ver su estado de cuenta."
     },
-
     "columns": {
       "code": "Código",
       "member": "Socio",
@@ -21,21 +26,53 @@
       "entryDate": "Fecha ingreso",
       "status": "Estado"
     },
-
+    "reports": {
+      "saldosAhorroActual": {
+        "title": "Saldos Ahorro Actual",
+        "subtitle": "Consulta los saldos actuales de ahorro"
+      },
+       
+      "saldosHistoricosAhorro": {
+        "title": "Saldos Históricos Ahorro",
+        "subtitle": "Histórico de saldos de ahorro"
+      },
+      "integracionAhorro": {
+        "title": "Integración Ahorro",
+        "subtitle": "Detalle de integración de ahorros"
+      },
+      "saldosAfiliacion": {
+        "title": "Saldos Afiliación",
+        "subtitle": "Consulta de saldos por afiliación"
+      },
+      "deduccionesAfiliacion": {
+        "title": "Deducciones Afiliación",
+        "subtitle": "Detalle de deducciones aplicadas"
+      }
+    },
+   "exportModal": {
+      "title": "Procesar reporte",
+      "report": "Reporte seleccionado",
+      "processing": "Procesando reporte:",
+      "accountType": "Tipo de cuenta",
+      "startDate": "Fecha inicio",
+      "endDate": "Fecha fin",
+      "status": "Estado",
+      "selectAction": "Seleccione una acción:",
+      "print": "Imprimir",
+      "fileNotAvailable": "El archivo no está disponible",
+      "notImplemented": "Este reporte aún no está disponible"
+    },
     "accounts": {
       "current": "Corriente",
       "christmas": "Navideña"
     },
-
     "status": {
       "active": "Activo",
       "inactive": "Inactivo"
     },
-
     "actions": {
       "accountStatement": "Estado de cuenta"
     },
-
     "filters": {
       "searchPlaceholder": "Buscar socio...",
       "accountType": "Tipo de cuenta",
@@ -43,21 +80,17 @@
       "all": "Todos",
       "clear": "Limpiar filtros"
     },
-
     "side": {
       "quickActions": "Acciones rápidas"
     },
-
     "messages": {
       "selectSocio": "Debe seleccionar un socio"
     },
-
     "pagination": {
       "showing": "Mostrando",
       "of": "de",
       "records": "registros"
     },
-
     "loading": "Cargando socios...",
     "empty": "No se encontraron socios."
   }

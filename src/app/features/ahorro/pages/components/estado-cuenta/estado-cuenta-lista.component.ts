@@ -10,12 +10,14 @@ import { AppPermissionDirective } from '../../../../../core/services/app-permiss
 import { NotificationService } from '../../../../../core/services/notification.service';
 import { EstadoCuentaService } from '../../../services/estado.cuenta.service';
 import { SocioAlerts } from '../../../../../shared/interfaces/alert.model';
-
+import { AppConfigService } from '../../../../../core/services/app-config.service';
+import { JMartAutoFocusNextDirective } from '@JairMartinez86/jmartinez-validator';
 
 interface CuentaSocio {
     corriente: boolean;
     navidena: boolean;
 }
+
 interface EstadoCuentaSocioRow {
     id: string;
     codigoSocio: string;
@@ -41,7 +43,8 @@ interface ActionItem {
         FormsModule,
         TranslateModule,
         Breadcrumb,
-        AppPermissionDirective
+        AppPermissionDirective,
+        JMartAutoFocusNextDirective,
     ],
     templateUrl: './estado-cuenta-lista.component.html',
     styleUrls: ['./estado-cuenta-lista.component.scss']
@@ -51,6 +54,7 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
     private readonly notify = inject(NotificationService);
     private readonly router = inject(Router);
     private readonly translate = inject(TranslateService);
+    public readonly appConfig = inject(AppConfigService);
 
     private readonly subs = new Subscription();
     private searchTimeout: any;
@@ -59,6 +63,43 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
 
     socios: EstadoCuentaSocioRow[] = [];
     selectedSocio: EstadoCuentaSocioRow | null = null;
+
+    tipoCuentaReporte: 'Corriente' | 'Navidena' | '' = '';
+    reporteSeleccionado: any | null = null;
+    modalReporteOpen = false;
+    procesandoReporte = false;
+    fechaInicioReporte: string | null = null;
+    fechaFinReporte: string | null = null;
+    estadoReporte: '' | 'Activo' | 'Inactivo' = '';
+
+
+    reports: any[] = [
+        {
+            titleKey: 'estadoCuentaLista.reports.saldosAhorroActual.title',
+            subtitleKey: 'estadoCuentaLista.reports.saldosAhorroActual.subtitle',
+            type: 'saldosAhorroActual'
+        },
+        {
+            titleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.title',
+            subtitleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.subtitle',
+            type: 'saldosHistoricosAhorro'
+        },
+        {
+            titleKey: 'estadoCuentaLista.reports.integracionAhorro.title',
+            subtitleKey: 'estadoCuentaLista.reports.integracionAhorro.subtitle',
+            type: 'integracionAhorro'
+        },
+        {
+            titleKey: 'estadoCuentaLista.reports.saldosAfiliacion.title',
+            subtitleKey: 'estadoCuentaLista.reports.saldosAfiliacion.subtitle',
+            type: 'saldosAfiliacion'
+        },
+        {
+            titleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.title',
+            subtitleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.subtitle',
+            type: 'deduccionesAfiliacion'
+        }
+    ];
 
     loading = false;
 
@@ -168,9 +209,9 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
             });
         }
 
-
         this.selectedSocio = item;
     }
+
     onSearchInputChange(): void {
         clearTimeout(this.searchTimeout);
 
@@ -293,7 +334,6 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
         this.loadData();
     }
 
-
     formatDate(value?: string | null): string {
         if (!value) {
             return this.translate.instant('common.noDate');
@@ -310,6 +350,191 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
             month: 'short',
             day: '2-digit'
         });
+    }
+
+    abrirModalReporte(report: any): void {
+        this.reporteSeleccionado = report;
+        this.tipoCuentaReporte = 'Corriente';
+        this.modalReporteOpen = true;
+        this.procesandoReporte = false;
+    }
+
+    cerrarModalReporte(): void {
+        if (this.procesandoReporte) return;
+
+        this.modalReporteOpen = false;
+        this.reporteSeleccionado = null;
+        this.tipoCuentaReporte = '';
+    }
+
+    procesarReporte(accion: 'print' | 'pdf' | 'excel'): void {
+        if (!this.reporteSeleccionado || !this.tipoCuentaReporte) {
+            return;
+        }
+
+        switch (this.reporteSeleccionado.type) {
+            case 'saldosAhorroActual':
+                this.procesarSaldosAhorroActual(accion);
+                return;
+
+            default:
+                this.notify.show(
+                    this.translate.instant('estadoCuentaLista.exportModal.notImplemented'),
+                    '',
+                    'warning'
+                );
+                return;
+        }
+    }
+
+   private procesarSaldosAhorroActual(accion: 'print' | 'pdf' | 'excel'): void {
+  const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
+
+  this.procesandoReporte = true;
+
+  this.service.getReporteSaldosAhorroActual(
+    this.tipoCuentaReporte,
+    formato,
+    this.fechaInicioReporte,
+    this.fechaFinReporte,
+    this.estadoReporte
+  )
+    .pipe(finalize(() => this.procesandoReporte = false))
+    .subscribe({
+      next: (res: any) => {
+        const data = res?.data ?? {};
+        const archivo = data?.archivo ?? '';
+
+        const base = this.getNombreBaseReporte(this.reporteSeleccionado?.type);
+        const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
+
+        if (accion === 'print') {
+          this.imprimirPdf(archivo);
+          return;
+        }
+
+        if (accion === 'pdf') {
+          this.descargarArchivo(
+            archivo,
+            this.getNombreArchivo(`${base} - ${cuenta}`, 'pdf'),
+            'application/pdf'
+          );
+          return;
+        }
+
+        if (accion === 'excel') {
+          this.descargarArchivo(
+            archivo,
+            this.getNombreArchivo(`${base} - ${cuenta}`, 'xlsx'),
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          );
+        }
+      },
+      error: (err: any) => {
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      }
+    });
+}
+
+
+    private descargarArchivo(base64: string, fileName: string, mimeType: string): void {
+        if (!base64) {
+            this.notify.show(
+                this.translate.instant('estadoCuentaLista.exportModal.fileNotAvailable'),
+                '',
+                'warning'
+            );
+            return;
+        }
+
+        const byteCharacters = atob(base64);
+        const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
+        const byteArray = new Uint8Array(byteNumbers);
+
+        const blob = new Blob([byteArray], { type: mimeType });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+    }
+
+    private imprimirPdf(base64: string): void {
+        if (!base64) {
+            this.notify.show(
+                this.translate.instant('estadoCuentaLista.exportModal.fileNotAvailable'),
+                '',
+                'warning'
+            );
+            return;
+        }
+
+        const byteCharacters = atob(base64);
+        const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
+        const byteArray = new Uint8Array(byteNumbers);
+
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = url;
+
+        document.body.appendChild(iframe);
+
+        iframe.onload = () => {
+            setTimeout(() => {
+                iframe.contentWindow?.focus();
+                iframe.contentWindow?.print();
+
+                setTimeout(() => {
+                    document.body.removeChild(iframe);
+                    window.URL.revokeObjectURL(url);
+                }, 1000);
+            }, 500);
+        };
+    }
+
+    private getNombreArchivo(base: string, extension: string): string {
+        return `COOPACSEM - ${base} - AL ${this.appConfig.getCurrentSettings().fechaServidor}.${extension}`;
+    }
+
+    private getNombreBaseReporte(type: string): string {
+        switch (type) {
+            case 'saldosAhorroActual':
+                return 'SALDO AHORROS';
+
+            case 'saldosHistoricosAhorro':
+                return 'SALDO AHORROS HISTORICO';
+
+            case 'integracionAhorro':
+                return 'INTEGRACION AHORROS';
+
+            case 'saldosAfiliacion':
+                return 'SALDOS AFILIACION';
+
+            case 'deduccionesAfiliacion':
+                return 'DEDUCCIONES AFILIACION';
+
+            default:
+                return 'REPORTE';
+        }
+    }
+
+    private getNombreTipoCuenta(tipoCuenta: string): string {
+        switch (tipoCuenta) {
+            case 'Corriente':
+                return 'CORRIENTE';
+
+            case 'Navidena':
+                return 'NAVIDENA';
+
+            default:
+                return 'TODOS';
+        }
     }
 
     private normalizeSocio(item: any): EstadoCuentaSocioRow {

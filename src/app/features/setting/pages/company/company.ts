@@ -387,10 +387,7 @@ loadCompany(): void {
         this.company = { ...this.copy };
         this.logoPreview = this.buildLogoUrl(this.company.LogoUrl);
 
-        console.log('RES COMPLETO', res);
-        console.log('apiCompany', apiCompany);
-        console.log('LogoUrl', this.company.LogoUrl);
-        console.log('logoPreview', this.logoPreview);
+
 
         this.patchEngineFromCompany();
         this.engine.clearErrors();
