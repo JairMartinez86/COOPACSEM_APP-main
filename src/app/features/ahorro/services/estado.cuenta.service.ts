@@ -54,31 +54,49 @@ export class EstadoCuentaService {
     }
 
 
-getReporteSaldosAhorroActual(
-  tipoCuenta: string,
-  formato: 'pdf' | 'excel',
-  fechaInicio?: string | null,
-  fechaFin?: string | null,
-  estado?: string | null
-) {
-  let params = new HttpParams()
-    .set('tipoCuenta', tipoCuenta)
-    .set('formato', formato);
+    getReporteSaldosAhorroActual(
+        tipoCuenta: string,
+        formato: 'pdf' | 'excel',
+        fechaInicio?: string | null,
+        fechaFin?: string | null,
+        estado?: string | null
+    ) {
+        let params = new HttpParams()
+            .set('tipoCuenta', tipoCuenta)
+            .set('formato', formato);
 
-  if (fechaInicio) {
-    params = params.set('fechaInicio', fechaInicio);
-  }
+        if (fechaInicio) {
+            params = params.set('fechaInicio', fechaInicio);
+        }
 
-  if (fechaFin) {
-    params = params.set('fechaFin', fechaFin);
-  }
+        if (fechaFin) {
+            params = params.set('fechaFin', fechaFin);
+        }
 
-  if (estado !== null && estado !== undefined && estado !== '') {
-    params = params.set('estado', estado);
-  }
+        if (estado !== null && estado !== undefined && estado !== '') {
+            params = params.set('estado', estado);
+        }
 
-  return this.http.get(`${this.baseUrl}/reporte/saldos-ahorro-actual`, { params });
-}
+        return this.http.get(`${this.baseUrl}/reporte/saldos-ahorro-actual`, { params });
+    }
+
+    getReporteSaldosHistoricosAhorro(
+        tipoCuenta: string,
+        formato: 'pdf' | 'excel',
+        fechaInicio?: string | null,
+        fechaFin?: string | null,
+        estado?: string | null
+    ) {
+        let params = new HttpParams()
+            .set('tipoCuenta', tipoCuenta)
+            .set('formato', formato);
+
+        if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
+        if (fechaFin) params = params.set('fechaFin', fechaFin);
+        if (estado) params = params.set('estado', estado);
+
+        return this.http.get(`${this.baseUrl}/reporte/saldos-historicos-ahorro`, { params });
+    }
 
 
 }

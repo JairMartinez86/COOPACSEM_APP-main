@@ -28,7 +28,7 @@
     },
     "reports": {
       "saldosAhorroActual": {
-        "title": "Current Savings Balances",
+        "title": "Savings Balances",
         "subtitle": "View current savings balances"
       },
       "saldosHistoricosAhorro": {
@@ -48,13 +48,14 @@
         "subtitle": "Details of applied deductions"
       }
     },
-       "exportModal": {
+    "exportModal": {
       "title": "Process report",
       "report": "Selected report",
       "processing": "Processing report:",
       "accountType": "Account type",
       "startDate": "Start date",
       "endDate": "End date",
+      "cutoffDate": "Cutoff date",
       "status": "Status",
       "selectAction": "Select an action:",
       "print": "Print",

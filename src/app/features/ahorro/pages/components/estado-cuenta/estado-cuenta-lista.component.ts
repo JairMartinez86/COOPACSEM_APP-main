@@ -355,9 +355,26 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
     abrirModalReporte(report: any): void {
         this.reporteSeleccionado = report;
         this.tipoCuentaReporte = 'Corriente';
+        this.estadoReporte = '';
+        this.fechaInicioReporte = null;
+        this.fechaFinReporte = null;
+
+
+        if (report.type === 'saldosAhorroActual') {
+            this.fechaFinReporte = this.getFechaHoy();
+        }
+
+
+        if (report.type === 'saldosHistoricosAhorro') {
+            this.fechaInicioReporte = this.getPrimerDiaMesActual();
+            this.fechaFinReporte = this.getFechaHoy();
+        }
+
         this.modalReporteOpen = true;
         this.procesandoReporte = false;
     }
+
+
 
     cerrarModalReporte(): void {
         if (this.procesandoReporte) return;
@@ -377,6 +394,22 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
                 this.procesarSaldosAhorroActual(accion);
                 return;
 
+            case 'saldosHistoricosAhorro':
+                this.procesarSaldosHistoricosAhorro(accion);
+                return;
+
+            case 'integracionAhorro':
+
+                return;
+
+            case 'saldosAfiliacion':
+
+                return;
+
+            case 'deduccionesAfiliacion':
+
+                return;
+
             default:
                 this.notify.show(
                     this.translate.instant('estadoCuentaLista.exportModal.notImplemented'),
@@ -385,56 +418,110 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
                 );
                 return;
         }
+
+
+
     }
 
-   private procesarSaldosAhorroActual(accion: 'print' | 'pdf' | 'excel'): void {
-  const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
+    private procesarSaldosAhorroActual(accion: 'print' | 'pdf' | 'excel'): void {
+        const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
 
-  this.procesandoReporte = true;
+        this.procesandoReporte = true;
 
-  this.service.getReporteSaldosAhorroActual(
-    this.tipoCuentaReporte,
-    formato,
-    this.fechaInicioReporte,
-    this.fechaFinReporte,
-    this.estadoReporte
-  )
-    .pipe(finalize(() => this.procesandoReporte = false))
-    .subscribe({
-      next: (res: any) => {
-        const data = res?.data ?? {};
-        const archivo = data?.archivo ?? '';
+        this.service.getReporteSaldosAhorroActual(
+            this.tipoCuentaReporte,
+            formato,
+            this.fechaInicioReporte,
+            this.fechaFinReporte,
+            this.estadoReporte
+        )
+            .pipe(finalize(() => this.procesandoReporte = false))
+            .subscribe({
+                next: (res: any) => {
+                    const data = res?.data ?? {};
+                    const archivo = data?.archivo ?? '';
 
-        const base = this.getNombreBaseReporte(this.reporteSeleccionado?.type);
-        const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
+                    const base = this.getNombreBaseReporte(this.reporteSeleccionado?.type);
+                    const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
 
-        if (accion === 'print') {
-          this.imprimirPdf(archivo);
-          return;
-        }
+                    if (accion === 'print') {
+                        this.imprimirPdf(archivo);
+                        return;
+                    }
 
-        if (accion === 'pdf') {
-          this.descargarArchivo(
-            archivo,
-            this.getNombreArchivo(`${base} - ${cuenta}`, 'pdf'),
-            'application/pdf'
-          );
-          return;
-        }
+                    if (accion === 'pdf') {
+                        this.descargarArchivo(
+                            archivo,
+                            this.getNombreArchivo(`${base} - ${cuenta}`, 'pdf'),
+                            'application/pdf'
+                        );
+                        return;
+                    }
 
-        if (accion === 'excel') {
-          this.descargarArchivo(
-            archivo,
-            this.getNombreArchivo(`${base} - ${cuenta}`, 'xlsx'),
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-          );
-        }
-      },
-      error: (err: any) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      }
-    });
-}
+                    if (accion === 'excel') {
+                        this.descargarArchivo(
+                            archivo,
+                            this.getNombreArchivo(`${base} - ${cuenta}`, 'xlsx'),
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        );
+                    }
+                },
+                error: (err: any) => {
+                    this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+                }
+            });
+    }
+
+
+    private procesarSaldosHistoricosAhorro(accion: 'print' | 'pdf' | 'excel'): void {
+        const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
+
+        this.procesandoReporte = true;
+
+        this.service.getReporteSaldosHistoricosAhorro(
+            this.tipoCuentaReporte,
+            formato,
+            this.fechaInicioReporte,
+            this.fechaFinReporte,
+            this.estadoReporte
+        )
+            .pipe(finalize(() => this.procesandoReporte = false))
+            .subscribe({
+                next: (res: any) => {
+                    const data = res?.data ?? {};
+                    const archivo = data?.archivo ?? '';
+
+                    const base = this.getNombreBaseReporte(this.reporteSeleccionado?.type);
+                    const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
+
+                    if (accion === 'print') {
+                        this.imprimirPdf(archivo);
+                        return;
+                    }
+
+                    if (accion === 'pdf') {
+                        this.descargarArchivo(
+                            archivo,
+                            this.getNombreArchivo(`${base} - ${cuenta}`, 'pdf'),
+                            'application/pdf'
+                        );
+                        return;
+                    }
+
+                    if (accion === 'excel') {
+                        this.descargarArchivo(
+                            archivo,
+                            this.getNombreArchivo(`${base} - ${cuenta}`, 'xlsx'),
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        );
+                    }
+                },
+                error: (err: any) => {
+                    this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+                }
+            });
+    }
+
 
 
     private descargarArchivo(base64: string, fileName: string, mimeType: string): void {
@@ -499,7 +586,14 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
     }
 
     private getNombreArchivo(base: string, extension: string): string {
-        return `COOPACSEM - ${base} - AL ${this.appConfig.getCurrentSettings().fechaServidor}.${extension}`;
+
+        const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
+
+        const rango = this.getTextoRangoFechas();
+
+        const estado = this.getTextoEstado();
+
+        return `COOPACSEM - ${base} - ${cuenta} ${rango} ${estado}.${extension}`;
     }
 
     private getNombreBaseReporte(type: string): string {
@@ -559,4 +653,59 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
             }
         };
     }
+
+    private getTextoRangoFechas(): string {
+
+        if (this.fechaInicioReporte && this.fechaFinReporte) {
+            return `DEL ${this.formatFecha(this.fechaInicioReporte)} AL ${this.formatFecha(this.fechaFinReporte)}`;
+        }
+
+        if (this.fechaInicioReporte) {
+            return `DEL ${this.formatFecha(this.fechaInicioReporte)}`;
+        }
+
+        if (this.fechaFinReporte) {
+            return `FECHA CORTE ${this.formatFecha(this.fechaFinReporte)}`;
+        }
+
+        return `AL ${this.appConfig.getCurrentSettings().fechaServidor}`;
+    }
+
+    private getTextoEstado(): string {
+
+        if (this.estadoReporte === 'Activo') {
+            return 'ACTIVOS';
+        }
+
+        if (this.estadoReporte === 'Inactivo') {
+            return 'INACTIVOS';
+        }
+
+        return 'TODOS';
+    }
+
+    private formatFecha(fecha: string): string {
+        const d = new Date(fecha);
+        return d.toLocaleDateString('es-NI');
+    }
+
+
+    private getFechaHoy(): string {
+        return this.appConfig.getCurrentSettings().fechaServidor;
+    }
+
+    private getPrimerDiaMesActual(): string {
+        const fecha = new Date();
+        return this.formatDateInput(new Date(fecha.getFullYear(), fecha.getMonth(), 1));
+    }
+
+    private formatDateInput(fecha: Date): string {
+        const year = fecha.getFullYear();
+        const month = String(fecha.getMonth() + 1).padStart(2, '0');
+        const day = String(fecha.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
+
 }
