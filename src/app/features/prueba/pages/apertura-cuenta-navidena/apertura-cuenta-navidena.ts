@@ -1165,7 +1165,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     }
 
     let current = this.normalizePlanDate(new Date(`${fecha}T00:00:00`));
-    const end = new Date(current.getFullYear(), 10, 30);
+    const end = new Date(current.getFullYear(), 9, 31); //Fecha Max para generar year-10-31
 
     const rows: PlanItem[] = [];
     let i = 1;
@@ -1228,39 +1228,8 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     return new Date(year, month + 1, 15);
   }
 
-  // ============================
-  // NUEVO: NORMALIZAR PRIMERA FECHA
-  // ============================
-  private normalizeMonthlyPlanDate(date: Date, dayBase: number): Date {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-
-    const lastDay = new Date(year, month + 1, 0).getDate();
-    const targetDay = Math.min(dayBase, lastDay);
-
-    if (date.getDate() <= targetDay) {
-      return new Date(year, month, targetDay);
-    }
-
-    const nextMonthLastDay = new Date(year, month + 2, 0).getDate();
-    const nextTargetDay = Math.min(dayBase, nextMonthLastDay);
-
-    return new Date(year, month + 1, nextTargetDay);
-  }
 
 
-  // ============================
-  // NUEVO: SIGUIENTE FECHA MENSUAL
-  // ============================
-  private getNextMonthlyDate(current: Date, dayBase: number): Date {
-    const year = current.getFullYear();
-    const month = current.getMonth() + 1;
-
-    const lastDay = new Date(year, month + 1, 0).getDate();
-    const targetDay = Math.min(dayBase, lastDay);
-
-    return new Date(year, month, targetDay);
-  }
 
   /* =========================================================
    * PARSEO Y UTILIDADES DE FECHAS
