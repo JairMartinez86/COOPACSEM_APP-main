@@ -98,5 +98,25 @@ export class EstadoCuentaService {
         return this.http.get(`${this.baseUrl}/reporte/saldos-historicos-ahorro`, { params });
     }
 
+    getReporteAfiliacionMembresia(
+        formato: 'pdf' | 'excel',
+        fechaFin?: string | null,
+        estado?: string | null
+    ) {
+        let params = new HttpParams()
+            .set('formato', formato);
+
+        if (fechaFin) {
+            params = params.set('fechaFin', fechaFin);
+        }
+
+        if (estado !== null && estado !== undefined && estado !== '') {
+            params = params.set('estado', estado);
+        }
+
+
+        return this.http.get(`${this.baseUrl}/reporte/afiliacion-membresia`, { params });
+    }
+
 
 }

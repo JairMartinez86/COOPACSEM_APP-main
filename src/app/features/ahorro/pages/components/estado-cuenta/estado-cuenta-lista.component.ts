@@ -370,6 +370,14 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
             this.fechaFinReporte = this.getFechaHoy();
         }
 
+
+        if (report.type === 'saldosAfiliacion') {
+            this.fechaFinReporte = this.getFechaHoy();
+        }
+
+
+
+
         this.modalReporteOpen = true;
         this.procesandoReporte = false;
     }
@@ -403,7 +411,7 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
                 return;
 
             case 'saldosAfiliacion':
-
+                this.procesarSaldosAfiliacion(accion);
                 return;
 
             case 'deduccionesAfiliacion':
@@ -512,6 +520,53 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
                         this.descargarArchivo(
                             archivo,
                             this.getNombreArchivo(`${base} - ${cuenta}`, 'xlsx'),
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        );
+                    }
+                },
+                error: (err: any) => {
+                    this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+                }
+            });
+    }
+
+
+    private procesarSaldosAfiliacion(accion: 'print' | 'pdf' | 'excel'): void {
+        const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
+
+        this.procesandoReporte = true;
+
+        this.service.getReporteAfiliacionMembresia(
+            formato,
+            this.fechaFinReporte,
+            this.estadoReporte
+        )
+            .pipe(finalize(() => this.procesandoReporte = false))
+            .subscribe({
+                next: (res: any) => {
+                    const data = res?.data ?? {};
+                    const archivo = data?.archivo ?? '';
+
+                    const base = this.getNombreBaseReporte('saldosAfiliacion');
+
+                    if (accion === 'print') {
+                        this.imprimirPdf(archivo);
+                        return;
+                    }
+
+                    if (accion === 'pdf') {
+                        this.descargarArchivo(
+                            archivo,
+                            this.getNombreArchivo(base, 'pdf'),
+                            'application/pdf'
+                        );
+                        return;
+                    }
+
+                    if (accion === 'excel') {
+                        this.descargarArchivo(
+                            archivo,
+                            this.getNombreArchivo(base, 'xlsx'),
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                         );
                     }

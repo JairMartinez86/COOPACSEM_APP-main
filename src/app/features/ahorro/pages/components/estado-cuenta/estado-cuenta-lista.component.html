@@ -290,204 +290,162 @@
 
 @if (modalReporteOpen) {
 <div class="modal fade show d-block" tabindex="-1" aria-modal="true" role="dialog">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
 
-      <div class="modal-header">
-        <h5 class="modal-title">
-          {{ 'estadoCuentaLista.exportModal.title' | translate }}
-        </h5>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    {{ 'estadoCuentaLista.exportModal.title' | translate }}
+                </h5>
 
-        <button
-          type="button"
-          class="btn-close"
-          [disabled]="procesandoReporte"
-          (click)="cerrarModalReporte()">
-        </button>
-      </div>
+                <button type="button" class="btn-close" [disabled]="procesandoReporte" (click)="cerrarModalReporte()">
+                </button>
+            </div>
 
-      <div class="modal-body">
+            <div class="modal-body">
 
-        <div class="mb-3">
-          <div class="text-muted small">
-            {{ 'estadoCuentaLista.exportModal.report' | translate }}
-          </div>
+                <div class="mb-3">
+                    <div class="text-muted small">
+                        {{ 'estadoCuentaLista.exportModal.report' | translate }}
+                    </div>
 
-          <div class="fw-semibold">
-            {{ reporteSeleccionado?.titleKey | translate }}
-          </div>
+                    <div class="fw-semibold">
+                        {{ reporteSeleccionado?.titleKey | translate }}
+                    </div>
 
-          <small class="text-muted">
-            {{ reporteSeleccionado?.subtitleKey | translate }}
-          </small>
+                    <small class="text-muted">
+                        {{ reporteSeleccionado?.subtitleKey | translate }}
+                    </small>
+                </div>
+
+                @if (procesandoReporte) {
+                <div class="alert alert-info mb-3">
+                    <i class="fa-solid fa-spinner fa-spin me-1"></i>
+                    {{ 'estadoCuentaLista.exportModal.processing' | translate }}
+                    <strong>{{ reporteSeleccionado?.titleKey | translate }}</strong>
+                </div>
+                }
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        {{ 'estadoCuentaLista.exportModal.accountType' | translate }}
+                    </label>
+
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="tipoCuentaReporte" id="tipoCuentaCorriente"
+                            value="Corriente" [(ngModel)]="tipoCuentaReporte">
+
+                        <label class="btn btn-outline-primary" for="tipoCuentaCorriente">
+                            {{ 'estadoCuentaLista.accounts.current' | translate }}
+                        </label>
+
+                        @if(reporteSeleccionado?.type !== 'saldosAfiliacion')
+                        {
+                        <input type="radio" class="btn-check" name="tipoCuentaReporte" id="tipoCuentaNavidena"
+                            value="Navidena" [(ngModel)]="tipoCuentaReporte">
+
+                        <label class="btn btn-outline-warning" for="tipoCuentaNavidena">
+                            {{ 'estadoCuentaLista.accounts.christmas' | translate }}
+                        </label>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+
+                    @if (reporteSeleccionado?.type !== 'saldosAhorroActual' && reporteSeleccionado?.type !==
+                    'saldosAfiliacion') {
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            {{ 'estadoCuentaLista.exportModal.startDate' | translate }}
+                        </label>
+
+                        <input type="date" class="form-control" [(ngModel)]="fechaInicioReporte" autoFocusNext
+                            [next]="FechaFin">
+                    </div>
+                    }
+
+                    <div
+                        [ngClass]="reporteSeleccionado?.type === 'saldosAhorroActual' ||  reporteSeleccionado?.type === 'saldosAfiliacion' ? 'col-md-12' : 'col-md-6'">
+                        <label class="form-label fw-semibold">
+                            @if (reporteSeleccionado?.type === 'saldosAhorroActual' || reporteSeleccionado?.type ===
+                            'saldosAfiliacion') {
+                            {{ 'estadoCuentaLista.exportModal.cutoffDate' | translate }}
+                            } @else {
+                            {{ 'estadoCuentaLista.exportModal.endDate' | translate }}
+                            }
+                        </label>
+
+                        <input #FechaFin type="date" class="form-control" [(ngModel)]="fechaFinReporte" autoFocusNext
+                            [next]="btnImprimir" [disableClickButton]="true">
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        {{ 'estadoCuentaLista.exportModal.status' | translate }}
+                    </label>
+
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="estadoReporte" id="estadoTodos" value=""
+                            [(ngModel)]="estadoReporte">
+
+                        <label class="btn btn-outline-secondary" for="estadoTodos">
+                            {{ 'estadoCuentaLista.filters.all' | translate }}
+                        </label>
+
+                        <input type="radio" class="btn-check" name="estadoReporte" id="estadoActivo" value="Activo"
+                            [(ngModel)]="estadoReporte">
+
+                        <label class="btn btn-outline-success" for="estadoActivo">
+                            {{ 'estadoCuentaLista.status.active' | translate }}
+                        </label>
+
+                        <input type="radio" class="btn-check" name="estadoReporte" id="estadoInactivo" value="Inactivo"
+                            [(ngModel)]="estadoReporte">
+
+                        <label class="btn btn-outline-danger" for="estadoInactivo">
+                            {{ 'estadoCuentaLista.status.inactive' | translate }}
+                        </label>
+                    </div>
+                </div>
+
+                <p class="mb-2">
+                    {{ 'estadoCuentaLista.exportModal.selectAction' | translate }}
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <button #btnImprimir class="btn btn-primary" [disabled]="procesandoReporte || !tipoCuentaReporte"
+                        (click)="procesarReporte('print')">
+                        <i class="fa-solid fa-print me-1"></i>
+                        {{ 'estadoCuentaLista.exportModal.print' | translate }}
+                    </button>
+
+                    <button class="btn btn-danger" [disabled]="procesandoReporte || !tipoCuentaReporte"
+                        (click)="procesarReporte('pdf')">
+                        <i class="fa-solid fa-file-pdf me-1"></i>
+                        PDF
+                    </button>
+
+                    <button class="btn btn-success" [disabled]="procesandoReporte || !tipoCuentaReporte"
+                        (click)="procesarReporte('excel')">
+                        <i class="fa-solid fa-file-excel me-1"></i>
+                        Excel
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-light" [disabled]="procesandoReporte" (click)="cerrarModalReporte()">
+                    {{ 'estadoCuentaDetalle.actions.cancel' | translate }}
+                </button>
+            </div>
+
         </div>
-
-        @if (procesandoReporte) {
-        <div class="alert alert-info mb-3">
-          <i class="fa-solid fa-spinner fa-spin me-1"></i>
-          {{ 'estadoCuentaLista.exportModal.processing' | translate }}
-          <strong>{{ reporteSeleccionado?.titleKey | translate }}</strong>
-        </div>
-        }
-
-        <div class="mb-3">
-          <label class="form-label fw-semibold">
-            {{ 'estadoCuentaLista.exportModal.accountType' | translate }}
-          </label>
-
-          <div class="btn-group w-100" role="group">
-            <input
-              type="radio"
-              class="btn-check"
-              name="tipoCuentaReporte"
-              id="tipoCuentaCorriente"
-              value="Corriente"
-              [(ngModel)]="tipoCuentaReporte">
-
-            <label class="btn btn-outline-primary" for="tipoCuentaCorriente">
-              {{ 'estadoCuentaLista.accounts.current' | translate }}
-            </label>
-
-            <input
-              type="radio"
-              class="btn-check"
-              name="tipoCuentaReporte"
-              id="tipoCuentaNavidena"
-              value="Navidena"
-              [(ngModel)]="tipoCuentaReporte">
-
-            <label class="btn btn-outline-warning" for="tipoCuentaNavidena">
-              {{ 'estadoCuentaLista.accounts.christmas' | translate }}
-            </label>
-          </div>
-        </div>
-
-        <div class="row g-3 mb-3">
-
-          @if (reporteSeleccionado?.type !== 'saldosAhorroActual') {
-          <div class="col-md-6">
-            <label class="form-label fw-semibold">
-              {{ 'estadoCuentaLista.exportModal.startDate' | translate }}
-            </label>
-
-            <input
-              type="date"
-              class="form-control"
-              [(ngModel)]="fechaInicioReporte"
-              autoFocusNext
-              [next]="FechaFin">
-          </div>
-          }
-
-          <div [ngClass]="reporteSeleccionado?.type === 'saldosAhorroActual' ? 'col-md-12' : 'col-md-6'">
-            <label class="form-label fw-semibold">
-              @if (reporteSeleccionado?.type === 'saldosAhorroActual') {
-                {{ 'estadoCuentaLista.exportModal.cutoffDate' | translate }}
-              } @else {
-                {{ 'estadoCuentaLista.exportModal.endDate' | translate }}
-              }
-            </label>
-
-            <input
-              #FechaFin
-              type="date"
-              class="form-control"
-              [(ngModel)]="fechaFinReporte"
-              autoFocusNext
-              [next]="btnImprimir"
-              [disableClickButton]="true">
-          </div>
-
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label fw-semibold">
-            {{ 'estadoCuentaLista.exportModal.status' | translate }}
-          </label>
-
-          <div class="btn-group w-100" role="group">
-            <input
-              type="radio"
-              class="btn-check"
-              name="estadoReporte"
-              id="estadoTodos"
-              value=""
-              [(ngModel)]="estadoReporte">
-
-            <label class="btn btn-outline-secondary" for="estadoTodos">
-              {{ 'estadoCuentaLista.filters.all' | translate }}
-            </label>
-
-            <input
-              type="radio"
-              class="btn-check"
-              name="estadoReporte"
-              id="estadoActivo"
-              value="Activo"
-              [(ngModel)]="estadoReporte">
-
-            <label class="btn btn-outline-success" for="estadoActivo">
-              {{ 'estadoCuentaLista.status.active' | translate }}
-            </label>
-
-            <input
-              type="radio"
-              class="btn-check"
-              name="estadoReporte"
-              id="estadoInactivo"
-              value="Inactivo"
-              [(ngModel)]="estadoReporte">
-
-            <label class="btn btn-outline-danger" for="estadoInactivo">
-              {{ 'estadoCuentaLista.status.inactive' | translate }}
-            </label>
-          </div>
-        </div>
-
-        <p class="mb-2">
-          {{ 'estadoCuentaLista.exportModal.selectAction' | translate }}
-        </p>
-
-        <div class="d-flex flex-wrap gap-2">
-          <button
-            #btnImprimir
-            class="btn btn-primary"
-            [disabled]="procesandoReporte || !tipoCuentaReporte"
-            (click)="procesarReporte('print')">
-            <i class="fa-solid fa-print me-1"></i>
-            {{ 'estadoCuentaLista.exportModal.print' | translate }}
-          </button>
-
-          <button
-            class="btn btn-danger"
-            [disabled]="procesandoReporte || !tipoCuentaReporte"
-            (click)="procesarReporte('pdf')">
-            <i class="fa-solid fa-file-pdf me-1"></i>
-            PDF
-          </button>
-
-          <button
-            class="btn btn-success"
-            [disabled]="procesandoReporte || !tipoCuentaReporte"
-            (click)="procesarReporte('excel')">
-            <i class="fa-solid fa-file-excel me-1"></i>
-            Excel
-          </button>
-        </div>
-
-      </div>
-
-      <div class="modal-footer">
-        <button
-          class="btn btn-light"
-          [disabled]="procesandoReporte"
-          (click)="cerrarModalReporte()">
-          {{ 'estadoCuentaDetalle.actions.cancel' | translate }}
-        </button>
-      </div>
-
     </div>
-  </div>
 </div>
 
 <div class="modal-backdrop fade show"></div>
