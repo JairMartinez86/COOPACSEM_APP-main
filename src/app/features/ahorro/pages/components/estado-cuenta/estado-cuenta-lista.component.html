@@ -339,7 +339,7 @@
                             {{ 'estadoCuentaLista.accounts.current' | translate }}
                         </label>
 
-                        @if(reporteSeleccionado?.type !== 'saldosAfiliacion')
+                        @if(reporteSeleccionado?.type !== 'saldosAfiliacion' && reporteSeleccionado?.type !== 'deduccionesAfiliacion')
                         {
                         <input type="radio" class="btn-check" name="tipoCuentaReporte" id="tipoCuentaNavidena"
                             value="Navidena" [(ngModel)]="tipoCuentaReporte">
@@ -355,7 +355,7 @@
                 <div class="row g-3 mb-3">
 
                     @if (reporteSeleccionado?.type !== 'saldosAhorroActual' && reporteSeleccionado?.type !==
-                    'saldosAfiliacion') {
+                    'saldosAfiliacion' && reporteSeleccionado?.type !== 'deduccionesAfiliacion') {
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">
                             {{ 'estadoCuentaLista.exportModal.startDate' | translate }}
@@ -367,10 +367,10 @@
                     }
 
                     <div
-                        [ngClass]="reporteSeleccionado?.type === 'saldosAhorroActual' ||  reporteSeleccionado?.type === 'saldosAfiliacion' ? 'col-md-12' : 'col-md-6'">
+                        [ngClass]="reporteSeleccionado?.type === 'saldosAhorroActual' ||  reporteSeleccionado?.type === 'saldosAfiliacion' ||  reporteSeleccionado?.type === 'deduccionesAfiliacion'? 'col-md-12' : 'col-md-6'">
                         <label class="form-label fw-semibold">
                             @if (reporteSeleccionado?.type === 'saldosAhorroActual' || reporteSeleccionado?.type ===
-                            'saldosAfiliacion') {
+                            'saldosAfiliacion' ||  reporteSeleccionado?.type === 'deduccionesAfiliacion') {
                             {{ 'estadoCuentaLista.exportModal.cutoffDate' | translate }}
                             } @else {
                             {{ 'estadoCuentaLista.exportModal.endDate' | translate }}

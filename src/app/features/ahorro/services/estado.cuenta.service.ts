@@ -119,4 +119,21 @@ export class EstadoCuentaService {
     }
 
 
+    getReportePagosAfiliaciones(
+    formato: 'pdf' | 'excel',
+    fechaInicio?: string | null,
+    fechaFin?: string | null,
+    estado?: string | null
+) {
+    let params = new HttpParams()
+        .set('formato', formato);
+
+    if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
+    if (fechaFin) params = params.set('fechaFin', fechaFin);
+    if (estado) params = params.set('estado', estado);
+
+    return this.http.get(`${this.baseUrl}/reporte/pagos-afiliaciones`, { params });
+}
+
+
 }

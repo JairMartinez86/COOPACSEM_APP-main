@@ -87,7 +87,7 @@
                 </div>
                 <div>
                   <div class="fw-semibold">{{ 'estadoCuentaDetalle.info.savingPercent' | translate }}</div>
-                 {{ resumen.porcentajeAhorro | number:'1.2-2' }} %
+                  {{ resumen.porcentajeAhorro | number:'1.2-2' }} %
                 </div>
               </div>
 
@@ -183,7 +183,7 @@
               [ngClass]="tipoCuentaSeleccionada === 'Navidena' ? 'btn-success' : 'btn-outline-secondary'"
               (click)="seleccionarTipoCuenta('Navidena')" [disabled]="!socio.cuentaNavidenaActiva">
               <i class="fa-solid fa-gift me-2"></i>
-              {{ 'estadoCuentaDetalle.accounts.christmasSaving' | translate }}
+              {{ 'estadoCuentaDetalle.accounts.christmasSaving' | translate }} 
             </button>
           </div>
 
@@ -199,173 +199,173 @@
       </div>
     </div>
 
-  <div class="card mb-3">
-  <div class="card-body">
+    <div class="card mb-3">
+      <div class="card-body">
 
-    <h5 class="card-title mb-1">
-      {{ 'estadoCuentaDetalle.report.title' | translate }}
-    </h5>
+        <h5 class="card-title mb-1">
+          {{ 'estadoCuentaDetalle.report.title' | translate }}
+        </h5>
 
-    <p class="text-muted mb-3">
-      {{ 'estadoCuentaDetalle.report.subtitle' | translate }}
-    </p>
+        <p class="text-muted mb-3">
+          {{ 'estadoCuentaDetalle.report.subtitle' | translate }}
+        </p>
 
-    <div class="row g-3">
+        <div class="row g-3">
 
-      <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-12">
-        <div class="card h-100" [ngClass]="tipoReporte === 'Acumulado' ? 'border border-success' : ''">
-          <div class="card-body">
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="tipoReporte"
-                [checked]="tipoReporte === 'Acumulado'" (change)="tipoReporte = 'Acumulado'">
+          <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-12">
+            <div class="card h-100" [ngClass]="tipoReporte === 'Acumulado' ? 'border border-success' : ''">
+              <div class="card-body">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="tipoReporte"
+                    [checked]="tipoReporte === 'Acumulado'" (change)="tipoReporte = 'Acumulado'">
 
-              <label class="form-check-label fw-semibold">
-                {{ 'estadoCuentaDetalle.report.accumulated' | translate }}
-              </label>
-            </div>
+                  <label class="form-check-label fw-semibold">
+                    {{ 'estadoCuentaDetalle.report.accumulated' | translate }}
+                  </label>
+                </div>
 
-            <p class="text-muted small mb-3">
-              {{ 'estadoCuentaDetalle.report.accumulatedText' | translate }}
-            </p>
+                <p class="text-muted small mb-3">
+                  {{ 'estadoCuentaDetalle.report.accumulatedText' | translate }}
+                </p>
 
-            <label class="form-label small">
-              {{ 'estadoCuentaDetalle.report.cutoffDate' | translate }}
-            </label>
-            <input type="date" class="form-control" [(ngModel)]="fechaCorte">
-          </div>
-        </div>
-      </div>
-
-      <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-12">
-        <div class="card h-100" [ngClass]="tipoReporte === 'Rango' ? 'border border-success' : ''">
-          <div class="card-body">
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="tipoReporte" [checked]="tipoReporte === 'Rango'"
-                (change)="tipoReporte = 'Rango'">
-
-              <label class="form-check-label fw-semibold">
-                {{ 'estadoCuentaDetalle.report.byRange' | translate }}
-              </label>
-            </div>
-
-            <p class="text-muted small mb-3">
-              {{ 'estadoCuentaDetalle.report.byRangeText' | translate }}
-            </p>
-
-            <div class="row g-2">
-              <div class="col-6">
                 <label class="form-label small">
-                  {{ 'estadoCuentaDetalle.report.from' | translate }}
+                  {{ 'estadoCuentaDetalle.report.cutoffDate' | translate }}
                 </label>
-                <input type="date" class="form-control" [(ngModel)]="fechaDesde">
-              </div>
-              <div class="col-6">
-                <label class="form-label small">
-                  {{ 'estadoCuentaDetalle.report.to' | translate }}
-                </label>
-                <input type="date" class="form-control" [(ngModel)]="fechaHasta">
+                <input type="date" class="form-control" [(ngModel)]="fechaCorte">
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-12">
-        <div class="card h-100" [ngClass]="tipoReporte === 'Mes' ? 'border border-success' : ''">
-          <div class="card-body">
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="tipoReporte" [checked]="tipoReporte === 'Mes'"
-                (change)="tipoReporte = 'Mes'">
+          <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-12">
+            <div class="card h-100" [ngClass]="tipoReporte === 'Rango' ? 'border border-success' : ''">
+              <div class="card-body">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="tipoReporte" [checked]="tipoReporte === 'Rango'"
+                    (change)="tipoReporte = 'Rango'">
 
-              <label class="form-check-label fw-semibold">
-                {{ 'estadoCuentaDetalle.report.byMonth' | translate }}
-              </label>
-            </div>
+                  <label class="form-check-label fw-semibold">
+                    {{ 'estadoCuentaDetalle.report.byRange' | translate }}
+                  </label>
+                </div>
 
-            <p class="text-muted small mb-3">
-              {{ 'estadoCuentaDetalle.report.byMonthText' | translate }}
-            </p>
+                <p class="text-muted small mb-3">
+                  {{ 'estadoCuentaDetalle.report.byRangeText' | translate }}
+                </p>
 
-            <div class="row g-2">
-              <div class="col-6">
-                <label class="form-label small">
-                  {{ 'estadoCuentaDetalle.report.month' | translate }}
-                </label>
-                <select class="form-select" [(ngModel)]="mes">
-                  <option [ngValue]="1">Enero</option>
-                  <option [ngValue]="2">Febrero</option>
-                  <option [ngValue]="3">Marzo</option>
-                  <option [ngValue]="4">Abril</option>
-                  <option [ngValue]="5">Mayo</option>
-                  <option [ngValue]="6">Junio</option>
-                  <option [ngValue]="7">Julio</option>
-                  <option [ngValue]="8">Agosto</option>
-                  <option [ngValue]="9">Septiembre</option>
-                  <option [ngValue]="10">Octubre</option>
-                  <option [ngValue]="11">Noviembre</option>
-                  <option [ngValue]="12">Diciembre</option>
-                </select>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label class="form-label small">
+                      {{ 'estadoCuentaDetalle.report.from' | translate }}
+                    </label>
+                    <input type="date" class="form-control" [(ngModel)]="fechaDesde">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label small">
+                      {{ 'estadoCuentaDetalle.report.to' | translate }}
+                    </label>
+                    <input type="date" class="form-control" [(ngModel)]="fechaHasta">
+                  </div>
+                </div>
               </div>
+            </div>
+          </div>
 
-              <div class="col-6">
+          <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-12">
+            <div class="card h-100" [ngClass]="tipoReporte === 'Mes' ? 'border border-success' : ''">
+              <div class="card-body">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="tipoReporte" [checked]="tipoReporte === 'Mes'"
+                    (change)="tipoReporte = 'Mes'">
+
+                  <label class="form-check-label fw-semibold">
+                    {{ 'estadoCuentaDetalle.report.byMonth' | translate }}
+                  </label>
+                </div>
+
+                <p class="text-muted small mb-3">
+                  {{ 'estadoCuentaDetalle.report.byMonthText' | translate }}
+                </p>
+
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label class="form-label small">
+                      {{ 'estadoCuentaDetalle.report.month' | translate }}
+                    </label>
+                    <select class="form-select" [(ngModel)]="mes">
+                      <option [ngValue]="1">Enero</option>
+                      <option [ngValue]="2">Febrero</option>
+                      <option [ngValue]="3">Marzo</option>
+                      <option [ngValue]="4">Abril</option>
+                      <option [ngValue]="5">Mayo</option>
+                      <option [ngValue]="6">Junio</option>
+                      <option [ngValue]="7">Julio</option>
+                      <option [ngValue]="8">Agosto</option>
+                      <option [ngValue]="9">Septiembre</option>
+                      <option [ngValue]="10">Octubre</option>
+                      <option [ngValue]="11">Noviembre</option>
+                      <option [ngValue]="12">Diciembre</option>
+                    </select>
+                  </div>
+
+                  <div class="col-6">
+                    <label class="form-label small">
+                      {{ 'estadoCuentaDetalle.report.year' | translate }}
+                    </label>
+                    <select class="form-select" [(ngModel)]="anio">
+                      @for (y of anios; track y) {
+                      <option [ngValue]="y">{{ y }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-12">
+            <div class="card h-100" [ngClass]="tipoReporte === 'Anio' ? 'border border-success' : ''">
+              <div class="card-body">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="tipoReporte" [checked]="tipoReporte === 'Anio'"
+                    (change)="tipoReporte = 'Anio'">
+
+                  <label class="form-check-label fw-semibold">
+                    {{ 'estadoCuentaDetalle.report.byYear' | translate }}
+                  </label>
+                </div>
+
+                <p class="text-muted small mb-3">
+                  {{ 'estadoCuentaDetalle.report.byYearText' | translate }}
+                </p>
+
                 <label class="form-label small">
                   {{ 'estadoCuentaDetalle.report.year' | translate }}
                 </label>
                 <select class="form-select" [(ngModel)]="anio">
-              @for (y of anios; track y) {
-              <option [ngValue]="y">{{ y }}</option>
-              }
-            </select>
+                  @for (y of anios; track y) {
+                  <option [ngValue]="y">{{ y }}</option>
+                  }
+                </select>
               </div>
             </div>
           </div>
+
         </div>
-      </div>
 
-      <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-12">
-        <div class="card h-100" [ngClass]="tipoReporte === 'Anio' ? 'border border-success' : ''">
-          <div class="card-body">
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="tipoReporte" [checked]="tipoReporte === 'Anio'"
-                (change)="tipoReporte = 'Anio'">
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <button type="button" class="btn btn-outline-success" (click)="aplicarFiltros()">
+            <i class="fa-solid fa-filter me-1"></i>
+            {{ 'estadoCuentaDetalle.actions.refresh' | translate }}
+          </button>
 
-              <label class="form-check-label fw-semibold">
-                {{ 'estadoCuentaDetalle.report.byYear' | translate }}
-              </label>
-            </div>
-
-            <p class="text-muted small mb-3">
-              {{ 'estadoCuentaDetalle.report.byYearText' | translate }}
-            </p>
-
-            <label class="form-label small">
-              {{ 'estadoCuentaDetalle.report.year' | translate }}
-            </label>
-            <select class="form-select" [(ngModel)]="anio">
-              @for (y of anios; track y) {
-              <option [ngValue]="y">{{ y }}</option>
-              }
-            </select>
-          </div>
+          <button type="button" class="btn btn-success" (click)="imprimirPdfFicha()">
+            <i class="fa-regular fa-file-lines me-1"></i>
+            {{ 'estadoCuentaDetalle.actions.generateReport' | translate }}
+          </button>
         </div>
+
       </div>
-
     </div>
-
-    <div class="d-flex justify-content-end gap-2 mt-3">
-      <button type="button" class="btn btn-outline-success" (click)="aplicarFiltros()">
-        <i class="fa-solid fa-filter me-1"></i>
-        {{ 'estadoCuentaDetalle.actions.refresh' | translate }}
-      </button>
-
-      <button type="button" class="btn btn-success" (click)="imprimirPdfFicha()">
-        <i class="fa-regular fa-file-lines me-1"></i>
-        {{ 'estadoCuentaDetalle.actions.generateReport' | translate }}
-      </button>
-    </div>
-
-  </div>
-</div>
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="card-title mb-0">
@@ -522,7 +522,7 @@
       </div>
 
       <div class="modal-body">
-       
+
         <p class="mb-2">{{ 'estadoCuentaDetalle.exportModal.selectFormat' | translate }}</p>
 
         <div class="d-flex gap-2">
