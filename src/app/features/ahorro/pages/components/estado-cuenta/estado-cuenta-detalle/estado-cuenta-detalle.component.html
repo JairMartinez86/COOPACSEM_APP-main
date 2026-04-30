@@ -173,7 +173,7 @@
             <button type="button" class="btn w-100"
               [ngClass]="tipoCuentaSeleccionada === 'Corriente' ? 'btn-success' : 'btn-outline-secondary'"
               (click)="seleccionarTipoCuenta('Corriente')" [disabled]="!socio.cuentaCorrienteActiva">
-              <i class="fa-solid fa-piggy-bank me-2"></i>
+              <i class="fa-solid fa-piggy-bank me-2 fa-2x"></i>
               {{ 'estadoCuentaDetalle.accounts.currentSaving' | translate }}
             </button>
           </div>
@@ -182,7 +182,7 @@
             <button type="button" class="btn w-100"
               [ngClass]="tipoCuentaSeleccionada === 'Navidena' ? 'btn-success' : 'btn-outline-secondary'"
               (click)="seleccionarTipoCuenta('Navidena')" [disabled]="!socio.cuentaNavidenaActiva">
-              <i class="fa-solid fa-gift me-2"></i>
+              <i class="fa-solid fa-gift me-2 fa-2x"></i>
               {{ 'estadoCuentaDetalle.accounts.christmasSaving' | translate }} 
             </button>
           </div>
@@ -191,7 +191,7 @@
             <button type="button" class="btn w-100"
               [ngClass]="tipoCuentaSeleccionada === 'Consolidado' ? 'btn-success' : 'btn-outline-secondary'"
               (click)="seleccionarTipoCuenta('Consolidado')">
-              <i class="fa-solid fa-coins me-2"></i>
+              <i class="fa-solid fa-coins me-2 fa-2x"></i>
               {{ 'estadoCuentaDetalle.accounts.consolidatedSaving' | translate }}
             </button>
           </div>
