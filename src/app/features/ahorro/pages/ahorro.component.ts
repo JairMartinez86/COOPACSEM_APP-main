@@ -85,11 +85,34 @@ export class AhorroComponent implements OnInit, OnDestroy {
     return [...this.actions].sort((a, b) => a.order - b.order);
   }
 
-  reports: ReportItem[] = [
-    { titleKey: 'ahorro.reports.movementsBySocio.title', subtitleKey: 'ahorro.reports.movementsBySocio.subtitle' },
-    { titleKey: 'ahorro.reports.savingSummary.title', subtitleKey: 'ahorro.reports.savingSummary.subtitle' },
-    { titleKey: 'ahorro.reports.pendingRequests.title', subtitleKey: 'ahorro.reports.pendingRequests.subtitle' },
-  ];
+
+    reports: any[] = [
+        {
+            titleKey: 'estadoCuentaLista.reports.saldosAhorroActual.title',
+            subtitleKey: 'estadoCuentaLista.reports.saldosAhorroActual.subtitle',
+            type: 'saldosAhorroActual'
+        },
+        {
+            titleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.title',
+            subtitleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.subtitle',
+            type: 'saldosHistoricosAhorro'
+        },
+        {
+            titleKey: 'estadoCuentaLista.reports.integracionAhorro.title',
+            subtitleKey: 'estadoCuentaLista.reports.integracionAhorro.subtitle',
+            type: 'integracionAhorro'
+        },
+        {
+            titleKey: 'estadoCuentaLista.reports.saldosAfiliacion.title',
+            subtitleKey: 'estadoCuentaLista.reports.saldosAfiliacion.subtitle',
+            type: 'saldosAfiliacion'
+        },
+        {
+            titleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.title',
+            subtitleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.subtitle',
+            type: 'deduccionesAfiliacion'
+        }
+    ];
 
   socioRows: SocioRow[] = [];
   pagination: PaginationMeta = {
