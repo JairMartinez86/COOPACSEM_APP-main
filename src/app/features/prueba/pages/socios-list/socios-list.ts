@@ -113,8 +113,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
     { icon: 'fa-solid fa-arrow-up', titleKey: 'ahorro.actions.newWithdrawal', accent: 'violet', order: 4 },
     { icon: 'fa-solid fa-arrow-trend-up', titleKey: 'ahorro.actions.increaseInstallment', accent: 'teal', order: 5 },
     { icon: 'fa-solid fa-arrow-trend-down', titleKey: 'ahorro.actions.decreaseInstallment', accent: 'orange', order: 6 },
-    { icon: 'fa-solid fa-print', titleKey: 'ahorro.actions.printReport', accent: 'cyan', order: 7 },
-    { icon: 'fa-regular fa-file-excel', titleKey: 'ahorro.actions.exportExcel', accent: 'emerald', order: 8 },
+   
   ];
 
 
