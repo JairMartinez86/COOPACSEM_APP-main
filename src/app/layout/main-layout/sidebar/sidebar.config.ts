@@ -158,8 +158,29 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     ]
   },
 
-  //FIN DE SOCIO
+
+
+  //CREDITO
   {
+    type: 'heading',
+    titleKey: 'sidebar.items.creditoPanel'
+  },
+    {
+    type: 'link',
+    titleKey: 'sidebar.items.solicitudCredito',
+    iconclass: 'fa-solid fa-handshake',
+    router: '/solicitud-credito',
+    permissions: {
+      view: false,
+      create: false,
+      edit: null,
+      delete: null
+    }
+  },
+
+
+
+    {
     type: 'heading',
     titleKey: 'sidebar.items.emptyPanel'
   },

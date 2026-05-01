@@ -12,6 +12,7 @@ import { EstadoCuentaService } from '../../../services/estado.cuenta.service';
 import { SocioAlerts } from '../../../../../shared/interfaces/alert.model';
 import { AppConfigService } from '../../../../../core/services/app-config.service';
 import { JMartAutoFocusNextDirective } from '@JairMartinez86/jmartinez-validator';
+import { TableFilterService } from '../../../../../core/services/table-filter.service';
 
 interface CuentaSocio {
     corriente: boolean;
@@ -55,6 +56,8 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
     private readonly router = inject(Router);
     private readonly translate = inject(TranslateService);
     public readonly appConfig = inject(AppConfigService);
+    private readonly filterSvc = inject(TableFilterService);
+    private readonly filterKey = 'estado-cuenta-lista';
 
     private readonly subs = new Subscription();
     private searchTimeout: any;
@@ -124,17 +127,36 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
     ];
 
     ngOnInit(): void {
-        this.setBreadcrumbs();
-        this.anioReporte = new Date(this.appConfig.getCurrentSettings().fechaServidor).getFullYear();
+  this.setBreadcrumbs();
+  this.anioReporte = new Date(this.appConfig.getCurrentSettings().fechaServidor).getFullYear();
 
-        this.subs.add(
-            this.translate.onLangChange.subscribe(() => {
-                this.setBreadcrumbs();
-            })
-        );
+  this.subs.add(
+    this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
+      const value = String(draft ?? '');
 
-        this.loadData();
-    }
+      if (this.search !== value) {
+        this.search = value;
+      }
+    })
+  );
+
+  this.subs.add(
+    this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
+      this.search = String(query ?? '').trim();
+      this.currentPage = 1;
+      this.loadData();
+    })
+  );
+
+  this.subs.add(
+    this.translate.onLangChange.subscribe(() => {
+      this.setBreadcrumbs();
+    })
+  );
+
+  this.loadData();
+}
+
 
     ngOnDestroy(): void {
         this.subs.unsubscribe();
@@ -645,51 +667,51 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
 
 
     private procesarIntegracionAhorro(accion: 'print' | 'pdf' | 'excel'): void {
-    const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
+        const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
 
-    this.procesandoReporte = true;
+        this.procesandoReporte = true;
 
-    this.service.getReporteIntegracionAhorro(
-        formato,
-        this.anioReporte,
-        this.tipoCuentaReporte,
-        this.estadoReporte
-    )
-        .pipe(finalize(() => this.procesandoReporte = false))
-        .subscribe({
-            next: (res: any) => {
-                const data = res?.data ?? {};
-                const archivo = data?.archivo ?? '';
+        this.service.getReporteIntegracionAhorro(
+            formato,
+            this.anioReporte,
+            this.tipoCuentaReporte,
+            this.estadoReporte
+        )
+            .pipe(finalize(() => this.procesandoReporte = false))
+            .subscribe({
+                next: (res: any) => {
+                    const data = res?.data ?? {};
+                    const archivo = data?.archivo ?? '';
 
-                const base = this.getNombreBaseReporte('integracionAhorro');
+                    const base = this.getNombreBaseReporte('integracionAhorro');
 
-                if (accion === 'print') {
-                    this.imprimirPdf(archivo);
-                    return;
+                    if (accion === 'print') {
+                        this.imprimirPdf(archivo);
+                        return;
+                    }
+
+                    if (accion === 'pdf') {
+                        this.descargarArchivo(
+                            archivo,
+                            this.getNombreArchivo(`${base} - ${this.anioReporte}`, 'pdf'),
+                            'application/pdf'
+                        );
+                        return;
+                    }
+
+                    if (accion === 'excel') {
+                        this.descargarArchivo(
+                            archivo,
+                            this.getNombreArchivo(`${base} - ${this.anioReporte}`, 'xlsx'),
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        );
+                    }
+                },
+                error: (err: any) => {
+                    this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
                 }
-
-                if (accion === 'pdf') {
-                    this.descargarArchivo(
-                        archivo,
-                        this.getNombreArchivo(`${base} - ${this.anioReporte}`, 'pdf'),
-                        'application/pdf'
-                    );
-                    return;
-                }
-
-                if (accion === 'excel') {
-                    this.descargarArchivo(
-                        archivo,
-                        this.getNombreArchivo(`${base} - ${this.anioReporte}`, 'xlsx'),
-                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                    );
-                }
-            },
-            error: (err: any) => {
-                this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-            }
-        });
-}
+            });
+    }
 
 
     private descargarArchivo(base64: string, fileName: string, mimeType: string): void {

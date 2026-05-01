@@ -273,6 +273,11 @@ export const routes: Routes = [
         providers: [JMartMassiveValidationService],
       },
 
+
+
+
+
+
       // ESTADO DE CUENTA
       {
         path: 'estado-cuenta',
@@ -296,9 +301,41 @@ export const routes: Routes = [
         data: {
           permission: '/estado-cuenta',
           action: 'view'
+
         }
       },
 
+
+
+      //CREDITO
+      {
+        path: 'solicitud-credito',
+        loadComponent: () =>
+          import('./features/credito/pages/components/solicitud-credito-list-socio/solicitud-credito-list-socio.component')
+            .then(m => m.SolicitudCreditoListSocioComponent),
+        canActivate: [permissionGuard],
+        data: {
+          permission: '/solicitud-credito',
+          action: 'view',
+          tableFilterKey: 'solicitud-credito-lista',
+          tableFilterEnter: true
+        },
+        providers: [JMartMassiveValidationService],
+      },
+
+      {
+        path: 'solicitud-credito/new/:socioId',
+        loadComponent: () =>
+          import('./features/credito/pages/components/solicitud-credito/solicitud-credito.component')
+            .then(m => m.SolicitudCreditoComponent),
+        data: {
+          permission: '/solicitud-credito',
+          action: ['view', 'create'],
+          tableFilterKey: 'solicitud-credito'
+        },
+        providers: [JMartMassiveValidationService],
+        canDeactivate: [pendingChangesGuard],
+      },
 
       // PROVEEDORES
       {

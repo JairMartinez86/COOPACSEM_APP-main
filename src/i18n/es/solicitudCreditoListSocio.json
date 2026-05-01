@@ -1,0 +1,66 @@
+{
+  "solicitudCreditoListSocio": {
+    "title": "Solicitud de Crédito",
+    "subtitle": "Seleccione un socio para crear una solicitud de crédito",
+
+    "breadcrumbs": [
+      {
+        "label": "Crédito"
+      },
+      {
+        "label": "Solicitud de Crédito"
+      }
+    ],
+
+    "table": {
+      "title": "Listado de socios",
+      "subtitle": "Seleccione un socio para iniciar la solicitud"
+    },
+
+    "filters": {
+      "searchPlaceholder": "Buscar por código, nombre o identificación...",
+      "status": "Estado",
+      "all": "Todos",
+      "clear": "Limpiar"
+    },
+
+    "columns": {
+      "code": "Código",
+      "member": "Socio",
+      "entryDate": "Fecha ingreso",
+      "salary": "Salario",
+      "savings": "Ahorro",
+      "status": "Estado"
+    },
+
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+
+    "pagination": {
+      "showing": "Mostrando",
+      "of": "de",
+      "records": "registros"
+    },
+
+    "loading": "Cargando información...",
+    "empty": "No hay socios disponibles",
+
+    "messages": {
+      "selectSocio": "Debe seleccionar un socio"
+    },
+
+    "actions": {
+      "newRequest": "Nueva solicitud"
+    },
+
+    "side": {
+      "quickActions": "Acciones rápidas",
+      "salary": "Salario mensual",
+      "savings": "Ahorro disponible",
+      "activeCredits": "Créditos activos",
+      "availableLimit": "Límite disponible"
+    }
+  }
+}

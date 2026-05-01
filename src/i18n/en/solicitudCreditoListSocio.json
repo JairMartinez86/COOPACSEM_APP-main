@@ -1,0 +1,66 @@
+{
+  "solicitudCreditoListSocio": {
+    "title": "Credit Request",
+    "subtitle": "Select a member to create a credit request",
+
+    "breadcrumbs": [
+      {
+        "label": "Credit"
+      },
+      {
+        "label": "Credit Request"
+      }
+    ],
+
+    "table": {
+      "title": "Members list",
+      "subtitle": "Select a member to start the request"
+    },
+
+    "filters": {
+      "searchPlaceholder": "Search by code, name or ID...",
+      "status": "Status",
+      "all": "All",
+      "clear": "Clear"
+    },
+
+    "columns": {
+      "code": "Code",
+      "member": "Member",
+      "entryDate": "Entry date",
+      "salary": "Salary",
+      "savings": "Savings",
+      "status": "Status"
+    },
+
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+
+    "pagination": {
+      "showing": "Showing",
+      "of": "of",
+      "records": "records"
+    },
+
+    "loading": "Loading data...",
+    "empty": "No members available",
+
+    "messages": {
+      "selectSocio": "You must select a member"
+    },
+
+    "actions": {
+      "newRequest": "New request"
+    },
+
+    "side": {
+      "quickActions": "Quick actions",
+      "salary": "Monthly salary",
+      "savings": "Available savings",
+      "activeCredits": "Active credits",
+      "availableLimit": "Available limit"
+    }
+  }
+}
