@@ -119,6 +119,24 @@ export class EstadoCuentaService {
     }
 
 
+    getReporteIntegracionAhorro(
+    formato: 'pdf' | 'excel',
+    anio: number,
+    tipoCuenta: string,
+    estado?: string | null
+) {
+    let params = new HttpParams()
+        .set('formato', formato)
+        .set('anio', anio)
+        .set('tipoCuenta', tipoCuenta);
+
+    if (estado) {
+        params = params.set('estado', estado);
+    }
+
+    return this.http.get(`${this.baseUrl}/reporte/integracion-ahorro`, { params });
+}
+
     getReportePagosAfiliaciones(
     formato: 'pdf' | 'excel',
     fechaInicio?: string | null,

@@ -164,7 +164,7 @@ export class EstadoCuentaDetalleComponent implements OnInit, OnDestroy {
 
   private generarAnios(): void {
     const anioActual = this.fechaServidor.getFullYear();
-    const anioMin = 2010;
+    const anioMin = 2000;
 
     this.anios = [];
 
