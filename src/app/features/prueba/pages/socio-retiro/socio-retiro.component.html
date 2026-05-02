@@ -71,7 +71,7 @@
               </span>
               <div>
                 <div class="text-muted">{{ 'socioRetiro.fields.porcentajeAhorro' | translate }}</div>
-                <div>% {{ socio?.porcentajeAhorro ?? '-' }}</div>
+                <div>% {{ socio?.porcentajeAhorro | number:'1.2-2' }}</div>
               </div>
             </div>
           </div>

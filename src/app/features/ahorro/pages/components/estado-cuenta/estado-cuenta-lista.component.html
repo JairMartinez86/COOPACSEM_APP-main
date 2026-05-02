@@ -95,7 +95,28 @@
                                         [class.socios-row-selected]="selectedSocio && selectedSocio.id === item.id"
                                         (click)="selectSocio(item)">
 
-                                        <td>{{ item.codigoSocio || '-' }}</td>
+                                         <td>
+                                            <div class="table-user">
+                                                <div class="position-relative d-inline-block">
+                                                    <div class="table-user-avatar table-user-avatar-text"
+                                                        [ngStyle]="getAvatarStyle()">
+                                                        {{ getInitials(item.nombreCompleto) }}
+                                                    </div>
+
+                                                    @if (item.alerts.count) {
+                                                    <i class="fa-solid fa-triangle-exclamation text-warning position-absolute top-0 start-100 translate-middle"
+                                                        style="font-size: 14px;">
+                                                    </i>
+                                                    }
+                                                </div>
+
+                                                <div>
+                                                    {{ item.codigoSocio || '-' }}
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                        
 
                                         <td>
                                             <div class="fw-semibold">{{ item.nombreCompleto || '-' }}</div>

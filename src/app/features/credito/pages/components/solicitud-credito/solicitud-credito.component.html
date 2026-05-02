@@ -9,172 +9,796 @@
           <i class="fa-duotone fa-solid fa-file-invoice-dollar text-success"></i>
           {{ 'solicitudCredito.title' | translate }}
         </h1>
-
-        <div class="text-muted">
-          {{ 'solicitudCredito.subtitle' | translate }}
-        </div>
+        <div class="text-muted">{{ 'solicitudCredito.subtitle' | translate }}</div>
       </div>
 
       <div class="d-flex align-items-center gap-2">
-        <span class="text-muted">
-          {{ 'solicitudCredito.fields.estadoSolicitud' | translate }}:
-        </span>
-
+        <span class="text-muted">{{ 'solicitudCredito.fields.estadoSolicitud' | translate }}:</span>
         <span class="badge badge-soft-warning">
           {{ 'solicitudCredito.status.enEvaluacion' | translate }}
         </span>
       </div>
     </div>
 
-    <div class="card mb-3">
-      <div class="card-header">
-        <strong>{{ 'solicitudCredito.sections.infoSocio' | translate }}</strong>
+    <form autocomplete="off" novalidate>
+
+      <!-- INFO SOCIO -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>{{ 'solicitudCredito.sections.infoSocio' | translate }}</strong>
+        </div>
+
+        <div class="card-body">
+          <div class="row g-4">
+
+            <div class="col-xl-2 col-lg-4 col-md-6">
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-success fa-2x">
+                  <i class="fa-duotone fa-solid fa-circle-user"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.noSocio' | translate }}</div>
+                  <strong>{{ socio?.codigoSocio || '-' }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-success fa-2x">
+                  <i class="fa-duotone fa-solid fa-user-check"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.nombreCompleto' | translate }}</div>
+                  <strong>{{ socio?.nombreCompleto || '-' }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-4 col-md-6">
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-success fa-2x">
+                  <i class="fa-duotone fa-solid fa-address-card"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.identificacion' | translate }}</div>
+                  <strong>{{ socio?.numeroIdentificacion || '-' }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-4 col-md-6">
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-success fa-2x">
+                  <i class="fa-duotone fa-solid fa-clipboard-check"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.estadoSocio' | translate }}</div>
+
+                  <span class="badge" [ngClass]="socio?.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                    {{
+                    socio?.activo
+                    ? ('solicitudCredito.status.activo' | translate)
+                    : ('solicitudCredito.status.inactivo' | translate)
+                    }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-success fa-2x">
+                  <i class="fa-duotone fa-solid fa-shield-check"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.antiguedad' | translate }}</div>
+                  <strong>{{ socio?.antiguedadTexto || '-' }}</strong>
+
+                  <div class="text-muted">
+                    @if (socio?.fechaIngreso) {
+                    ({{ 'solicitudCredito.labels.desde' | translate }} {{ socio?.fechaIngreso }})
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <hr class="my-1">
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-warning fa-2x">
+                  <i class="fa-duotone fa-solid fa-money-check-dollar"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.salario' | translate }}</div>
+                  <strong>{{ currency }} {{ formatCurrency(socio?.salarioMensual ?? 0) }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-primary fa-2x">
+                  <i class="fa-duotone fa-solid fa-piggy-bank"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.ahorrosDisponibles' | translate }}</div>
+                  <strong>{{ currency }} {{ formatCurrency(socio?.ahorrosDisponibles ?? 0) }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-purple fa-2x">
+                  <i class="fa-duotone fa-solid fa-credit-card"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.creditosActivos' | translate }}</div>
+                  <strong>{{ currency }} {{ formatCurrency(socio?.creditosActivos ?? 0) }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-success fa-2x">
+                  <i class="fa-duotone fa-solid fa-shield-check"></i>
+                </span>
+                <div>
+                  <div class="text-muted">
+                    {{ 'solicitudCredito.fields.limiteCreditoDisponible' | translate }}
+                    <i class="fa-duotone fa-solid fa-circle-info text-muted ms-1"></i>
+                  </div>
+
+                  <strong>{{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }}</strong>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
 
-      <div class="card-body">
-        <div class="row g-4">
+      <div class="row g-3">
 
-          <div class="col-xl-2 col-lg-4 col-md-6">
-            <div class="d-flex align-items-center gap-3">
-              <span class="text-success fa-2x">
-                <i class="fa-duotone fa-solid fa-circle-user"></i>
-              </span>
+        <div class="col-xl-10 col-lg-9">
 
-              <div>
-                <div class="text-muted">{{ 'solicitudCredito.fields.noSocio' | translate }}</div>
-                <strong>{{ socio?.codigoSocio || '-' }}</strong>
+          <div class="row g-3 mb-3">
+
+            <!-- DATOS LABORALES -->
+            <div class="col-xl-5 col-lg-12">
+              <div class="card h-100">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">
+                    <i class="fa-duotone fa-solid fa-briefcase text-success me-1"></i>
+                    {{ 'solicitudCredito.sections.datosLaborales' | translate }}
+                  </h5>
+                </div>
+
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6 border-end">
+                      <div class="mb-3">
+                        <div class="text-muted small">{{ 'solicitudCredito.fields.departamento' | translate }}</div>
+                        <div>{{ laboral.departamento || '-' }}</div>
+                      </div>
+
+                      <div class="mb-3">
+                        <div class="text-muted small">{{ 'solicitudCredito.fields.nomina' | translate }}</div>
+                        <div>{{ laboral.nomina || '-' }}</div>
+                      </div>
+
+                      <div class="mb-3">
+                        <div class="text-muted small">{{ 'solicitudCredito.fields.ingresoEmpresa' | translate }}</div>
+                        <div>{{ currency }} {{ formatCurrency(laboral.ingresoEmpresa) }}</div>
+                      </div>
+
+                      <div>
+                        <div class="text-muted small">{{ 'solicitudCredito.fields.antiguedadLaboral' | translate }}
+                        </div>
+                        <strong>{{ laboral.antiguedadLaboral || '-' }}</strong>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="text-muted small mb-2">
+                        {{ 'solicitudCredito.fields.deduccionesMensuales' | translate }}
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom py-1">
+                        <span>{{ 'solicitudCredito.fields.cuotaCreditoTiendas' | translate }}</span>
+                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaCreditoTiendas) }}</span>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom py-1">
+                        <span>{{ 'solicitudCredito.fields.pensionAlimenticia' | translate }}</span>
+                        <span>{{ currency }} {{ formatCurrency(deducciones.pensionAlimenticia) }}</span>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom py-1">
+                        <span>{{ 'solicitudCredito.fields.otrasCxc' | translate }}</span>
+                        <span>{{ currency }} {{ formatCurrency(deducciones.otrasCxC) }}</span>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom py-1">
+                        <span>{{ 'solicitudCredito.fields.cuotaBdf' | translate }}</span>
+                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaBdf) }}</span>
+                      </div>
+
+                      <div class="d-flex justify-content-between border-bottom py-1">
+                        <span>{{ 'solicitudCredito.fields.cuotaCoopacsem' | translate }}</span>
+                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaCoopacsem) }}</span>
+                      </div>
+
+                      <div class="d-flex justify-content-between fw-bold pt-2">
+                        <span>{{ 'solicitudCredito.fields.totalDeducciones' | translate }}</span>
+                        <span>{{ currency }} {{ formatCurrency(totalDeducciones) }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="border rounded p-2 mt-3 d-flex justify-content-between">
+                    <div>
+                      <strong>% {{ 'solicitudCredito.fields.nivelEndeudamiento' | translate }}</strong>
+                      <span class="ms-3">{{ formatPercent(nivelEndeudamiento) }}</span>
+                    </div>
+
+                    <div>
+                      <strong>{{ 'solicitudCredito.fields.cuotaDisponible' | translate }}</strong>
+                      <span class="ms-2 text-success fw-bold">
+                        {{ currency }} {{ formatCurrency(cuotaDisponible) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONFIGURACION CREDITO -->
+            <div class="col-xl-7 col-lg-12">
+              <div class="card h-100">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">
+                    <i class="fa-duotone fa-solid fa-file-lines text-success me-1"></i>
+                    {{ 'solicitudCredito.sections.configuracionCredito' | translate }}
+                  </h5>
+                </div>
+
+                <div class="card-body">
+                  <div class="row g-3">
+
+                    <!-- TIPO CREDITO -->
+                    <div class="col-md-6" error-notify="TipoCredito" error-display="inline">
+                      <label for="TipoCredito" class="form-label">
+                        {{ 'solicitudCredito.fields.tipoCredito' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-light fa-list"></i>
+                        </span>
+
+                        <select #TipoCredito class="form-select" id="TipoCredito" name="TipoCredito"
+                          [(ngModel)]="solicitud.tipoCredito" engineSync="TipoCredito" autoFocusNext
+                          [next]="FechaInicioPago" required (ngModelChange)="onTipoCreditoChange()">
+
+                          <option value="">
+                            {{ 'solicitudCredito.common.select' | translate }}
+                          </option>
+
+                          @for (tipo of tiposCredito; track tipo.id) {
+                          <option [value]="tipo.id">{{ tipo.nombre }}</option>
+                          }
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- FECHA INICIO PAGO -->
+                    <div class="col-md-6" error-notify="FechaInicioPago" error-display="inline">
+                      <label for="FechaInicioPago" class="form-label">
+                        {{ 'solicitudCredito.fields.fechaInicioPago' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-duotone fa-solid fa-calendar"></i>
+                        </span>
+
+                        <input #FechaInicioPago type="date" class="form-control" id="FechaInicioPago"
+                          name="FechaInicioPago" [(ngModel)]="solicitud.fechaInicioPago" engineSync="FechaInicioPago"
+                          autoFocusNext [next]="Proposito" required />
+                      </div>
+                    </div>
+
+                    <!-- PROPOSITO -->
+                    <div class="col-md-6" error-notify="Proposito" error-display="inline">
+                      <label for="Proposito" class="form-label">
+                        {{ 'solicitudCredito.fields.proposito' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-duotone fa-solid fa-bullseye-arrow"></i>
+                        </span>
+
+                        <select #Proposito class="form-select" id="Proposito" name="Proposito"
+                          [(ngModel)]="solicitud.proposito" engineSync="Proposito" autoFocusNext
+                          [next]="TasaInteresAnual" required>
+
+                          <option value="">
+                            {{ 'common.select' | translate }}
+                          </option>
+
+                          @for (p of propositosCreditoFiltrados; track p.id) {
+                          <option [value]="p.id">{{ p.nombre }}</option>
+                          }
+                        </select>
+                      </div>
+                    </div>
+
+                    @if (requiereProveedor) {
+                    <div class="col-md-6" error-notify="Proveedor" error-display="inline">
+                      <label for="Proveedor" class="form-label">
+                        {{ 'solicitudCredito.fields.proveedor' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-duotone fa-solid fa-store"></i>
+                        </span>
+
+                        <select #Proveedor class="form-select" id="Proveedor" name="Proveedor"
+                          [(ngModel)]="solicitud.proveedorId" engineSync="Proveedor" autoFocusNext
+                          [next]="TasaInteresAnual" required>
+
+                          <option value="">
+                            {{ 'solicitudCredito.common.select' | translate }}
+                          </option>
+
+                          @for (p of proveedores; track p.id) {
+                          <option [value]="p.id">
+                            {{ p.codigo ? (p.codigo + ' - ' + p.nombre) : p.nombre }}
+                          </option>
+                          }
+                        </select>
+                      </div>
+                    </div>
+                    }
+
+
+                    <!-- TASA INTERES -->
+                    <div class="col-md-6" error-notify="TasaInteresAnual" error-display="inline">
+                      <label for="TasaInteresAnual" class="form-label">
+                        {{ 'solicitudCredito.fields.tasaInteresAnual' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-duotone fa-solid fa-percent"></i>
+                        </span>
+
+                        <input #TasaInteresAnual type="text" class="form-control text-end" id="TasaInteresAnual"
+                          name="TasaInteresAnual" [(ngModel)]="solicitud.tasaInteresAnual" engineSync="TasaInteresAnual"
+                          autoFocusNext [next]="MontoSolicitado" numberFormat [decimals]="2"
+                          [decimalSeparator]="settings.decimalSeparator"
+                          [thousandSeparator]="settings.thousandSeparator" required readonly />
+                      </div>
+                    </div>
+
+                    <!-- MONTO SOLICITADO -->
+                    <div class="col-md-6" error-notify="MontoSolicitado" error-display="inline">
+                      <label for="MontoSolicitado" class="form-label">
+                        {{ 'solicitudCredito.fields.montoSolicitado' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-duotone fa-solid fa-hand-holding-circle-dollar me-1"></i>{{ currency }}
+                        </span>
+
+                        <input #MontoSolicitado type="text" class="form-control text-end" id="MontoSolicitado"
+                          name="MontoSolicitado" [(ngModel)]="solicitud.montoSolicitado" engineSync="MontoSolicitado"
+                          autoFocusNext [next]="ComisionDesembolso" numberFormat [decimals]="2"
+                          [decimalSeparator]="settings.decimalSeparator"
+                          [thousandSeparator]="settings.thousandSeparator" required
+                          [ngClass]="montoExcedeLimite ? 'is-invalid' : ''" (ngModelChange)="onMontoChange()"
+                          JmartAutoFocus />
+                      </div>
+
+                      @if (montoExcedeLimite) {
+                      <small class="text-danger">
+                        {{ 'solicitudCredito.messages.amountExceedsLimit' | translate }}
+                        ({{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }})
+                      </small>
+                      }
+                    </div>
+
+                    <!-- COMISION -->
+                    <div class="col-md-6" error-notify="ComisionDesembolso" error-display="inline">
+                      <label for="ComisionDesembolso" class="form-label">
+                        {{ 'solicitudCredito.fields.comisionDesembolso' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-duotone fa-solid fa-percent"></i>
+                        </span>
+
+                        <input #ComisionDesembolso type="text" class="form-control text-end" id="ComisionDesembolso"
+                          name="ComisionDesembolso" [(ngModel)]="solicitud.comisionDesembolso"
+                          engineSync="ComisionDesembolso" autoFocusNext [next]="Plazo" numberFormat [decimals]="2"
+                          [decimalSeparator]="settings.decimalSeparator"
+                          [thousandSeparator]="settings.thousandSeparator" required readonly />
+                      </div>
+                    </div>
+
+                    <!-- PLAZO -->
+                    <div class="col-md-4" error-notify="Plazo" error-display="inline">
+                      <label for="Plazo" class="form-label">
+                        {{ 'solicitudCredito.fields.plazo' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-duotone fa-solid fa-calendar-days"></i>
+                        </span>
+
+                        <input #Plazo type="text" class="form-control text-end" id="Plazo" name="Plazo"
+                          [(ngModel)]="solicitud.plazo" engineSync="Plazo" autoFocusNext [next]="NumeroFactura"
+                          numberFormat [decimals]="0" [decimalSeparator]="settings.decimalSeparator"
+                          [thousandSeparator]="settings.thousandSeparator" required (ngModelChange)="onPlazoChange()" />
+                      </div>
+                    </div>
+
+                    <div class="col-md-2 d-flex align-items-end">
+                      <span>{{ 'solicitudCredito.fields.quincenas' | translate }}</span>
+                    </div>
+
+                    <!-- NUMERO FACTURA -->
+                    <div class="col-md-6" error-notify="NumeroFactura" error-display="inline">
+                      <label for="NumeroFactura" class="form-label">
+                        {{ 'solicitudCredito.fields.numeroFactura' | translate }}
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-duotone fa-solid fa-file-invoice"></i>
+                        </span>
+
+                        <input #NumeroFactura type="text" class="form-control" id="NumeroFactura" name="NumeroFactura"
+                          [(ngModel)]="solicitud.numeroFactura" engineSync="NumeroFactura" autoFocusNext
+                          [next]="saveButton" />
+                      </div>
+                    </div>
+
+                    <div class="col-12 d-flex align-items-center gap-3 flex-wrap">
+                      <button type="button" class="btn btn-success" (click)="ajustarMaximoPermitido()">
+                        <i class="fa-solid fa-arrows-rotate me-1"></i>
+                        {{ 'solicitudCredito.actions.ajustarMaximo' | translate }}
+                      </button>
+
+                      <span>
+                        {{ 'solicitudCredito.fields.montoMaximoDisponible' | translate }}:
+                        <strong class="text-success">
+                          {{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }}
+                        </strong>
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- SIMULACION -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                <i class="fa-duotone fa-solid fa-chart-simple text-success me-1"></i>
+                {{ 'solicitudCredito.sections.simulacionCredito' | translate }}
+              </h5>
+            </div>
+
+            <div class="card-body">
+              <div class="row g-3 align-items-center">
+
+                <div class="col-xl-3 col-md-6">
+                  <div class="d-flex align-items-center gap-3">
+                    <span class="text-success fa-2x">
+                      <i class="fa-duotone fa-solid fa-house"></i>
+                    </span>
+                    <div>
+                      <div class="text-muted">{{ 'solicitudCredito.fields.cuotaQuincenal' | translate }}</div>
+                      <strong>{{ currency }} {{ formatCurrency(cuotaQuincenal) }}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                  <div class="d-flex align-items-center gap-3">
+                    <span class="text-success fa-2x">
+                      <i class="fa-duotone fa-solid fa-circle-dollar"></i>
+                    </span>
+                    <div>
+                      <div class="text-muted">{{ 'solicitudCredito.fields.interesesTotales' | translate }}</div>
+                      <strong>{{ currency }} {{ formatCurrency(interesesTotales) }}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                  <div class="d-flex align-items-center gap-3">
+                    <span class="text-success fa-2x">
+                      <i class="fa-duotone fa-solid fa-calendar-check"></i>
+                    </span>
+                    <div>
+                      <div class="text-muted">{{ 'solicitudCredito.fields.totalPagar' | translate }}</div>
+                      <strong>{{ currency }} {{ formatCurrency(totalPagar) }}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <div class="text-muted">{{ 'solicitudCredito.fields.capacidadPago' | translate }}</div>
+                      <strong>{{ formatPercent(capacidadPagoPorcentaje) }}</strong>
+                    </div>
+
+                    <div>
+                      <div class="text-muted">{{ 'solicitudCredito.fields.resultadoEvaluacion' | translate }}</div>
+                      <strong [ngClass]="esViable ? 'text-success' : 'text-danger'">
+                        {{ resultadoEvaluacionKey | translate }}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="progress mt-2">
+                    <div class="progress-bar" [ngClass]="esViable ? 'bg-success' : 'bg-danger'"
+                      [style.width.%]="capacidadProgress">
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
 
-          <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="d-flex align-items-center gap-3">
-              <span class="text-success fa-2x">
-                <i class="fa-duotone fa-solid fa-user-check"></i>
-              </span>
-
-              <div>
-                <div class="text-muted">{{ 'solicitudCredito.fields.nombreCompleto' | translate }}</div>
-                <strong>{{ socio?.nombreCompleto || '-' }}</strong>
-              </div>
+          <!-- VALIDACIONES -->
+          <div class="mb-3">
+            <div class="fw-semibold mb-2">
+              <i class="fa-solid fa-chevron-down me-1"></i>
+              {{ 'solicitudCredito.sections.validacionesAutomaticas' | translate }}
             </div>
-          </div>
 
-          <div class="col-xl-2 col-lg-4 col-md-6">
-            <div class="d-flex align-items-center gap-3">
-              <span class="text-success fa-2x">
-                <i class="fa-duotone fa-solid fa-address-card"></i>
-              </span>
+            <div class="row g-3">
 
-              <div>
-                <div class="text-muted">{{ 'solicitudCredito.fields.identificacion' | translate }}</div>
-                <strong>{{ socio?.numeroIdentificacion || '-' }}</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-2 col-lg-4 col-md-6">
-            <div class="d-flex align-items-center gap-3">
-              <span class="text-success fa-2x">
-                <i class="fa-duotone fa-solid fa-clipboard-check"></i>
-              </span>
-
-              <div>
-                <div class="text-muted">{{ 'solicitudCredito.fields.estadoSocio' | translate }}</div>
-
-                <span class="badge" [ngClass]="socio?.activo ? 'badge-soft-success' : 'badge-soft-danger'">
-                  {{
+              <div class="col-xl-3 col-md-6">
+                <div class="alert" [ngClass]="socio?.activo ? 'alert-success' : 'alert-danger'">
+                  <i class="fa-solid me-1"
+                    [ngClass]="socio?.activo ? 'fa-circle-check' : 'fa-triangle-exclamation'"></i>
+                  <strong>{{ 'solicitudCredito.validations.socioActivo' | translate }}</strong>
+                  <div>
+                    {{
                     socio?.activo
-                      ? ('solicitudCredito.status.activo' | translate)
-                      : ('solicitudCredito.status.inactivo' | translate)
-                  }}
-                </span>
+                    ? ('solicitudCredito.validations.socioActivoText' | translate)
+                    : ('solicitudCredito.status.inactivo' | translate)
+                    }}
+                  </div>
+                </div>
               </div>
+
+              <div class="col-xl-3 col-md-6">
+                <div class="alert alert-success mb-0">
+                  <i class="fa-solid fa-circle-check me-1"></i>
+                  <strong>{{ 'solicitudCredito.validations.nivelEndeudamiento' | translate }}</strong>
+                  <div>{{ formatPercent(nivelEndeudamiento) }}</div>
+                </div>
+              </div>
+
+              <div class="col-xl-3 col-md-6">
+                <div class="alert mb-0" [ngClass]="esViable ? 'alert-success' : 'alert-danger'">
+                  <i class="fa-solid me-1" [ngClass]="esViable ? 'fa-circle-check' : 'fa-triangle-exclamation'"></i>
+
+                  <strong>{{ 'solicitudCredito.validations.cuotaDisponible' | translate }}</strong>
+
+                  <div>
+                    {{ formatPercent(capacidadPagoPorcentaje) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-3 col-md-6">
+                <div class="alert alert-success mb-0">
+                  <i class="fa-solid fa-circle-check me-1"></i>
+                  <strong>{{ 'solicitudCredito.validations.sinMora' | translate }}</strong>
+                  <div>{{ 'solicitudCredito.validations.sinMoraText' | translate }}</div>
+                </div>
+              </div>
+
             </div>
           </div>
 
-          <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="d-flex align-items-center gap-3">
-              <span class="text-success fa-2x">
-                <i class="fa-duotone fa-solid fa-shield-check"></i>
-              </span>
+          <!-- APROBACION + ACCIONES -->
+          <div class="row g-3 mb-3">
+            <div class="col-xl-7">
+              <div class="card h-100">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">
+                    {{ 'solicitudCredito.sections.flujoAprobacion' | translate }}
+                  </h5>
+                </div>
 
-              <div>
-                <div class="text-muted">{{ 'solicitudCredito.fields.antiguedad' | translate }}</div>
-                <strong>{{ socio?.antiguedadTexto || '-' }}</strong>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start text-center">
+                    @for (step of flujoAprobacion; track step.orden) {
+                    <div>
+                      <div class="rounded-circle d-inline-flex align-items-center justify-content-center text-white"
+                        [ngClass]="step.orden < 4 ? 'bg-success' : 'bg-secondary'" style="width: 34px; height: 34px;">
+                        {{ step.orden }}
+                      </div>
 
-                <div class="text-muted">
-                  @if (socio?.fechaIngreso) {
-                    ({{ 'solicitudCredito.labels.desde' | translate }} {{ socio?.fechaIngreso }})
+                      <div class="mt-2 fw-semibold">{{ step.labelKey | translate }}</div>
+                      <span class="badge badge-soft-warning">
+                        {{ 'solicitudCredito.status.pendiente' | translate }}
+                      </span>
+                      <div class="text-muted small">
+                        {{ 'solicitudCredito.approval.pendingReview' | translate }}
+                      </div>
+                    </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-5">
+              <div class="card h-100">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">
+                    {{ 'solicitudCredito.sections.acciones' | translate }}
+                  </h5>
+                </div>
+
+                <div class="card-body">
+                  <div class="d-flex flex-wrap gap-2">
+
+                    <button #saveButton type="button" class="btn btn-success" [disabled]="saving" autoFocusNext
+                      [disableClickButton]="true" [unlockOn]="notify.closed$" (click)="guardarBorrador()">
+                      <i class="fa-solid fa-floppy-disk me-1"></i>
+                      {{ 'solicitudCredito.actions.guardarBorrador' | translate }}
+                    </button>
+
+                    <button type="button" class="btn btn-light" (click)="simular()">
+                      <i class="fa-solid fa-calculator me-1"></i>
+                      {{ 'solicitudCredito.actions.simular' | translate }}
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" (click)="enviarAprobacion()" [disabled]="!esViable">
+                      <i class="fa-solid fa-paper-plane me-1"></i>
+                      {{ 'solicitudCredito.actions.enviarAprobacion' | translate }}
+                    </button>
+
+                    <button type="button" class="btn btn-light" (click)="imprimir()">
+                      <i class="fa-solid fa-print me-1"></i>
+                      {{ 'solicitudCredito.actions.imprimir' | translate }}
+                    </button>
+
+                    <button type="button" class="btn btn-outline-danger" (click)="cancelar()">
+                      <i class="fa-solid fa-circle-xmark me-1"></i>
+                      {{ 'solicitudCredito.actions.cancelar' | translate }}
+                    </button>
+                  </div>
+
+                  @if (!esViable) {
+                  <small class="text-muted d-block mt-2">
+                    {{ 'solicitudCredito.messages.notAvailableByLimit' | translate }}
+                  </small>
                   }
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="col-12">
-            <hr class="my-1">
-          </div>
-
-          <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="d-flex align-items-center gap-3">
-              <span class="text-warning fa-2x">
-                <i class="fa-duotone fa-solid fa-money-check-dollar"></i>
-              </span>
-
-              <div>
-                <div class="text-muted">{{ 'solicitudCredito.fields.salario' | translate }}</div>
-                <strong>{{ currency }} {{ formatCurrency(socio?.salarioMensual ?? 0) }}</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="d-flex align-items-center gap-3">
-              <span class="text-primary fa-2x">
-                <i class="fa-duotone fa-solid fa-piggy-bank"></i>
-              </span>
-
-              <div>
-                <div class="text-muted">{{ 'solicitudCredito.fields.ahorrosDisponibles' | translate }}</div>
-                <strong>{{ currency }} {{ formatCurrency(socio?.ahorrosDisponibles ?? 0) }}</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="d-flex align-items-center gap-3">
-              <span class="text-purple fa-2x">
-                <i class="fa-duotone fa-solid fa-credit-card"></i>
-              </span>
-
-              <div>
-                <div class="text-muted">{{ 'solicitudCredito.fields.creditosActivos' | translate }}</div>
-                <strong>{{ currency }} {{ formatCurrency(socio?.creditosActivos ?? 0) }}</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="d-flex align-items-center gap-3">
-              <span class="text-success fa-2x">
-                <i class="fa-duotone fa-solid fa-shield-check"></i>
-              </span>
-
-              <div>
-                <div class="text-muted">
-                  {{ 'solicitudCredito.fields.limiteCreditoDisponible' | translate }}
-                  <i class="fa-duotone fa-solid fa-circle-info text-muted ms-1"></i>
-                </div>
-
-                <strong>{{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }}</strong>
-              </div>
-            </div>
+          <div class="alert alert-primary">
+            <i class="fa-solid fa-circle-info me-1"></i>
+            <strong>{{ 'solicitudCredito.labels.note' | translate }}:</strong>
+            {{ 'solicitudCredito.messages.noteLimit' | translate }}
           </div>
 
         </div>
-      </div>
-    </div>
 
+        <!-- RESUMEN DERECHO -->
+        <div class="col-xl-2 col-lg-3">
+          <div class="card border-danger">
+            <div class="card-header">
+              <strong>{{ 'solicitudCredito.sections.resumenSolicitud' | translate }}</strong>
+            </div>
+
+            <div class="card-body">
+              @if (montoExcedeLimite) {
+              <div class="alert alert-danger">
+                <strong>
+                  <i class="fa-solid fa-triangle-exclamation me-1"></i>
+                  {{ 'solicitudCredito.messages.amountExceedsLimitTitle' | translate }}
+                </strong>
+
+                <div class="d-flex justify-content-between mt-2">
+                  <span>{{ 'solicitudCredito.fields.limiteDisponible' | translate }}:</span>
+                  <strong>{{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }}</strong>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <span>{{ 'solicitudCredito.fields.montoSolicitado' | translate }}:</span>
+                  <strong>{{ currency }} {{ formatCurrency(solicitud.montoSolicitado ?? 0) }}</strong>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <span>{{ 'solicitudCredito.fields.exceso' | translate }}:</span>
+                  <strong>{{ currency }} {{ formatCurrency(excedenteLimite) }}</strong>
+                </div>
+              </div>
+              }
+
+              <div class="d-flex justify-content-between mb-2">
+                <span>{{ 'solicitudCredito.fields.plazo' | translate }}</span>
+                <strong>{{ solicitud.plazo || 0 }} {{ 'solicitudCredito.fields.quincenas' | translate }}</strong>
+              </div>
+
+              <div class="d-flex justify-content-between mb-2">
+                <span>{{ 'solicitudCredito.fields.cuotaQuincenal' | translate }}</span>
+                <strong>{{ currency }} {{ formatCurrency(cuotaQuincenal) }}</strong>
+              </div>
+
+              <div class="d-flex justify-content-between mb-2">
+                <span>{{ 'solicitudCredito.fields.interesesTotales' | translate }}</span>
+                <strong>{{ currency }} {{ formatCurrency(interesesTotales) }}</strong>
+              </div>
+
+              <div class="d-flex justify-content-between mb-2">
+                <span>{{ 'solicitudCredito.fields.totalPagar' | translate }}</span>
+                <strong>{{ currency }} {{ formatCurrency(totalPagar) }}</strong>
+              </div>
+
+              <div class="d-flex justify-content-between mb-2">
+                <span>{{ 'solicitudCredito.fields.fechaInicioPago' | translate }}</span>
+                <strong>{{ solicitud.fechaInicioPago || '-' }}</strong>
+              </div>
+
+              <div class="d-flex justify-content-between mb-2">
+                <span>{{ 'solicitudCredito.fields.tasaInteresAnual' | translate }}</span>
+                <strong>{{ formatPercent(solicitud.tasaInteresAnual) }}</strong>
+              </div>
+
+              <div class="d-flex justify-content-between mb-2">
+                <span>{{ 'solicitudCredito.fields.comisionDesembolso' | translate }}</span>
+                <strong>{{ formatPercent(solicitud.comisionDesembolso) }}</strong>
+              </div>
+
+              <div class="alert alert-primary mt-3 mb-0">
+                <i class="fa-solid fa-circle-info me-1"></i>
+                {{ 'solicitudCredito.messages.approvalPolicy' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
   </div>
 </section>

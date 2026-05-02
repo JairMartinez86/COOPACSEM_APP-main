@@ -913,4 +913,34 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
         return this.reporteSeleccionado?.type === 'integracionAhorro';
     }
 
+     getAvatarStyle(): Record<string, string> {
+    if (this.isDarkTheme()) {
+      return {};
+    }
+
+    return {
+      background: '#1e3a8a',
+      color: '#ffffff',
+      border: '1px solid #1d4ed8'
+    };
+  }
+
+    isDarkTheme(): boolean {
+    return document.documentElement.getAttribute('data-theme') === 'dark';
+  }
+
+    getInitials(value: string | null | undefined): string {
+    if (!value) {
+      return 'SO';
+    }
+
+    const parts = value.trim().split(/\s+/).filter(Boolean);
+
+    if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
+
+    return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
+  }
+
 }

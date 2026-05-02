@@ -9,22 +9,12 @@ import { Breadcrumb } from '../../../../../shared/components/breadcrumb/breadcru
 import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import { AppConfigService } from '../../../../../core/services/app-config.service';
-import { SocioAlerts } from '../../../../../shared/interfaces/alert.model';
+
 import { SolicitudCreditoService } from '../../../services/solicitud-credito.service';
 import { TableFilterService } from '../../../../../core/services/table-filter.service';
+import { SolicitudCreditoSocioRow } from '../../../interface/solicitud-credito.interface';
 
-interface SolicitudCreditoSocioRow {
-  id: string;
-  codigoSocio: string;
-  nombreCompleto: string;
-  fechaIngreso?: string | null;
-  estado: string;
-  salarioMensual?: number;
-  ahorroDisponible?: number;
-  creditosActivos?: number;
-  limiteCreditoDisponible?: number;
-  alerts: SocioAlerts;
-}
+
 
 interface ActionItem {
   icon: string;
@@ -50,13 +40,13 @@ export class SolicitudCreditoListSocioComponent implements OnInit, OnDestroy {
   private readonly notify = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
-  public readonly appConfig = inject(AppConfigService);
-
   private readonly filterSvc = inject(TableFilterService);
-private readonly filterKey = 'solicitud-credito-lista';
+
+  public readonly appConfig = inject(AppConfigService);
 
   private readonly subs = new Subscription();
   private searchTimeout: any;
+  private readonly filterKey = 'solicitud-credito-lista';
 
   breadcrumbs: any[] = [];
 
@@ -66,6 +56,7 @@ private readonly filterKey = 'solicitud-credito-lista';
   loading = false;
 
   search = '';
+  tipoCuenta = '';
   estado = '';
 
   currentPage = 1;
@@ -82,35 +73,35 @@ private readonly filterKey = 'solicitud-credito-lista';
     }
   ];
 
- ngOnInit(): void {
-  this.setBreadcrumbs();
+  ngOnInit(): void {
+    this.setBreadcrumbs();
 
-  this.subs.add(
-    this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
-      const value = String(draft ?? '');
+    this.subs.add(
+      this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
+        const value = String(draft ?? '');
 
-      if (this.search !== value) {
-        this.search = value;
-      }
-    })
-  );
+        if (this.search !== value) {
+          this.search = value;
+        }
+      })
+    );
 
-  this.subs.add(
-    this.filterSvc.query$(this.filterKey).subscribe(query => {
-      this.search = String(query ?? '').trim();
-      this.currentPage = 1;
-      this.loadData();
-    })
-  );
+    this.subs.add(
+      this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
+        this.search = String(query ?? '').trim();
+        this.currentPage = 1;
+        this.loadData();
+      })
+    );
 
-  this.subs.add(
-    this.translate.onLangChange.subscribe(() => {
-      this.setBreadcrumbs();
-    })
-  );
+    this.subs.add(
+      this.translate.onLangChange.subscribe(() => {
+        this.setBreadcrumbs();
+      })
+    );
 
-  this.loadData();
-}
+    this.loadData();
+  }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
@@ -131,7 +122,8 @@ private readonly filterKey = 'solicitud-credito-lista';
       this.currentPage,
       this.pageSize,
       this.search,
-      this.estado
+      this.tipoCuenta,
+      this.estado,
     )
       .pipe(finalize(() => this.loading = false))
       .subscribe({
@@ -192,6 +184,8 @@ private readonly filterKey = 'solicitud-credito-lista';
   onSearchInputChange(): void {
     clearTimeout(this.searchTimeout);
 
+    this.filterSvc.setDraft(this.filterKey, this.search);
+
     this.searchTimeout = setTimeout(() => {
       this.currentPage = 1;
       this.loadData();
@@ -201,9 +195,18 @@ private readonly filterKey = 'solicitud-credito-lista';
   onSearchKeyup(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       clearTimeout(this.searchTimeout);
+
+      this.filterSvc.setDraft(this.filterKey, this.search);
+      this.filterSvc.setQuery(this.filterKey, this.search);
+
       this.currentPage = 1;
       this.loadData();
     }
+  }
+
+  onTipoCuentaChange(): void {
+    this.currentPage = 1;
+    this.loadData();
   }
 
   onEstadoChange(): void {
@@ -213,8 +216,12 @@ private readonly filterKey = 'solicitud-credito-lista';
 
   clearFilters(): void {
     this.search = '';
+    this.tipoCuenta = '';
     this.estado = '';
     this.currentPage = 1;
+
+    this.filterSvc.clear(this.filterKey);
+
     this.loadData();
   }
 
@@ -346,6 +353,11 @@ private readonly filterKey = 'solicitud-credito-lista';
       creditosActivos: Number(item?.creditosActivos ?? 0),
       limiteCreditoDisponible: Number(item?.limiteCreditoDisponible ?? 0),
 
+      cuentas: {
+        corriente: !!item?.cuentas?.corriente,
+        navidena: !!item?.cuentas?.navidena
+      },
+
       alerts: item?.alerts ?? {
         count: 0,
         hasAlerts: false,
@@ -354,5 +366,35 @@ private readonly filterKey = 'solicitud-credito-lista';
         items: []
       }
     };
+  }
+
+  getAvatarStyle(): Record<string, string> {
+    if (this.isDarkTheme()) {
+      return {};
+    }
+
+    return {
+      background: '#1e3a8a',
+      color: '#ffffff',
+      border: '1px solid #1d4ed8'
+    };
+  }
+
+  isDarkTheme(): boolean {
+    return document.documentElement.getAttribute('data-theme') === 'dark';
+  }
+
+  getInitials(value: string | null | undefined): string {
+    if (!value) {
+      return 'SO';
+    }
+
+    const parts = value.trim().split(/\s+/).filter(Boolean);
+
+    if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
+
+    return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
   }
 }

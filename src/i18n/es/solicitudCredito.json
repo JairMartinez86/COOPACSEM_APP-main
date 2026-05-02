@@ -1,0 +1,132 @@
+{
+  "solicitudCredito": {
+    "title": "Solicitud de Crédito",
+    "subtitle": "Evaluación y configuración de crédito",
+
+    "breadcrumbs": [
+      { "label": "Créditos" },
+      { "label": "Solicitud de crédito" }
+    ],
+
+    "sections": {
+      "infoSocio": "Información del Socio",
+      "datosLaborales": "Datos Laborales",
+      "configuracionCredito": "Configuración del Crédito",
+      "simulacionCredito": "Simulación del Crédito",
+      "validacionesAutomaticas": "Validaciones Automáticas",
+      "flujoAprobacion": "Flujo de Aprobación",
+      "acciones": "Acciones",
+      "resumenSolicitud": "Resumen de la Solicitud"
+    },
+
+    "fields": {
+      "estadoSolicitud": "Estado",
+      "noSocio": "No. Socio",
+      "nombreCompleto": "Nombre Completo",
+      "identificacion": "Identificación",
+      "estadoSocio": "Estado del Socio",
+      "antiguedad": "Antigüedad",
+
+      "salario": "Salario",
+      "ahorrosDisponibles": "Ahorros Disponibles",
+      "creditosActivos": "Créditos Activos",
+      "limiteCreditoDisponible": "Límite Crédito Disponible",
+
+      "departamento": "Departamento",
+      "nomina": "Nómina",
+      "ingresoEmpresa": "Ingreso en la Empresa",
+      "antiguedadLaboral": "Antigüedad Laboral",
+
+      "deduccionesMensuales": "Deducciones Mensuales",
+      "cuotaCreditoTiendas": "Cuota Crédito Tiendas",
+      "pensionAlimenticia": "Pensión Alimenticia",
+      "otrasCxc": "Otras CxC",
+      "cuotaBdf": "Cuota BDF",
+      "cuotaCoopacsem": "Cuota COOPACSEM",
+      "totalDeducciones": "Total Deducciones",
+
+      "nivelEndeudamiento": "Nivel de Endeudamiento",
+      "cuotaDisponible": "Cuota Disponible",
+
+      "tipoCredito": "Tipo de Crédito",
+      "fechaInicioPago": "Fecha Inicio Pago",
+      "proposito": "Propósito",
+      "proveedor": "Proveedor",
+
+      "tasaInteresAnual": "Tasa de Interés Anual",
+      "montoSolicitado": "Monto Solicitado",
+      "comisionDesembolso": "Comisión Desembolso",
+      "plazo": "Plazo",
+      "quincenas": "quincenas",
+      "numeroFactura": "Número de Factura",
+
+      "montoMaximoDisponible": "Monto Máximo Disponible",
+
+      "cuotaQuincenal": "Cuota Quincenal",
+      "interesesTotales": "Intereses Totales",
+      "totalPagar": "Total a Pagar",
+      "capacidadPago": "Capacidad de Pago",
+      "resultadoEvaluacion": "Resultado Evaluación",
+
+      "limiteDisponible": "Límite Disponible",
+      "exceso": "Exceso"
+    },
+
+    "status": {
+      "activo": "Activo",
+      "inactivo": "Inactivo",
+      "pendiente": "Pendiente",
+      "enEvaluacion": "En Evaluación"
+    },
+
+    "evaluation": {
+      "viable": "Viable",
+      "notViable": "No Viable"
+    },
+
+    "validations": {
+      "socioActivo": "Socio Activo",
+      "socioActivoText": "El socio está activo",
+      "nivelEndeudamiento": "Nivel de Endeudamiento",
+      "cuotaDisponible": "Cuota Disponible",
+      "sinMora": "Sin Mora",
+      "sinMoraText": "No presenta mora"
+    },
+
+    "approval": {
+      "comiteCredito": "Comité Crédito",
+      "comiteVigilancia": "Comité Vigilancia",
+      "juntaDirectiva": "Junta Directiva",
+      "desembolso": "Desembolso",
+      "pendingReview": "Pendiente de revisión"
+    },
+
+    "actions": {
+      "guardarBorrador": "Guardar Borrador",
+      "simular": "Simular",
+      "enviarAprobacion": "Enviar Aprobación",
+      "imprimir": "Imprimir",
+      "cancelar": "Cancelar",
+      "ajustarMaximo": "Ajustar al máximo"
+    },
+
+    "messages": {
+      "amountExceedsLimit": "El monto excede el límite permitido",
+      "amountExceedsLimitTitle": "Excede el límite",
+      "notViable": "La solicitud no es viable",
+      "notAvailableByLimit": "No disponible por límite o capacidad",
+      "noteLimit": "El monto no debe exceder el límite disponible",
+      "approvalPolicy": "Sujeto a aprobación según políticas internas"
+    },
+
+    "labels": {
+      "desde": "desde",
+      "note": "Nota"
+    },
+    
+  "common": {
+    "select": "Seleccione..."
+  }
+  }
+
+}
