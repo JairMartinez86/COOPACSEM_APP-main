@@ -12,6 +12,8 @@ export interface SocioCreditoResumen {
   ahorrosDisponibles?: number;
   creditosActivos?: number;
   limiteCreditoDisponible?: number;
+  porcentajePrincipalPagado?: number;
+  tieneCreditosVigentes?: boolean;
 }
 
 export interface TipoCreditoItem {
@@ -81,4 +83,15 @@ export interface TipoCreditoReglaItem {
   comision: number;
   cuotaMaxima: number;
   porcInteresAnual: number;
+}
+
+
+export interface PlanPagoItem {
+  noCuota: number;
+  fechaPago: string;
+  cuota: number;
+  principalPendiente: number;
+  pagoPrincipal: number;
+  pagoInteres: number;
+  principalCancelado: number;
 }

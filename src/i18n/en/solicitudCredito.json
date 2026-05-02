@@ -2,12 +2,14 @@
   "solicitudCredito": {
     "title": "Credit Request",
     "subtitle": "Credit evaluation and configuration",
-
     "breadcrumbs": [
-      { "label": "Credits" },
-      { "label": "Credit request" }
+      {
+        "label": "Credits"
+      },
+      {
+        "label": "Credit request"
+      }
     ],
-
     "sections": {
       "infoSocio": "Member Information",
       "datosLaborales": "Employment Information",
@@ -16,9 +18,9 @@
       "validacionesAutomaticas": "Automatic Validations",
       "flujoAprobacion": "Approval Flow",
       "acciones": "Actions",
-      "resumenSolicitud": "Request Summary"
+      "resumenSolicitud": "Request Summary",
+        "planPagos": "Payment Schedule"
     },
-
     "fields": {
       "estadoSolicitud": "Status",
       "noSocio": "Member ID",
@@ -26,17 +28,14 @@
       "identificacion": "Identification",
       "estadoSocio": "Member Status",
       "antiguedad": "Seniority",
-
       "salario": "Salary",
       "ahorrosDisponibles": "Available Savings",
       "creditosActivos": "Active Credits",
       "limiteCreditoDisponible": "Available Credit Limit",
-
       "departamento": "Department",
       "nomina": "Payroll",
       "ingresoEmpresa": "Company Income",
       "antiguedadLaboral": "Work Seniority",
-
       "deduccionesMensuales": "Monthly Deductions",
       "cuotaCreditoTiendas": "Store Credit Payment",
       "pensionAlimenticia": "Alimony",
@@ -44,33 +43,44 @@
       "cuotaBdf": "BDF Payment",
       "cuotaCoopacsem": "COOPACSEM Payment",
       "totalDeducciones": "Total Deductions",
-
       "nivelEndeudamiento": "Debt Level",
       "cuotaDisponible": "Available Installment",
-
       "tipoCredito": "Credit Type",
       "fechaInicioPago": "Start Payment Date",
       "proposito": "Purpose",
       "proveedor": "Supplier",
-
       "tasaInteresAnual": "Annual Interest Rate",
       "montoSolicitado": "Requested Amount",
       "comisionDesembolso": "Disbursement Fee",
       "plazo": "Term",
       "quincenas": "fortnights",
+      "meses": "monthly",
       "numeroFactura": "Invoice Number",
-
+      "cuotaMensual": "Monthly payment",
       "montoMaximoDisponible": "Maximum Available Amount",
-
       "cuotaQuincenal": "Biweekly Payment",
       "interesesTotales": "Total Interest",
       "totalPagar": "Total Payment",
       "capacidadPago": "Payment Capacity",
       "resultadoEvaluacion": "Evaluation Result",
-
       "limiteDisponible": "Available Limit",
-      "exceso": "Excess"
+      "exceso": "Excess",
+      "actual": "Current",
+      "proyectado": "Projected",
+      "afterCredit": "After credit"
     },
+
+    
+      "plan": {
+        "noCuota": "Installment",
+        "fechaPago": "Payment Date",
+        "cuota": "Installment Amount",
+        "principalPendiente": "Outstanding Principal",
+        "pagoPrincipal": "Principal Payment",
+        "pagoInteres": "Interest Payment",
+        "principalCancelado": "Principal Paid",
+        "totales": "Totals"
+      },
 
     "status": {
       "activo": "Active",
@@ -78,12 +88,10 @@
       "pendiente": "Pending",
       "enEvaluacion": "Under Evaluation"
     },
-
     "evaluation": {
       "viable": "Viable",
       "notViable": "Not Viable"
     },
-
     "actions": {
       "guardarBorrador": "Save Draft",
       "simular": "Simulate",
@@ -92,21 +100,18 @@
       "cancelar": "Cancel",
       "ajustarMaximo": "Set to max"
     },
-
     "messages": {
       "amountExceedsLimit": "Amount exceeds limit",
       "notViable": "Request is not viable",
       "approvalPolicy": "Subject to internal approval policies"
     },
-
     "labels": {
       "desde": "since",
       "note": "Note"
     },
-    
-  "common": {
-    "select": "Select..."
+    "common": {
+      "select": "Select...",
+      "close": "Close"
+    }
   }
-  }
-
 }

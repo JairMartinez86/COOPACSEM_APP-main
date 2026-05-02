@@ -237,24 +237,60 @@
 
                       <div class="d-flex justify-content-between fw-bold pt-2">
                         <span>{{ 'solicitudCredito.fields.totalDeducciones' | translate }}</span>
-                        <span>{{ currency }} {{ formatCurrency(totalDeducciones) }}</span>
+                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaCreditoTiendas + deducciones.pensionAlimenticia + deducciones.otrasCxC + deducciones.cuotaBdf + deducciones.cuotaCoopacsem) }}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div class="border rounded p-2 mt-3 d-flex justify-content-between">
-                    <div>
-                      <strong>% {{ 'solicitudCredito.fields.nivelEndeudamiento' | translate }}</strong>
-                      <span class="ms-3">{{ formatPercent(nivelEndeudamiento) }}</span>
+                  <div class="border rounded p-2 mt-3">
+
+                    <div class="d-flex justify-content-between">
+
+                      <!-- NIVEL ENDEUDAMIENTO -->
+                      <div>
+                        <strong>% {{ 'solicitudCredito.fields.nivelEndeudamiento' | translate }}</strong>
+
+                        <div class="ms-3">
+                          <small class="text-muted d-block">
+                            {{ 'solicitudCredito.fields.actual' | translate }}:
+                            {{ formatPercent(nivelEndeudamientoBase) }}
+                          </small>
+
+                          <span class="fw-bold" [ngClass]="
+    nivelEndeudamientoProyectado <= 30
+      ? 'text-success'
+      : nivelEndeudamientoProyectado <= 40
+      ? 'text-warning'
+      : 'text-danger'
+  ">
+                            {{ 'solicitudCredito.fields.proyectado' | translate }}:
+                            {{ formatPercent(nivelEndeudamientoProyectado) }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- CUOTA DISPONIBLE -->
+                      <div class="text-end">
+                        <strong>{{ 'solicitudCredito.fields.cuotaDisponible' | translate }}</strong>
+
+                        <div>
+                          <small class="text-muted d-block">
+                            {{ 'solicitudCredito.fields.actual' | translate }}:
+                            {{ currency }} {{ formatCurrency(cuotaDisponible) }}
+                          </small>
+
+                          <span class="fw-bold"
+                            [ngClass]="cuotaDisponible - cuotaQuincenal < 0 ? 'text-danger' : 'text-success'">
+                            {{ 'solicitudCredito.fields.afterCredit' | translate }}:
+                            {{ currency }} {{ formatCurrency(cuotaDisponible - cuotaQuincenal) }}
+                          </span>
+                        </div>
+                      </div>
+
                     </div>
 
-                    <div>
-                      <strong>{{ 'solicitudCredito.fields.cuotaDisponible' | translate }}</strong>
-                      <span class="ms-2 text-success fw-bold">
-                        {{ currency }} {{ formatCurrency(cuotaDisponible) }}
-                      </span>
-                    </div>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -313,7 +349,7 @@
 
                         <input #FechaInicioPago type="date" class="form-control" id="FechaInicioPago"
                           name="FechaInicioPago" [(ngModel)]="solicitud.fechaInicioPago" engineSync="FechaInicioPago"
-                          autoFocusNext [next]="Proposito" required />
+                          autoFocusNext [next]="Proposito" required (ngModelChange)="onFechaInicioPagoChange()" />
                       </div>
                     </div>
 
@@ -331,10 +367,11 @@
 
                         <select #Proposito class="form-select" id="Proposito" name="Proposito"
                           [(ngModel)]="solicitud.proposito" engineSync="Proposito" autoFocusNext
-                          [next]="TasaInteresAnual" required>
+                          [next]="TasaInteresAnual" required (ngModelChange)="onPropositoChange()"
+                          [disabled]="propositosCreditoFiltrados.length == 0">
 
                           <option value="">
-                            {{ 'common.select' | translate }}
+                            {{ 'solicitudCredito.common.select' | translate }}
                           </option>
 
                           @for (p of propositosCreditoFiltrados; track p.id) {
@@ -344,8 +381,31 @@
                       </div>
                     </div>
 
+
+
+                    <!-- TASA INTERES -->
+                    <div class="col-md-6" error-notify="TasaInteresAnual" error-display="inline">
+                      <label for="TasaInteresAnual" class="form-label">
+                        {{ 'solicitudCredito.fields.tasaInteresAnual' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <i class="fa-duotone fa-solid fa-percent"></i>
+                        </span>
+
+                        <input #TasaInteresAnual type="text" class="form-control text-end" id="TasaInteresAnual"
+                          name="TasaInteresAnual" [(ngModel)]="solicitud.tasaInteresAnual" engineSync="TasaInteresAnual"
+                          autoFocusNext [next]="MontoSolicitado" numberFormat [decimals]="2"
+                          [decimalSeparator]="settings.decimalSeparator"
+                          [thousandSeparator]="settings.thousandSeparator" required readonly />
+                      </div>
+                    </div>
+
+                    <!-- PROVEEDOR -->
                     @if (requiereProveedor) {
-                    <div class="col-md-6" error-notify="Proveedor" error-display="inline">
+                    <div class="col-md-12" error-notify="Proveedor" error-display="inline">
                       <label for="Proveedor" class="form-label">
                         {{ 'solicitudCredito.fields.proveedor' | translate }}
                         <span class="text-danger">*</span>
@@ -375,26 +435,6 @@
                     }
 
 
-                    <!-- TASA INTERES -->
-                    <div class="col-md-6" error-notify="TasaInteresAnual" error-display="inline">
-                      <label for="TasaInteresAnual" class="form-label">
-                        {{ 'solicitudCredito.fields.tasaInteresAnual' | translate }}
-                        <span class="text-danger">*</span>
-                      </label>
-
-                      <div class="input-group">
-                        <span class="input-group-text">
-                          <i class="fa-duotone fa-solid fa-percent"></i>
-                        </span>
-
-                        <input #TasaInteresAnual type="text" class="form-control text-end" id="TasaInteresAnual"
-                          name="TasaInteresAnual" [(ngModel)]="solicitud.tasaInteresAnual" engineSync="TasaInteresAnual"
-                          autoFocusNext [next]="MontoSolicitado" numberFormat [decimals]="2"
-                          [decimalSeparator]="settings.decimalSeparator"
-                          [thousandSeparator]="settings.thousandSeparator" required readonly />
-                      </div>
-                    </div>
-
                     <!-- MONTO SOLICITADO -->
                     <div class="col-md-6" error-notify="MontoSolicitado" error-display="inline">
                       <label for="MontoSolicitado" class="form-label">
@@ -412,7 +452,7 @@
                           autoFocusNext [next]="ComisionDesembolso" numberFormat [decimals]="2"
                           [decimalSeparator]="settings.decimalSeparator"
                           [thousandSeparator]="settings.thousandSeparator" required
-                          [ngClass]="montoExcedeLimite ? 'is-invalid' : ''" (ngModelChange)="onMontoChange()"
+                          [ngClass]="montoSolicitadoInvalido ? 'is-invalid' : ''" (ngModelChange)="onMontoChange()"
                           JmartAutoFocus />
                       </div>
 
@@ -422,6 +462,31 @@
                         ({{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }})
                       </small>
                       }
+                      @if (montoInvalidoPorTipoCredito) {
+                      <small class="text-danger">
+                        El monto solicitado no aplica para las reglas configuradas del tipo de crédito seleccionado.
+                      </small>
+                      }
+
+                      @if (mesNoPermitidoPorRegla) {
+                      <small class="text-danger d-block">
+                        Este crédito no está disponible para el mes seleccionado.
+                      </small>
+                      }
+
+
+                      @if (noTieneCreditosVigentes) {
+                      <small class="text-danger d-block">
+                        Debe tener al menos un crédito vigente.
+                      </small>
+                      }
+
+                      @if (noCumplePorcentajePrincipalPagado) {
+                      <small class="text-danger d-block">
+                        No cumple el porcentaje mínimo de pago requerido.
+                      </small>
+                      }
+
                     </div>
 
                     <!-- COMISION -->
@@ -459,12 +524,13 @@
                         <input #Plazo type="text" class="form-control text-end" id="Plazo" name="Plazo"
                           [(ngModel)]="solicitud.plazo" engineSync="Plazo" autoFocusNext [next]="NumeroFactura"
                           numberFormat [decimals]="0" [decimalSeparator]="settings.decimalSeparator"
-                          [thousandSeparator]="settings.thousandSeparator" required (ngModelChange)="onPlazoChange()" />
+                          [thousandSeparator]="settings.thousandSeparator" required />
+
                       </div>
                     </div>
 
                     <div class="col-md-2 d-flex align-items-end">
-                      <span>{{ 'solicitudCredito.fields.quincenas' | translate }}</span>
+                      <span>{{ etiquetaPeriodoKey | translate }}</span>
                     </div>
 
                     <!-- NUMERO FACTURA -->
@@ -604,10 +670,27 @@
               </div>
 
               <div class="col-xl-3 col-md-6">
-                <div class="alert alert-success mb-0">
-                  <i class="fa-solid fa-circle-check me-1"></i>
+                <div class="alert mb-0" [ngClass]="
+         nivelEndeudamientoProyectado <= 30
+           ? 'alert-success'
+           : nivelEndeudamientoProyectado <= 40
+           ? 'alert-warning'
+           : 'alert-danger'
+       ">
+
+                  <i class="fa-solid me-1" [ngClass]="
+         nivelEndeudamientoProyectado <= 30
+           ? 'fa-circle-check'
+           : nivelEndeudamientoProyectado <= 30
+           ? 'fa-triangle-exclamation'
+           : 'fa-circle-xmark'
+       ">
+                  </i>
+
                   <strong>{{ 'solicitudCredito.validations.nivelEndeudamiento' | translate }}</strong>
-                  <div>{{ formatPercent(nivelEndeudamiento) }}</div>
+
+                  <div>{{ formatPercent(nivelEndeudamientoProyectado) }}</div>
+
                 </div>
               </div>
 
@@ -731,6 +814,7 @@
             </div>
 
             <div class="card-body">
+
               @if (montoExcedeLimite) {
               <div class="alert alert-danger">
                 <strong>
@@ -755,50 +839,144 @@
               </div>
               }
 
+              <!-- PLAZO -->
               <div class="d-flex justify-content-between mb-2">
                 <span>{{ 'solicitudCredito.fields.plazo' | translate }}</span>
-                <strong>{{ solicitud.plazo || 0 }} {{ 'solicitudCredito.fields.quincenas' | translate }}</strong>
+                <strong>
+                  {{ solicitud.plazo || 0 }} {{ etiquetaPeriodoKey | translate }}
+                </strong>
               </div>
 
+              <!-- CUOTA -->
               <div class="d-flex justify-content-between mb-2">
-                <span>{{ 'solicitudCredito.fields.cuotaQuincenal' | translate }}</span>
+                <span>
+                  {{
+                  esQuincenal
+                  ? ('solicitudCredito.fields.cuotaQuincenal' | translate)
+                  : ('solicitudCredito.fields.cuotaMensual' | translate)
+                  }}
+                </span>
                 <strong>{{ currency }} {{ formatCurrency(cuotaQuincenal) }}</strong>
               </div>
 
+              <!-- INTERESES -->
               <div class="d-flex justify-content-between mb-2">
                 <span>{{ 'solicitudCredito.fields.interesesTotales' | translate }}</span>
                 <strong>{{ currency }} {{ formatCurrency(interesesTotales) }}</strong>
               </div>
 
+              <!-- TOTAL -->
               <div class="d-flex justify-content-between mb-2">
                 <span>{{ 'solicitudCredito.fields.totalPagar' | translate }}</span>
                 <strong>{{ currency }} {{ formatCurrency(totalPagar) }}</strong>
               </div>
 
+              <!-- FECHA -->
               <div class="d-flex justify-content-between mb-2">
                 <span>{{ 'solicitudCredito.fields.fechaInicioPago' | translate }}</span>
                 <strong>{{ solicitud.fechaInicioPago || '-' }}</strong>
               </div>
 
+              <!-- TASA -->
               <div class="d-flex justify-content-between mb-2">
                 <span>{{ 'solicitudCredito.fields.tasaInteresAnual' | translate }}</span>
                 <strong>{{ formatPercent(solicitud.tasaInteresAnual) }}</strong>
               </div>
 
+              <!-- COMISIÓN -->
               <div class="d-flex justify-content-between mb-2">
                 <span>{{ 'solicitudCredito.fields.comisionDesembolso' | translate }}</span>
                 <strong>{{ formatPercent(solicitud.comisionDesembolso) }}</strong>
               </div>
 
+              <!-- VALIDACIÓN PLAZO -->
+              @if (plazoExcedeMaximoRegla) {
+              <div class="alert alert-warning mt-2 mb-0">
+                <i class="fa-solid fa-circle-exclamation me-1"></i>
+                El plazo máximo permitido es
+                <strong>{{ reglaCreditoActual?.cuotaMaxima }} {{ etiquetaPeriodoKey | translate }}</strong>.
+              </div>
+              }
+
+              <!-- INFO -->
               <div class="alert alert-primary mt-3 mb-0">
                 <i class="fa-solid fa-circle-info me-1"></i>
                 {{ 'solicitudCredito.messages.approvalPolicy' | translate }}
               </div>
+
             </div>
           </div>
         </div>
-
       </div>
     </form>
   </div>
 </section>
+
+@if (mostrarModalPlan) {
+<div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,.55);">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ 'solicitudCredito.sections.planPagos' | translate }}
+        </h5>
+
+        <button type="button" class="btn-close" (click)="cerrarModalPlan()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="table-responsive">
+          <table class="table table-sm table-bordered align-middle">
+            <thead>
+              <tr>
+                <th class="text-center">{{ 'solicitudCredito.plan.noCuota' | translate }}</th>
+                <th>{{ 'solicitudCredito.plan.fechaPago' | translate }}</th>
+                <th class="text-end">{{ 'solicitudCredito.plan.cuota' | translate }}</th>
+                <th class="text-end">{{ 'solicitudCredito.plan.principalPendiente' | translate }}</th>
+                <th class="text-end">{{ 'solicitudCredito.plan.pagoPrincipal' | translate }}</th>
+                <th class="text-end">{{ 'solicitudCredito.plan.pagoInteres' | translate }}</th>
+                <th class="text-end">{{ 'solicitudCredito.plan.principalCancelado' | translate }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (row of planPagos; track row.noCuota) {
+              <tr>
+                <td class="text-center">{{ row.noCuota }}</td>
+                <td>{{ row.fechaPago }}</td>
+                <td class="text-end">{{ formatCurrency(row.cuota) }}</td>
+                <td class="text-end">{{ formatCurrency(row.principalPendiente) }}</td>
+                <td class="text-end">{{ formatCurrency(row.pagoPrincipal) }}</td>
+                <td class="text-end">{{ formatCurrency(row.pagoInteres) }}</td>
+                <td class="text-end">{{ formatCurrency(row.principalCancelado) }}</td>
+              </tr>
+              }
+            </tbody>
+
+            <tfoot>
+              <tr class="fw-bold">
+                <td colspan="2" class="text-end">{{ 'solicitudCredito.plan.totales' | translate }}</td>
+                <td class="text-end">{{ formatCurrency(totalPlanCuota) }}</td>
+                <td></td>
+                <td class="text-end">{{ formatCurrency(totalPlanPrincipal) }}</td>
+                <td class="text-end">{{ formatCurrency(totalPlanInteres) }}</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarModalPlan()">
+          {{ 'solicitudCredito.common.close' | translate }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+}
