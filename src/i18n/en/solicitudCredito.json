@@ -19,7 +19,7 @@
       "flujoAprobacion": "Approval Flow",
       "acciones": "Actions",
       "resumenSolicitud": "Request Summary",
-        "planPagos": "Payment Schedule"
+      "planPagos": "Payment Schedule"
     },
     "fields": {
       "estadoSolicitud": "Status",
@@ -69,19 +69,16 @@
       "proyectado": "Projected",
       "afterCredit": "After credit"
     },
-
-    
-      "plan": {
-        "noCuota": "Installment",
-        "fechaPago": "Payment Date",
-        "cuota": "Installment Amount",
-        "principalPendiente": "Outstanding Principal",
-        "pagoPrincipal": "Principal Payment",
-        "pagoInteres": "Interest Payment",
-        "principalCancelado": "Principal Paid",
-        "totales": "Totals"
-      },
-
+    "plan": {
+      "noCuota": "Installment",
+      "fechaPago": "Payment Date",
+      "cuota": "Installment Amount",
+      "principalPendiente": "Outstanding Principal",
+      "pagoPrincipal": "Principal Payment",
+      "pagoInteres": "Interest Payment",
+      "principalCancelado": "Principal Paid",
+      "totales": "Totals"
+    },
     "status": {
       "activo": "Active",
       "inactivo": "Inactive",
@@ -101,9 +98,24 @@
       "ajustarMaximo": "Set to max"
     },
     "messages": {
-      "amountExceedsLimit": "Amount exceeds limit",
       "notViable": "Request is not viable",
-      "approvalPolicy": "Subject to internal approval policies"
+      "approvalPolicy": "Subject to internal approval policies",
+      "amountExceedsLimit": "The requested amount exceeds the available limit",
+      "invalidMonthForCredit": "This credit is not available for the selected month",
+      "requiresActiveCredit": "You must have at least one active credit",
+      "minPrincipalNotMet": "Minimum required principal payment percentage not met",
+      "creditTypeRequired": "Select the credit type",
+      "paymentStartDateRequired": "Payment start date is required",
+      "paymentStartDateMin": "The payment start date cannot be earlier than the current date",
+      "amountRequired": "Amount is required",
+      "invalidAmount": "Enter a valid amount",
+      "invalidAmountForType": "The requested amount does not match the rules for the selected credit type",
+      "termRequired": "Term is required",
+      "invalidTerm": "Enter a valid term",
+      "maxTermExceeded": "The term exceeds the maximum allowed for this credit type",
+      "purposeRequired": "Select the credit purpose",
+      "providerRequired": "Select the provider",
+      "planNotGenerated": "The payment plan could not be generated"
     },
     "labels": {
       "desde": "since",

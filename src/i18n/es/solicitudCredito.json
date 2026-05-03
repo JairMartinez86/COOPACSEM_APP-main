@@ -113,12 +113,27 @@
       "ajustarMaximo": "Ajustar al máximo"
     },
     "messages": {
-      "amountExceedsLimit": "El monto excede el límite permitido",
       "amountExceedsLimitTitle": "Excede el límite",
       "notViable": "La solicitud no es viable",
       "notAvailableByLimit": "No disponible por límite o capacidad",
       "noteLimit": "El monto no debe exceder el límite disponible",
-      "approvalPolicy": "Sujeto a aprobación según políticas internas"
+      "approvalPolicy": "Sujeto a aprobación según políticas internas",
+      "amountExceedsLimit": "El monto solicitado excede el límite disponible",
+      "invalidMonthForCredit": "Este crédito no está disponible para el mes seleccionado",
+      "requiresActiveCredit": "Debe tener al menos un crédito vigente",
+      "minPrincipalNotMet": "No cumple el porcentaje mínimo de pago requerido",
+      "creditTypeRequired": "Seleccione el tipo de crédito",
+      "paymentStartDateRequired": "La fecha de inicio de pago es requerida",
+      "paymentStartDateMin": "La fecha de inicio de pago no puede ser menor que la fecha actual",
+      "amountRequired": "El monto es requerido",
+      "invalidAmount": "Ingrese un monto válido",
+      "invalidAmountForType": "El monto solicitado no aplica para las reglas del tipo de crédito seleccionado",
+      "termRequired": "El plazo es requerido",
+      "invalidTerm": "Ingrese un plazo válido",
+      "maxTermExceeded": "El plazo supera el máximo permitido para este tipo de crédito",
+      "purposeRequired": "Seleccione el propósito del crédito",
+      "providerRequired": "Seleccione el proveedor",
+      "planNotGenerated": "No se pudo generar el plan de pagos"
     },
     "labels": {
       "desde": "desde",
@@ -127,7 +142,6 @@
     "common": {
       "select": "Seleccione...",
       "close": "Cerrar"
-      
     }
   }
 }

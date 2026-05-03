@@ -168,7 +168,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     {
     type: 'link',
     titleKey: 'sidebar.items.solicitudCredito',
-    iconclass: 'fa-solid fa-handshake',
+    iconclass: 'fa-duotone fa-solid fa-hand-holding-dollar',
     router: '/solicitud-credito',
     permissions: {
       view: false,

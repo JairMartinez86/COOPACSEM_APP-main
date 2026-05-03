@@ -67,11 +67,13 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   private readonly subs = new Subscription();
   private readonly isBrowser: boolean;
 
+
   breadcrumbs: any[] = [];
   socioId = '';
 
   loading = false;
   saving = false;
+  montoTouched = false;
 
   estadoSolicitud = 'EN_EVALUACION';
 
@@ -134,14 +136,23 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setBreadcrumbs();
 
+    this.configurarValidacionesCredito();
+
     this.subs.add(
-      this.translate.onLangChange.subscribe(() => this.setBreadcrumbs())
+      this.translate.onLangChange.subscribe(() => {
+        this.setBreadcrumbs();
+        this.configurarValidacionesCredito();
+        this.sincronizarValoresValidacion();
+      })
     );
+
 
     this.socioId =
       this.route.snapshot.paramMap.get('socioId') ??
       this.route.snapshot.paramMap.get('id') ??
       '';
+
+
 
     this.cargarNuevo();
   }
@@ -156,9 +167,9 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     this.breadcrumbs = Array.isArray(value)
       ? value
       : [
-          { label: 'Créditos' },
-          { label: 'Solicitud de crédito' }
-        ];
+        { label: 'Créditos' },
+        { label: 'Solicitud de crédito' }
+      ];
   }
 
   get settings(): any {
@@ -280,8 +291,12 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   }
 
   get montoSolicitadoInvalido(): boolean {
-    return this.montoExcedeLimite || this.montoInvalidoPorTipoCredito;
+    if (!this.montoTouched) return false;
+
+    const monto = this.toNumber(this.solicitud.montoSolicitado);
+    return monto <= 0;
   }
+
 
   get excedenteLimite(): number {
     const exceso =
@@ -390,7 +405,11 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     this.loading = true;
 
     this.service.getNuevo(this.socioId)
-      .pipe(finalize(() => this.loading = false))
+      .pipe(finalize(() => {
+        this.loading = false;
+        this.sincronizarValoresValidacion();
+        this.engine.clearErrors();
+      }))
       .subscribe({
         next: (res: any) => {
           const data = res?.data ?? res;
@@ -467,7 +486,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
           this.cuotaDisponibleApi = Number(data?.deducciones?.cuotaDisponible ?? 0);
           this.nivelEndeudamientoApi = Number(data?.deducciones?.nivelEndeudamiento ?? 0);
 
-          this.solicitud.fechaInicioPago = this.toDateInput(data?.fechaInicioPago ?? data?.fechaServidor);
+          this.solicitud.fechaInicioPago = this.getFechaInicioDefault();
           this.solicitud.montoSolicitado = null;
           this.solicitud.plazo = null;
           this.solicitud.tasaInteresAnual = 0;
@@ -487,11 +506,34 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
             this.solicitud.proveedorId = '';
             this.reglaCreditoActual = null;
           }
+
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
         }
       });
+  }
+
+  private getFechaInicioDefault(): string {
+    const fechaServidor = new Date(
+      this.appConfigService.getCurrentSettings().fechaServidor
+    );
+
+    const year = fechaServidor.getFullYear();
+    const month = fechaServidor.getMonth();
+    const day = fechaServidor.getDate();
+
+    let fechaResult: Date;
+
+    if (day <= 15) {
+      // 👉 último día del mes actual
+      fechaResult = new Date(year, month + 1, 0);
+    } else {
+      // 👉 día 15 del siguiente mes
+      fechaResult = new Date(year, month + 1, 15);
+    }
+
+    return this.toDateInput(fechaResult);
   }
 
   onTipoCreditoChange(): void {
@@ -506,6 +548,16 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       this.requiereProveedor = false;
       this.solicitud.proposito = '';
       this.solicitud.proveedorId = '';
+
+      this.sincronizarValoresValidacion();
+      this.engine.validateByIds([
+        'TipoCredito',
+        'Proposito',
+        'Proveedor',
+        'MontoSolicitado',
+        'Plazo'
+      ]);
+
       return;
     }
 
@@ -517,20 +569,45 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
     this.filtrarPropositosPorTipo();
     this.aplicarReglaCreditoPorMonto(true);
-  }
 
+    this.sincronizarValoresValidacion();
+
+    this.engine.validateByIds([
+      'TipoCredito',
+      'Proposito',
+      'Proveedor',
+      'MontoSolicitado',
+      'Plazo'
+    ]);
+  }
   onPropositoChange(): void {
     this.aplicarReglaCreditoPorMonto(true);
   }
 
   onMontoChange(): void {
-    this.aplicarReglaCreditoPorMonto(true);
+    this.aplicarReglaCreditoPorMonto(false);
+    this.sincronizarValoresValidacion();
+    this.engine.validateById('MontoSolicitado');
   }
+
 
   onFechaInicioPagoChange(): void {
     this.aplicarReglaCreditoPorMonto(false);
+
+    // 🔥 sincroniza valores con JMart
+    this.sincronizarValoresValidacion();
+
+    // 🔥 revalida fecha + reglas relacionadas
+    this.engine.validateByIds([
+      'FechaInicioPago',
+      'MontoSolicitado',
+      'Plazo'
+    ]);
+
+    // 🔥 limpia plan
     this.planPagos = [];
   }
+
 
   onPlazoChange(): void {
     this.planPagos = [];
@@ -649,9 +726,111 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     this.aplicarReglaCreditoPorMonto(true);
   }
 
+
+
+
   guardarBorrador(): void {
-    console.log(this.buildPayload(false));
+
+
+    const ok = this.engine.validateAll();
+
+    if (!ok) {
+      this.notify.show(this.engine.getGroupedErrorsHtmlSnapshot(), '', 'warning');
+      return;
+    }
+
+    this.engine.clearErrors();
+    this.notify.close();
+
+
+    const plan = this.generarPlanPagos();
+
+    if (!plan || plan.length === 0) {
+      this.notify.show(
+        this.translate.instant('solicitudCredito.messages.planNotGenerated'),
+        '',
+        'warning'
+      );
+      return;
+    }
+
+    const payload = this.buildPayloadFromPlan(plan);
+
+    this.saving = true;
+
+
+
+    this.service.postSolicitudCredito(payload)
+      .pipe(finalize(() => this.saving = false))
+      .subscribe({
+        next: (res: any) => {
+          this.notify.showFromApiResponse?.(res, 'success');
+          this.planPagos = [];
+          this.limpiarFormularioCredito();
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        }
+      });
   }
+ private toIsoDateFromFormatted(value: string): string {
+    if (!value) return '';
+
+    const parts = value.split('/');
+
+    if (parts.length !== 3) {
+      return '';
+    }
+
+    const day = parts[0]?.padStart(2, '0');
+    const month = parts[1]?.padStart(2, '0');
+    const year = parts[2];
+
+    return `${year}-${month}-${day}`;
+  }
+
+
+
+  private buildPayloadFromPlan(plan: PlanPagoItem[]): any {
+    return {
+      codSocio: this.socio?.codigoSocio ?? '',
+      tipoCreditoId: this.solicitud.tipoCredito,
+      propositoId: this.solicitud.proposito || null,
+      proveedorId: this.requiereProveedor ? this.solicitud.proveedorId : null,
+      tipoCreditoReglaId: this.reglaCreditoActual?.id ?? null,
+      fechaInicioPago: this.solicitud.fechaInicioPago,
+      montoSolicitado: this.toNumber(this.solicitud.montoSolicitado),
+      plazo: this.toNumber(this.solicitud.plazo),
+      esQuincenal: this.esQuincenal,
+      tasaInteresAnual: this.toNumber(this.solicitud.tasaInteresAnual),
+      comisionDesembolso: this.toNumber(this.solicitud.comisionDesembolso),
+      cuota: plan[0]?.cuota ?? 0,
+      interesesTotales: this.round2(plan.reduce((s, x) => s + x.pagoInteres, 0)),
+      totalPagar: this.round2(plan.reduce((s, x) => s + x.cuota, 0)),
+      salarioMensual: Number((this.socio as any)?.salarioMensual ?? 0),
+      totalDeducciones: this.totalDeducciones,
+      cuotaDisponible: this.cuotaDisponible,
+      nivelEndeudamiento: this.nivelEndeudamientoProyectado,
+      capacidadPagoPorcentaje: this.capacidadPagoPorcentaje,
+      montoExcedeLimite: this.montoExcedeLimite,
+      cuotaExcedeCapacidad: this.cuotaExcedeCapacidad,
+      mesNoPermitidoPorRegla: this.mesNoPermitidoPorRegla,
+      noTieneCreditosVigentes: this.noTieneCreditosVigentes,
+      noCumplePorcentajePrincipalPagado: this.noCumplePorcentajePrincipalPagado,
+      plazoExcedeMaximoRegla: this.plazoExcedeMaximoRegla,
+      planPagos: plan.map(x => ({
+        noCuota: x.noCuota,
+        fechaPago: this.toIsoDateFromFormatted(x.fechaPago),
+        cuota: x.cuota,
+        principalPendiente: x.principalPendiente,
+        pagoPrincipal: x.pagoPrincipal,
+        pagoInteres: x.pagoInteres,
+        principalCancelado: x.principalCancelado
+      }))
+    };
+  }
+
+
 
   enviarAprobacion(): void {
     this.aplicarReglaCreditoPorMonto(false);
@@ -738,7 +917,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   }
 
   private generarPlanPagos(): PlanPagoItem[] {
-    const principal = this.toNumber(this.solicitud.montoSolicitado);
+    const principal = this.round4(this.toNumber(this.solicitud.montoSolicitado));
     const tasaAnual = this.toNumber(this.solicitud.tasaInteresAnual) / 100;
     const plazo = this.toNumber(this.solicitud.plazo);
 
@@ -752,9 +931,9 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       ? principal * tasaPeriodo / (1 - Math.pow(1 + tasaPeriodo, -plazo))
       : principal / plazo;
 
-    const cuota = this.round2(cuotaSinRedondear);
+    const cuota = this.round4(cuotaSinRedondear);
 
-    let saldo = this.round2(principal);
+    let saldo = principal;
     let principalCancelado = 0;
 
     const fechaBase = this.solicitud.fechaInicioPago
@@ -764,21 +943,24 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     const plan: PlanPagoItem[] = [];
 
     for (let i = 1; i <= plazo; i++) {
-      const saldoAntes = this.round2(saldo);
-      const pagoInteres = this.round2(saldoAntes * tasaPeriodo);
+      const saldoAntes = this.round4(saldo);
 
-      let pagoPrincipal = this.round2(cuota - pagoInteres);
+      // interés con 10 decimales
+      const pagoInteres = this.round10(saldoAntes * tasaPeriodo);
+
+      // montos con 4 decimales
+      let pagoPrincipal = this.round4(cuota - pagoInteres);
       let cuotaFila = cuota;
 
       if (i === plazo) {
         pagoPrincipal = saldoAntes;
-        cuotaFila = this.round2(pagoPrincipal + pagoInteres);
+        cuotaFila = this.round4(pagoPrincipal + pagoInteres);
       }
 
-      principalCancelado = this.round2(principalCancelado + pagoPrincipal);
-      saldo = this.round2(saldoAntes - pagoPrincipal);
+      principalCancelado = this.round4(principalCancelado + pagoPrincipal);
+      saldo = this.round4(saldoAntes - pagoPrincipal);
 
-      if (saldo < 0.01) saldo = 0;
+      if (saldo < 0.0001) saldo = 0;
 
       const fechaPago = this.esQuincenal
         ? this.getFechaQuincenal(fechaBase, i)
@@ -796,6 +978,14 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     }
 
     return plan;
+  }
+
+  private round4(value: number): number {
+    return Math.round((Number(value ?? 0) + Number.EPSILON) * 10000) / 10000;
+  }
+
+  private round10(value: number): number {
+    return Math.round((Number(value ?? 0) + Number.EPSILON) * 10000000000) / 10000000000;
   }
 
   private getFechaQuincenal(fechaBase: Date, noCuota: number): Date {
@@ -917,4 +1107,97 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
     return `${day}/${month}/${year}`;
   }
+
+
+
+
+
+  private configurarValidacionesCredito(): void {
+    this.engine.resetRules();
+    this.engine.clearFieldsMeta();
+
+    this.engine.addFieldsMeta([
+      { id: 'TipoCredito', label: this.translate.instant('solicitudCredito.fields.tipoCredito') },
+      { id: 'FechaInicioPago', label: this.translate.instant('solicitudCredito.fields.fechaInicioPago') },
+      { id: 'Proposito', label: this.translate.instant('solicitudCredito.fields.proposito') },
+      { id: 'MontoSolicitado', label: this.translate.instant('solicitudCredito.fields.montoSolicitado') },
+      { id: 'Plazo', label: this.translate.instant('solicitudCredito.fields.plazo') },
+      { id: 'Proveedor', label: this.translate.instant('solicitudCredito.fields.proveedor') }
+    ]);
+
+    this.engine.addRules([
+      { id: 'TipoCredito', condition: 'REQUIRED', value: '', message: this.translate.instant('solicitudCredito.messages.creditTypeRequired') },
+      { id: 'FechaInicioPago', condition: 'REQUIRED', value: '', message: this.translate.instant('solicitudCredito.messages.paymentStartDateRequired') },
+      { id: 'FechaInicioPago', condition: 'DATE>=', value: '{FechaServidor}', message: this.translate.instant('solicitudCredito.messages.paymentStartDateMin') },
+      { id: 'MontoSolicitado', condition: 'REQUIRED', value: '', message: this.translate.instant('solicitudCredito.messages.amountRequired') },
+      { id: 'MontoSolicitado', condition: 'NUM>', value: 0, message: this.translate.instant('solicitudCredito.messages.invalidAmount') },
+      { id: 'MontoSolicitado', condition: 'NUM>=', value: '{MontoMinimoPermitido}', message: this.translate.instant('solicitudCredito.messages.invalidAmountForType') },
+      { id: 'MontoSolicitado', condition: 'NUM<=', value: '{MontoMaximoPermitido}', message: this.translate.instant('solicitudCredito.messages.invalidAmountForType') },
+      { id: 'Plazo', condition: 'REQUIRED', value: '', message: this.translate.instant('solicitudCredito.messages.termRequired') },
+      { id: 'Plazo', condition: 'NUM>', value: 0, message: this.translate.instant('solicitudCredito.messages.invalidTerm') },
+      { id: 'Plazo', condition: 'NUM<=', value: '{CuotaMaximaRegla}', message: this.translate.instant('solicitudCredito.messages.maxTermExceeded') },
+      { id: 'Proposito', condition: 'REQUIRED', value: '', when: '{PropositoRequerido}=true', message: this.translate.instant('solicitudCredito.messages.purposeRequired') },
+      { id: 'Proveedor', condition: 'REQUIRED', value: '', when: '{ProveedorRequerido}=true', message: this.translate.instant('solicitudCredito.messages.providerRequired') }
+    ]);
+
+    this.engine.clearErrors();
+  }
+
+  private sincronizarValoresValidacion(): void {
+
+    const reglasAplicables = this.reglasCredito
+      .filter(x => this.reglaAplicaPorTipoYProposito(x));
+
+    const montoMinimoPermitido = reglasAplicables.length > 0
+      ? Math.min(...reglasAplicables.map(x => Number(x.montoDesde ?? 0)))
+      : 0;
+
+    const montoMaximoPermitido = reglasAplicables.length > 0
+      ? Math.max(...reglasAplicables.map(x =>
+        x.montoHasta == null ? 999999999999 : Number(x.montoHasta)
+      ))
+      : 999999999999;
+
+    const cuotaMaximaRegla = Number(this.reglaCreditoActual?.cuotaMaxima ?? 999999);
+
+    this.engine.patchValues({
+      TipoCredito: this.solicitud.tipoCredito,
+      FechaInicioPago: this.solicitud.fechaInicioPago,
+      FechaServidor: this.appConfigService.getCurrentSettings()?.fechaServidor,
+      Proposito: this.solicitud.proposito,
+      MontoSolicitado: this.solicitud.montoSolicitado,
+      Plazo: this.solicitud.plazo,
+      Proveedor: this.solicitud.proveedorId,
+
+      PropositoRequerido: this.propositosCreditoFiltrados.length > 0 ? 'true' : 'false',
+      ProveedorRequerido: this.requiereProveedor ? 'true' : 'false',
+
+      MontoMinimoPermitido: montoMinimoPermitido,
+      MontoMaximoPermitido: montoMaximoPermitido,
+      CuotaMaximaRegla: cuotaMaximaRegla
+    });
+  }
+
+
+  private limpiarFormularioCredito(): void {
+  this.solicitud.tipoCredito = '';
+  this.solicitud.proposito = '';
+  this.solicitud.proveedorId = '';
+  this.solicitud.montoSolicitado = null;
+  this.solicitud.plazo = null;
+  this.solicitud.tasaInteresAnual = 0;
+  this.solicitud.comisionDesembolso = 0;
+  this.solicitud.numeroFactura = '';
+  this.solicitud.fechaInicioPago = this.getFechaInicioDefault();
+
+  this.propositosCreditoFiltrados = [];
+  this.requiereProveedor = false;
+  this.reglaCreditoActual = null;
+  this.planPagos = [];
+  this.montoTouched = false;
+
+  this.engine.clearErrors();
+  this.sincronizarValoresValidacion();
+}
+
 }

@@ -237,7 +237,9 @@
 
                       <div class="d-flex justify-content-between fw-bold pt-2">
                         <span>{{ 'solicitudCredito.fields.totalDeducciones' | translate }}</span>
-                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaCreditoTiendas + deducciones.pensionAlimenticia + deducciones.otrasCxC + deducciones.cuotaBdf + deducciones.cuotaCoopacsem) }}</span>
+                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaCreditoTiendas +
+                          deducciones.pensionAlimenticia + deducciones.otrasCxC + deducciones.cuotaBdf +
+                          deducciones.cuotaCoopacsem) }}</span>
                       </div>
                     </div>
                   </div>
@@ -448,13 +450,22 @@
                         </span>
 
                         <input #MontoSolicitado type="text" class="form-control text-end" id="MontoSolicitado"
-                          name="MontoSolicitado" [(ngModel)]="solicitud.montoSolicitado" engineSync="MontoSolicitado"
-                          autoFocusNext [next]="ComisionDesembolso" numberFormat [decimals]="2"
+                          name="MontoSolicitado" [(ngModel)]="solicitud.montoSolicitado"
+                          (ngModelChange)="onMontoChange()" (blur)="montoTouched = true"
+                          [ngClass]="montoSolicitadoInvalido ? 'is-invalid' : ''" 
+                          numberFormat [decimals]="2"
                           [decimalSeparator]="settings.decimalSeparator"
-                          [thousandSeparator]="settings.thousandSeparator" required
-                          [ngClass]="montoSolicitadoInvalido ? 'is-invalid' : ''" (ngModelChange)="onMontoChange()"
-                          JmartAutoFocus />
+                          [thousandSeparator]="settings.thousandSeparator" required JmartAutoFocus />
                       </div>
+
+
+
+<!--
+                      @if (montoSolicitadoInvalido) {
+                      <small class="text-danger">
+                        {{ 'solicitudCredito.messages.invalidAmount' | translate }}
+                      </small>
+                      }
 
                       @if (montoExcedeLimite) {
                       <small class="text-danger">
@@ -462,31 +473,31 @@
                         ({{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }})
                       </small>
                       }
+
                       @if (montoInvalidoPorTipoCredito) {
-                      <small class="text-danger">
-                        El monto solicitado no aplica para las reglas configuradas del tipo de crédito seleccionado.
+                      <small class="text-danger d-block">
+                        {{ 'solicitudCredito.messages.invalidAmountForType' | translate }}
                       </small>
                       }
 
                       @if (mesNoPermitidoPorRegla) {
                       <small class="text-danger d-block">
-                        Este crédito no está disponible para el mes seleccionado.
+                        {{ 'solicitudCredito.messages.invalidMonthForCredit' | translate }}
                       </small>
                       }
 
-
                       @if (noTieneCreditosVigentes) {
                       <small class="text-danger d-block">
-                        Debe tener al menos un crédito vigente.
+                        {{ 'solicitudCredito.messages.requiresActiveCredit' | translate }}
                       </small>
                       }
 
                       @if (noCumplePorcentajePrincipalPagado) {
                       <small class="text-danger d-block">
-                        No cumple el porcentaje mínimo de pago requerido.
+                        {{ 'solicitudCredito.messages.minPrincipalNotMet' | translate }}
                       </small>
                       }
-
+-->
                     </div>
 
                     <!-- COMISION -->

@@ -62,4 +62,20 @@ export class SolicitudCreditoService extends BrowserApiService {
     }
   );
 }
+
+postSolicitudCredito(payload: any, skipLoader = false): Observable<any> {
+  const headers = skipLoader
+    ? { 'X-Skip-Loader': 'false' }
+    : undefined;
+
+  return this.http.post<any>(
+    `${this.api.baseUrl}/SolicitudCreditoListaSocio/solicitud`,
+    payload,
+    {
+      headers,
+      withCredentials: true
+    }
+  );
+}
+
 }
