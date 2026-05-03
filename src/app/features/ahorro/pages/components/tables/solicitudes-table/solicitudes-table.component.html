@@ -59,20 +59,32 @@
                         </td>
 
                         <td>
-                            <span class="badge" [ngClass]="row.tipoCuenta === 'Corriente'
-        ? 'badge-soft-success'
-        : 'badge-soft-warning'">
+                            <span class="badge" [ngClass]="
+      row.tipoCuenta === 'Corriente' ? 'badge-soft-success' :
+      row.tipoCuenta === 'Navidena' ? 'badge-soft-warning' :
+      row.tipoCuenta === 'Crédito' ? 'badge-soft-primary' :
+      'badge-soft-secondary'
+    ">
 
                                 {{
                                 row.tipoCuenta === 'Corriente'
                                 ? ('ahorro.accountTypes.current' | translate)
-                                : ('ahorro.accountTypes.christmas' | translate)
+                                : row.tipoCuenta === 'Navidena'
+                                ? ('ahorro.accountTypes.christmas' | translate)
+                                : row.tipoCuenta === 'Crédito'
+                                ? ('ahorro.accountTypes.credit' | translate)
+                                : row.tipoCuenta
                                 }}
                             </span>
                         </td>
 
                         <td>
-                            <span class="badge badge-soft-warning">
+                            <span class="badge" [ngClass]="{
+      'badge-soft-warning': row.estado?.toLowerCase() === 'pendiente',
+      'badge-soft-secondary': row.estado?.toLowerCase() === 'borrador',
+      'badge-soft-info': row.estado?.toLowerCase() === 'enevaluacion'
+    }">
+
                                 {{ ('ahorro.status.' + (row.estado || '').toLowerCase()) | translate }}
                             </span>
                         </td>
@@ -89,6 +101,9 @@
 
 
                             <div class="table-actions" (click)="$event.stopPropagation()">
+
+                                @if(row.tipoDocumento == "Retiro")
+                                {
                                 <button type="button" class="btn btn-icon btn-sm btn-light" (click)="verSolicitud(row)"
                                     [permissionRoute]="['/ahorro']" [appPermission]="['view']">
                                     <i class="bi bi-eye"></i>
@@ -99,6 +114,9 @@
                                     [appPermission]="['edit']">
                                     <i class="bi bi-pencil"></i>
                                 </button>
+                                }
+
+
 
                             </div>
 

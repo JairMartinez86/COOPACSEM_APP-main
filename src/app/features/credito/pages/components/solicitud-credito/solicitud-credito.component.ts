@@ -582,6 +582,8 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   }
   onPropositoChange(): void {
     this.aplicarReglaCreditoPorMonto(true);
+    this.sincronizarValoresValidacion();
+    this.engine.validateByIds(['Proposito', 'MontoSolicitado', 'Plazo']);
   }
 
   onMontoChange(): void {
@@ -610,6 +612,9 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
 
   onPlazoChange(): void {
+    this.aplicarReglaCreditoPorMonto(false);
+    this.sincronizarValoresValidacion();
+    this.engine.validateById('Plazo');
     this.planPagos = [];
   }
 
@@ -727,20 +732,29 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   }
 
 
-
-
   guardarBorrador(): void {
+    this.guardar("Borrador");
+  }
 
 
-    const ok = this.engine.validateAll();
+  private guardar(estado: string): void {
 
-    if (!ok) {
-      this.notify.show(this.engine.getGroupedErrorsHtmlSnapshot(), '', 'warning');
-      return;
+
+    if (estado != "Borrador") {
+      const ok = this.engine.validateAll();
+
+      if (!ok) {
+        this.notify.show(this.engine.getGroupedErrorsHtmlSnapshot(), '', 'warning');
+        return;
+      }
+
+
+      this.engine.clearErrors();
+      this.notify.close();
+
     }
 
-    this.engine.clearErrors();
-    this.notify.close();
+
 
 
     const plan = this.generarPlanPagos();
@@ -754,7 +768,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const payload = this.buildPayloadFromPlan(plan);
+    const payload = this.buildPayloadFromPlan(plan, estado);
 
     this.saving = true;
 
@@ -773,7 +787,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
         }
       });
   }
- private toIsoDateFromFormatted(value: string): string {
+
+
+
+  private toIsoDateFromFormatted(value: string): string {
     if (!value) return '';
 
     const parts = value.split('/');
@@ -791,9 +808,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
 
 
-  private buildPayloadFromPlan(plan: PlanPagoItem[]): any {
+  private buildPayloadFromPlan(plan: PlanPagoItem[], estado: string): any {
     return {
       codSocio: this.socio?.codigoSocio ?? '',
+      estado: estado,
       tipoCreditoId: this.solicitud.tipoCredito,
       propositoId: this.solicitud.proposito || null,
       proveedorId: this.requiereProveedor ? this.solicitud.proveedorId : null,
@@ -833,18 +851,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
 
   enviarAprobacion(): void {
-    this.aplicarReglaCreditoPorMonto(false);
-
-    if (!this.esViable) {
-      this.notify.show(
-        this.translate.instant('solicitudCredito.messages.notViable'),
-        '',
-        'warning'
-      );
-      return;
-    }
-
-    console.log(this.buildPayload(true));
+    this.guardar("EnEvaluacion");
   }
 
   simular(): void {
@@ -1180,24 +1187,32 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
 
   private limpiarFormularioCredito(): void {
-  this.solicitud.tipoCredito = '';
-  this.solicitud.proposito = '';
-  this.solicitud.proveedorId = '';
-  this.solicitud.montoSolicitado = null;
-  this.solicitud.plazo = null;
-  this.solicitud.tasaInteresAnual = 0;
-  this.solicitud.comisionDesembolso = 0;
-  this.solicitud.numeroFactura = '';
-  this.solicitud.fechaInicioPago = this.getFechaInicioDefault();
+    this.solicitud.tipoCredito = '';
+    this.solicitud.proposito = '';
+    this.solicitud.proveedorId = '';
+    this.solicitud.montoSolicitado = null;
+    this.solicitud.plazo = null;
+    this.solicitud.tasaInteresAnual = 0;
+    this.solicitud.comisionDesembolso = 0;
+    this.solicitud.numeroFactura = '';
+    this.solicitud.fechaInicioPago = this.getFechaInicioDefault();
 
-  this.propositosCreditoFiltrados = [];
-  this.requiereProveedor = false;
-  this.reglaCreditoActual = null;
-  this.planPagos = [];
-  this.montoTouched = false;
+    this.propositosCreditoFiltrados = [];
+    this.requiereProveedor = false;
+    this.reglaCreditoActual = null;
+    this.planPagos = [];
+    this.montoTouched = false;
 
-  this.engine.clearErrors();
-  this.sincronizarValoresValidacion();
-}
+    if (this.tiposCredito.length > 0) {
+      this.solicitud.tipoCredito = this.tiposCredito[0].id;
+      this.onTipoCreditoChange();
+    } else {
+      this.sincronizarValoresValidacion();
+    }
+
+    
+    this.engine.clearErrors();
+
+  }
 
 }

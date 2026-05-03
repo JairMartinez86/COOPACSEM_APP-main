@@ -14,7 +14,8 @@
     "accountTypes": {
       "current": "Corriente",
       "christmas": "Navideña",
-      "intereses": "Intereses"
+      "intereses": "Intereses",
+      "credit": "Crédito"
     },
     "status": {
       "active": "Activo",
@@ -23,7 +24,9 @@
       "paid": "Pagado",
       "overdue": "Vencido",
       "pendiente": "Pendiente",
-      "pending": "Pendiente"
+      "pending": "Pendiente",
+      "enevaluacion": "En Evaluación",
+      "borrador" : "Borrador"
     },
     "summary": {
       "totalSaved": {

@@ -63,6 +63,7 @@ export interface SimpleMovimientoRow {
   banco?: string | null;
   estadoKey?: string | null;
   estado?: string;
+  tipoDocumento? : string;
 }
 
 export interface CambioCuotaRow {

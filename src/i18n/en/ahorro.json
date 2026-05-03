@@ -14,7 +14,8 @@
     "accountTypes": {
       "current": "Current",
       "christmas": "Christmas",
-      "intereses": "Interest"
+      "intereses": "Interest",
+      "credit": "Credit"
     },
     "status": {
       "active": "Active",
@@ -23,7 +24,9 @@
       "pendiente": "Pending",
       "pending": "Pending",
       "paid": "Paid",
-      "overdue": "Overdue"
+      "overdue": "Overdue",
+      "enevaluacion": "Under Evaluation",
+      "borrador": "Draft"
     },
     "summary": {
       "totalSaved": {
@@ -58,7 +61,7 @@
       "newDeposit": "New deposit",
       "newWithdrawal": "New withdrawal",
       "printReport": "Print report",
-     "affiliation": "Affiliation Payment",
+      "affiliation": "Affiliation Payment",
       "increaseInstallment": "Increase installment",
       "decreaseInstallment": "Decrease installment",
       "exportExcel": "Export Excel"
@@ -92,7 +95,7 @@
       "requests": "Requests",
       "membership": "Membership",
       "currentPlan": "Current Plan",
-  "christmasPlan": "Christmas Plan"
+      "christmasPlan": "Christmas Plan"
     },
     "detail": {
       "totalSaved": "Total savings",
@@ -117,7 +120,6 @@
         "interest": "Interest",
         "balanceInterest": "Balance + Interest"
       },
-      
       "socios": {
         "code": "Code",
         "member": "Member",
@@ -143,7 +145,7 @@
         "bank": "Bank",
         "searchPlaceholder": "Search by date, deposit number, bank, account type or amount"
       },
-       "installmentChanges": {
+      "installmentChanges": {
         "title": "Installment changes",
         "registerDate": "Registration date",
         "movementType": "Movement type",
