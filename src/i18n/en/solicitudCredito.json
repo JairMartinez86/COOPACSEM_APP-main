@@ -91,6 +91,14 @@
       "viable": "Viable",
       "notViable": "Not Viable"
     },
+    "approval": {
+      "comiteCredito1": "Credit Committee 1",
+      "comiteCredito2": "Credit Committee 2",
+      "comiteVigilancia": "Supervisory Committee",
+      "juntaDirectiva": "Board of Directors",
+      "desembolso": "Disbursement",
+      "pendingReview": "Pending Review"
+    },
     "actions": {
       "guardarBorrador": "Save Draft",
       "simular": "Simulate",
@@ -119,10 +127,15 @@
       "providerRequired": "Select the provider",
       "planNotGenerated": "The payment plan could not be generated"
     },
+    "exportModal": {
+      "title": "Export request",
+      "selectDocumentType": "Select document type"
+    },
     "labels": {
       "desde": "since",
       "note": "Note"
     },
+    
     "common": {
       "select": "Select...",
       "close": "Close"

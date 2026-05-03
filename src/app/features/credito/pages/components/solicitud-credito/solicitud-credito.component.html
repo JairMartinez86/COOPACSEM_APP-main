@@ -814,10 +814,19 @@
                       {{ 'solicitudCredito.actions.enviarAprobacion' | translate }}
                     </button>
 
+
+                    @if (modo != "new"){
                     <button type="button" class="btn btn-light" (click)="imprimir()">
                       <i class="fa-solid fa-print me-1"></i>
                       {{ 'solicitudCredito.actions.imprimir' | translate }}
                     </button>
+
+                    <button type="button" class="btn btn-primary" (click)="abrirModalExportacion()">
+                      <i class="bi bi-download me-1"></i>
+                      {{ 'fichaSocio.buttons.export' | translate }}
+                    </button>
+
+                    }
 
                     <button type="button" class="btn btn-outline-danger" (click)="cancelar()">
                       <i class="fa-solid fa-circle-xmark me-1"></i>
@@ -1017,4 +1026,41 @@
     </div>
   </div>
 </div>
+}
+
+@if (modalExportacionOpen) {
+<div class="modal fade show d-block" tabindex="-1" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{ 'solicitudCredito.exportModal.title' | translate }}</h5>
+        <button type="button" class="btn-close" (click)="cerrarModalExportacion()"></button>
+      </div>
+
+      <div class="modal-body">
+        <p class="mb-2">{{ 'solicitudCredito.exportModal.selectDocumentType' | translate }}</p>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-danger"  (click)="exportarComoPdf()">
+            PDF
+          </button>
+
+          <button class="btn btn-success" (click)="exportarComoExcel()">
+            Excel
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-light" (click)="cerrarModalExportacion()">
+          {{ 'solicitudCredito.common.close' | translate }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show"></div>
 }

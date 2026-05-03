@@ -100,7 +100,8 @@
       "sinMoraText": "No presenta mora"
     },
     "approval": {
-      "comiteCredito": "Comité Crédito",
+      "comiteCredito1": "Comité Crédito 1",
+      "comiteCredito2": "Comité Crédito 2",
       "comiteVigilancia": "Comité Vigilancia",
       "juntaDirectiva": "Junta Directiva",
       "desembolso": "Desembolso",
@@ -136,6 +137,10 @@
       "purposeRequired": "Seleccione el propósito del crédito",
       "providerRequired": "Seleccione el proveedor",
       "planNotGenerated": "No se pudo generar el plan de pagos"
+    },
+     "exportModal": {
+      "title": "Exportar solicitud",
+      "selectDocumentType": "Seleccione el tipo de documento"
     },
     "labels": {
       "desde": "desde",

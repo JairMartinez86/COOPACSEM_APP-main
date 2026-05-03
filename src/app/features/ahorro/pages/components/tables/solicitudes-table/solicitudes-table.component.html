@@ -102,7 +102,7 @@
 
                             <div class="table-actions" (click)="$event.stopPropagation()">
 
-                                @if(row.tipoDocumento == "Solicitud Retiro")
+                                @if(row.tipoDocumento == "Solicitud_Retiro")
                                 {
                                 <button type="button" class="btn btn-icon btn-sm btn-light"
                                     (click)="verSolicitudRetiro(row)" [permissionRoute]="['/ahorro']"
@@ -117,7 +117,7 @@
                                 </button>
                                 }
 
-                                @if(row.tipoDocumento == "Solicitud Credito"){
+                                @if(row.tipoDocumento == "Solicitud_Credito"){
                                 <button type="button" class="btn btn-icon btn-sm btn-light"
                                     (click)="verSolicitudCredito(row)" [permissionRoute]="['/solicitud-credito']"
                                     [appPermission]="['view']">

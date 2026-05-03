@@ -67,6 +67,9 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   private readonly subs = new Subscription();
   private readonly isBrowser: boolean;
 
+  private pdf : any;
+  private excel : any;
+
 
   breadcrumbs: any[] = [];
   socioId = '';
@@ -89,6 +92,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
   planPagos: PlanPagoItem[] = [];
   mostrarModalPlan = false;
+  modalExportacionOpen = false;
 
   requiereProveedor = false;
 
@@ -125,10 +129,11 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   };
 
   flujoAprobacion = [
-    { orden: 1, labelKey: 'solicitudCredito.approval.comiteCredito', estado: 'Pendiente', usuario: '' },
-    { orden: 2, labelKey: 'solicitudCredito.approval.comiteVigilancia', estado: 'Pendiente', usuario: '' },
-    { orden: 3, labelKey: 'solicitudCredito.approval.juntaDirectiva', estado: 'Pendiente', usuario: '' },
-    { orden: 4, labelKey: 'solicitudCredito.approval.desembolso', estado: 'Pendiente', usuario: '' }
+    { orden: 1, labelKey: 'solicitudCredito.approval.comiteCredito1', estado: 'Pendiente', usuario: '' },
+    { orden: 2, labelKey: 'solicitudCredito.approval.comiteCredito2', estado: 'Pendiente', usuario: '' },
+    { orden: 3, labelKey: 'solicitudCredito.approval.comiteVigilancia', estado: 'Pendiente', usuario: '' },
+    { orden: 4, labelKey: 'solicitudCredito.approval.juntaDirectiva', estado: 'Pendiente', usuario: '' },
+    { orden: 5, labelKey: 'solicitudCredito.approval.desembolso', estado: 'Pendiente', usuario: '' }
   ];
 
   cuotaDisponibleApi = 0;
@@ -550,7 +555,9 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       }))
       .subscribe({
         next: (res: any) => {
-          const data = res?.data ?? res;
+          const data = res?.data.data ?? res;
+          this.pdf = res?.data?.pdf;
+          this.excel = res?.data?.excel;
 
           this.cargarDatosBaseDesdeResponse(data);
 
@@ -578,29 +585,30 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
           this.flujoAprobacion = [
             {
               orden: 1,
-              labelKey: 'solicitudCredito.approval.comiteCredito',
+              labelKey: 'solicitudCredito.approval.comiteCredito1',
               estado: String(s.estadoComiteCredito1 ?? 'Pendiente'),
               usuario: String(s.usuarioAutorizaComiteCredito1 ?? ''),
             },
-            /* {
+             {
               orden: 2,
               labelKey: 'solicitudCredito.approval.comiteCredito2',
-              estado: String(s.estadoComiteCredito2 ?? 'Pendiente')
-            },*/
+              estado: String(s.estadoComiteCredito2 ?? 'Pendiente'),
+              usuario: String(s.usuarioAutorizaComiteCredito2 ?? ''),
+            },
             {
-              orden: 2,
+              orden: 3,
               labelKey: 'solicitudCredito.approval.comiteVigilancia',
               estado: String(s.estadoComiteVigilancia ?? 'Pendiente'),
               usuario: String(s.usuarioAutorizaComiteVigilancia ?? ''),
             },
             {
-              orden: 3,
+              orden: 4,
               labelKey: 'solicitudCredito.approval.juntaDirectiva',
               estado: String(s.estadoJuntaDirectiva ?? 'Pendiente'),
                usuario: String(s.usuarioAutorizaJuntaDirectiva ?? ''),
             },
             {
-              orden: 4,
+              orden: 5,
               labelKey: 'solicitudCredito.approval.desembolso',
               estado: String(s.estadoDesembolso ?? 'Pendiente'),
               usuario: String(s.usuarioAutorizaDesembolso ?? ''),
@@ -985,6 +993,15 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           this.notify.showFromApiResponse?.(res, 'success');
 
+          this.pdf = res?.data?.pdf;
+          this.excel = res?.data?.excel;
+
+          this.imprimir();
+
+
+          
+          
+
           if (!this.solicitudId) {
             this.limpiarFormularioCredito();
           } else {
@@ -1083,10 +1100,34 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     this.mostrarModalPlan = false;
   }
 
-  imprimir(): void {
-    if (!this.isBrowser) return;
 
-    window.print();
+   imprimir(): void {
+    if (!this.isBrowser) return;
+    if (!this?.pdf) return;
+
+
+    const base64 = this.pdf;
+    const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
+
+    const byteCharacters = atob(cleanBase64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+
+    const win = window.open(url, '_blank');
+
+    if (!win) return;
+
+    win.onload = () => {
+      win.focus();
+      win.print();
+    };
   }
 
   cancelar(): void {
@@ -1422,6 +1463,101 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
     this.engine.clearErrors();
 
+  }
+
+  abrirModalExportacion(): void {
+    this.modalExportacionOpen = true;
+  }
+
+  
+  cerrarModalExportacion(): void {
+    this.modalExportacionOpen = false;
+  }
+
+
+    exportarComoPdf(): void {
+
+    this.cerrarModalExportacion();
+
+    this.descargarPdfBase64(
+        this.pdf,
+        this.buildPrintFileName()
+      );
+
+  }
+
+  exportarComoExcel(): void {
+     this.descargarExcelBase64(
+        this.excel,
+        this.buildPrintFileName()
+      );
+      return;
+  }
+
+  private buildPrintFileName(): string {
+
+    return `${this.appConfigService.getCurrentSettings().companyName} - SOLICITUD DE CRÉDITO - ${this.socio?.codigoSocio} - ${this.socio?.nombreCompleto} `;
+  }
+
+
+
+   private descargarExcelBase64(base64: string | null | undefined, fileName: string): void {
+    if (!base64) return;
+
+    const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
+    const byteCharacters = atob(cleanBase64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    const blob = new Blob([byteArray], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileName}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    window.URL.revokeObjectURL(url);
+  }
+
+  private descargarPdfBase64(base64: string | null | undefined, fileName: string): void {
+    if (!base64) return;
+
+    const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
+    const byteCharacters = atob(cleanBase64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    const blob = new Blob([byteArray], {
+      type: 'application/pdf'
+    });
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileName}.pdf`;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    window.URL.revokeObjectURL(url);
   }
 
 }

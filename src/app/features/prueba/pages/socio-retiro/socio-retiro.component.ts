@@ -550,17 +550,15 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           this.notify.showFromApiResponse?.(res, 'success');
 
+              if (res?.data.pdf) {
+              this.retiro.pdf = res.data.pdf;
+              this.onPrint();
+            }
+
 
           if (this.isEdit) {
             this.loadSolicitud();
           } else {
-            const retiroCreado = res?.data?.retiro;
-
-            if (retiroCreado?.pdf) {
-              this.retiro.pdf = retiroCreado.pdf;
-              this.onPrint();
-            }
-
 
             this.loadRetiroNuevo();
             this.engine.clearErrors();
