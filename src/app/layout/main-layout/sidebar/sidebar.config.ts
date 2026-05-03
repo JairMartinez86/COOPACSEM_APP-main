@@ -173,7 +173,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     permissions: {
       view: false,
       create: false,
-      edit: null,
+      edit: false,
       delete: null
     }
   },

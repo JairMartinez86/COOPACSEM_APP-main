@@ -83,7 +83,9 @@
       "activo": "Activo",
       "inactivo": "Inactivo",
       "pendiente": "Pendiente",
-      "enEvaluacion": "En Evaluación"
+      "enEvaluacion": "En Evaluación",
+      "aprobado": "Aprobado",
+      "rechazado": "Rechazado"
     },
     "evaluation": {
       "viable": "Viable",

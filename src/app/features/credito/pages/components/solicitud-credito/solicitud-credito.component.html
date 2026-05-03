@@ -7,7 +7,7 @@
       <div>
         <h1 class="page-title mb-1">
           <i class="fa-duotone fa-solid fa-file-invoice-dollar text-success"></i>
-          {{ 'solicitudCredito.title' | translate }}
+          {{ 'solicitudCredito.title' | translate }} {{NoSolicitud}}
         </h1>
         <div class="text-muted">{{ 'solicitudCredito.subtitle' | translate }}</div>
       </div>
@@ -324,7 +324,8 @@
 
                         <select #TipoCredito class="form-select" id="TipoCredito" name="TipoCredito"
                           [(ngModel)]="solicitud.tipoCredito" engineSync="TipoCredito" autoFocusNext
-                          [next]="FechaInicioPago" required (ngModelChange)="onTipoCreditoChange()">
+                          [next]="FechaInicioPago" required (ngModelChange)="onTipoCreditoChange()"
+                          [disabled]="modo=='view'">
 
                           <option value="">
                             {{ 'solicitudCredito.common.select' | translate }}
@@ -351,7 +352,8 @@
 
                         <input #FechaInicioPago type="date" class="form-control" id="FechaInicioPago"
                           name="FechaInicioPago" [(ngModel)]="solicitud.fechaInicioPago" engineSync="FechaInicioPago"
-                          autoFocusNext [next]="Proposito" required (ngModelChange)="onFechaInicioPagoChange()" />
+                          autoFocusNext [next]="Proposito" required (ngModelChange)="onFechaInicioPagoChange()"
+                          [disabled]="modo=='view'" />
                       </div>
                     </div>
 
@@ -370,7 +372,7 @@
                         <select #Proposito class="form-select" id="Proposito" name="Proposito"
                           [(ngModel)]="solicitud.proposito" engineSync="Proposito" autoFocusNext
                           [next]="TasaInteresAnual" required (ngModelChange)="onPropositoChange()"
-                          [disabled]="propositosCreditoFiltrados.length == 0">
+                          [disabled]="propositosCreditoFiltrados.length == 0" [disabled]="modo=='view'">
 
                           <option value="">
                             {{ 'solicitudCredito.common.select' | translate }}
@@ -420,7 +422,7 @@
 
                         <select #Proveedor class="form-select" id="Proveedor" name="Proveedor"
                           [(ngModel)]="solicitud.proveedorId" engineSync="Proveedor" autoFocusNext
-                          [next]="TasaInteresAnual" required>
+                          [next]="TasaInteresAnual" required [disabled]="modo=='view'">
 
                           <option value="">
                             {{ 'solicitudCredito.common.select' | translate }}
@@ -452,15 +454,15 @@
                         <input #MontoSolicitado type="text" class="form-control text-end" id="MontoSolicitado"
                           name="MontoSolicitado" [(ngModel)]="solicitud.montoSolicitado"
                           (ngModelChange)="onMontoChange()" (blur)="montoTouched = true"
-                          [ngClass]="montoSolicitadoInvalido ? 'is-invalid' : ''" 
-                          numberFormat [decimals]="2"
+                          [ngClass]="montoSolicitadoInvalido ? 'is-invalid' : ''" numberFormat [decimals]="2"
                           [decimalSeparator]="settings.decimalSeparator"
-                          [thousandSeparator]="settings.thousandSeparator" required JmartAutoFocus />
+                          [thousandSeparator]="settings.thousandSeparator" required JmartAutoFocus
+                          [disabled]="modo=='view'" />
                       </div>
 
 
 
-<!--
+                      <!--
                       @if (montoSolicitadoInvalido) {
                       <small class="text-danger">
                         {{ 'solicitudCredito.messages.invalidAmount' | translate }}
@@ -535,7 +537,7 @@
                         <input #Plazo type="text" class="form-control text-end" id="Plazo" name="Plazo"
                           [(ngModel)]="solicitud.plazo" engineSync="Plazo" autoFocusNext [next]="NumeroFactura"
                           numberFormat [decimals]="0" [decimalSeparator]="settings.decimalSeparator"
-                          [thousandSeparator]="settings.thousandSeparator" required />
+                          [thousandSeparator]="settings.thousandSeparator" required [disabled]="modo=='view'" />
 
                       </div>
                     </div>
@@ -557,12 +559,13 @@
 
                         <input #NumeroFactura type="text" class="form-control" id="NumeroFactura" name="NumeroFactura"
                           [(ngModel)]="solicitud.numeroFactura" engineSync="NumeroFactura" autoFocusNext
-                          [next]="saveButton" />
+                          [next]="saveButton" [disabled]="modo=='view'" />
                       </div>
                     </div>
 
                     <div class="col-12 d-flex align-items-center gap-3 flex-wrap">
-                      <button type="button" class="btn btn-success" (click)="ajustarMaximoPermitido()">
+                      <button type="button" class="btn btn-success" (click)="ajustarMaximoPermitido()"
+                        [disabled]="modo=='view'">
                         <i class="fa-solid fa-arrows-rotate me-1"></i>
                         {{ 'solicitudCredito.actions.ajustarMaximo' | translate }}
                       </button>
@@ -728,6 +731,9 @@
             </div>
           </div>
 
+
+
+
           <!-- APROBACION + ACCIONES -->
           <div class="row g-3 mb-3">
             <div class="col-xl-7">
@@ -739,20 +745,38 @@
                 </div>
 
                 <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-start text-center">
-                    @for (step of flujoAprobacion; track step.orden) {
-                    <div>
-                      <div class="rounded-circle d-inline-flex align-items-center justify-content-center text-white"
-                        [ngClass]="step.orden < 4 ? 'bg-success' : 'bg-secondary'" style="width: 34px; height: 34px;">
+                  <div class="approval-progress">
+                    @for (step of flujoAprobacion; track step.orden; let last = $last) {
+                    <div class="approval-step">
+                      <div class="approval-line" [class.d-none]="last" [ngClass]="{
+    'line-success': (step.estado || '').toLowerCase() === 'aprobado',
+    'line-danger': (step.estado || '').toLowerCase() === 'rechazado',
+    'line-warning': (step.estado || '').toLowerCase() === 'pendiente'
+  }">
+                      </div>
+
+                      <div class="approval-circle" [ngClass]="{
+          'bg-success': (step.estado || '').toLowerCase() === 'aprobado',
+          'bg-danger': (step.estado || '').toLowerCase() === 'rechazado',
+          'bg-warning': (step.estado || '').toLowerCase() === 'pendiente',
+          'bg-secondary': !['aprobado','rechazado','pendiente'].includes((step.estado || '').toLowerCase())
+        }">
                         {{ step.orden }}
                       </div>
 
                       <div class="mt-2 fw-semibold">{{ step.labelKey | translate }}</div>
-                      <span class="badge badge-soft-warning">
-                        {{ 'solicitudCredito.status.pendiente' | translate }}
+
+                      <span class="badge" [ngClass]="{
+          'badge-soft-success': (step.estado || '').toLowerCase() === 'aprobado',
+          'badge-soft-danger': (step.estado || '').toLowerCase() === 'rechazado',
+          'badge-soft-warning': (step.estado || '').toLowerCase() === 'pendiente',
+          'badge-soft-secondary': !['aprobado','rechazado','pendiente'].includes((step.estado || '').toLowerCase())
+        }">
+                        {{ ('solicitudCredito.status.' + (step.estado || 'pendiente').toLowerCase()) | translate }}
                       </span>
+
                       <div class="text-muted small">
-                        {{ 'solicitudCredito.approval.pendingReview' | translate }}
+                        {{ step.usuario || ('solicitudCredito.approval.pendingReview' | translate) }}
                       </div>
                     </div>
                     }
@@ -773,7 +797,8 @@
                   <div class="d-flex flex-wrap gap-2">
 
                     <button #saveButton type="button" class="btn btn-success" [disabled]="saving" autoFocusNext
-                      [disableClickButton]="true" [unlockOn]="notify.closed$" (click)="guardarBorrador()">
+                      [disableClickButton]="true" [unlockOn]="notify.closed$" (click)="guardarBorrador()"
+                      [disabled]="!puedeEditarSolicitud">
                       <i class="fa-solid fa-floppy-disk me-1"></i>
                       {{ 'solicitudCredito.actions.guardarBorrador' | translate }}
                     </button>
@@ -783,7 +808,8 @@
                       {{ 'solicitudCredito.actions.simular' | translate }}
                     </button>
 
-                    <button type="button" class="btn btn-secondary" (click)="enviarAprobacion()" [disabled]="!esViable">
+                    <button type="button" class="btn btn-secondary" (click)="enviarAprobacion()"
+                      [disabled]="!esViable || !puedeEditarSolicitud">
                       <i class="fa-solid fa-paper-plane me-1"></i>
                       {{ 'solicitudCredito.actions.enviarAprobacion' | translate }}
                     </button>
@@ -808,6 +834,7 @@
               </div>
             </div>
           </div>
+
 
           <div class="alert alert-primary">
             <i class="fa-solid fa-circle-info me-1"></i>

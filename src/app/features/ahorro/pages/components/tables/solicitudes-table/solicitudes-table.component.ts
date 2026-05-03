@@ -170,11 +170,22 @@ export class SolicitudesTableComponent implements OnChanges {
   }
 
 
-  verSolicitud(row: any): void {
+  verSolicitudRetiro(row: any): void {
 
     this.router.navigate(['/socio-retiro/view', row.socioId, row.id]);
   }
-  editarSolicitud(row: any) {
+  editarSolicitudRetiro(row: any) {
     this.router.navigate(['/socio-retiro/edit', row.socioId, row.id]);
   }
+
+
+  verSolicitudCredito(row: any) {
+    this.router.navigate(['/solicitud-credito/view', row.socioId, row.id]);
+  }
+
+  editarSolicitudCredito(row: any) {
+    this.router.navigate(['/solicitud-credito/edit', row.socioId, row.id]);
+  }
+
+
 }

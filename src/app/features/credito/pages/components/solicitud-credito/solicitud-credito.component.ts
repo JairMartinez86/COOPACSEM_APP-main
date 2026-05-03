@@ -70,6 +70,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
   breadcrumbs: any[] = [];
   socioId = '';
+  NoSolicitud = '';
 
   loading = false;
   saving = false;
@@ -90,6 +91,11 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   mostrarModalPlan = false;
 
   requiereProveedor = false;
+
+  solicitudId = '';
+  modo: 'new' | 'view' | 'edit' = 'new';
+  puedeEditarSolicitud = true;
+
 
   solicitud: SolicitudCreditoForm & { proveedorId?: string } = {
     tipoCredito: '',
@@ -119,10 +125,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   };
 
   flujoAprobacion = [
-    { orden: 1, labelKey: 'solicitudCredito.approval.comiteCredito', estado: 'Pendiente' },
-    { orden: 2, labelKey: 'solicitudCredito.approval.comiteVigilancia', estado: 'Pendiente' },
-    { orden: 3, labelKey: 'solicitudCredito.approval.juntaDirectiva', estado: 'Pendiente' },
-    { orden: 4, labelKey: 'solicitudCredito.approval.desembolso', estado: 'Pendiente' }
+    { orden: 1, labelKey: 'solicitudCredito.approval.comiteCredito', estado: 'Pendiente', usuario: '' },
+    { orden: 2, labelKey: 'solicitudCredito.approval.comiteVigilancia', estado: 'Pendiente', usuario: '' },
+    { orden: 3, labelKey: 'solicitudCredito.approval.juntaDirectiva', estado: 'Pendiente', usuario: '' },
+    { orden: 4, labelKey: 'solicitudCredito.approval.desembolso', estado: 'Pendiente', usuario: '' }
   ];
 
   cuotaDisponibleApi = 0;
@@ -154,7 +160,23 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
 
 
-    this.cargarNuevo();
+    this.solicitudId = this.route.snapshot.paramMap.get('solicitudId') ?? '';
+
+    const url = this.route.snapshot.routeConfig?.path ?? '';
+
+    if (url.includes('view')) this.modo = 'view';
+    else if (url.includes('edit')) this.modo = 'edit';
+    else this.modo = 'new';
+
+    if (this.solicitudId) {
+      this.cargarSolicitudGuardada();
+    } else {
+      this.cargarNuevo();
+    }
+
+
+
+
   }
 
   ngOnDestroy(): void {
@@ -514,6 +536,176 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       });
   }
 
+
+  private cargarSolicitudGuardada(): void {
+    if (!this.socioId || !this.solicitudId) return;
+
+    this.loading = true;
+
+    this.service.getSolicitud(this.socioId, this.solicitudId)
+      .pipe(finalize(() => {
+        this.loading = false;
+        this.sincronizarValoresValidacion();
+        this.engine.clearErrors();
+      }))
+      .subscribe({
+        next: (res: any) => {
+          const data = res?.data ?? res;
+
+          this.cargarDatosBaseDesdeResponse(data);
+
+          const s = data?.solicitud ?? {};
+
+          this.puedeEditarSolicitud = !!s.puedeEditar;
+
+         this.NoSolicitud = `${String(s.serie ?? '')} ${s.noSolicitud ?? ''}`;
+
+          this.solicitud.tipoCredito = String(s.tipoCreditoId ?? '');
+          this.solicitud.proposito = s.propositoId ? String(s.propositoId) : '';
+          this.solicitud.proveedorId = s.proveedorId ? String(s.proveedorId) : '';
+          this.solicitud.fechaInicioPago = this.toDateInput(s.fechaInicioPago);
+          this.solicitud.montoSolicitado = Number(s.montoSolicitado ?? 0);
+          this.solicitud.plazo = Number(s.plazo ?? 0);
+          this.solicitud.tasaInteresAnual = Number(s.tasaInteresAnual ?? 0);
+          this.solicitud.comisionDesembolso = Number(s.comisionDesembolso ?? 0);
+
+          this.estadoSolicitud = String(s.estado ?? '');
+
+          this.filtrarPropositosPorTipo();
+          this.aplicarReglaCreditoPorMonto(false);
+
+
+          this.flujoAprobacion = [
+            {
+              orden: 1,
+              labelKey: 'solicitudCredito.approval.comiteCredito',
+              estado: String(s.estadoComiteCredito1 ?? 'Pendiente'),
+              usuario: String(s.usuarioAutorizaComiteCredito1 ?? ''),
+            },
+            /* {
+              orden: 2,
+              labelKey: 'solicitudCredito.approval.comiteCredito2',
+              estado: String(s.estadoComiteCredito2 ?? 'Pendiente')
+            },*/
+            {
+              orden: 2,
+              labelKey: 'solicitudCredito.approval.comiteVigilancia',
+              estado: String(s.estadoComiteVigilancia ?? 'Pendiente'),
+              usuario: String(s.usuarioAutorizaComiteVigilancia ?? ''),
+            },
+            {
+              orden: 3,
+              labelKey: 'solicitudCredito.approval.juntaDirectiva',
+              estado: String(s.estadoJuntaDirectiva ?? 'Pendiente'),
+               usuario: String(s.usuarioAutorizaJuntaDirectiva ?? ''),
+            },
+            {
+              orden: 4,
+              labelKey: 'solicitudCredito.approval.desembolso',
+              estado: String(s.estadoDesembolso ?? 'Pendiente'),
+              usuario: String(s.usuarioAutorizaDesembolso ?? ''),
+            }
+          ];
+
+
+
+
+          this.planPagos = (s.planPagos ?? []).map((x: any) => ({
+            noCuota: Number(x.noCuota ?? 0),
+            fechaPago: this.toDateInput(x.fechaPago),
+            cuota: Number(x.cuota ?? 0),
+            principalPendiente: Number(x.principalPendiente ?? 0),
+            pagoPrincipal: Number(x.pagoPrincipal ?? 0),
+            pagoInteres: Number(x.pagoInteres ?? 0),
+            principalCancelado: Number(x.principalCancelado ?? 0)
+          }));
+
+          if (this.modo === 'view' || !this.puedeEditarSolicitud) {
+            this.puedeEditarSolicitud = false;
+          }
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        }
+      });
+  }
+
+  private cargarDatosBaseDesdeResponse(data: any): void {
+    const socio = data?.socio ?? {};
+
+    this.socio = {
+      id: String(socio?.id ?? this.socioId),
+      codigoSocio: String(socio?.codigoSocio ?? ''),
+      nombreCompleto: String(socio?.nombreCompleto ?? ''),
+      numeroIdentificacion: String(socio?.numeroIdentificacion ?? ''),
+      activo: this.toBoolean(socio?.activo ?? true),
+      antiguedadTexto: String(socio?.antiguedadTexto ?? ''),
+      fechaIngreso: String(socio?.fechaIngresoTexto ?? socio?.fechaIngreso ?? ''),
+      salarioMensual: Number(socio?.salarioMensual ?? 0),
+      ahorrosDisponibles: Number(socio?.ahorrosDisponibles ?? socio?.ahorroDisponible ?? 0),
+      creditosActivos: Number(socio?.creditosActivos ?? 0),
+      limiteCreditoDisponible: Number(socio?.limiteCreditoDisponible ?? 0),
+      porcentajePrincipalPagado: Number(socio?.porcentajePrincipalPagado ?? 0),
+      tieneCreditosVigentes: this.toBoolean(socio?.tieneCreditosVigentes ?? false)
+    } as any;
+
+    this.tiposCredito = (data?.tiposCredito ?? []).map((x: any) => ({
+      id: String(x?.id ?? ''),
+      tipo: String(x?.tipo ?? ''),
+      nombre: String(x?.nombre ?? x?.tipoCreditoNombre ?? ''),
+      tipoCreditoNombre: String(x?.tipoCreditoNombre ?? x?.nombre ?? ''),
+      esQuincenal: this.toBoolean(x?.esQuincenal ?? true),
+      requiereProveedor: this.toBoolean(x?.requiereProveedor ?? false),
+      porcMinPrincipalPagado: Number(x?.porcMinPrincipalPagado ?? 0)
+    } as any));
+
+    this.propositosCredito = (data?.propositosCredito ?? []).map((x: any) => ({
+      id: String(x?.id ?? ''),
+      tipoCreditoId: String(x?.tipoCreditoId ?? ''),
+      nombre: String(x?.nombre ?? '')
+    }));
+
+    this.proveedores = (data?.proveedores ?? []).map((x: any) => ({
+      id: String(x?.id ?? ''),
+      codigo: String(x?.codigo ?? ''),
+      nombre: String(x?.nombre ?? '')
+    }));
+
+    this.reglasCredito = (data?.reglasCredito ?? []).map((x: any) => ({
+      id: String(x?.id ?? ''),
+      idProposito: x?.idProposito == null ? null : String(x.idProposito),
+      tipoCreditoId: String(x?.tipoCreditoId ?? ''),
+      montoDesde: Number(x?.montoDesde ?? 0),
+      montoHasta: x?.montoHasta == null ? null : Number(x.montoHasta),
+      comision: Number(x?.comision ?? 0),
+      cuotaMaxima: Number(x?.cuotaMaxima ?? 0),
+      porcInteresAnual: Number(x?.porcInteresAnual ?? 0),
+      mesDesde: x?.mesDesde == null ? null : Number(x.mesDesde),
+      mesHasta: x?.mesHasta == null ? null : Number(x.mesHasta),
+      orden: Number(x?.orden ?? 0)
+    } as any));
+
+    this.laboral = {
+      departamento: String(data?.laboral?.departamento ?? ''),
+      nomina: String(data?.laboral?.nomina ?? ''),
+      ingresoEmpresa: Number(data?.laboral?.ingresoEmpresa ?? (this.socio as any)?.salarioMensual ?? 0),
+      antiguedadLaboral: String(data?.laboral?.antiguedadLaboral ?? (this.socio as any)?.antiguedadTexto ?? '')
+    };
+
+    this.deducciones = {
+      cuotaCreditoTiendas: Number(data?.deducciones?.cuotaCreditoTiendas ?? 0),
+      pensionAlimenticia: Number(data?.deducciones?.pensionAlimenticia ?? 0),
+      otrasCxC: Number(data?.deducciones?.otrasCxC ?? 0),
+      cuotaBdf: Number(data?.deducciones?.cuotaBdf ?? 0),
+      cuotaCoopacsem: Number(data?.deducciones?.cuotaCoopacsem ?? 0)
+    };
+
+    this.totalDeduccionesApi = Number(data?.deducciones?.totalDeducciones ?? 0);
+    this.cuotaDisponibleApi = Number(data?.deducciones?.cuotaDisponible ?? 0);
+    this.nivelEndeudamientoApi = Number(data?.deducciones?.nivelEndeudamiento ?? 0);
+  }
+
+
   private getFechaInicioDefault(): string {
     const fechaServidor = new Date(
       this.appConfigService.getCurrentSettings().fechaServidor
@@ -755,6 +947,16 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     }
 
 
+    if (this.solicitudId && !this.puedeEditarSolicitud) {
+      this.notify.show(
+        this.translate.instant('solicitudCredito.messages.cannotEditApproved'),
+        '',
+        'warning'
+      );
+      return;
+    }
+
+
 
 
     const plan = this.generarPlanPagos();
@@ -773,14 +975,21 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     this.saving = true;
 
 
+    const request$ = this.solicitudId
+      ? this.service.putSolicitudCredito(this.solicitudId, payload)
+      : this.service.postSolicitudCredito(payload);
 
-    this.service.postSolicitudCredito(payload)
+    request$
       .pipe(finalize(() => this.saving = false))
       .subscribe({
         next: (res: any) => {
           this.notify.showFromApiResponse?.(res, 'success');
-          this.planPagos = [];
-          this.limpiarFormularioCredito();
+
+          if (!this.solicitudId) {
+            this.limpiarFormularioCredito();
+          } else {
+            this.cargarSolicitudGuardada();
+          }
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -1210,7 +1419,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       this.sincronizarValoresValidacion();
     }
 
-    
+
     this.engine.clearErrors();
 
   }

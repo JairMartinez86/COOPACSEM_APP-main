@@ -1,0 +1,50 @@
+.approval-progress {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  text-align: center;
+}
+
+.approval-step {
+  position: relative;
+  flex: 1;
+  z-index: 1;
+}
+
+.approval-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  position: relative;
+  z-index: 2;
+}
+
+
+
+.approval-line {
+  position: absolute;
+  top: 17px;
+  left: 50%;
+  width: 100%;
+  height: 3px;
+  z-index: 0;
+  background: rgba(255, 255, 255, 0.25); // default gris
+}
+
+
+.line-success {
+  background: #28c76f;
+}
+
+.line-danger {
+  background: #ea5455;
+}
+
+.line-warning {
+  background: #ff9f43;
+}

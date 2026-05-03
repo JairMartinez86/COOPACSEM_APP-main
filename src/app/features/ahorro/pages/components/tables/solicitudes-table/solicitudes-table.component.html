@@ -81,8 +81,8 @@
                         <td>
                             <span class="badge" [ngClass]="{
       'badge-soft-warning': row.estado?.toLowerCase() === 'pendiente',
-      'badge-soft-secondary': row.estado?.toLowerCase() === 'borrador',
-      'badge-soft-info': row.estado?.toLowerCase() === 'enevaluacion'
+      'badge-soft-dark': row.estado?.toLowerCase() === 'borrador',
+      'badge-soft-primary': row.estado?.toLowerCase() === 'enevaluacion'
     }">
 
                                 {{ ('ahorro.status.' + (row.estado || '').toLowerCase()) | translate }}
@@ -102,19 +102,42 @@
 
                             <div class="table-actions" (click)="$event.stopPropagation()">
 
-                                @if(row.tipoDocumento == "Retiro")
+                                @if(row.tipoDocumento == "Solicitud Retiro")
                                 {
-                                <button type="button" class="btn btn-icon btn-sm btn-light" (click)="verSolicitud(row)"
-                                    [permissionRoute]="['/ahorro']" [appPermission]="['view']">
+                                <button type="button" class="btn btn-icon btn-sm btn-light"
+                                    (click)="verSolicitudRetiro(row)" [permissionRoute]="['/ahorro']"
+                                    [appPermission]="['view']">
                                     <i class="bi bi-eye"></i>
                                 </button>
 
                                 <button type="button" class="btn btn-icon btn-sm btn-light"
-                                    (click)="editarSolicitud(row)" [permissionRoute]="['/ahorro']"
+                                    (click)="editarSolicitudRetiro(row)" [permissionRoute]="['/ahorro']"
                                     [appPermission]="['edit']">
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 }
+
+                                @if(row.tipoDocumento == "Solicitud Credito"){
+                                <button type="button" class="btn btn-icon btn-sm btn-light"
+                                    (click)="verSolicitudCredito(row)" [permissionRoute]="['/solicitud-credito']"
+                                    [appPermission]="['view']">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+
+                                @if(row.estado == "Borrador")
+                                {
+                                <button type="button" class="btn btn-icon btn-sm btn-light"
+                                    (click)="editarSolicitudCredito(row)" [permissionRoute]="['/solicitud-credito']"
+                                    [appPermission]="['edit']">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                }
+
+
+                                }
+
+
+
 
 
 
