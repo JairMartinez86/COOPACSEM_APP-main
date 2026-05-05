@@ -23,8 +23,9 @@
         <div class="row g-3 mb-3">
             <div class="col-xl-2 col-md-4" *ngFor="let card of [
         { key: 'total', value: resumen.totalSolicitudes, cls: '' },
+          { key: 'completadas', value: resumen.completadas, cls: 'text-success' },
         { key: 'enEvaluacion', value: resumen.enEvaluacion, cls: 'text-warning' },
-        { key: 'aprobadas', value: resumen.aprobadas, cls: 'text-success' },
+      
         { key: 'rechazadas', value: resumen.rechazadas, cls: 'text-danger' },
         { key: 'desembolsadas', value: resumen.desembolsadas, cls: 'text-primary' },
         { key: 'pendientes', value: resumen.pendientesAprobacion, cls: '' }

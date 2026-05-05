@@ -58,7 +58,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         totalSolicitudes: 0,
         borradores: 0,
         enEvaluacion: 0,
-        aprobadas: 0,
+        completadas: 0,
         rechazadas: 0,
         desembolsadas: 0,
         pendientesAprobacion: 0
@@ -156,7 +156,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
                         totalSolicitudes: Number(data?.resumen?.totalSolicitudes ?? 0),
                         borradores: Number(data?.resumen?.borradores ?? 0),
                         enEvaluacion: Number(data?.resumen?.enEvaluacion ?? 0),
-                        aprobadas: Number(data?.resumen?.aprobadas ?? 0),
+                        completadas: Number(data?.resumen?.completadas ?? 0),
                         rechazadas: Number(data?.resumen?.rechazadas ?? 0),
                         desembolsadas: Number(data?.resumen?.desembolsadas ?? 0),
                         pendientesAprobacion: Number(data?.resumen?.pendientesAprobacion ?? 0)

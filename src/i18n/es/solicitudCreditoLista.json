@@ -60,7 +60,7 @@
         "summary": {
             "total": "Total",
             "enEvaluacion": "En evaluación",
-            "aprobadas": "Aprobadas",
+            "completadas": "Completadas",
             "rechazadas": "Rechazadas",
             "desembolsadas": "Desembolsadas",
             "pendientes": "Pendientes"

@@ -11,7 +11,7 @@ export interface SolicitudCreditoListaResumen {
   totalSolicitudes: number;
   borradores: number;
   enEvaluacion: number;
-  aprobadas: number;
+  completadas: number;
   rechazadas: number;
   desembolsadas: number;
   pendientesAprobacion: number;

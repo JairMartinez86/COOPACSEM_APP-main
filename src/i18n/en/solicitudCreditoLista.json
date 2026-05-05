@@ -59,7 +59,7 @@
         "summary": {
             "total": "Total",
             "enEvaluacion": "In evaluation",
-            "aprobadas": "Approved",
+            "completadas": "Completed",
             "rechazadas": "Rejected",
             "desembolsadas": "Disbursed",
             "pendientes": "Pending"
