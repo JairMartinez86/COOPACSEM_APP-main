@@ -364,6 +364,22 @@ export const routes: Routes = [
 
 
 
+      // APROBACIONES DE CRÉDITO
+      {
+        path: 'aprobaciones-credito',
+        loadComponent: () =>
+          import('./features/credito/pages/components/solicitud-credito-lista/solicitud-credito-lista.component')
+            .then(m => m.SolicitudCreditoListaComponent),
+        canActivate: [permissionGuard],
+        data: {
+          permission: '/aprobaciones-credito',
+          action: 'view'
+        }
+      },
+
+
+
+
 
       // PROVEEDORES
       {

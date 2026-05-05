@@ -1,0 +1,464 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+    <div class="main-content">
+
+        <div class="page-header mb-3 d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+                <h1 class="page-title mb-1">
+                    <i class="fa-duotone fa-solid fa-file-signature text-success"></i>
+                    {{ 'solicitudCreditoLista.title' | translate }}
+                </h1>
+                <div class="text-muted">
+                    {{ 'solicitudCreditoLista.subtitle' | translate }}
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-success" (click)="nuevaSolicitud()">
+                <i class="fa-solid fa-plus me-1"></i>
+                {{ 'solicitudCreditoLista.actions.nuevaSolicitud' | translate }}
+            </button>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-xl-2 col-md-4" *ngFor="let card of [
+        { key: 'total', value: resumen.totalSolicitudes, cls: '' },
+        { key: 'enEvaluacion', value: resumen.enEvaluacion, cls: 'text-warning' },
+        { key: 'aprobadas', value: resumen.aprobadas, cls: 'text-success' },
+        { key: 'rechazadas', value: resumen.rechazadas, cls: 'text-danger' },
+        { key: 'desembolsadas', value: resumen.desembolsadas, cls: 'text-primary' },
+        { key: 'pendientes', value: resumen.pendientesAprobacion, cls: '' }
+      ]">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="text-muted small">
+                            {{ ('solicitudCreditoLista.summary.' + card.key) | translate }}
+                        </div>
+                        <h4 class="mb-0" [ngClass]="card.cls">{{ card.value }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row g-2 align-items-end">
+
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <label class="form-label">{{ 'solicitudCreditoLista.filters.buscar' | translate }}</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fa-light fa-magnifying-glass"></i>
+                            </span>
+                            <input type="text" class="form-control" name="search" [(ngModel)]="filtro.search"
+                                (keyup.enter)="buscar()"
+                                [placeholder]="'solicitudCreditoLista.filters.buscarPlaceholder' | translate">
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-2 col-md-6">
+                        <label class="form-label">{{ 'solicitudCreditoLista.filters.estado' | translate }}</label>
+                        <select class="form-select" name="estado" [(ngModel)]="filtro.estado" (change)="buscar()">
+                            @for (e of estados; track e.value) {
+                            <option [value]="e.value">{{ e.labelKey | translate }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-2 col-md-6">
+                        <label class="form-label">{{ 'solicitudCreditoLista.filters.etapa' | translate }}</label>
+                        <select class="form-select" name="etapa" [(ngModel)]="filtro.etapa" (change)="buscar()">
+                            @for (e of etapas; track e.value) {
+                            <option [value]="e.value">{{ e.labelKey | translate }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-2 col-md-6">
+                        <label class="form-label">{{ 'solicitudCreditoLista.filters.fechaInicio' | translate }}</label>
+                        <input type="date" class="form-control" name="fechaInicio" [(ngModel)]="filtro.fechaInicio">
+                    </div>
+
+                    <div class="col-xl-2 col-lg-2 col-md-6">
+                        <label class="form-label">{{ 'solicitudCreditoLista.filters.fechaFin' | translate }}</label>
+                        <input type="date" class="form-control" name="fechaFin" [(ngModel)]="filtro.fechaFin">
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+                        <button type="button" class="btn btn-light" (click)="limpiarFiltros()">
+                            <i class="fa-light fa-eraser me-1"></i>
+                            {{ 'solicitudCreditoLista.actions.limpiar' | translate }}
+                        </button>
+
+                        <button type="button" class="btn btn-primary" (click)="buscar()">
+                            <i class="fa-light fa-filter me-1"></i>
+                            {{ 'solicitudCreditoLista.actions.filtrar' | translate }}
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0 socios-table">
+                        <thead>
+                            <tr>
+                                <th>{{ 'solicitudCreditoLista.table.solicitud' | translate }}</th>
+                                <th>{{ 'solicitudCreditoLista.table.socio' | translate }}</th>
+                                <th>{{ 'solicitudCreditoLista.table.tipoCredito' | translate }}</th>
+                                <th class="text-end">{{ 'solicitudCreditoLista.table.monto' | translate }}</th>
+                                <th>{{ 'solicitudCreditoLista.table.fecha' | translate }}</th>
+                                <th>{{ 'solicitudCreditoLista.table.estado' | translate }}</th>
+                                <th>{{ 'solicitudCreditoLista.table.etapaActual' | translate }}</th>
+                                <th style="min-width: 160px;">{{ 'solicitudCreditoLista.table.progreso' | translate }}
+                                </th>
+                                <th class="text-end">{{ 'solicitudCreditoLista.table.acciones' | translate }}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (loading) {
+                            <tr>
+                                <td colspan="9" class="text-center py-5">
+                                    <div class="spinner-border text-success"></div>
+                                    <div class="text-muted mt-2">
+                                        {{ 'solicitudCreditoLista.common.loading' | translate }}
+                                    </div>
+                                </td>
+                            </tr>
+                            } @else if (items.length === 0) {
+                            <tr>
+                                <td colspan="9" class="text-center py-5 text-muted">
+                                    <i class="fa-light fa-folder-open fa-2x d-block mb-2"></i>
+                                    {{ 'solicitudCreditoLista.common.noData' | translate }}
+                                </td>
+                            </tr>
+                            } @else {
+                            @for (row of items; track row.id) {
+                            <tr class="socios-click-row"
+                                [class.socios-row-selected]="solicitudFlujoSeleccionada && solicitudFlujoSeleccionada.id === row.id"
+                                (click)="seleccionarSolicitudFlujo(row)">
+
+                                <td>
+                                    <strong>{{ row.documento }}</strong>
+                                </td>
+
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="text-success">
+                                            <i class="fa-duotone fa-solid fa-circle-user fa-lg"></i>
+                                        </span>
+                                        <div>
+                                            <strong>{{ row.nombreSocio }}</strong>
+                                            <div class="text-muted small">{{ row.codigoSocio }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <strong>{{ row.tipoCredito || '-' }}</strong>
+                                    <div class="text-muted small">{{ row.proposito || '-' }}</div>
+                                </td>
+
+                                <td class="text-end">
+                                    <strong>{{ currency }} {{ formatCurrency(row.montoSolicitado) }}</strong>
+                                    <div class="text-muted small">
+                                        {{ row.plazo }}
+                                        {{
+                                        row.esQuincenal
+                                        ? ('solicitudCreditoLista.fields.quincenas' | translate)
+                                        : ('solicitudCreditoLista.fields.meses' | translate)
+                                        }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    {{ formatDate(row.fechaSolicitud) }}
+                                    <div class="text-muted small">
+                                        {{ 'solicitudCreditoLista.fields.inicioPago' | translate }}:
+                                        {{ formatDate(row.fechaInicioPago) }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="badge" [ngClass]="estadoBadgeClass(row.estado)">
+                                        {{ getEstadoTexto(row.estado) }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div>
+                                        <span class="me-1">
+                                            <i class="fa-solid" [ngClass]="etapaActualIconClass(row)"></i>
+                                        </span>
+                                        <strong>{{ row.etapaActualTexto }}</strong>
+                                    </div>
+                                    <div class="text-muted small">
+                                        {{ 'solicitudCreditoLista.fields.enRevision' | translate }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="approval-progress flex-grow-1">
+                                            <div class="approval-progress-bar" [ngClass]="progressClass(row)"
+                                                [style.width.%]="row.progreso">
+                                            </div>
+                                        </div>
+                                        <span class="small">{{ row.progreso }}%</span>
+                                    </div>
+                                </td>
+
+                                <td class="text-end">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-success"
+                                            (click)="$event.stopPropagation(); verDetalle(row)">
+                                            {{ 'solicitudCreditoLista.actions.verDetalle' | translate }}
+                                        </button>
+
+                                        @if (row.puedeEditar) {
+                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                            (click)="$event.stopPropagation(); editar(row)">
+                                            {{ 'solicitudCreditoLista.actions.editar' | translate }}
+                                        </button>
+                                        }
+
+                                        @if (puedeMostrarAprobar(row)) {
+                                        <button type="button" class="btn btn-sm btn-success"
+                                            (click)="$event.stopPropagation(); abrirModalAccion(row, 'aprobar')">
+                                            {{ 'solicitudCreditoLista.actions.aprobar' | translate }}
+                                        </button>
+                                        }
+
+                                        @if (puedeMostrarRechazar(row)) {
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            (click)="$event.stopPropagation(); abrirModalAccion(row, 'rechazar')">
+                                            {{ 'solicitudCreditoLista.actions.rechazar' | translate }}
+                                        </button>
+                                        }
+
+                                        @if (puedeMostrarDesembolsar(row)) {
+                                        <button type="button" class="btn btn-sm btn-primary"
+                                            (click)="$event.stopPropagation(); abrirModalAccion(row, 'desembolsar')">
+                                            {{ 'solicitudCreditoLista.actions.desembolsar' | translate }}
+                                        </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 p-3 border-top">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted">{{ 'solicitudCreditoLista.pagination.pageSize' | translate }}</span>
+
+                        <select class="form-select form-select-sm w-auto" name="pageSize" [(ngModel)]="filtro.pageSize"
+                            (change)="cambiarPageSize()">
+                            @for (size of pageSizeOptions; track size) {
+                            <option [value]="size">{{ size }}</option>
+                            }
+                        </select>
+
+                        <span class="text-muted">
+                            {{ 'solicitudCreditoLista.pagination.total' | translate }}: {{ totalRecords }}
+                        </span>
+                    </div>
+
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item" [class.disabled]="filtro.page <= 1">
+                                <button class="page-link" type="button" (click)="cambiarPagina(filtro.page - 1)">
+                                    {{ 'solicitudCreditoLista.pagination.previous' | translate }}
+                                </button>
+                            </li>
+
+                            @for (p of paginas; track p) {
+                            <li class="page-item" [class.active]="p === filtro.page">
+                                <button class="page-link" type="button" (click)="cambiarPagina(p)">
+                                    {{ p }}
+                                </button>
+                            </li>
+                            }
+
+                            <li class="page-item" [class.disabled]="filtro.page >= totalPages">
+                                <button class="page-link" type="button" (click)="cambiarPagina(filtro.page + 1)">
+                                    {{ 'solicitudCreditoLista.pagination.next' | translate }}
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        @if (solicitudFlujoSeleccionada) {
+
+        <div class="row g-3 mt-3">
+
+            <!-- FLOW -->
+            <div class="col-xl-9 col-lg-8">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            {{ 'solicitudCreditoLista.flow.title' | translate }}
+                            <span class="text-muted small ms-2">
+                                {{ solicitudFlujoSeleccionada.documento }}
+                            </span>
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="step-progress position-relative">
+
+                            <!-- 🔥 LINEA DINÁMICA -->
+                            <div class="step-progress-colored-line" [ngClass]="getFlowLineClass()"
+                                [style.width.%]="getFlowProgress(solicitudFlujoSeleccionada)">
+                            </div>
+
+                            <!-- PASOS -->
+                            @for (ap of aprobacionesFlujoSeleccionado; track ap.codigo; let i = $index) {
+
+                            <div class="step-progress-item" [class.completed]="isStepCompleted(i)"
+                                [class.completed-danger]="isStepRejected(i)"
+                                [class.active]="isStepActualPendiente(ap, i)">
+
+                                <div class="step-progress-marker">
+                                    <i class="bi" [ngClass]="getStepProgressIcon(ap, i)"></i>
+                                </div>
+
+                                <span class="step-progress-label">
+                                    {{ ap.nombre }}
+                                </span>
+
+                                <div class="small mt-1">
+                                    <span class="badge" [ngClass]="aprobacionBadgeClass(ap.estado)">
+                                        {{ getEstadoAprobacionTexto(ap.estado) }}
+                                    </span>
+                                </div>
+
+                                <div class="small text-muted mt-1">
+                                    @if (ap.fecha) {
+                                    {{ formatDateTime(ap.fecha) }}
+                                    } @else {
+                                    {{ 'solicitudCreditoLista.status.pendienteRevision' | translate }}
+                                    }
+                                </div>
+
+                            </div>
+
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- STATS -->
+            <div class="col-xl-3 col-lg-4">
+
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            {{ 'solicitudCreditoLista.flow.statsTitle' | translate }}
+                        </h6>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">
+                                {{ 'solicitudCreditoLista.table.estado' | translate }}
+                            </span>
+                            <strong>
+                                {{ getEstadoTexto(solicitudFlujoSeleccionada.estado) }}
+                            </strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">
+                                {{ 'solicitudCreditoLista.table.etapaActual' | translate }}
+                            </span>
+                            <strong>
+                                {{ solicitudFlujoSeleccionada.etapaActualTexto }}
+                            </strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">
+                                {{ 'solicitudCreditoLista.table.progreso' | translate }}
+                            </span>
+                            <strong>
+                                {{ getFlowProgress(solicitudFlujoSeleccionada) | number:'1.0-0' }}%
+                            </strong>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        }
+
+    </div>
+</section>
+
+@if (modalAprobacionOpen && solicitudSeleccionada) {
+<div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{ modalTitleKey() | translate }}</h5>
+                <button type="button" class="btn-close" (click)="cerrarModalAccion()"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-light border">
+                    <strong>{{ solicitudSeleccionada.documento }}</strong>
+                    <div>{{ solicitudSeleccionada.nombreSocio }} - {{ solicitudSeleccionada.codigoSocio }}</div>
+                    <div class="text-muted small">{{ solicitudSeleccionada.etapaActualTexto }}</div>
+                </div>
+
+                <label class="form-label">
+                    {{ 'solicitudCreditoLista.modal.comentario' | translate }}
+                </label>
+
+                <textarea class="form-control" rows="3" name="comentarioAccion"
+                    [(ngModel)]="comentarioAccion"></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" (click)="cerrarModalAccion()" [disabled]="processing">
+                    {{ 'solicitudCreditoLista.actions.cancelar' | translate }}
+                </button>
+
+                <button type="button" [class]="modalButtonClass()" (click)="confirmarAccion()" [disabled]="processing">
+                    @if (processing) {
+                    <span class="spinner-border spinner-border-sm me-1"></span>
+                    }
+                    {{ modalButtonKey() | translate }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-backdrop fade show"></div>
+}

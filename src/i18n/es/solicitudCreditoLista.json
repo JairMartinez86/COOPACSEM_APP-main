@@ -1,0 +1,110 @@
+{
+    "solicitudCreditoLista": {
+        "title": "Aprobaciones de crédito",
+        "subtitle": "Gestión de solicitudes y flujo de aprobaciones",
+        "breadcrumbs": [
+            {
+                "label": "Créditos"
+            },
+            {
+                "label": "Aprobaciones de crédito"
+            }
+        ],
+        "filters": {
+            "buscar": "Buscar",
+            "buscarPlaceholder": "Buscar por socio, solicitud, identificación...",
+            "estado": "Estado",
+            "etapa": "Etapa",
+            "fechaInicio": "Fecha inicio",
+            "fechaFin": "Fecha fin",
+            "todos": "Todos",
+            "todas": "Todas"
+        },
+        "table": {
+            "solicitud": "Solicitud",
+            "socio": "Socio",
+            "tipoCredito": "Tipo de crédito",
+            "monto": "Monto",
+            "fecha": "Fecha",
+            "estado": "Estado",
+            "etapaActual": "Etapa actual",
+            "progreso": "Progreso",
+            "acciones": "Acciones"
+        },
+        "fields": {
+            "inicioPago": "Inicio de pago",
+            "meses": "meses",
+            "quincenas": "quincenas",
+            "enRevision": "En revisión"
+        },
+        "status": {
+            "borrador": "Borrador",
+            "enEvaluacion": "En evaluación",
+            "tramitePago": "Trámite Pago",
+            "completado": "Completado",
+            "anulado": "Anulado",
+            "pendiente": "Pendiente",
+            "aprobado": "Aprobado",
+            "rechazado": "Rechazado",
+            "actual": "Actual",
+            "pendienteRevision": "Pendiente de revisión"
+        },
+        "approval": {
+            "comiteCredito1": "Comité de crédito 1",
+            "comiteCredito2": "Comité de crédito 2",
+            "comiteVigilancia": "Comité de vigilancia",
+            "vicepresidente": "Vicepresidente",
+            "presidente": "Presidente",
+            "desembolso": "Desembolso"
+        },
+        "summary": {
+            "total": "Total",
+            "enEvaluacion": "En evaluación",
+            "aprobadas": "Aprobadas",
+            "rechazadas": "Rechazadas",
+            "desembolsadas": "Desembolsadas",
+            "pendientes": "Pendientes"
+        },
+        "actions": {
+            "nuevaSolicitud": "Nueva solicitud",
+            "verDetalle": "Ver detalle",
+            "editar": "Editar",
+            "aprobar": "Aprobar",
+            "rechazar": "Rechazar",
+            "desembolsar": "Desembolsar",
+            "cancelar": "Cancelar",
+            "limpiar": "Limpiar",
+            "filtrar": "Filtrar"
+        },
+        "modal": {
+            "aprobarTitle": "Aprobar solicitud",
+            "rechazarTitle": "Rechazar solicitud",
+            "desembolsarTitle": "Desembolsar crédito",
+            "comentario": "Comentario"
+        },
+        "pagination": {
+            "pageSize": "Mostrar",
+            "total": "Total",
+            "previous": "Anterior",
+            "next": "Siguiente"
+        },
+        "flow": {
+            "title": "Flujo de aprobación de solicitudes",
+            "statsTitle": "Estadísticas del flujo",
+            "enCola": "en cola",
+            "enColaTotal": "En cola total",
+            "enProceso": "En proceso",
+            "aprobadas": "Aprobadas",
+            "rechazadas": "Rechazadas",
+            "comiteCredito1Desc": "Revisa y evalúa la solicitud",
+            "comiteCredito2Desc": "Segunda evaluación",
+            "comiteVigilanciaDesc": "Revisión de cumplimiento",
+            "vicepresidenteDesc": "Aprobación ejecutiva",
+            "presidenteDesc": "Aprobación final"
+        },
+        "common": {
+            "loading": "Cargando...",
+            "noData": "No hay datos disponibles"
+        }
+    }
+}

@@ -129,13 +129,13 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     cuotaCoopacsem: 0
   };
 
-  flujoAprobacion = [
-    { orden: 1, labelKey: 'solicitudCredito.approval.comiteCredito1', estado: 'Pendiente', usuario: '' },
-    { orden: 2, labelKey: 'solicitudCredito.approval.comiteCredito2', estado: 'Pendiente', usuario: '' },
-    { orden: 3, labelKey: 'solicitudCredito.approval.comiteVigilancia', estado: 'Pendiente', usuario: '' },
-    { orden: 4, labelKey: 'solicitudCredito.approval.juntaDirectiva', estado: 'Pendiente', usuario: '' },
-    { orden: 5, labelKey: 'solicitudCredito.approval.desembolso', estado: 'Pendiente', usuario: '' }
-  ];
+flujoAprobacion = [
+  { orden: 1, labelKey: 'solicitudCredito.approval.comiteCredito1', estado: 'Pendiente', usuario: '', fecha: null },
+  { orden: 2, labelKey: 'solicitudCredito.approval.comiteCredito2', estado: 'Pendiente', usuario: '', fecha: null },
+  { orden: 3, labelKey: 'solicitudCredito.approval.comiteVigilancia', estado: 'Pendiente', usuario: '', fecha: null },
+  { orden: 4, labelKey: 'solicitudCredito.approval.vicepresidente', estado: 'Pendiente', usuario: '', fecha: null },
+  { orden: 5, labelKey: 'solicitudCredito.approval.presidente', estado: 'Pendiente', usuario: '', fecha: null }
+];
 
   cuotaDisponibleApi = 0;
   nivelEndeudamientoApi = 0;
@@ -596,37 +596,42 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
 
           this.flujoAprobacion = [
-            {
-              orden: 1,
-              labelKey: 'solicitudCredito.approval.comiteCredito1',
-              estado: String(s.estadoComiteCredito1 ?? 'Pendiente'),
-              usuario: String(s.usuarioAutorizaComiteCredito1 ?? ''),
-            },
-            {
-              orden: 2,
-              labelKey: 'solicitudCredito.approval.comiteCredito2',
-              estado: String(s.estadoComiteCredito2 ?? 'Pendiente'),
-              usuario: String(s.usuarioAutorizaComiteCredito2 ?? ''),
-            },
-            {
-              orden: 3,
-              labelKey: 'solicitudCredito.approval.comiteVigilancia',
-              estado: String(s.estadoComiteVigilancia ?? 'Pendiente'),
-              usuario: String(s.usuarioAutorizaComiteVigilancia ?? ''),
-            },
-            {
-              orden: 4,
-              labelKey: 'solicitudCredito.approval.juntaDirectiva',
-              estado: String(s.estadoJuntaDirectiva ?? 'Pendiente'),
-              usuario: String(s.usuarioAutorizaJuntaDirectiva ?? ''),
-            },
-            {
-              orden: 5,
-              labelKey: 'solicitudCredito.approval.desembolso',
-              estado: String(s.estadoDesembolso ?? 'Pendiente'),
-              usuario: String(s.usuarioAutorizaDesembolso ?? ''),
-            }
-          ];
+  {
+    orden: 1,
+    labelKey: 'solicitudCredito.approval.comiteCredito1',
+    estado: String(s.estadoComiteCredito1 ?? 'Pendiente'),
+    usuario: String(s.usuarioAutorizaComiteCredito1 ?? ''),
+    fecha: s.fechaAutorizaComiteCredito1 ?? null
+  },
+  {
+    orden: 2,
+    labelKey: 'solicitudCredito.approval.comiteCredito2',
+    estado: String(s.estadoComiteCredito2 ?? 'Pendiente'),
+    usuario: String(s.usuarioAutorizaComiteCredito2 ?? ''),
+    fecha: s.fechaAutorizaComiteCredito2 ?? null
+  },
+  {
+    orden: 3,
+    labelKey: 'solicitudCredito.approval.comiteVigilancia',
+    estado: String(s.estadoComiteVigilancia ?? 'Pendiente'),
+    usuario: String(s.usuarioAutorizaComiteVigilancia ?? ''),
+    fecha: s.fechaAutorizaComiteVigilancia ?? null
+  },
+  {
+    orden: 4,
+    labelKey: 'solicitudCredito.approval.vicepresidente',
+    estado: String(s.estadoVicepresidente ?? 'Pendiente'),
+    usuario: String(s.usuarioAutorizaVicepresidente ?? ''),
+    fecha: s.fechaAutorizaVicepresidente ?? null
+  },
+  {
+    orden: 5,
+    labelKey: 'solicitudCredito.approval.presidente',
+    estado: String(s.estadoPresidente ?? 'Pendiente'),
+    usuario: String(s.usuarioAutorizaPresidente ?? ''),
+    fecha: s.fechaAutorizaPresidente ?? null
+  }
+];
 
 
 
@@ -1583,5 +1588,34 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
     window.URL.revokeObjectURL(url);
   }
+
+formatDateTime(value: string | Date | null | undefined): string {
+  if (!value) return '';
+
+  const settings = this.appConfigService.getCurrentSettings();
+  const format = settings?.dateFormat || 'dd/MM/yyyy';
+
+  const d = new Date(value);
+
+  const fecha = this.formatDate(d, format);
+  const hora = d.toLocaleTimeString('es-NI', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+
+  return `${fecha} ${hora}`;
+}
+
+private formatDate(date: Date, format: string): string {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return format
+    .replace('dd', day)
+    .replace('MM', month)
+    .replace('yyyy', String(year));
+}
 
 }

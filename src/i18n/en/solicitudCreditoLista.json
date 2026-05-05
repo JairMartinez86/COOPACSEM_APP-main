@@ -1,0 +1,109 @@
+{
+    "solicitudCreditoLista": {
+        "title": "Credit approvals",
+        "subtitle": "Manage requests and approval workflow",
+        "breadcrumbs": [
+            {
+                "label": "Credits"
+            },
+            {
+                "label": "Credit approvals"
+            }
+        ],
+        "filters": {
+            "buscar": "Search",
+            "buscarPlaceholder": "Search by member, request, ID...",
+            "estado": "Status",
+            "etapa": "Stage",
+            "fechaInicio": "Start date",
+            "fechaFin": "End date",
+            "todos": "All",
+            "todas": "All"
+        },
+        "table": {
+            "solicitud": "Request",
+            "socio": "Member",
+            "tipoCredito": "Credit type",
+            "monto": "Amount",
+            "fecha": "Date",
+            "estado": "Status",
+            "etapaActual": "Current stage",
+            "progreso": "Progress",
+            "acciones": "Actions"
+        },
+        "fields": {
+            "inicioPago": "Payment start",
+            "meses": "months",
+            "quincenas": "biweekly",
+            "enRevision": "Under review"
+        },
+        "status": {
+            "borrador": "Draft",
+            "enEvaluacion": "Under Review",
+            "tramitePago": "Payment Processing",
+            "completado": "Completed",
+            "anulado": "Canceled",
+            "pendiente": "Pending",
+            "aprobado": "Approved",
+            "rechazado": "Rejected",
+            "actual": "Current",
+            "pendienteRevision": "Pending Review"
+        },
+        "approval": {
+            "comiteCredito1": "Credit committee 1",
+            "comiteCredito2": "Credit committee 2",
+            "vicepresidente": "Vice President",
+            "presidente": "President",
+            "desembolso": "Disbursement"
+        },
+        "summary": {
+            "total": "Total",
+            "enEvaluacion": "In evaluation",
+            "aprobadas": "Approved",
+            "rechazadas": "Rejected",
+            "desembolsadas": "Disbursed",
+            "pendientes": "Pending"
+        },
+        "actions": {
+            "nuevaSolicitud": "New request",
+            "verDetalle": "View details",
+            "editar": "Edit",
+            "aprobar": "Approve",
+            "rechazar": "Reject",
+            "desembolsar": "Disburse",
+            "cancelar": "Cancel",
+            "limpiar": "Clear",
+            "filtrar": "Filter"
+        },
+        "modal": {
+            "aprobarTitle": "Approve request",
+            "rechazarTitle": "Reject request",
+            "desembolsarTitle": "Disburse credit",
+            "comentario": "Comment"
+        },
+        "pagination": {
+            "pageSize": "Show",
+            "total": "Total",
+            "previous": "Previous",
+            "next": "Next"
+        },
+        "flow": {
+            "title": "Approval workflow",
+            "statsTitle": "Workflow statistics",
+            "enCola": "in queue",
+            "enColaTotal": "Total in queue",
+            "enProceso": "In progress",
+            "aprobadas": "Approved",
+            "rechazadas": "Rejected",
+            "comiteCredito1Desc": "Reviews and evaluates the request",
+            "comiteCredito2Desc": "Second evaluation",
+            "comiteVigilanciaDesc": "Compliance review",
+            "vicepresidenteDesc": "Executive approval",
+            "presidenteDesc": "Final approval"
+        },
+        "common": {
+            "loading": "Loading...",
+            "noData": "No data available"
+        }
+    }
+}

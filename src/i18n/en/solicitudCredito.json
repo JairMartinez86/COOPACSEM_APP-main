@@ -22,7 +22,7 @@
       "planPagos": "Payment Schedule"
     },
     "fields": {
-       "required": "Required field",
+      "required": "Required field",
       "estadoSolicitud": "Status",
       "noSocio": "Member ID",
       "nombreCompleto": "Full Name",
@@ -69,7 +69,7 @@
       "actual": "Current",
       "proyectado": "Projected",
       "afterCredit": "After credit",
-       "observaciones": "Observations"
+      "observaciones": "Observations"
     },
     "plan": {
       "noCuota": "Installment",
@@ -81,14 +81,20 @@
       "principalCancelado": "Principal Paid",
       "totales": "Totals"
     },
-    "status": {
-      "activo": "Active",
-      "inactivo": "Inactive",
-      "pendiente": "Pending",
-      "enEvaluacion": "Under Evaluation",
-      "aprobado": "Approved",
-      "rechazado": "Rejected"
-    },
+   "status": {
+  "borrador": "Draft",
+  "enEvaluacion": "Under Review",
+  "tramitePago": "Payment Process",
+  "completado": "Completed",
+  "anulado": "Cancelled",
+
+  "pendiente": "Pending",
+  "aprobado": "Approved",
+  "rechazado": "Rejected",
+
+  "actual": "Current",
+  "pendienteRevision": "Pending review"
+},
     "evaluation": {
       "viable": "Viable",
       "notViable": "Not Viable"
@@ -97,7 +103,8 @@
       "comiteCredito1": "Credit Committee 1",
       "comiteCredito2": "Credit Committee 2",
       "comiteVigilancia": "Supervisory Committee",
-      "juntaDirectiva": "Board of Directors",
+      "vicepresidente": "Vice President",
+      "presidente": "President",
       "desembolso": "Disbursement",
       "pendingReview": "Pending Review"
     },
@@ -138,7 +145,6 @@
       "desde": "since",
       "note": "Note"
     },
-    
     "common": {
       "select": "Select...",
       "close": "Close"

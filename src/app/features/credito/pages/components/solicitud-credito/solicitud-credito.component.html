@@ -768,41 +768,54 @@
 
                 <div class="card-body">
                   <div class="approval-progress">
-                    @for (step of flujoAprobacion; track step.orden; let last = $last) {
-                    <div class="approval-step">
-                      <div class="approval-line" [class.d-none]="last" [ngClass]="{
-    'line-success': (step.estado || '').toLowerCase() === 'aprobado',
-    'line-danger': (step.estado || '').toLowerCase() === 'rechazado',
-    'line-warning': (step.estado || '').toLowerCase() === 'pendiente'
-  }">
-                      </div>
+  @for (step of flujoAprobacion; track step.orden; let last = $last) {
+    <div class="approval-step">
 
-                      <div class="approval-circle" [ngClass]="{
-          'bg-success': (step.estado || '').toLowerCase() === 'aprobado',
-          'bg-danger': (step.estado || '').toLowerCase() === 'rechazado',
-          'bg-warning': (step.estado || '').toLowerCase() === 'pendiente',
-          'bg-secondary': !['aprobado','rechazado','pendiente'].includes((step.estado || '').toLowerCase())
-        }">
-                        {{ step.orden }}
-                      </div>
+      <div class="approval-line"
+           [class.d-none]="last"
+           [ngClass]="{
+             'line-success': (step.estado || '').toLowerCase() === 'aprobado',
+             'line-danger': (step.estado || '').toLowerCase() === 'rechazado',
+             'line-warning': (step.estado || '').toLowerCase() === 'pendiente'
+           }">
+      </div>
 
-                      <div class="mt-2 fw-semibold">{{ step.labelKey | translate }}</div>
+      <div class="approval-circle"
+           [ngClass]="{
+             'bg-success': (step.estado || '').toLowerCase() === 'aprobado',
+             'bg-danger': (step.estado || '').toLowerCase() === 'rechazado',
+             'bg-warning': (step.estado || '').toLowerCase() === 'pendiente',
+             'bg-secondary': !['aprobado','rechazado','pendiente'].includes((step.estado || '').toLowerCase())
+           }">
+        {{ step.orden }}
+      </div>
 
-                      <span class="badge" [ngClass]="{
-          'badge-soft-success': (step.estado || '').toLowerCase() === 'aprobado',
-          'badge-soft-danger': (step.estado || '').toLowerCase() === 'rechazado',
-          'badge-soft-warning': (step.estado || '').toLowerCase() === 'pendiente',
-          'badge-soft-secondary': !['aprobado','rechazado','pendiente'].includes((step.estado || '').toLowerCase())
-        }">
-                        {{ ('solicitudCredito.status.' + (step.estado || 'pendiente').toLowerCase()) | translate }}
-                      </span>
+      <div class="mt-2 fw-semibold">
+        {{ step.labelKey | translate }}
+      </div>
 
-                      <div class="text-muted small">
-                        {{ step.usuario || ('solicitudCredito.approval.pendingReview' | translate) }}
-                      </div>
-                    </div>
-                    }
-                  </div>
+      <span class="badge"
+            [ngClass]="{
+              'badge-soft-success': (step.estado || '').toLowerCase() === 'aprobado',
+              'badge-soft-danger': (step.estado || '').toLowerCase() === 'rechazado',
+              'badge-soft-warning': (step.estado || '').toLowerCase() === 'pendiente',
+              'badge-soft-secondary': !['aprobado','rechazado','pendiente'].includes((step.estado || '').toLowerCase())
+            }">
+        {{ step.estado }}
+      </span>
+
+      <div class="text-muted small mt-1">
+        @if (step.fecha) {
+          {{ formatDateTime(step.fecha) }}
+        } @else {
+          {{ 'solicitudCredito.status.pendienteRevision' | translate }}
+        }
+      </div>
+
+    </div>
+  }
+</div>
+                 
                 </div>
               </div>
             </div>

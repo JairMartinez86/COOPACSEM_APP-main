@@ -175,8 +175,25 @@ export const SIDEBAR_DATA: SidebarItem[] = [
       create: false,
       edit: false,
       delete: null
-    }
+    },
+    
   },
+
+  {
+    type: 'link',
+    titleKey: 'sidebar.items.aprobacionCredito',
+    iconclass: 'fa-duotone fa-solid fa-circle-check',
+    router: '/aprobaciones-credito',
+    permissions: {
+      view: false,
+      create: false,
+      edit: false,
+      delete: false
+    },
+    
+  },
+
+
 
 
 

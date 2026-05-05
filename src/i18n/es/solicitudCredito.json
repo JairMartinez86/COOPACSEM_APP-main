@@ -81,14 +81,20 @@
       "principalCancelado": "Principal Cancelado",
       "totales": "Totales"
     },
-    "status": {
-      "activo": "Activo",
-      "inactivo": "Inactivo",
-      "pendiente": "Pendiente",
-      "enEvaluacion": "En Evaluación",
-      "aprobado": "Aprobado",
-      "rechazado": "Rechazado"
-    },
+   "status": {
+  "borrador": "Borrador",
+  "enEvaluacion": "En evaluación",
+  "tramitePago": "Trámite de pago",
+  "completado": "Completado",
+  "anulado": "Anulado",
+
+  "pendiente": "Pendiente",
+  "aprobado": "Aprobado",
+  "rechazado": "Rechazado",
+
+  "actual": "Actual",
+  "pendienteRevision": "Pendiente de revisión"
+},
     "evaluation": {
       "viable": "Viable",
       "notViable": "No Viable"
@@ -105,7 +111,8 @@
       "comiteCredito1": "Comité Crédito 1",
       "comiteCredito2": "Comité Crédito 2",
       "comiteVigilancia": "Comité Vigilancia",
-      "juntaDirectiva": "Junta Directiva",
+      "vicepresidente": "Vicepresidente",
+      "presidente": "Presidente",
       "desembolso": "Desembolso",
       "pendingReview": "Pendiente de revisión"
     },
@@ -141,7 +148,7 @@
       "planNotGenerated": "No se pudo generar el plan de pagos",
       "atLeastOneObservationRequired": "Ingrese al menos una observación"
     },
-     "exportModal": {
+    "exportModal": {
       "title": "Exportar solicitud",
       "selectDocumentType": "Seleccione el tipo de documento"
     },
