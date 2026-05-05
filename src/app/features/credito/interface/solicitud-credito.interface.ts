@@ -38,6 +38,7 @@ export interface SolicitudCreditoForm {
   tasaInteresAnual: number;
   comisionDesembolso: number;
   numeroFactura: string;
+  Observaciones : string;
 }
 
 

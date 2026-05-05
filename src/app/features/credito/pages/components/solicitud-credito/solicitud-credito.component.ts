@@ -67,8 +67,8 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   private readonly subs = new Subscription();
   private readonly isBrowser: boolean;
 
-  private pdf : any;
-  private excel : any;
+  private pdf: any;
+  private excel: any;
 
 
   breadcrumbs: any[] = [];
@@ -110,7 +110,8 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     plazo: null,
     tasaInteresAnual: 0,
     comisionDesembolso: 0,
-    numeroFactura: ''
+    numeroFactura: '',
+    Observaciones: ''
   };
 
   laboral = {
@@ -255,8 +256,16 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       : 'solicitudCredito.fields.meses';
   }
 
+  private get debeUsarPlanGuardado(): boolean {
+    return !!this.solicitudId && this.estadoSolicitud !== 'Borrador';
+  }
+
   get planPreview(): PlanPagoItem[] {
-    return this.generarPlanPagos();
+    if (this.debeUsarPlanGuardado) {
+      return this.planPagos; // 🔥 USA EL PLAN GUARDADO
+    }
+
+    return this.generarPlanPagos(); // 🔥 SOLO EN BORRADOR
   }
 
   get cuotaQuincenal(): number {
@@ -465,7 +474,8 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
             tipoCreditoNombre: String(x?.tipoCreditoNombre ?? x?.nombre ?? ''),
             esQuincenal: this.toBoolean(x?.esQuincenal ?? true),
             requiereProveedor: this.toBoolean(x?.requiereProveedor ?? false),
-            porcMinPrincipalPagado: Number(x?.porcMinPrincipalPagado ?? 0)
+            porcMinPrincipalPagado: Number(x?.porcMinPrincipalPagado ?? 0),
+            metodoCalculo: String(x?.metodoCalculo ?? 'FRANCES')
           } as any));
 
           this.propositosCredito = (data?.propositosCredito ?? []).map((x: any) => ({
@@ -520,6 +530,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
           this.solicitud.comisionDesembolso = 0;
           this.solicitud.proveedorId = '';
           this.solicitud.numeroFactura = '';
+          this.solicitud.Observaciones = '';
           this.planPagos = [];
 
           if (this.tiposCredito.length > 0) {
@@ -559,13 +570,15 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
           this.pdf = res?.data?.pdf;
           this.excel = res?.data?.excel;
 
+
+
           this.cargarDatosBaseDesdeResponse(data);
 
           const s = data?.solicitud ?? {};
 
           this.puedeEditarSolicitud = !!s.puedeEditar;
 
-         this.NoSolicitud = `${String(s.serie ?? '')} ${s.noSolicitud ?? ''}`;
+          this.NoSolicitud = `${String(s.serie ?? '')} ${s.noSolicitud ?? ''}`;
 
           this.solicitud.tipoCredito = String(s.tipoCreditoId ?? '');
           this.solicitud.proposito = s.propositoId ? String(s.propositoId) : '';
@@ -589,7 +602,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
               estado: String(s.estadoComiteCredito1 ?? 'Pendiente'),
               usuario: String(s.usuarioAutorizaComiteCredito1 ?? ''),
             },
-             {
+            {
               orden: 2,
               labelKey: 'solicitudCredito.approval.comiteCredito2',
               estado: String(s.estadoComiteCredito2 ?? 'Pendiente'),
@@ -605,7 +618,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
               orden: 4,
               labelKey: 'solicitudCredito.approval.juntaDirectiva',
               estado: String(s.estadoJuntaDirectiva ?? 'Pendiente'),
-               usuario: String(s.usuarioAutorizaJuntaDirectiva ?? ''),
+              usuario: String(s.usuarioAutorizaJuntaDirectiva ?? ''),
             },
             {
               orden: 5,
@@ -627,6 +640,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
             pagoInteres: Number(x.pagoInteres ?? 0),
             principalCancelado: Number(x.principalCancelado ?? 0)
           }));
+
 
           if (this.modo === 'view' || !this.puedeEditarSolicitud) {
             this.puedeEditarSolicitud = false;
@@ -999,8 +1013,8 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
           this.imprimir();
 
 
-          
-          
+
+
 
           if (!this.solicitudId) {
             this.limpiarFormularioCredito();
@@ -1081,18 +1095,32 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   }
 
   simular(): void {
-    this.aplicarReglaCreditoPorMonto(false);
 
-    if (!this.esViable) {
-      this.notify.show(
-        this.translate.instant('solicitudCredito.messages.notViable'),
-        '',
-        'warning'
-      );
-      return;
+
+
+    if (this.puedeEditarSolicitud) {
+
+      this.aplicarReglaCreditoPorMonto(false);
+
+      if (!this.esViable) {
+        this.notify.show(
+          this.translate.instant('solicitudCredito.messages.notViable'),
+          '',
+          'warning'
+        );
+        return;
+      }
+
+
+
+      this.planPagos = this.generarPlanPagos();
+
+
+
     }
 
-    this.planPagos = this.generarPlanPagos();
+
+
     this.mostrarModalPlan = true;
   }
 
@@ -1101,7 +1129,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   }
 
 
-   imprimir(): void {
+  imprimir(): void {
     if (!this.isBrowser) return;
     if (!this?.pdf) return;
 
@@ -1136,44 +1164,12 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     history.back();
   }
 
-  private buildPayload(enviarAprobacion: boolean): any {
-    const plan = this.generarPlanPagos();
 
-    return {
-      socioId: this.socioId,
-      tipoCredito: this.solicitud.tipoCredito,
-      proposito: this.solicitud.proposito,
-      proveedorId: this.requiereProveedor ? this.solicitud.proveedorId : null,
-      tipoCreditoReglaId: this.reglaCreditoActual?.id ?? null,
-      fechaInicioPago: this.solicitud.fechaInicioPago,
-      montoSolicitado: this.toNumber(this.solicitud.montoSolicitado),
-      montoInvalidoPorTipoCredito: this.montoInvalidoPorTipoCredito,
-      montoExcedeLimite: this.montoExcedeLimite,
-      mesNoPermitidoPorRegla: this.mesNoPermitidoPorRegla,
-      noTieneCreditosVigentes: this.noTieneCreditosVigentes,
-      noCumplePorcentajePrincipalPagado: this.noCumplePorcentajePrincipalPagado,
-      plazoExcedeMaximoRegla: this.plazoExcedeMaximoRegla,
-      porcMinPrincipalPagado: this.porcMinPrincipalPagadoTipo,
-      porcentajePrincipalPagado: Number((this.socio as any)?.porcentajePrincipalPagado ?? 0),
-      plazo: this.toNumber(this.solicitud.plazo),
-      esQuincenal: this.esQuincenal,
-      tasaInteresAnual: this.toNumber(this.solicitud.tasaInteresAnual),
-      comisionDesembolso: this.toNumber(this.solicitud.comisionDesembolso),
-      numeroFactura: this.solicitud.numeroFactura?.trim() ?? '',
-      cuotaQuincenal: plan.length > 0 ? plan[0].cuota : 0,
-      interesesTotales: this.round2(plan.reduce((sum, x) => sum + x.pagoInteres, 0)),
-      totalPagar: this.round2(plan.reduce((sum, x) => sum + x.cuota, 0)),
-      capacidadPagoPorcentaje: this.capacidadPagoPorcentaje,
-      nivelEndeudamientoPorcentaje: this.nivelEndeudamientoProyectado,
-      totalDeducciones: this.totalDeducciones,
-      cuotaDisponible: this.cuotaDisponible,
-      resultadoEvaluacion: this.esViable ? 'Viable' : 'NoViable',
-      planPagos: plan,
-      enviarAprobacion
-    };
-  }
 
   private generarPlanPagos(): PlanPagoItem[] {
+
+
+
     const principal = this.round4(this.toNumber(this.solicitud.montoSolicitado));
     const tasaAnual = this.toNumber(this.solicitud.tasaInteresAnual) / 100;
     const plazo = this.toNumber(this.solicitud.plazo);
@@ -1184,11 +1180,23 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       ? tasaAnual / 24
       : tasaAnual / 12;
 
-    const cuotaSinRedondear = tasaPeriodo > 0
-      ? principal * tasaPeriodo / (1 - Math.pow(1 + tasaPeriodo, -plazo))
-      : principal / plazo;
+    const metodoCalculo = String(
+      (this.tipoCreditoActual as any)?.metodoCalculo ?? 'FRANCES'
+    ).toUpperCase();
 
-    const cuota = this.round4(cuotaSinRedondear);
+    let cuota = 0;
+
+    if (metodoCalculo === 'LINEAL') {
+      const principalFijo = this.round4(principal / plazo);
+      const interesFijo = this.round4(principal * tasaPeriodo);
+      cuota = this.round4(principalFijo + interesFijo);
+    } else {
+      const cuotaSinRedondear = tasaPeriodo > 0
+        ? principal * tasaPeriodo / (1 - Math.pow(1 + tasaPeriodo, -plazo))
+        : principal / plazo;
+
+      cuota = this.round4(cuotaSinRedondear);
+    }
 
     let saldo = principal;
     let principalCancelado = 0;
@@ -1202,16 +1210,26 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     for (let i = 1; i <= plazo; i++) {
       const saldoAntes = this.round4(saldo);
 
-      // interés con 10 decimales
-      const pagoInteres = this.round10(saldoAntes * tasaPeriodo);
-
-      // montos con 4 decimales
-      let pagoPrincipal = this.round4(cuota - pagoInteres);
+      let pagoInteres = 0;
+      let pagoPrincipal = 0;
       let cuotaFila = cuota;
 
-      if (i === plazo) {
-        pagoPrincipal = saldoAntes;
-        cuotaFila = this.round4(pagoPrincipal + pagoInteres);
+      if (metodoCalculo === 'LINEAL') {
+        pagoInteres = this.round4(principal * tasaPeriodo);
+        pagoPrincipal = this.round4(principal / plazo);
+
+        if (i === plazo) {
+          pagoPrincipal = saldoAntes;
+          cuotaFila = this.round4(pagoPrincipal + pagoInteres);
+        }
+      } else {
+        pagoInteres = this.round10(saldoAntes * tasaPeriodo);
+        pagoPrincipal = this.round4(cuota - pagoInteres);
+
+        if (i === plazo) {
+          pagoPrincipal = saldoAntes;
+          cuotaFila = this.round4(pagoPrincipal + pagoInteres);
+        }
       }
 
       principalCancelado = this.round4(principalCancelado + pagoPrincipal);
@@ -1374,12 +1392,14 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     this.engine.clearFieldsMeta();
 
     this.engine.addFieldsMeta([
-      { id: 'TipoCredito', label: this.translate.instant('solicitudCredito.fields.tipoCredito') },
-      { id: 'FechaInicioPago', label: this.translate.instant('solicitudCredito.fields.fechaInicioPago') },
-      { id: 'Proposito', label: this.translate.instant('solicitudCredito.fields.proposito') },
-      { id: 'MontoSolicitado', label: this.translate.instant('solicitudCredito.fields.montoSolicitado') },
-      { id: 'Plazo', label: this.translate.instant('solicitudCredito.fields.plazo') },
-      { id: 'Proveedor', label: this.translate.instant('solicitudCredito.fields.proveedor') }
+      { id: 'TipoCredito', label: this.translate.instant('solicitudCredito.fields.tipoCredito'), tooltip: this.translate.instant('solicitudCredito.fields.required') },
+      { id: 'FechaInicioPago', label: this.translate.instant('solicitudCredito.fields.fechaInicioPago'), tooltip: this.translate.instant('solicitudCredito.fields.required') },
+      { id: 'Proposito', label: this.translate.instant('solicitudCredito.fields.proposito'), tooltip: this.translate.instant('solicitudCredito.fields.required') },
+      { id: 'MontoSolicitado', label: this.translate.instant('solicitudCredito.fields.montoSolicitado'), tooltip: this.translate.instant('solicitudCredito.fields.required') },
+      { id: 'Plazo', label: this.translate.instant('solicitudCredito.fields.plazo'), tooltip: this.translate.instant('solicitudCredito.fields.required') },
+      { id: 'Proveedor', label: this.translate.instant('solicitudCredito.fields.proveedor'), tooltip: this.translate.instant('solicitudCredito.fields.required') },
+      { id: 'NoFactura', label: this.translate.instant('solicitudCredito.fields.numeroFactura'), tooltip: this.translate.instant('solicitudCredito.fields.required') },
+      { id: 'Observaciones', label: this.translate.instant('solicitudCredito.fields.observaciones'), tooltip: this.translate.instant('solicitudCredito.fields.required') }
     ]);
 
     this.engine.addRules([
@@ -1394,7 +1414,8 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       { id: 'Plazo', condition: 'NUM>', value: 0, message: this.translate.instant('solicitudCredito.messages.invalidTerm') },
       { id: 'Plazo', condition: 'NUM<=', value: '{CuotaMaximaRegla}', message: this.translate.instant('solicitudCredito.messages.maxTermExceeded') },
       { id: 'Proposito', condition: 'REQUIRED', value: '', when: '{PropositoRequerido}=true', message: this.translate.instant('solicitudCredito.messages.purposeRequired') },
-      { id: 'Proveedor', condition: 'REQUIRED', value: '', when: '{ProveedorRequerido}=true', message: this.translate.instant('solicitudCredito.messages.providerRequired') }
+      { id: 'Proveedor', condition: 'REQUIRED', value: '', when: '{ProveedorRequerido}=true', message: this.translate.instant('solicitudCredito.messages.providerRequired') },
+      { id: 'Observaciones', condition: 'LEN>', value: '0', message: this.translate.instant('solicitudCredito.messages.atLeastOneObservationRequired') },
     ]);
 
     this.engine.clearErrors();
@@ -1425,6 +1446,8 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       MontoSolicitado: this.solicitud.montoSolicitado,
       Plazo: this.solicitud.plazo,
       Proveedor: this.solicitud.proveedorId,
+      NoFactura: this.solicitud.numeroFactura,
+      Observaciones: this.solicitud.Observaciones,
 
       PropositoRequerido: this.propositosCreditoFiltrados.length > 0 ? 'true' : 'false',
       ProveedorRequerido: this.requiereProveedor ? 'true' : 'false',
@@ -1445,6 +1468,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     this.solicitud.tasaInteresAnual = 0;
     this.solicitud.comisionDesembolso = 0;
     this.solicitud.numeroFactura = '';
+    this.solicitud.Observaciones = '';
     this.solicitud.fechaInicioPago = this.getFechaInicioDefault();
 
     this.propositosCreditoFiltrados = [];
@@ -1469,29 +1493,29 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     this.modalExportacionOpen = true;
   }
 
-  
+
   cerrarModalExportacion(): void {
     this.modalExportacionOpen = false;
   }
 
 
-    exportarComoPdf(): void {
+  exportarComoPdf(): void {
 
     this.cerrarModalExportacion();
 
     this.descargarPdfBase64(
-        this.pdf,
-        this.buildPrintFileName()
-      );
+      this.pdf,
+      this.buildPrintFileName()
+    );
 
   }
 
   exportarComoExcel(): void {
-     this.descargarExcelBase64(
-        this.excel,
-        this.buildPrintFileName()
-      );
-      return;
+    this.descargarExcelBase64(
+      this.excel,
+      this.buildPrintFileName()
+    );
+    return;
   }
 
   private buildPrintFileName(): string {
@@ -1501,7 +1525,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
 
 
-   private descargarExcelBase64(base64: string | null | undefined, fileName: string): void {
+  private descargarExcelBase64(base64: string | null | undefined, fileName: string): void {
     if (!base64) return;
 
     const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;

@@ -292,7 +292,23 @@
                     </div>
 
                   </div>
+                  
 
+                   <div class="col-md-12" error-notify="Observaciones" error-display="inline">
+                      <label for="Observaciones" class="form-label">
+                        {{ 'solicitudCredito.fields.observaciones' | translate }}
+                        <span class="text-danger">*</span>
+                      </label>
+
+                      <div class="input-group">
+             
+
+                        <textarea #Observaciones rows="2" class="form-control text-end" id="Observaciones"
+                          name="Observaciones" [(ngModel)]="solicitud.Observaciones"
+                          engineSync="Observaciones"   required autoFocusNext [next]="saveButton" [disabled]="modo=='view'" ></textarea>
+                      </div>
+                    </div>
+                    
                 </div>
               </div>
             </div>
@@ -546,6 +562,7 @@
                       <span>{{ etiquetaPeriodoKey | translate }}</span>
                     </div>
 
+                  
                     <!-- NUMERO FACTURA -->
                     <div class="col-md-6" error-notify="NumeroFactura" error-display="inline">
                       <label for="NumeroFactura" class="form-label">
@@ -558,10 +575,15 @@
                         </span>
 
                         <input #NumeroFactura type="text" class="form-control" id="NumeroFactura" name="NumeroFactura"
-                          [(ngModel)]="solicitud.numeroFactura" engineSync="NumeroFactura" autoFocusNext
-                          [next]="saveButton" [disabled]="modo=='view'" />
+                          [(ngModel)]="solicitud.numeroFactura" engineSync="NumeroFactura" autoFocusNext  [next]="Observaciones"
+                           />
                       </div>
                     </div>
+
+                     
+
+
+
 
                     <div class="col-12 d-flex align-items-center gap-3 flex-wrap">
                       <button type="button" class="btn btn-success" (click)="ajustarMaximoPermitido()"

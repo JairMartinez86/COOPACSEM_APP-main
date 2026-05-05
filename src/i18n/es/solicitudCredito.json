@@ -22,6 +22,7 @@
       "planPagos": "Plan de pagos"
     },
     "fields": {
+      "required": "Campo Requerido",
       "estadoSolicitud": "Estado",
       "noSocio": "No. Socio",
       "nombreCompleto": "Nombre Completo",
@@ -67,7 +68,8 @@
       "exceso": "Exceso",
       "actual": "Actual",
       "proyectado": "Proyectado",
-      "afterCredit": "Después del crédito"
+      "afterCredit": "Después del crédito",
+      "observaciones": "Observaciones"
     },
     "plan": {
       "noCuota": "N. Cuota",
@@ -136,7 +138,8 @@
       "maxTermExceeded": "El plazo supera el máximo permitido para este tipo de crédito",
       "purposeRequired": "Seleccione el propósito del crédito",
       "providerRequired": "Seleccione el proveedor",
-      "planNotGenerated": "No se pudo generar el plan de pagos"
+      "planNotGenerated": "No se pudo generar el plan de pagos",
+      "atLeastOneObservationRequired": "Ingrese al menos una observación"
     },
      "exportModal": {
       "title": "Exportar solicitud",

@@ -22,6 +22,7 @@
       "planPagos": "Payment Schedule"
     },
     "fields": {
+       "required": "Required field",
       "estadoSolicitud": "Status",
       "noSocio": "Member ID",
       "nombreCompleto": "Full Name",
@@ -67,7 +68,8 @@
       "exceso": "Excess",
       "actual": "Current",
       "proyectado": "Projected",
-      "afterCredit": "After credit"
+      "afterCredit": "After credit",
+       "observaciones": "Observations"
     },
     "plan": {
       "noCuota": "Installment",
@@ -125,7 +127,8 @@
       "maxTermExceeded": "The term exceeds the maximum allowed for this credit type",
       "purposeRequired": "Select the credit purpose",
       "providerRequired": "Select the provider",
-      "planNotGenerated": "The payment plan could not be generated"
+      "planNotGenerated": "The payment plan could not be generated",
+      "atLeastOneObservationRequired": "Enter at least one observation"
     },
     "exportModal": {
       "title": "Export request",
