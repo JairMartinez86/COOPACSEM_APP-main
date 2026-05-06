@@ -91,6 +91,8 @@
   "pendiente": "Pendiente",
   "aprobado": "Aprobado",
   "rechazado": "Rechazado",
+  "activo": "Activo",
+  "inactivo": "Inactivo",
 
   "actual": "Actual",
   "pendienteRevision": "Pendiente de revisión"

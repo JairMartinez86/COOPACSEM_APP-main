@@ -227,13 +227,17 @@
             <div class="card-body pt-0">
               <div class="quick-actions-grid">
                 @for (action of orderedActions; track action.titleKey) {
-                  <button type="button" class="quick-action-btn is-blue fa-lg"
+                  @if(selectedSocio?.estado == "Activo")
+                  {
+<button type="button" class="quick-action-btn is-blue fa-lg"
                     (click)="onActionClick(action)" [disabled]="!selectedSocio"
                     [permissionRoute]="['/solicitud-credito']" [appPermission]="['create']">
 
                     <i [class]="action.icon"></i>
                     <span>{{ action.titleKey | translate }}</span>
                   </button>
+                  }
+                  
                 }
               </div>
             </div>

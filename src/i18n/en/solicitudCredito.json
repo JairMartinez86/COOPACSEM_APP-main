@@ -87,6 +87,8 @@
   "tramitePago": "Payment Process",
   "completado": "Completed",
   "anulado": "Cancelled",
+  "activo": "Active",
+  "inactivo": "Inactive",
 
   "pendiente": "Pending",
   "aprobado": "Approved",
