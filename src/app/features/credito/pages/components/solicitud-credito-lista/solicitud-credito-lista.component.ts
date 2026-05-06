@@ -15,6 +15,8 @@ import {
     SolicitudCreditoListaItem
 } from '../../../interface/solicitud-credito-lista.interface';
 import { JMartAutoFocusNextDirective, JMartDateFormatDirective, JMartMassiveValidationService } from '@JairMartinez86/jmartinez-validator';
+import { TableFilterService } from '../../../../../core/services/table-filter.service';
+import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
 
 @Component({
     selector: 'app-solicitud-credito-lista',
@@ -25,6 +27,7 @@ import { JMartAutoFocusNextDirective, JMartDateFormatDirective, JMartMassiveVali
         TranslateModule,
         JMartAutoFocusNextDirective,
         JMartDateFormatDirective,
+        AppPermissionDirective,
         Breadcrumb
     ],
     templateUrl: './solicitud-credito-lista.component.html',
@@ -37,6 +40,10 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     private readonly notify = inject(NotificationService);
 
     public readonly appConfigService = inject(AppConfigService);
+    private readonly filterSvc = inject(TableFilterService);
+    private searchTimeout: any;
+    private readonly filterKey = 'aprobaciones-credito-lista';
+
 
     private readonly subs = new Subscription();
     private readonly isBrowser: boolean;
@@ -97,29 +104,57 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         this.isBrowser = isPlatformBrowser(platformId);
     }
 
+
     ngOnInit(): void {
 
-        if (!this.isBrowser) return;
+    if (!this.isBrowser) return;
 
-        this.setBreadcrumbs();
+    this.setBreadcrumbs();
 
-        this.subs.add(
-            this.translate.onLangChange.subscribe(() => this.setBreadcrumbs())
-        );
+    this.subs.add(
+        this.translate.onLangChange.subscribe(() => this.setBreadcrumbs())
+    );
 
-        const fechaServidor =
-            this.appConfigService.getCurrentSettings().fechaServidor;
+    const fechaServidor =
+        this.appConfigService.getCurrentSettings().fechaServidor;
 
-        this.filtro.fechaFin = fechaServidor
-            ? this.formatDate(fechaServidor)
-            : '';
+    this.filtro.fechaFin = fechaServidor
+        ? this.formatDate(fechaServidor)
+        : '';
 
-        this.cargarSolicitudes();
-    }
+    this.subs.add(
+        this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
+
+            const value = String(draft ?? '');
+
+            if (this.filtro.search !== value) {
+                this.filtro.search = value;
+            }
+        })
+    );
+
+    this.subs.add(
+        this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
+
+            const value = String(query ?? '').trim();
+
+            this.filtro.search = value;
+            this.filtro.page = 1;
+
+            this.cargarSolicitudes();
+        })
+    );
+
+    this.cargarSolicitudes();
+}
 
 
     ngOnDestroy(): void {
         this.subs.unsubscribe();
+
+        if (this.searchTimeout) {
+            clearTimeout(this.searchTimeout);
+        }
     }
 
     private setBreadcrumbs(): void {
@@ -635,5 +670,44 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
 
         return 'step-line-warning';
     }
+
+onSearchInputChange(): void {
+    clearTimeout(this.searchTimeout);
+
+    const value = String(this.filtro.search ?? '');
+
+    this.filterSvc.setDraft(this.filterKey, value);
+
+    this.searchTimeout = setTimeout(() => {
+        this.filtro.page = 1;
+        this.cargarSolicitudes();
+    }, 400);
+}
+
+
+
+
+onSearchKeyup(event: KeyboardEvent): void {
+    if (event.key !== 'Enter') return;
+
+    clearTimeout(this.searchTimeout);
+
+    const value = String(this.filtro.search ?? '').trim();
+
+    this.filtro.search = value;
+    this.filtro.page = 1;
+
+    if (!value) {
+        this.filterSvc.clear(this.filterKey);
+        this.cargarSolicitudes();
+        return;
+    }
+
+    this.filterSvc.setDraft(this.filterKey, value);
+    this.filterSvc.setQuery(this.filterKey, value);
+
+    this.cargarSolicitudes();
+}
+
 
 }

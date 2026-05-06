@@ -47,7 +47,7 @@ export class SolicitudCreditoListSocioComponent implements OnInit, OnDestroy {
 
   private readonly subs = new Subscription();
   private searchTimeout: any;
-  private readonly filterKey = 'solicitud-credito-lista';
+  private readonly filterKey = 'solicitud-credito-lista-socio';
 
   breadcrumbs: any[] = [];
 

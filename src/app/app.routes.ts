@@ -317,7 +317,7 @@ export const routes: Routes = [
         data: {
           permission: '/solicitud-credito',
           action: 'view',
-          tableFilterKey: 'solicitud-credito-lista',
+          tableFilterKey: 'solicitud-credito-lista-socio',
           tableFilterEnter: true
         },
         providers: [JMartMassiveValidationService],
@@ -373,7 +373,9 @@ export const routes: Routes = [
         canActivate: [permissionGuard],
         data: {
           permission: '/aprobaciones-credito',
-          action: 'view'
+          action: 'view',
+            tableFilterKey: 'aprobaciones-credito-lista',
+          tableFilterEnter: true
         },
          providers: [JMartMassiveValidationService]
       },

@@ -186,7 +186,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     router: '/aprobaciones-credito',
     permissions: {
       view: false,
-      create: null,
+      create: false,
       edit: false,
       delete: false
     },
