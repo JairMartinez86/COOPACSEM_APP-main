@@ -18,11 +18,14 @@ export interface SolicitudCreditoListaResumen {
 }
 
 export interface SolicitudCreditoListaItem {
+
   id: string;
   socioId: string;
 
   serie: string;
   noSolicitud: string;
+  noCredito?: string;
+
   documento: string;
 
   codigoSocio: string;
@@ -37,25 +40,35 @@ export interface SolicitudCreditoListaItem {
   fechaInicioPago: string;
 
   montoSolicitado: number;
+
   plazo: number;
   esQuincenal: boolean;
 
   cuota: number;
+
   interesesTotales: number;
   totalPagar: number;
 
+  comisionDesembolso?: number;
+  tasaInteresAnual?: number;
+  porComision?: number;
+
   estado: string;
+  estadoOriginal?: string;
+
   etapaActual: string;
   etapaActualTexto: string;
+
   progreso: number;
 
   puedeAprobar: boolean;
-  puedeRechazar: boolean;
+  puedeRechazar?: boolean;
   puedeDesembolsar: boolean;
+
   puedeEditar: boolean;
   puedeVerDetalle: boolean;
 
-  estadoDesembolso : string;
+  estadoDesembolso: string;
 
   aprobaciones: SolicitudCreditoAprobacionItem[];
 }

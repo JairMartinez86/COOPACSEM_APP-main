@@ -32,7 +32,7 @@
                             <label class="form-label">{{ 'solicitudCreditoLista.filters.buscar' | translate }}</label>
                             <div class="input-group">
                                 <span class="input-group-text">
-                                    <i class="fa-light fa-magnifying-glass"></i>
+                                    <i class=" fa-magnifying-glass"></i>
                                 </span>
                                 <input type="text" class="form-control" name="search" [(ngModel)]="filtro.search"
                                     (ngModelChange)="onSearchInputChange()" (keyup)="onSearchKeyup($event)"
@@ -84,12 +84,12 @@
 
                         <div class="col-12 d-flex justify-content-end gap-2 mt-2">
                             <button type="button" class="btn btn-light" (click)="limpiarFiltros()">
-                                <i class="fa-light fa-eraser me-1"></i>
+                                <i class=" fa-eraser me-1"></i>
                                 {{ 'solicitudCreditoLista.actions.limpiar' | translate }}
                             </button>
 
                             <button type="button" class="btn btn-primary" (click)="buscar()">
-                                <i class="fa-light fa-filter me-1"></i>
+                                <i class=" fa-filter me-1"></i>
                                 {{ 'solicitudCreditoLista.actions.filtrar' | translate }}
                             </button>
                         </div>
@@ -133,7 +133,7 @@
                             } @else if (items.length === 0) {
                             <tr>
                                 <td colspan="9" class="text-center py-5 text-muted">
-                                    <i class="fa-light fa-folder-open fa-2x d-block mb-2"></i>
+                                    <i class=" fa-folder-open fa-2x d-block mb-2"></i>
                                     {{ 'solicitudCreditoLista.common.noData' | translate }}
                                 </td>
                             </tr>
@@ -232,15 +232,15 @@
                                             (click)="$event.stopPropagation(); abrirModalAccion(row, 'aprobar')">
                                             {{ 'solicitudCreditoLista.actions.aprobar' | translate }}
                                         </button>
-                                        }
 
-                                        @if (puedeMostrarRechazar(row)) {
                                         <button type="button" class="btn btn-sm btn-outline-danger"
                                             (click)="$event.stopPropagation(); abrirModalAccion(row, 'rechazar')">
                                             {{ 'solicitudCreditoLista.actions.rechazar' | translate }}
                                         </button>
+
                                         }
 
+                            
                                         @if (puedeMostrarDesembolsar(row)) {
                                         <button type="button" class="btn btn-sm btn-primary"
                                             (click)="$event.stopPropagation(); abrirModalAccion(row, 'desembolsar')">
@@ -418,40 +418,283 @@
 
     </div>
 </section>
-
 @if (modalAprobacionOpen && solicitudSeleccionada) {
 <div class="modal fade show d-block" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+        <div class="modal-content border-0 overflow-hidden shadow-lg">
 
-            <div class="modal-header">
-                <h5 class="modal-title">{{ modalTitleKey() | translate }}</h5>
-                <button type="button" class="btn-close" (click)="cerrarModalAccion()"></button>
+            <div class="position-relative text-white p-3"
+                 [ngClass]="accionModal === 'rechazar' ? 'bg-danger' : accionModal === 'desembolsar' ? 'bg-primary' : 'bg-success'">
+
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center"
+                                 style="width:52px;height:52px;">
+                                <i class="fa-solid fs-4"
+                                   [ngClass]="accionModal === 'rechazar' ? 'fa-circle-xmark' : accionModal === 'desembolsar' ? 'fa-money-bill-transfer' : 'fa-circle-check'">
+                                </i>
+                            </div>
+
+                            <div>
+                                <h5 class="mb-1 fw-bold">
+                                    {{ modalTitleKey() | translate }}
+                                </h5>
+                                <div class="small opacity-75">
+                                    {{ solicitudSeleccionada.documento }} · {{ solicitudSeleccionada.etapaActualTexto }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-white text-dark px-2 py-1">
+                                {{ solicitudSeleccionada.codigoSocio }}
+                            </span>
+
+                            <span class="badge bg-white text-dark px-2 py-1">
+                                {{ solicitudSeleccionada.identificacion || '-' }}
+                            </span>
+
+                            <span class="badge bg-dark px-2 py-1">
+                                {{ getEstadoTexto(solicitudSeleccionada.estado) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            (click)="cerrarModalAccion()">
+                    </button>
+                </div>
             </div>
 
-            <div class="modal-body">
-                <div class="alert alert-light border">
-                    <strong>{{ solicitudSeleccionada.documento }}</strong>
-                    <div>{{ solicitudSeleccionada.nombreSocio }} - {{ solicitudSeleccionada.codigoSocio }}</div>
-                    <div class="text-muted small">{{ solicitudSeleccionada.etapaActualTexto }}</div>
+            <div class="modal-body p-3">
+
+                <div class="card border-0 shadow-sm mb-2">
+                    <div class="card-body p-2">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div>
+                                <div class="text-muted small">
+                                    {{ 'solicitudCreditoLista.table.socio' | translate }}
+                                </div>
+
+                                <h6 class="mb-1 fw-bold">
+                                    {{ solicitudSeleccionada.nombreSocio }}
+                                </h6>
+
+                                <div class="text-muted small">
+                                    {{ solicitudSeleccionada.tipoCredito || '-' }} · {{ solicitudSeleccionada.proposito || '-' }}
+                                </div>
+                            </div>
+
+                            <div class="text-end">
+                                <div class="text-muted small">
+                                    {{ 'solicitudCreditoLista.table.monto' | translate }}
+                                </div>
+
+                                <div class="fs-4 fw-bold text-success">
+                                    {{ currency }} {{ formatCurrency(solicitudSeleccionada.montoSolicitado) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <label class="form-label">
-                    {{ 'solicitudCreditoLista.modal.comentario' | translate }}
-                </label>
+                <div class="row g-2 mb-2">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-2">
+                                <div class="text-muted small">Fecha solicitud</div>
+                                <div class="fw-bold">
+                                    {{ formatDate(solicitudSeleccionada.fechaSolicitud) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <textarea class="form-control" rows="3" name="comentarioAccion"
-                    [(ngModel)]="comentarioAccion"></textarea>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-2">
+                                <div class="text-muted small">Inicio pago</div>
+                                <div class="fw-bold">
+                                    {{ formatDate(solicitudSeleccionada.fechaInicioPago) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-2">
+                                <div class="text-muted small">Plazo</div>
+                                <div class="fw-bold">
+                                    {{ solicitudSeleccionada.plazo }}
+                                    {{
+                                        solicitudSeleccionada.esQuincenal
+                                            ? ('solicitudCreditoLista.fields.quincenas' | translate)
+                                            : ('solicitudCreditoLista.fields.meses' | translate)
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-2">
+                                <div class="text-muted small">Cuota</div>
+                                <div class="fw-bold">
+                                    {{ currency }} {{ formatCurrency(solicitudSeleccionada.cuota) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-2 mb-2">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-2">
+                                <div class="text-muted small">Comisión</div>
+                                <div class="fw-bold">
+                                    {{ currency }} {{ formatCurrency(solicitudSeleccionada.comisionDesembolso) }}
+                                </div>
+                                <div class="text-muted small">
+                                    {{ solicitudSeleccionada.porComision || 0 }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-2">
+                                <div class="text-muted small">Tasa anual</div>
+                                <div class="fw-bold">
+                                    {{ solicitudSeleccionada.tasaInteresAnual || 0 }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-2">
+                                <div class="text-muted small">Interés total</div>
+                                <div class="fw-bold">
+                                    {{ currency }} {{ formatCurrency(solicitudSeleccionada.interesesTotales) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-2">
+                                <div class="text-muted small">Total pagar</div>
+                                <div class="fw-bold text-success">
+                                    {{ currency }} {{ formatCurrency(solicitudSeleccionada.totalPagar) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mb-2">
+                    <div class="card-body p-2">
+
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <h6 class="mb-0 fw-bold">Flujo de aprobación</h6>
+                                <div class="text-muted small">
+                                    {{ getFlowProgress(solicitudSeleccionada) }}% completado
+                                </div>
+                            </div>
+
+                            <span class="badge px-2 py-1"
+                                  [ngClass]="estadoBadgeClass(solicitudSeleccionada.estado)">
+                                {{ getEstadoTexto(solicitudSeleccionada.estado) }}
+                            </span>
+                        </div>
+
+                        <div class="approval-progress mb-2" style="height:8px;">
+                            <div class="approval-progress-bar"
+                                 [ngClass]="progressClass(solicitudSeleccionada)"
+                                 [style.width.%]="getFlowProgress(solicitudSeleccionada)">
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            @for (ap of solicitudSeleccionada.aprobaciones; track ap.codigo) {
+                            <div class="col">
+                                <div class="p-2 text-center h-100">
+                                    <div class="mb-2">
+                                        <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                                             [ngClass]="
+                                                ap.estado === 'Aprobado'
+                                                    ? 'bg-success text-white'
+                                                    : ap.estado === 'Rechazado'
+                                                        ? 'bg-danger text-white'
+                                                        : 'bg-light text-muted'
+                                             "
+                                             style="width:40px;height:40px;">
+                                            <i class="fa-solid small"
+                                               [ngClass]="
+                                                    ap.estado === 'Aprobado'
+                                                        ? 'fa-check'
+                                                        : ap.estado === 'Rechazado'
+                                                            ? 'fa-xmark'
+                                                            : 'fa-clock'
+                                               ">
+                                            </i>
+                                        </div>
+                                    </div>
+
+                                    <div class="fw-semibold small mb-1">
+                                        {{ ap.nombre }}
+                                    </div>
+
+                                    <span class="badge"
+                                          [ngClass]="aprobacionBadgeClass(ap.estado)">
+                                        {{ getEstadoAprobacionTexto(ap.estado) }}
+                                    </span>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-2">
+                        <label class="form-label fw-bold small mb-1">
+                            Comentario / Observación
+                        </label>
+
+                        <textarea class="form-control border-0"
+                                  rows="3"
+                                  name="comentarioAccion"
+                                  [(ngModel)]="comentarioAccion"
+                                  placeholder="Escriba un comentario..."></textarea>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" (click)="cerrarModalAccion()" [disabled]="processing">
+            <div class="modal-footer border-0 p-3">
+                <button type="button"
+                        class="btn btn-secondary px-4"
+                        (click)="cerrarModalAccion()"
+                        [disabled]="processing">
                     {{ 'solicitudCreditoLista.actions.cancelar' | translate }}
                 </button>
 
-                <button type="button" [class]="modalButtonClass()" (click)="confirmarAccion()" [disabled]="processing">
+                <button type="button"
+                        [class]="modalButtonClass() + ' px-4'"
+                        (click)="confirmarAccion()"
+                        [disabled]="processing">
                     @if (processing) {
-                    <span class="spinner-border spinner-border-sm me-1"></span>
+                    <span class="spinner-border spinner-border-sm me-2"></span>
                     }
                     {{ modalButtonKey() | translate }}
                 </button>

@@ -578,7 +578,7 @@ flujoAprobacion = [
 
           this.puedeEditarSolicitud = !!s.puedeEditar;
 
-          this.NoSolicitud = `${String(s.serie ?? '')} ${s.noSolicitud ?? ''}`;
+          this.NoSolicitud = `${String(s.serie ?? '')}-${s.noSolicitud ?? ''}`;
 
           this.solicitud.tipoCredito = String(s.tipoCreditoId ?? '');
           this.solicitud.proposito = s.propositoId ? String(s.propositoId) : '';
