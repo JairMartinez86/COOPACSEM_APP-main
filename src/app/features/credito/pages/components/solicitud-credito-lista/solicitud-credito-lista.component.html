@@ -20,84 +20,83 @@
             </button>
         </div>
 
-        <div class="row g-3 mb-3">
-            <div class="col-xl-2 col-md-4" *ngFor="let card of [
-        { key: 'total', value: resumen.totalSolicitudes, cls: '' },
-          { key: 'completadas', value: resumen.completadas, cls: 'text-success' },
-        { key: 'enEvaluacion', value: resumen.enEvaluacion, cls: 'text-warning' },
-      
-        { key: 'rechazadas', value: resumen.rechazadas, cls: 'text-danger' },
-        { key: 'desembolsadas', value: resumen.desembolsadas, cls: 'text-primary' },
-        { key: 'pendientes', value: resumen.pendientesAprobacion, cls: '' }
-      ]">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="text-muted small">
-                            {{ ('solicitudCreditoLista.summary.' + card.key) | translate }}
-                        </div>
-                        <h4 class="mb-0" [ngClass]="card.cls">{{ card.value }}</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="card mb-3">
             <div class="card-body">
-                <div class="row g-2 align-items-end">
 
-                    <div class="col-xl-4 col-lg-4 col-md-6">
-                        <label class="form-label">{{ 'solicitudCreditoLista.filters.buscar' | translate }}</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fa-light fa-magnifying-glass"></i>
-                            </span>
-                            <input type="text" class="form-control" name="search" [(ngModel)]="filtro.search"
-                                (keyup.enter)="buscar()"
-                                [placeholder]="'solicitudCreditoLista.filters.buscarPlaceholder' | translate">
+                <form autocomplete="off" novalidate>
+                    <div class="row g-2 align-items-end">
+
+                        <div class="col-xl-4 col-lg-4 col-md-6">
+                            <label class="form-label">{{ 'solicitudCreditoLista.filters.buscar' | translate }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fa-light fa-magnifying-glass"></i>
+                                </span>
+                                <input type="text" class="form-control" name="search" [(ngModel)]="filtro.search"
+                                    (keyup.enter)="buscar()"
+                                    [placeholder]="'solicitudCreditoLista.filters.buscarPlaceholder' | translate">
+                            </div>
                         </div>
+
+                        <div class="col-xl-2 col-lg-2 col-md-6">
+                            <label class="form-label">{{ 'solicitudCreditoLista.filters.estado' | translate }}</label>
+                            <select class="form-select" name="estado" [(ngModel)]="filtro.estado" (change)="buscar()">
+                                @for (e of estados; track e.value) {
+                                <option [value]="e.value">{{ e.labelKey | translate }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-xl-2 col-lg-2 col-md-6">
+                            <label class="form-label">{{ 'solicitudCreditoLista.filters.etapa' | translate }}</label>
+                            <select class="form-select" name="etapa" [(ngModel)]="filtro.etapa" (change)="buscar()">
+                                @for (e of etapas; track e.value) {
+                                <option [value]="e.value">{{ e.labelKey | translate }}</option>
+                                }
+                            </select>
+                        </div>
+
+
+
+                        <div class="col-xl-2 col-lg-2 col-md-6" error-notify="fechaInicio" error-display="inline">
+                            <label class="form-label">
+                                {{ 'solicitudCreditoLista.filters.fechaInicio' | translate }}
+                            </label>
+
+                            <input class="form-control" name="fechaInicio" [(ngModel)]="filtro.fechaInicio"
+                                engineSync="fechaInicio" autoFocusNext [next]="fecha2" type="text" dateFormat
+                                [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
+                        </div>
+
+                        <div class="col-xl-2 col-lg-2 col-md-6" error-notify="fechaFin" error-display="inline">
+                            <label class="form-label">
+                                {{ 'solicitudCreditoLista.filters.fechaFin' | translate }}
+                            </label>
+
+                            <input #fecha2 class="form-control" name="fechaFin" [(ngModel)]="filtro.fechaFin"
+                                engineSync="fechaFin" type="text" dateFormat
+                                [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
+                        </div>
+
+
+
+                        <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+                            <button type="button" class="btn btn-light" (click)="limpiarFiltros()">
+                                <i class="fa-light fa-eraser me-1"></i>
+                                {{ 'solicitudCreditoLista.actions.limpiar' | translate }}
+                            </button>
+
+                            <button type="button" class="btn btn-primary" (click)="buscar()">
+                                <i class="fa-light fa-filter me-1"></i>
+                                {{ 'solicitudCreditoLista.actions.filtrar' | translate }}
+                            </button>
+                        </div>
+
                     </div>
 
-                    <div class="col-xl-2 col-lg-2 col-md-6">
-                        <label class="form-label">{{ 'solicitudCreditoLista.filters.estado' | translate }}</label>
-                        <select class="form-select" name="estado" [(ngModel)]="filtro.estado" (change)="buscar()">
-                            @for (e of estados; track e.value) {
-                            <option [value]="e.value">{{ e.labelKey | translate }}</option>
-                            }
-                        </select>
-                    </div>
+                </form>
 
-                    <div class="col-xl-2 col-lg-2 col-md-6">
-                        <label class="form-label">{{ 'solicitudCreditoLista.filters.etapa' | translate }}</label>
-                        <select class="form-select" name="etapa" [(ngModel)]="filtro.etapa" (change)="buscar()">
-                            @for (e of etapas; track e.value) {
-                            <option [value]="e.value">{{ e.labelKey | translate }}</option>
-                            }
-                        </select>
-                    </div>
-
-                    <div class="col-xl-2 col-lg-2 col-md-6">
-                        <label class="form-label">{{ 'solicitudCreditoLista.filters.fechaInicio' | translate }}</label>
-                        <input type="date" class="form-control" name="fechaInicio" [(ngModel)]="filtro.fechaInicio">
-                    </div>
-
-                    <div class="col-xl-2 col-lg-2 col-md-6">
-                        <label class="form-label">{{ 'solicitudCreditoLista.filters.fechaFin' | translate }}</label>
-                        <input type="date" class="form-control" name="fechaFin" [(ngModel)]="filtro.fechaFin">
-                    </div>
-
-                    <div class="col-12 d-flex justify-content-end gap-2 mt-2">
-                        <button type="button" class="btn btn-light" (click)="limpiarFiltros()">
-                            <i class="fa-light fa-eraser me-1"></i>
-                            {{ 'solicitudCreditoLista.actions.limpiar' | translate }}
-                        </button>
-
-                        <button type="button" class="btn btn-primary" (click)="buscar()">
-                            <i class="fa-light fa-filter me-1"></i>
-                            {{ 'solicitudCreditoLista.actions.filtrar' | translate }}
-                        </button>
-                    </div>
-
-                </div>
             </div>
         </div>
 
@@ -193,7 +192,7 @@
                                 <td>
                                     <div>
                                         <span class="me-1">
-                                            <i class="fa-solid" [ngClass]="etapaActualIconClass(row)"></i>
+                                           <i class="fa-solid" [ngClass]="etapaActualIconClass(row)"></i>
                                         </span>
                                         <strong>{{ row.etapaActualTexto }}</strong>
                                     </div>

@@ -55,6 +55,8 @@ export interface SolicitudCreditoListaItem {
   puedeEditar: boolean;
   puedeVerDetalle: boolean;
 
+  estadoDesembolso : string;
+
   aprobaciones: SolicitudCreditoAprobacionItem[];
 }
 

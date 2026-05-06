@@ -18,7 +18,6 @@
   border-left: 4px solid #3b82f6;
 }
 
-
 /* =========================
    PROGRESO TABLA
 ========================= */
@@ -37,72 +36,60 @@
   transition: width 0.25s ease;
 }
 
-.progress-success {
-  background: #198754 !important;
-}
-
-.progress-warning {
-  background: #ffc107 !important;
-}
-
-.progress-danger {
-  background: #dc3545 !important;
-}
+.progress-success { background: #198754 !important; }
+.progress-warning { background: #ffc107 !important; }
+.progress-danger  { background: #dc3545 !important; }
+.progress-primary { background: #0d6efd !important; }
+.progress-secondary { background: #6c757d !important; }
 
 
 /* =========================
-   STEP PROGRESS (FINAL)
+   STEP PROGRESS
 ========================= */
 
 .step-progress {
   position: relative;
 }
 
-/* 🔥 Línea SIEMPRE verde */
 .step-progress-colored-line {
   position: absolute;
   left: 0;
   top: 54px;
   height: 3px;
-  width: 100%;
-  background-color: #20c997 !important;
   z-index: 1;
   transition: width 0.25s ease;
+  border-radius: 999px;
 }
 
-/* 🔥 pasos por encima */
+.step-line-success { background-color: #20c997 !important; }
+.step-line-warning { background-color: #ffc107 !important; }
+.step-line-danger  { background-color: #dc3545 !important; }
+.step-line-primary { background-color: #0d6efd !important; }
+.step-line-secondary { background-color: #6c757d !important; }
+
 .step-progress-item {
   position: relative;
   z-index: 2;
 }
 
-
-/* =========================
-   ESTADOS
-========================= */
-
-/* ✔ APROBADO */
 .step-progress-item.completed .step-progress-marker {
   background-color: #20c997 !important;
   border-color: #20c997 !important;
   color: #fff !important;
 }
 
-/* ❌ RECHAZADO (SOLO ESE PASO) */
 .step-progress-item.completed-danger .step-progress-marker {
   background-color: #dc3545 !important;
   border-color: #dc3545 !important;
   color: #fff !important;
 }
 
-/* 🟡 ACTUAL */
 .step-progress-item.active .step-progress-marker {
   background-color: #ffc107 !important;
   border-color: #ffc107 !important;
   color: #fff !important;
 }
 
-/* ⚪ PENDIENTE */
 .step-progress-item .step-progress-marker {
   background-color: transparent;
   border-color: rgba(148, 163, 184, 0.45);

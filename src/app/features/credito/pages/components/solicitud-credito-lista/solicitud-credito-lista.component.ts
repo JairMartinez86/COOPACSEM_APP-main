@@ -12,9 +12,9 @@ import { AppConfigService } from '../../../../../core/services/app-config.servic
 import { SolicitudCreditoListaService } from '../../../services/solicitud-credito-lista.service';
 import {
     SolicitudCreditoListaFiltro,
-    SolicitudCreditoListaItem,
-    SolicitudCreditoListaResumen
+    SolicitudCreditoListaItem
 } from '../../../interface/solicitud-credito-lista.interface';
+import { JMartAutoFocusNextDirective, JMartDateFormatDirective } from '@JairMartinez86/jmartinez-validator';
 
 @Component({
     selector: 'app-solicitud-credito-lista',
@@ -23,6 +23,8 @@ import {
         CommonModule,
         FormsModule,
         TranslateModule,
+        JMartAutoFocusNextDirective,
+        JMartDateFormatDirective,
         Breadcrumb
     ],
     templateUrl: './solicitud-credito-lista.component.html',
@@ -54,15 +56,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     accionModal: 'aprobar' | 'rechazar' | 'desembolsar' = 'aprobar';
     comentarioAccion = '';
 
-    resumen: SolicitudCreditoListaResumen = {
-        totalSolicitudes: 0,
-        borradores: 0,
-        enEvaluacion: 0,
-        completadas: 0,
-        rechazadas: 0,
-        desembolsadas: 0,
-        pendientesAprobacion: 0
-    };
+
 
     filtro: SolicitudCreditoListaFiltro = {
         page: 1,
@@ -85,6 +79,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         { value: 'EnEvaluacion', labelKey: 'solicitudCreditoLista.status.enEvaluacion' },
         { value: 'TramitePago', labelKey: 'solicitudCreditoLista.status.tramitePago' },
         { value: 'Completado', labelKey: 'solicitudCreditoLista.status.completado' },
+         { value: 'Denegada', labelKey: 'solicitudCreditoLista.status.denegada' },
         { value: 'Anulado', labelKey: 'solicitudCreditoLista.status.anulado' }
     ];
 
@@ -103,11 +98,19 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        if (!this.isBrowser) return;
+
         this.setBreadcrumbs();
 
         this.subs.add(
             this.translate.onLangChange.subscribe(() => this.setBreadcrumbs())
         );
+
+        const fechaServidor = this.appConfigService.getCurrentSettings().fechaServidor;
+
+        this.filtro.fechaFin = fechaServidor
+            ? this.formatDate(fechaServidor)
+            : '';
 
         this.cargarSolicitudes();
     }
@@ -152,15 +155,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
                     this.totalRecords = Number(data?.totalRecords ?? 0);
                     this.totalPages = Number(data?.totalPages ?? 0);
 
-                    this.resumen = {
-                        totalSolicitudes: Number(data?.resumen?.totalSolicitudes ?? 0),
-                        borradores: Number(data?.resumen?.borradores ?? 0),
-                        enEvaluacion: Number(data?.resumen?.enEvaluacion ?? 0),
-                        completadas: Number(data?.resumen?.completadas ?? 0),
-                        rechazadas: Number(data?.resumen?.rechazadas ?? 0),
-                        desembolsadas: Number(data?.resumen?.desembolsadas ?? 0),
-                        pendientesAprobacion: Number(data?.resumen?.pendientesAprobacion ?? 0)
-                    };
+
 
                     if (this.items.length > 0) {
                         const selected = this.items.find(x => x.id === this.solicitudFlujoSeleccionada?.id);
@@ -322,6 +317,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         if (value === 'enevaluacion') return this.translate.instant('solicitudCreditoLista.status.enEvaluacion');
         if (value === 'tramitepago') return this.translate.instant('solicitudCreditoLista.status.tramitePago');
         if (value === 'completado') return this.translate.instant('solicitudCreditoLista.status.completado');
+        if (value === 'denegada') return this.translate.instant('solicitudCreditoLista.status.denegada');
         if (value === 'anulado') return this.translate.instant('solicitudCreditoLista.status.anulado');
 
         return estado || '-';
@@ -333,6 +329,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         if (value === 'aprobado') return this.translate.instant('solicitudCreditoLista.status.aprobado');
         if (value === 'rechazado') return this.translate.instant('solicitudCreditoLista.status.rechazado');
         if (value === 'anulado') return this.translate.instant('solicitudCreditoLista.status.anulado');
+         if (value === 'denegada') return this.translate.instant('solicitudCreditoLista.status.denegada');
         if (value === 'pendiente') return this.translate.instant('solicitudCreditoLista.status.pendiente');
 
         return estado || '-';
@@ -345,7 +342,10 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         if (value === 'enevaluacion') return 'badge-soft-warning';
         if (value === 'tramitepago') return 'badge-soft-primary';
         if (value === 'completado') return 'badge-soft-success';
+         if (value === 'denegada') return 'badge-soft-danger';
         if (value === 'anulado') return 'badge-soft-danger';
+
+        
 
         return 'badge-soft-secondary';
     }
@@ -361,38 +361,10 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         return 'badge-soft-secondary';
     }
 
-    progressClass(row: SolicitudCreditoListaItem): string {
-        const estado = this.normalize(row.estado);
 
-        if (estado === 'anulado') return 'progress-danger';
-        if (estado === 'completado') return 'progress-success';
-        if (estado === 'tramitepago') return 'progress-success';
 
-        return 'progress-warning';
-    }
 
-    etapaActualIconClass(row: SolicitudCreditoListaItem): string {
-        const actual = this.getAprobacionActual(row);
-        return this.etapaIconClass(actual?.estado ?? 'Pendiente');
-    }
 
-    etapaIconClass(aprobacionEstado: string): string {
-        const estado = this.normalize(aprobacionEstado);
-
-        if (estado === 'aprobado') {
-            return 'fa-circle-check text-success';
-        }
-
-        if (estado === 'rechazado' || estado === 'anulado') {
-            return 'fa-circle-xmark text-danger';
-        }
-
-        return 'fa-clock text-warning';
-    }
-
-    getAprobacionActual(row: SolicitudCreditoListaItem): any {
-        return (row.aprobaciones ?? []).find(x => x.actual) ?? null;
-    }
 
     puedeMostrarAprobar(row: SolicitudCreditoListaItem): boolean {
         const estado = this.normalize(row.estado);
@@ -466,22 +438,8 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         });
     }
 
-    getFlowProgress(row: SolicitudCreditoListaItem): number {
-        const total = row.aprobaciones?.length ?? 0;
-        if (total === 0) return 0;
 
-        const estadoSolicitud = this.normalize(row.estado);
 
-        if (estadoSolicitud === 'completado') return 100;
-        if (estadoSolicitud === 'anulado') return 100;
-
-        const aprobadas = row.aprobaciones.filter(x => {
-            const estado = this.normalize(x.estado);
-            return estado === 'aprobado';
-        }).length;
-
-        return Math.max(0, Math.min(100, (aprobadas / total) * 100));
-    }
 
     getStepClass(ap: any): string {
         const estado = this.normalize(ap.estado);
@@ -538,42 +496,137 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         return index === firstPendingIndex;
     }
 
-    getStepProgressIcon(ap: any, index: number): string {
-        const estado = this.normalize(ap.estado);
 
-        if (estado === 'aprobado') return 'bi-check';
-        if (estado === 'rechazado') return 'bi-x';
-        if (estado === 'anulado') return 'bi-x-circle';
 
-        if (this.isStepActualPendiente(ap, index)) {
-            return 'bi-clock';
-        }
 
-        return 'bi-circle';
+ isStepCompleted(index: number): boolean {
+    const item = this.aprobacionesFlujoSeleccionado[index];
+    return this.normalize(item?.estado) === 'aprobado';
+}
+
+getStepProgressIcon(ap: any, index: number): string {
+    const estado = this.normalize(ap.estado);
+
+    if (estado === 'aprobado') return 'bi-check';
+
+    if (this.isStepActualPendiente(ap, index)) {
+        return 'bi-clock';
+    }
+
+    return 'bi-circle';
+}
+
+    isStepRejected(index: number): boolean {
+        const item = this.aprobacionesFlujoSeleccionado[index];
+        const estado = this.normalize(item?.estado);
+
+        return estado === 'rechazado' || estado === 'anulado';
     }
 
 
 
-    isStepCompleted(index: number): boolean {
-  const item = this.aprobacionesFlujoSeleccionado[index];
-  const estado = this.normalize(item?.estado);
 
-  return estado === 'aprobado';
+
+    private aprobacionEstado(row: SolicitudCreditoListaItem, codigo: string): string {
+    const item = (row.aprobaciones ?? []).find(x =>
+        this.normalize(x.codigo) === this.normalize(codigo)
+    );
+
+    return this.normalize(item?.estado);
 }
 
-isStepRejected(index: number): boolean {
-  const item = this.aprobacionesFlujoSeleccionado[index];
-  const estado = this.normalize(item?.estado);
 
-  return estado === 'rechazado' || estado === 'anulado';
+
+
+
+
+
+
+
+
+private estadoEsRojo(row: SolicitudCreditoListaItem): boolean {
+    const estado = this.normalize(row.estado);
+
+    return estado === 'denegada'
+        || estado === 'anulado';
+}
+
+private todasAprobacionesAprobadas(row: SolicitudCreditoListaItem): boolean {
+    return this.aprobacionEstado(row, 'COMITE_CREDITO_1') === 'aprobado'
+        && this.aprobacionEstado(row, 'COMITE_CREDITO_2') === 'aprobado'
+        && this.aprobacionEstado(row, 'COMITE_VIGILANCIA') === 'aprobado'
+        && this.aprobacionEstado(row, 'VICEPRESIDENTE') === 'aprobado'
+        && this.aprobacionEstado(row, 'PRESIDENTE') === 'aprobado';
+}
+
+private desembolsoPagado(row: SolicitudCreditoListaItem): boolean {
+    return this.normalize(row.estadoDesembolso) === 'pagado';
+}
+
+getFlowProgress(row: SolicitudCreditoListaItem): number {
+
+    const total = 5;
+    let completadas = 0;
+
+    if (this.aprobacionEstado(row, 'COMITE_CREDITO_1') === 'aprobado') completadas++;
+    if (this.aprobacionEstado(row, 'COMITE_CREDITO_2') === 'aprobado') completadas++;
+    if (this.aprobacionEstado(row, 'COMITE_VIGILANCIA') === 'aprobado') completadas++;
+    if (this.aprobacionEstado(row, 'VICEPRESIDENTE') === 'aprobado') completadas++;
+    if (this.aprobacionEstado(row, 'PRESIDENTE') === 'aprobado') completadas++;
+
+    return Math.round((completadas / total) * 100);
+}
+
+progressClass(row: SolicitudCreditoListaItem): string {
+
+    if (this.estadoEsRojo(row)) {
+        return 'progress-danger';
+    }
+
+    if (
+        this.todasAprobacionesAprobadas(row)
+        && this.desembolsoPagado(row)
+    ) {
+        return 'progress-success';
+    }
+
+    return 'progress-warning';
+}
+
+etapaActualIconClass(row: SolicitudCreditoListaItem): string {
+
+    if (this.estadoEsRojo(row)) {
+        return 'fa-circle-xmark text-danger';
+    }
+
+    if (
+        this.todasAprobacionesAprobadas(row)
+        && this.desembolsoPagado(row)
+    ) {
+        return 'fa-circle-check text-success';
+    }
+
+    return 'fa-clock text-warning';
 }
 
 getFlowLineClass(): string {
-  return 'step-line-success';
+
+    if (!this.solicitudFlujoSeleccionada) {
+        return 'step-line-warning';
+    }
+
+    if (this.estadoEsRojo(this.solicitudFlujoSeleccionada)) {
+        return 'step-line-danger';
+    }
+
+    if (
+        this.todasAprobacionesAprobadas(this.solicitudFlujoSeleccionada)
+        && this.desembolsoPagado(this.solicitudFlujoSeleccionada)
+    ) {
+        return 'step-line-success';
+    }
+
+    return 'step-line-warning';
 }
-
-
-
-
 
 }

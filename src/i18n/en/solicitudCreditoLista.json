@@ -47,6 +47,7 @@
             "aprobado": "Approved",
             "rechazado": "Rejected",
             "actual": "Current",
+            "denegada": "Denied",
             "pendienteRevision": "Pending Review"
         },
         "approval": {
