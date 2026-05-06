@@ -14,7 +14,7 @@ import {
     SolicitudCreditoListaFiltro,
     SolicitudCreditoListaItem
 } from '../../../interface/solicitud-credito-lista.interface';
-import { JMartAutoFocusNextDirective, JMartDateFormatDirective } from '@JairMartinez86/jmartinez-validator';
+import { JMartAutoFocusNextDirective, JMartDateFormatDirective, JMartMassiveValidationService } from '@JairMartinez86/jmartinez-validator';
 
 @Component({
     selector: 'app-solicitud-credito-lista',
@@ -79,7 +79,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         { value: 'EnEvaluacion', labelKey: 'solicitudCreditoLista.status.enEvaluacion' },
         { value: 'TramitePago', labelKey: 'solicitudCreditoLista.status.tramitePago' },
         { value: 'Completado', labelKey: 'solicitudCreditoLista.status.completado' },
-         { value: 'Denegada', labelKey: 'solicitudCreditoLista.status.denegada' },
+        { value: 'Denegada', labelKey: 'solicitudCreditoLista.status.denegada' },
         { value: 'Anulado', labelKey: 'solicitudCreditoLista.status.anulado' }
     ];
 
@@ -98,6 +98,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+
         if (!this.isBrowser) return;
 
         this.setBreadcrumbs();
@@ -106,7 +107,8 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
             this.translate.onLangChange.subscribe(() => this.setBreadcrumbs())
         );
 
-        const fechaServidor = this.appConfigService.getCurrentSettings().fechaServidor;
+        const fechaServidor =
+            this.appConfigService.getCurrentSettings().fechaServidor;
 
         this.filtro.fechaFin = fechaServidor
             ? this.formatDate(fechaServidor)
@@ -114,6 +116,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
 
         this.cargarSolicitudes();
     }
+
 
     ngOnDestroy(): void {
         this.subs.unsubscribe();
@@ -176,18 +179,22 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     }
 
     limpiarFiltros(): void {
-        this.filtro = {
-            page: 1,
-            pageSize: 10,
-            search: '',
-            estado: '',
-            etapa: '',
-            fechaInicio: '',
-            fechaFin: ''
-        };
+
+        const fechaServidor = this.appConfigService.getCurrentSettings().fechaServidor;
+
+        this.filtro.page = 1;
+        this.filtro.pageSize = 10;
+        this.filtro.search = '';
+        this.filtro.estado = '';
+        this.filtro.etapa = '';
+        this.filtro.fechaInicio = '';
+        this.filtro.fechaFin = fechaServidor ? this.formatDate(fechaServidor) : '';
+
+
 
         this.cargarSolicitudes();
     }
+
 
     cambiarPageSize(): void {
         this.filtro.page = 1;
@@ -329,7 +336,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         if (value === 'aprobado') return this.translate.instant('solicitudCreditoLista.status.aprobado');
         if (value === 'rechazado') return this.translate.instant('solicitudCreditoLista.status.rechazado');
         if (value === 'anulado') return this.translate.instant('solicitudCreditoLista.status.anulado');
-         if (value === 'denegada') return this.translate.instant('solicitudCreditoLista.status.denegada');
+        if (value === 'denegada') return this.translate.instant('solicitudCreditoLista.status.denegada');
         if (value === 'pendiente') return this.translate.instant('solicitudCreditoLista.status.pendiente');
 
         return estado || '-';
@@ -342,10 +349,10 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         if (value === 'enevaluacion') return 'badge-soft-warning';
         if (value === 'tramitepago') return 'badge-soft-primary';
         if (value === 'completado') return 'badge-soft-success';
-         if (value === 'denegada') return 'badge-soft-danger';
+        if (value === 'denegada') return 'badge-soft-danger';
         if (value === 'anulado') return 'badge-soft-danger';
 
-        
+
 
         return 'badge-soft-secondary';
     }
@@ -499,22 +506,22 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
 
 
 
- isStepCompleted(index: number): boolean {
-    const item = this.aprobacionesFlujoSeleccionado[index];
-    return this.normalize(item?.estado) === 'aprobado';
-}
-
-getStepProgressIcon(ap: any, index: number): string {
-    const estado = this.normalize(ap.estado);
-
-    if (estado === 'aprobado') return 'bi-check';
-
-    if (this.isStepActualPendiente(ap, index)) {
-        return 'bi-clock';
+    isStepCompleted(index: number): boolean {
+        const item = this.aprobacionesFlujoSeleccionado[index];
+        return this.normalize(item?.estado) === 'aprobado';
     }
 
-    return 'bi-circle';
-}
+    getStepProgressIcon(ap: any, index: number): string {
+        const estado = this.normalize(ap.estado);
+
+        if (estado === 'aprobado') return 'bi-check';
+
+        if (this.isStepActualPendiente(ap, index)) {
+            return 'bi-clock';
+        }
+
+        return 'bi-circle';
+    }
 
     isStepRejected(index: number): boolean {
         const item = this.aprobacionesFlujoSeleccionado[index];
@@ -528,105 +535,105 @@ getStepProgressIcon(ap: any, index: number): string {
 
 
     private aprobacionEstado(row: SolicitudCreditoListaItem, codigo: string): string {
-    const item = (row.aprobaciones ?? []).find(x =>
-        this.normalize(x.codigo) === this.normalize(codigo)
-    );
+        const item = (row.aprobaciones ?? []).find(x =>
+            this.normalize(x.codigo) === this.normalize(codigo)
+        );
 
-    return this.normalize(item?.estado);
-}
-
-
-
-
-
-
-
-
-
-
-private estadoEsRojo(row: SolicitudCreditoListaItem): boolean {
-    const estado = this.normalize(row.estado);
-
-    return estado === 'denegada'
-        || estado === 'anulado';
-}
-
-private todasAprobacionesAprobadas(row: SolicitudCreditoListaItem): boolean {
-    return this.aprobacionEstado(row, 'COMITE_CREDITO_1') === 'aprobado'
-        && this.aprobacionEstado(row, 'COMITE_CREDITO_2') === 'aprobado'
-        && this.aprobacionEstado(row, 'COMITE_VIGILANCIA') === 'aprobado'
-        && this.aprobacionEstado(row, 'VICEPRESIDENTE') === 'aprobado'
-        && this.aprobacionEstado(row, 'PRESIDENTE') === 'aprobado';
-}
-
-private desembolsoPagado(row: SolicitudCreditoListaItem): boolean {
-    return this.normalize(row.estadoDesembolso) === 'pagado';
-}
-
-getFlowProgress(row: SolicitudCreditoListaItem): number {
-
-    const total = 5;
-    let completadas = 0;
-
-    if (this.aprobacionEstado(row, 'COMITE_CREDITO_1') === 'aprobado') completadas++;
-    if (this.aprobacionEstado(row, 'COMITE_CREDITO_2') === 'aprobado') completadas++;
-    if (this.aprobacionEstado(row, 'COMITE_VIGILANCIA') === 'aprobado') completadas++;
-    if (this.aprobacionEstado(row, 'VICEPRESIDENTE') === 'aprobado') completadas++;
-    if (this.aprobacionEstado(row, 'PRESIDENTE') === 'aprobado') completadas++;
-
-    return Math.round((completadas / total) * 100);
-}
-
-progressClass(row: SolicitudCreditoListaItem): string {
-
-    if (this.estadoEsRojo(row)) {
-        return 'progress-danger';
+        return this.normalize(item?.estado);
     }
 
-    if (
-        this.todasAprobacionesAprobadas(row)
-        && this.desembolsoPagado(row)
-    ) {
-        return 'progress-success';
+
+
+
+
+
+
+
+
+
+    private estadoEsRojo(row: SolicitudCreditoListaItem): boolean {
+        const estado = this.normalize(row.estado);
+
+        return estado === 'denegada'
+            || estado === 'anulado';
     }
 
-    return 'progress-warning';
-}
-
-etapaActualIconClass(row: SolicitudCreditoListaItem): string {
-
-    if (this.estadoEsRojo(row)) {
-        return 'fa-circle-xmark text-danger';
+    private todasAprobacionesAprobadas(row: SolicitudCreditoListaItem): boolean {
+        return this.aprobacionEstado(row, 'COMITE_CREDITO_1') === 'aprobado'
+            && this.aprobacionEstado(row, 'COMITE_CREDITO_2') === 'aprobado'
+            && this.aprobacionEstado(row, 'COMITE_VIGILANCIA') === 'aprobado'
+            && this.aprobacionEstado(row, 'VICEPRESIDENTE') === 'aprobado'
+            && this.aprobacionEstado(row, 'PRESIDENTE') === 'aprobado';
     }
 
-    if (
-        this.todasAprobacionesAprobadas(row)
-        && this.desembolsoPagado(row)
-    ) {
-        return 'fa-circle-check text-success';
+    private desembolsoPagado(row: SolicitudCreditoListaItem): boolean {
+        return this.normalize(row.estadoDesembolso) === 'pagado';
     }
 
-    return 'fa-clock text-warning';
-}
+    getFlowProgress(row: SolicitudCreditoListaItem): number {
 
-getFlowLineClass(): string {
+        const total = 5;
+        let completadas = 0;
 
-    if (!this.solicitudFlujoSeleccionada) {
+        if (this.aprobacionEstado(row, 'COMITE_CREDITO_1') === 'aprobado') completadas++;
+        if (this.aprobacionEstado(row, 'COMITE_CREDITO_2') === 'aprobado') completadas++;
+        if (this.aprobacionEstado(row, 'COMITE_VIGILANCIA') === 'aprobado') completadas++;
+        if (this.aprobacionEstado(row, 'VICEPRESIDENTE') === 'aprobado') completadas++;
+        if (this.aprobacionEstado(row, 'PRESIDENTE') === 'aprobado') completadas++;
+
+        return Math.round((completadas / total) * 100);
+    }
+
+    progressClass(row: SolicitudCreditoListaItem): string {
+
+        if (this.estadoEsRojo(row)) {
+            return 'progress-danger';
+        }
+
+        if (
+            this.todasAprobacionesAprobadas(row)
+            && this.desembolsoPagado(row)
+        ) {
+            return 'progress-success';
+        }
+
+        return 'progress-warning';
+    }
+
+    etapaActualIconClass(row: SolicitudCreditoListaItem): string {
+
+        if (this.estadoEsRojo(row)) {
+            return 'fa-circle-xmark text-danger';
+        }
+
+        if (
+            this.todasAprobacionesAprobadas(row)
+            && this.desembolsoPagado(row)
+        ) {
+            return 'fa-circle-check text-success';
+        }
+
+        return 'fa-clock text-warning';
+    }
+
+    getFlowLineClass(): string {
+
+        if (!this.solicitudFlujoSeleccionada) {
+            return 'step-line-warning';
+        }
+
+        if (this.estadoEsRojo(this.solicitudFlujoSeleccionada)) {
+            return 'step-line-danger';
+        }
+
+        if (
+            this.todasAprobacionesAprobadas(this.solicitudFlujoSeleccionada)
+            && this.desembolsoPagado(this.solicitudFlujoSeleccionada)
+        ) {
+            return 'step-line-success';
+        }
+
         return 'step-line-warning';
     }
-
-    if (this.estadoEsRojo(this.solicitudFlujoSeleccionada)) {
-        return 'step-line-danger';
-    }
-
-    if (
-        this.todasAprobacionesAprobadas(this.solicitudFlujoSeleccionada)
-        && this.desembolsoPagado(this.solicitudFlujoSeleccionada)
-    ) {
-        return 'step-line-success';
-    }
-
-    return 'step-line-warning';
-}
 
 }

@@ -374,7 +374,8 @@ export const routes: Routes = [
         data: {
           permission: '/aprobaciones-credito',
           action: 'view'
-        }
+        },
+         providers: [JMartMassiveValidationService]
       },
 
 

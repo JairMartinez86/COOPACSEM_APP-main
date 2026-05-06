@@ -16,6 +16,7 @@ import { SolicitudCreditoSocioRow } from '../../../interface/solicitud-credito.i
 
 
 
+
 interface ActionItem {
   icon: string;
   titleKey: string;
