@@ -30,8 +30,8 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                   </span>
 
-                  <input type="text" class="form-control" [(ngModel)]="search"
-                    (ngModelChange)="onSearchInputChange()" (keyup)="onSearchKeyup($event)"
+                  <input type="text" class="form-control" [(ngModel)]="search" (ngModelChange)="onSearchInputChange()"
+                    (keyup)="onSearchKeyup($event)"
                     [placeholder]="'solicitudCreditoListSocio.filters.searchPlaceholder' | translate" />
                 </div>
               </div>
@@ -69,145 +69,146 @@
             </div>
 
             @if (loading) {
-              <div class="text-center py-4 text-muted">
-                {{ 'solicitudCreditoListSocio.loading' | translate }}
-              </div>
+            <div class="text-center py-4 text-muted">
+              {{ 'solicitudCreditoListSocio.loading' | translate }}
+            </div>
             } @else {
-              @if (socios.length > 0) {
-                <div class="table-responsive socios-table-scroll">
-                  <table class="table table-sm socios-table mb-0">
-                    <thead>
-                      <tr>
-                        <th>{{ 'solicitudCreditoListSocio.columns.code' | translate }}</th>
-                        <th>{{ 'solicitudCreditoListSocio.columns.member' | translate }}</th>
-                        <th>{{ 'solicitudCreditoListSocio.columns.accountType' | translate }}</th>
-                        <th>{{ 'solicitudCreditoListSocio.columns.entryDate' | translate }}</th>
-                        <th class="text-end">{{ 'solicitudCreditoListSocio.columns.salary' | translate }}</th>
-                        <th class="text-end">{{ 'solicitudCreditoListSocio.columns.savings' | translate }}</th>
-                        <th>{{ 'solicitudCreditoListSocio.columns.status' | translate }}</th>
-                      </tr>
-                    </thead>
+            @if (socios.length > 0) {
+            <div class="table-responsive socios-table-scroll">
+              <table class="table table-sm socios-table mb-0">
+                <thead>
+                  <tr>
+                    <th>{{ 'solicitudCreditoListSocio.columns.code' | translate }}</th>
+                    <th>{{ 'solicitudCreditoListSocio.columns.member' | translate }}</th>
+                    <th>{{ 'solicitudCreditoListSocio.columns.accountType' | translate }}</th>
+                    <th>{{ 'solicitudCreditoListSocio.columns.entryDate' | translate }}</th>
+                    <th class="text-end">{{ 'solicitudCreditoListSocio.columns.salary' | translate }}</th>
+                    <th class="text-end">{{ 'solicitudCreditoListSocio.columns.savings' | translate }}</th>
+                    <th>{{ 'solicitudCreditoListSocio.columns.status' | translate }}</th>
+                  </tr>
+                </thead>
 
-                    <tbody>
-                      @for (item of socios; track item.id) {
-                        <tr class="socios-click-row"
-                          [class.socios-row-selected]="selectedSocio && selectedSocio.id === item.id"
-                          (click)="selectSocio(item)">
+                <tbody>
+                  @for (item of socios; track item.id) {
+                  <tr class="socios-click-row"
+                    [class.socios-row-selected]="selectedSocio && selectedSocio.id === item.id"
+                    (click)="selectSocio(item)">
 
-                          <td>
-                            <div class="table-user">
-                              <div class="position-relative d-inline-block">
-                                <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
-                                  {{ getInitials(item.nombreCompleto) }}
-                                </div>
+                    <td>
+                      <div class="table-user">
+                        <div class="position-relative d-inline-block">
+                          <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
+                            {{ getInitials(item.nombreCompleto) }}
+                          </div>
 
-                                @if (item.alerts.count) {
-                                  <i class="fa-solid fa-triangle-exclamation text-warning position-absolute top-0 start-100 translate-middle"
-                                    style="font-size: 14px;"></i>
-                                }
-                              </div>
-
-                              <div>{{ item.codigoSocio || '-' }}</div>
-                            </div>
-                          </td>
-
-                          <td>
-                            <div class="fw-semibold">{{ item.nombreCompleto || '-' }}</div>
-                          </td>
-
-                          <td>
-                            <div class="d-flex flex-wrap gap-1">
-                              <span class="badge d-inline-flex align-items-center gap-1"
-                                [ngClass]="item.cuentas.corriente ? 'badge-soft-success' : 'badge-soft-secondary'">
-                                <i class="bi"
-                                  [ngClass]="item.cuentas.corriente ? 'bi-check-circle-fill' : 'bi-dash-circle'"></i>
-                                {{ 'solicitudCreditoListSocio.accountType.current' | translate }}
-                              </span>
-
-                              <span class="badge d-inline-flex align-items-center gap-1"
-                                [ngClass]="item.cuentas.navidena ? 'badge-soft-warning' : 'badge-soft-secondary'">
-                                <i class="bi"
-                                  [ngClass]="item.cuentas.navidena ? 'bi-check-circle-fill' : 'bi-dash-circle'"></i>
-                                {{ 'solicitudCreditoListSocio.accountType.christmas' | translate }}
-                              </span>
-                            </div>
-                          </td>
-
-                          <td>{{ formatDate(item.fechaIngreso) }}</td>
-
-                          <td class="text-end">{{ currency }} {{ formatCurrency(item.salarioMensual) }}</td>
-
-                          <td class="text-end">{{ currency }} {{ formatCurrency(item.ahorroDisponible) }}</td>
-
-                          <td>
-                            <span class="badge"
-                              [ngClass]="item.estado === 'Activo' ? 'badge-soft-success' : 'badge-soft-danger'">
-                              {{
-                                item.estado === 'Activo'
-                                  ? ('solicitudCreditoListSocio.status.active' | translate)
-                                  : ('solicitudCreditoListSocio.status.inactive' | translate)
-                              }}
-                            </span>
-                          </td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="users-pagination estado-cuenta-pagination d-flex justify-content-between align-items-center flex-wrap gap-2">
-                  <div class="users-pagination-info">
-                    {{ 'solicitudCreditoListSocio.pagination.showing' | translate }}
-                    <strong>{{ visibleStart }}-{{ visibleEnd }}</strong>
-                    {{ 'solicitudCreditoListSocio.pagination.of' | translate }}
-                    <strong>{{ totalRecords }}</strong>
-                    {{ 'solicitudCreditoListSocio.pagination.records' | translate }}
-                  </div>
-
-                  <div class="d-flex align-items-center gap-2">
-                    <select class="form-select form-select-sm" [ngModel]="pageSize"
-                      (ngModelChange)="changePageSize($event)">
-                      @for (size of pageSizeOptions; track size) {
-                        <option [ngValue]="size">{{ size }}</option>
-                      }
-                    </select>
-
-                    <nav>
-                      <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item" [class.disabled]="currentPage === 1">
-                          <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage - 1)">
-                            <i class="bi bi-chevron-left"></i>
-                          </a>
-                        </li>
-
-                        @for (page of pageNumbers; track page) {
-                          @if (page === '...') {
-                            <li class="page-item disabled">
-                              <a class="page-link" href="javascript:void(0)">...</a>
-                            </li>
-                          } @else {
-                            <li class="page-item" [class.active]="page === currentPage">
-                              <a class="page-link" href="javascript:void(0)" (click)="goToPage(+page)">
-                                {{ page }}
-                              </a>
-                            </li>
+                          @if (item.alerts.count) {
+                          <i class="fa-solid fa-triangle-exclamation text-warning position-absolute top-0 start-100 translate-middle"
+                            style="font-size: 14px;"></i>
                           }
-                        }
+                        </div>
 
-                        <li class="page-item" [class.disabled]="currentPage === totalPages">
-                          <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage + 1)">
-                            <i class="bi bi-chevron-right"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-              } @else {
-                <div class="text-center py-4 text-muted">
-                  {{ 'solicitudCreditoListSocio.empty' | translate }}
-                </div>
-              }
+                        <div>{{ item.codigoSocio || '-' }}</div>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="fw-semibold">{{ item.nombreCompleto || '-' }}</div>
+                    </td>
+
+                    <td>
+                      <div class="d-flex flex-wrap gap-1">
+                        <span class="badge d-inline-flex align-items-center gap-1"
+                          [ngClass]="item.cuentas.corriente ? 'badge-soft-success' : 'badge-soft-secondary'">
+                          <i class="bi"
+                            [ngClass]="item.cuentas.corriente ? 'bi-check-circle-fill' : 'bi-dash-circle'"></i>
+                          {{ 'solicitudCreditoListSocio.accountType.current' | translate }}
+                        </span>
+
+                        <span class="badge d-inline-flex align-items-center gap-1"
+                          [ngClass]="item.cuentas.navidena ? 'badge-soft-warning' : 'badge-soft-secondary'">
+                          <i class="bi"
+                            [ngClass]="item.cuentas.navidena ? 'bi-check-circle-fill' : 'bi-dash-circle'"></i>
+                          {{ 'solicitudCreditoListSocio.accountType.christmas' | translate }}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td>{{ formatDate(item.fechaIngreso) }}</td>
+
+                    <td class="text-end">{{ currency }} {{ formatCurrency(item.salarioMensual) }}</td>
+
+                    <td class="text-end">{{ currency }} {{ formatCurrency(item.ahorroDisponible) }}</td>
+
+                    <td>
+                      <span class="badge"
+                        [ngClass]="item.estado === 'Activo' ? 'badge-soft-success' : 'badge-soft-danger'">
+                        {{
+                        item.estado === 'Activo'
+                        ? ('solicitudCreditoListSocio.status.active' | translate)
+                        : ('solicitudCreditoListSocio.status.inactive' | translate)
+                        }}
+                      </span>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              class="users-pagination estado-cuenta-pagination d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <div class="users-pagination-info">
+                {{ 'solicitudCreditoListSocio.pagination.showing' | translate }}
+                <strong>{{ visibleStart }}-{{ visibleEnd }}</strong>
+                {{ 'solicitudCreditoListSocio.pagination.of' | translate }}
+                <strong>{{ totalRecords }}</strong>
+                {{ 'solicitudCreditoListSocio.pagination.records' | translate }}
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                <select class="form-select form-select-sm" [ngModel]="pageSize"
+                  (ngModelChange)="changePageSize($event)">
+                  @for (size of pageSizeOptions; track size) {
+                  <option [ngValue]="size">{{ size }}</option>
+                  }
+                </select>
+
+                <nav>
+                  <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                      <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage - 1)">
+                        <i class="bi bi-chevron-left"></i>
+                      </a>
+                    </li>
+
+                    @for (page of pageNumbers; track page) {
+                    @if (page === '...') {
+                    <li class="page-item disabled">
+                      <a class="page-link" href="javascript:void(0)">...</a>
+                    </li>
+                    } @else {
+                    <li class="page-item" [class.active]="page === currentPage">
+                      <a class="page-link" href="javascript:void(0)" (click)="goToPage(+page)">
+                        {{ page }}
+                      </a>
+                    </li>
+                    }
+                    }
+
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                      <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage + 1)">
+                        <i class="bi bi-chevron-right"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+            } @else {
+            <div class="text-center py-4 text-muted">
+              {{ 'solicitudCreditoListSocio.empty' | translate }}
+            </div>
+            }
             }
 
           </div>
@@ -227,63 +228,62 @@
             <div class="card-body pt-0">
               <div class="quick-actions-grid">
                 @for (action of orderedActions; track action.titleKey) {
-                  @if(selectedSocio?.estado == "Activo")
-                  {
-<button type="button" class="quick-action-btn is-blue fa-lg"
-                    (click)="onActionClick(action)" [disabled]="!selectedSocio"
-                    [permissionRoute]="['/solicitud-credito']" [appPermission]="['create']">
+                @if(selectedSocio?.estado == "Activo")
+                {
+                <button type="button" class="quick-action-btn is-blue fa-lg" (click)="onActionClick(action)"
+                  [disabled]="!selectedSocio" [permissionRoute]="['/solicitud-credito']" [appPermission]="['create']">
 
-                    <i [class]="action.icon"></i>
-                    <span>{{ action.titleKey | translate }}</span>
-                  </button>
-                  }
-                  
+                  <i [class]="action.icon"></i>
+                  <span>{{ action.titleKey | translate }}</span>
+                </button>
+                }
+
                 }
               </div>
             </div>
           </div>
 
           @if (selectedSocio) {
-            <div class="card flex-shrink-0">
-              <div class="card-body">
-                <h6 class="mb-1">{{ selectedSocio.nombreCompleto }}</h6>
-                <div class="text-muted small">{{ selectedSocio.codigoSocio }}</div>
+          <div class="card flex-shrink-0">
+            <div class="card-body">
+              <h6 class="mb-1">{{ selectedSocio.nombreCompleto }}</h6>
+              <div class="text-muted small">{{ selectedSocio.codigoSocio }}</div>
 
-                <div class="d-flex flex-wrap gap-1 mt-2">
-                  <span class="badge"
-                    [ngClass]="selectedSocio.cuentas.corriente ? 'badge-soft-success' : 'badge-soft-secondary'">
-                    {{ 'solicitudCreditoListSocio.accountType.current' | translate }}
-                  </span>
+              <div class="d-flex flex-wrap gap-1 mt-2">
+                <span class="badge"
+                  [ngClass]="selectedSocio.cuentas.corriente ? 'badge-soft-success' : 'badge-soft-secondary'">
+                  {{ 'solicitudCreditoListSocio.accountType.current' | translate }}
+                </span>
 
-                  <span class="badge"
-                    [ngClass]="selectedSocio.cuentas.navidena ? 'badge-soft-warning' : 'badge-soft-secondary'">
-                    {{ 'solicitudCreditoListSocio.accountType.christmas' | translate }}
-                  </span>
-                </div>
+                <span class="badge"
+                  [ngClass]="selectedSocio.cuentas.navidena ? 'badge-soft-warning' : 'badge-soft-secondary'">
+                  {{ 'solicitudCreditoListSocio.accountType.christmas' | translate }}
+                </span>
+              </div>
 
-                <div class="mt-3">
-                  <div class="text-muted small">{{ 'solicitudCreditoListSocio.side.salary' | translate }}</div>
-                  <div class="fw-semibold">{{ currency }} {{ formatCurrency(selectedSocio.salarioMensual) }}</div>
-                </div>
+              <div class="mt-3">
+                <div class="text-muted small">{{ 'solicitudCreditoListSocio.side.salary' | translate }}</div>
+                <div class="fw-semibold">{{ currency }} {{ formatCurrency(selectedSocio.salarioMensual) }}</div>
+              </div>
 
-                <div class="mt-2">
-                  <div class="text-muted small">{{ 'solicitudCreditoListSocio.side.savings' | translate }}</div>
-                  <div class="fw-semibold">{{ currency }} {{ formatCurrency(selectedSocio.ahorroDisponible) }}</div>
-                </div>
+              <div class="mt-2">
+                <div class="text-muted small">{{ 'solicitudCreditoListSocio.side.savings' | translate }}</div>
+                <div class="fw-semibold">{{ currency }} {{ formatCurrency(selectedSocio.ahorroDisponible) }}</div>
+              </div>
 
-                <div class="mt-2">
-                  <div class="text-muted small">{{ 'solicitudCreditoListSocio.side.activeCredits' | translate }}</div>
-                  <div class="fw-semibold">{{ currency }} {{ formatCurrency(selectedSocio.creditosActivos) }}</div>
-                </div>
+              <div class="mt-2">
+                <div class="text-muted small">{{ 'solicitudCreditoListSocio.side.activeCredits' | translate }}</div>
+                <div class="fw-semibold">{{ currency }} {{ formatCurrency(selectedSocio.creditosActivos) }}</div>
+              </div>
 
-                <div class="mt-2">
-                  <div class="text-muted small">{{ 'solicitudCreditoListSocio.side.availableLimit' | translate }}</div>
-                  <div class="fw-semibold text-success">
-                    {{ currency }} {{ formatCurrency(selectedSocio.limiteCreditoDisponible) }}
-                  </div>
+              <div class="mt-2">
+                <div class="text-muted small">{{ 'solicitudCreditoListSocio.side.availableLimit' | translate }}</div>
+                <div class="fw-semibold text-success">
+                  {{ currency }} {{ formatCurrency(selectedSocio.limiteCreditoDisponible) }}
                 </div>
               </div>
             </div>
+          </div>
           }
 
         </div>

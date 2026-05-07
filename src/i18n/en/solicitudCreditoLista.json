@@ -2,6 +2,8 @@
     "solicitudCreditoLista": {
         "title": "Credit approvals",
         "subtitle": "Manage requests and approval workflow",
+        "title2": "Credit Records",
+        "subtitle2": "Application Management",
         "breadcrumbs": [
             {
                 "label": "Credits"
@@ -10,6 +12,24 @@
                 "label": "Credit approvals"
             }
         ],
+        "breadcrumbs2": [
+            {
+                "label": "Credits"
+            },
+            {
+                "label": "Credit Records"
+            }
+        ],
+        "committee": {
+            "credit": {
+                "title": "Credit Committee",
+                "subtitle": "Evaluation and analysis of applications"
+            },
+            "board": {
+                "title": "Board of Directors",
+                "subtitle": "Final approval and supervision"
+            }
+        },
         "filters": {
             "buscar": "Search",
             "buscarPlaceholder": "Search by member, request, ID...",

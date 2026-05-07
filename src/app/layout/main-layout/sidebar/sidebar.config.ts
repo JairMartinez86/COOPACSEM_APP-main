@@ -109,7 +109,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     type: 'heading',
     titleKey: 'sidebar.items.partnerPanel'
   },
-    {
+  {
     type: 'link',
     titleKey: 'sidebar.items.partner',
     iconclass: 'fa-solid fa-handshake',
@@ -127,34 +127,34 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     titleKey: 'sidebar.items.saving',
     iconclass: 'fa-sharp fa-solid fa-piggy-bank',
     children: [
-    {
-    type: 'link',
-    titleKey: 'sidebar.items.saverList',
-    iconclass: '',
-    router: '/ahorro',
-    permissions: {
-      view: false,
-      create: false,
-      edit: false,
-      delete: null
-    }
-  },
+      {
+        type: 'link',
+        titleKey: 'sidebar.items.saverList',
+        iconclass: '',
+        router: '/ahorro',
+        permissions: {
+          view: false,
+          create: false,
+          edit: false,
+          delete: null
+        }
+      },
 
-   {
-    type: 'link',
-    titleKey: 'sidebar.items.estadoCuentaList',
-    iconclass: '',
-    router: '/estado-cuenta',
-    permissions: {
-      view: false,
-      create: null,
-      edit: null,
-      delete: null
-    }
-  },
-  
+      {
+        type: 'link',
+        titleKey: 'sidebar.items.estadoCuentaList',
+        iconclass: '',
+        router: '/estado-cuenta',
+        permissions: {
+          view: false,
+          create: null,
+          edit: null,
+          delete: null
+        }
+      },
 
-     
+
+
     ]
   },
 
@@ -165,7 +165,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     type: 'heading',
     titleKey: 'sidebar.items.creditoPanel'
   },
-    {
+  {
     type: 'link',
     titleKey: 'sidebar.items.solicitudCredito',
     iconclass: 'fa-duotone fa-solid fa-hand-holding-dollar',
@@ -176,33 +176,48 @@ export const SIDEBAR_DATA: SidebarItem[] = [
       edit: false,
       delete: null
     },
-    
+
   },
 
   {
     type: 'link',
-    titleKey: 'sidebar.items.aprobacionCredito',
-    iconclass: 'fa-duotone fa-solid fa-circle-check',
-    router: '/aprobaciones-credito',
+    titleKey: 'sidebar.items.registrosSolicitudesCredito',
+    iconclass: 'fa-regular fa-list',
+    router: '/solicitudes-credito/registros',
     permissions: {
       view: false,
       create: false,
       edit: false,
       delete: false
     },
-    
+
+  },
+
+  {
+    type: 'link',
+    titleKey: 'sidebar.items.aprobacionCredito',
+    iconclass: 'fa-duotone fa-solid fa-circle-check',
+    router: '/solicitudes-credito/aprobaciones',
+    permissions: {
+      view: false,
+      create: false,
+      edit: false,
+      delete: false
+    },
+
   },
 
 
 
 
 
-    {
+
+  {
     type: 'heading',
     titleKey: 'sidebar.items.emptyPanel'
   },
 
- 
+
 
   {
     type: 'link',
@@ -233,7 +248,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
   {
     type: 'heading',
     titleKey: 'sidebar.items.otro',
-    
+
   },
 
 

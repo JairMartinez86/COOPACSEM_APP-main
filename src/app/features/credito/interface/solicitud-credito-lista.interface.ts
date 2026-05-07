@@ -93,8 +93,8 @@ export interface SolicitudCreditoListaFiltro {
   etapa?: string;
   fechaInicio?: string;
   fechaFin?: string;
+  modo?: 'registros' | 'aprobaciones';
 }
-
 export interface SolicitudCreditoAprobacionRequest {
   solicitudId: string;
   etapa: string;

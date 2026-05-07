@@ -1,7 +1,7 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, Subscription } from 'rxjs';
 
@@ -36,6 +36,7 @@ import { AppPermissionDirective } from '../../../../../core/services/app-permiss
 export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     private readonly service = inject(SolicitudCreditoListaService);
     private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
     private readonly translate = inject(TranslateService);
     private readonly notify = inject(NotificationService);
 
@@ -45,19 +46,24 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     private readonly filterKey = 'aprobaciones-credito-lista';
 
 
+
     private readonly subs = new Subscription();
     private readonly isBrowser: boolean;
 
     readonly permissionRoute = '/aprobaciones-credito';
 
     breadcrumbs: any[] = [];
+    autorizadores: any[] = [];
 
     loading = false;
     processing = false;
+    fechaServidor: any;
 
     items: SolicitudCreditoListaItem[] = [];
     solicitudSeleccionada: SolicitudCreditoListaItem | null = null;
     solicitudFlujoSeleccionada: SolicitudCreditoListaItem | null = null;
+
+    modo: 'registros' | 'aprobaciones' = 'registros';
 
     modalAprobacionOpen = false;
     accionModal: 'aprobar' | 'rechazar' | 'desembolsar' = 'aprobar';
@@ -109,6 +115,10 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
 
         if (!this.isBrowser) return;
 
+        this.modo = this.route.snapshot.data['modo'] === 'aprobaciones'
+            ? 'aprobaciones'
+            : 'registros';
+
         this.setBreadcrumbs();
 
         this.subs.add(
@@ -117,6 +127,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
 
         const fechaServidor =
             this.appConfigService.getCurrentSettings().fechaServidor;
+        this.fechaServidor = new Date(this.appConfigService.getCurrentSettings().fechaServidor);
 
         this.filtro.fechaFin = fechaServidor
             ? this.formatDate(fechaServidor)
@@ -157,15 +168,25 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         }
     }
 
-    private setBreadcrumbs(): void {
-        const value = this.translate.instant('solicitudCreditoLista.breadcrumbs');
+    get esModoAprobacion(): boolean {
+        return this.modo === 'aprobaciones';
+    }
 
-        this.breadcrumbs = Array.isArray(value)
-            ? value
-            : [
-                { label: 'Créditos' },
-                { label: 'Aprobaciones de crédito' }
-            ];
+    get esModoRegistro(): boolean {
+        return this.modo === 'registros';
+    }
+
+
+    private setBreadcrumbs(): void {
+       const key = this.esModoAprobacion
+        ? 'solicitudCreditoLista.breadcrumbs'
+        : 'solicitudCreditoLista.breadcrumbs2';
+
+    const value = this.translate.instant(key);
+
+
+        this.breadcrumbs =  value
+
     }
 
     get settings(): any {
@@ -178,6 +199,9 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
 
     cargarSolicitudes(): void {
         this.loading = true;
+
+        this.filtro.modo = this.modo;
+
 
         this.service.getAll(this.filtro)
             .pipe(finalize(() => this.loading = false))
@@ -192,6 +216,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
 
                     this.totalRecords = Number(data?.totalRecords ?? 0);
                     this.totalPages = Number(data?.totalPages ?? 0);
+                    this.autorizadores = data?.autorizadores ?? [];
 
 
 
@@ -223,6 +248,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         this.filtro.estado = '';
         this.filtro.etapa = '';
         this.filtro.fechaInicio = '';
+        this.filtro.modo = this.modo;
         this.filtro.fechaFin = fechaServidor ? this.formatDate(fechaServidor) : '';
 
 
@@ -704,6 +730,43 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         this.filterSvc.setQuery(this.filterKey, value);
 
         this.cargarSolicitudes();
+    }
+
+    getAutorizadorCargo(codigo: string): string {
+
+        const value = this.normalize(codigo);
+
+        if (value === 'comite_credito_1') {
+            return this.translate.instant(
+                'solicitudCreditoLista.approval.comiteCredito1'
+            );
+        }
+
+        if (value === 'comite_credito_2') {
+            return this.translate.instant(
+                'solicitudCreditoLista.approval.comiteCredito2'
+            );
+        }
+
+        if (value === 'comite_vigilancia') {
+            return this.translate.instant(
+                'solicitudCreditoLista.approval.comiteVigilancia'
+            );
+        }
+
+        if (value === 'vicepresidente') {
+            return this.translate.instant(
+                'solicitudCreditoLista.approval.vicepresidente'
+            );
+        }
+
+        if (value === 'presidente') {
+            return this.translate.instant(
+                'solicitudCreditoLista.approval.presidente'
+            );
+        }
+
+        return codigo;
     }
 
 

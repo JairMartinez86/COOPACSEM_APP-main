@@ -15,25 +15,18 @@
       "account": "Cuenta",
       "activity": "Actividad",
       "rolesPermissions": "Roles y Permisos",
-
-
-
       "partnerPanel": "Administración de Socio",
       "partner": "Socio",
       "saving": "Ahorro",
       "saverList": "Mis Ahorros",
       "estadoCuentaList": "Estado de cuenta",
-
-
-       "creditoPanel": "Administración de Credito",
-       "solicitudCredito": "Solicitud de Credito",
-       "aprobacionCredito" : "Solicitudes y Aprobaciones",
-
-
-
+      "creditoPanel": "Administración de Credito",
+      "solicitudCredito": "Solicitud de Credito",
+      "registrosSolicitudesCredito": "Registros de Solicitudes",
+      "aprobacionCredito": "Aprobaciones de Credito",
+      
       "supplier": "Proveedor",
-       
-       "emptyPanel": "Vacío",
+      "emptyPanel": "Vacío",
       "empty": "Vacío"
     }
   }

@@ -7,19 +7,236 @@
             <div>
                 <h1 class="page-title mb-1">
                     <i class="fa-duotone fa-solid fa-file-signature text-success"></i>
-                    {{ 'solicitudCreditoLista.title' | translate }}
+
+                    {{
+                    (esModoAprobacion
+                    ? 'solicitudCreditoLista.title'
+                    : 'solicitudCreditoLista.title2')
+                    | translate
+                    }}
                 </h1>
+
                 <div class="text-muted">
-                    {{ 'solicitudCreditoLista.subtitle' | translate }}
+                    {{
+                    (esModoAprobacion
+                    ? 'solicitudCreditoLista.subtitle'
+                    : 'solicitudCreditoLista.subtitle2')
+                    | translate
+                    }}
                 </div>
             </div>
 
             <button type="button" class="btn btn-success" (click)="nuevaSolicitud()" [appPermission]="['create']"
-                      [permissionRoute]="'/aprobaciones-credito'">
+                [permissionRoute]="'/aprobaciones-credito'">
                 <i class="fa-solid fa-plus me-1"></i>
                 {{ 'solicitudCreditoLista.actions.nuevaSolicitud' | translate }}
             </button>
         </div>
+
+        <div class="row g-3">
+
+            <!-- COMITÉ CRÉDITO -->
+            <div class="col-xl-4">
+
+                <div class="card border-0 shadow-sm h-100 overflow-hidden bg-transparent">
+
+                    <div class="committee-header p-3 text-white">
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <div class="committee-icon">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+
+                            <div>
+                                <h5 class="mb-0 fw-bold text-white">
+                                    {{ 'solicitudCreditoLista.committee.credit.title' | translate }}
+                                </h5>
+
+                                <div class="small opacity-75 text-white">
+                                    {{ 'solicitudCreditoLista.committee.credit.subtitle' | translate }}
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body bg-transparent">
+
+                        <div class="row g-2">
+
+                            @for (a of autorizadores.filter(x =>
+                            x.codigo === 'COMITE_CREDITO_1'
+                            || x.codigo === 'COMITE_CREDITO_2'); track a.codigo + a.usuario) {
+
+                            <div class="col-md-6">
+
+                                <div class="committee-card h-100 bg-transparent">
+
+                                    <div class="d-flex align-items-start gap-2">
+
+                                        <div class="committee-avatar">
+                                            <i class="fa-solid fa-user-tie"></i>
+                                        </div>
+
+                                        <div class="flex-grow-1">
+
+                                            <div class="d-flex justify-content-between align-items-start gap-2">
+
+                                                <div>
+
+                                                    <h6 class="mb-1 fw-bold">
+                                                        {{ a.nombreCompleto || a.usuario }}
+                                                    </h6>
+
+                                                    <div class="text-muted small mb-2">
+                                                        {{ a.nombre }}
+                                                    </div>
+
+                                                </div>
+
+                                                <span class="badge badge-soft-primary">
+                                                    {{ a.orden }}
+                                                </span>
+
+                                            </div>
+
+                                            <div class="small text-muted d-flex flex-column gap-1">
+
+                                                <div>
+                                                    <i class="fa-solid fa-phone me-2 text-success"></i>
+                                                    {{ a.telefono || '-' }}
+                                                </div>
+
+                                                <div class="text-truncate">
+                                                    <i class="fa-solid fa-envelope me-2 text-primary"></i>
+                                                    {{ a.correo || '-' }}
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- JUNTA DIRECTIVA -->
+            <div class="col-xl-8">
+
+                <div class="card border-0 shadow-sm h-100 overflow-hidden bg-transparent">
+
+                    <div class="committee-header-2 p-3 text-white">
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <div class="committee-icon">
+                                <i class="fa-solid fa-building-columns"></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="mb-0 fw-bold text-white">
+                                    {{ 'solicitudCreditoLista.committee.board.title' | translate }}
+                                </h5>
+
+                                <div class="small opacity-75 text-white">
+                                    {{ 'solicitudCreditoLista.committee.board.subtitle' | translate }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body bg-transparent">
+
+                        <div class="row g-2">
+
+                            @for (a of autorizadores.filter(x =>
+                            x.codigo !== 'COMITE_CREDITO_1'
+                            && x.codigo !== 'COMITE_CREDITO_2'); track a.codigo + a.usuario) {
+
+                            <div class="col-md-4">
+
+                                <div class="committee-card h-100 bg-transparent">
+
+                                    <div class="d-flex align-items-start gap-2">
+
+                                        <div class="committee-avatar committee-avatar-2">
+                                            <i class="fa-solid fa-user-shield"></i>
+                                        </div>
+
+                                        <div class="flex-grow-1">
+
+                                            <div class="d-flex justify-content-between align-items-start gap-2">
+
+                                                <div>
+
+                                                    <h6 class="mb-1 fw-bold">
+                                                        {{ a.nombreCompleto || a.usuario }}
+                                                    </h6>
+
+                                                    <div class="text-muted small mb-2">
+                                                        {{ a.nombre }}
+                                                    </div>
+
+                                                </div>
+
+                                                <span class="badge badge-soft-info">
+                                                    {{ a.orden }}
+                                                </span>
+
+                                            </div>
+
+                                            <div class="small text-muted d-flex flex-column gap-1">
+
+                                                <div>
+                                                    <i class="fa-solid fa-phone me-2 text-success"></i>
+                                                    {{ a.telefono || '-' }}
+                                                </div>
+
+                                                <div class="text-truncate">
+                                                    <i class="fa-solid fa-envelope me-2 text-primary"></i>
+                                                    {{ a.correo || '-' }}
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
 
 
         <div class="card mb-3">
@@ -32,7 +249,7 @@
                             <label class="form-label">{{ 'solicitudCreditoLista.filters.buscar' | translate }}</label>
                             <div class="input-group">
                                 <span class="input-group-text">
-                                    <i class=" fa-magnifying-glass"></i>
+                                    <i class="fa-regular fa-magnifying-glass"></i>
                                 </span>
                                 <input type="text" class="form-control" name="search" [(ngModel)]="filtro.search"
                                     (ngModelChange)="onSearchInputChange()" (keyup)="onSearchKeyup($event)"
@@ -100,6 +317,9 @@
 
             </div>
         </div>
+
+
+
 
         <div class="card">
             <div class="card-body p-0">
@@ -227,11 +447,16 @@
                                         </button>
                                         }
 
-                                        @if (puedeMostrarAprobar(row)) {
+                                        @if (puedeMostrarAprobar(row) && modo === 'aprobaciones') {
+
+                                        @if(fechaServidor >= row.fechaInicioPago)
+                                        {
                                         <button type="button" class="btn btn-sm btn-success"
                                             (click)="$event.stopPropagation(); abrirModalAccion(row, 'aprobar')">
                                             {{ 'solicitudCreditoLista.actions.aprobar' | translate }}
                                         </button>
+
+                                        }
 
                                         <button type="button" class="btn btn-sm btn-outline-danger"
                                             (click)="$event.stopPropagation(); abrirModalAccion(row, 'rechazar')">
@@ -240,7 +465,7 @@
 
                                         }
 
-                            
+
                                         @if (puedeMostrarDesembolsar(row)) {
                                         <button type="button" class="btn btn-sm btn-primary"
                                             (click)="$event.stopPropagation(); abrirModalAccion(row, 'desembolsar')">
@@ -424,15 +649,15 @@
         <div class="modal-content border-0 overflow-hidden shadow-lg">
 
             <div class="position-relative text-white p-3"
-                 [ngClass]="accionModal === 'rechazar' ? 'bg-danger' : accionModal === 'desembolsar' ? 'bg-primary' : 'bg-success'">
+                [ngClass]="accionModal === 'rechazar' ? 'bg-danger' : accionModal === 'desembolsar' ? 'bg-primary' : 'bg-success'">
 
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <div class="d-flex align-items-center gap-2 mb-2">
                             <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center"
-                                 style="width:52px;height:52px;">
+                                style="width:52px;height:52px;">
                                 <i class="fa-solid fs-4"
-                                   [ngClass]="accionModal === 'rechazar' ? 'fa-circle-xmark' : accionModal === 'desembolsar' ? 'fa-money-bill-transfer' : 'fa-circle-check'">
+                                    [ngClass]="accionModal === 'rechazar' ? 'fa-circle-xmark' : accionModal === 'desembolsar' ? 'fa-money-bill-transfer' : 'fa-circle-check'">
                                 </i>
                             </div>
 
@@ -461,9 +686,7 @@
                         </div>
                     </div>
 
-                    <button type="button"
-                            class="btn-close btn-close-white"
-                            (click)="cerrarModalAccion()">
+                    <button type="button" class="btn-close btn-close-white" (click)="cerrarModalAccion()">
                     </button>
                 </div>
             </div>
@@ -483,7 +706,8 @@
                                 </h6>
 
                                 <div class="text-muted small">
-                                    {{ solicitudSeleccionada.tipoCredito || '-' }} · {{ solicitudSeleccionada.proposito || '-' }}
+                                    {{ solicitudSeleccionada.tipoCredito || '-' }} · {{ solicitudSeleccionada.proposito
+                                    || '-' }}
                                 </div>
                             </div>
 
@@ -530,9 +754,9 @@
                                 <div class="fw-bold">
                                     {{ solicitudSeleccionada.plazo }}
                                     {{
-                                        solicitudSeleccionada.esQuincenal
-                                            ? ('solicitudCreditoLista.fields.quincenas' | translate)
-                                            : ('solicitudCreditoLista.fields.meses' | translate)
+                                    solicitudSeleccionada.esQuincenal
+                                    ? ('solicitudCreditoLista.fields.quincenas' | translate)
+                                    : ('solicitudCreditoLista.fields.meses' | translate)
                                     }}
                                 </div>
                             </div>
@@ -611,16 +835,14 @@
                                 </div>
                             </div>
 
-                            <span class="badge px-2 py-1"
-                                  [ngClass]="estadoBadgeClass(solicitudSeleccionada.estado)">
+                            <span class="badge px-2 py-1" [ngClass]="estadoBadgeClass(solicitudSeleccionada.estado)">
                                 {{ getEstadoTexto(solicitudSeleccionada.estado) }}
                             </span>
                         </div>
 
                         <div class="approval-progress mb-2" style="height:8px;">
-                            <div class="approval-progress-bar"
-                                 [ngClass]="progressClass(solicitudSeleccionada)"
-                                 [style.width.%]="getFlowProgress(solicitudSeleccionada)">
+                            <div class="approval-progress-bar" [ngClass]="progressClass(solicitudSeleccionada)"
+                                [style.width.%]="getFlowProgress(solicitudSeleccionada)">
                             </div>
                         </div>
 
@@ -630,16 +852,14 @@
                                 <div class="p-2 text-center h-100">
                                     <div class="mb-2">
                                         <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
-                                             [ngClass]="
+                                            [ngClass]="
                                                 ap.estado === 'Aprobado'
                                                     ? 'bg-success text-white'
                                                     : ap.estado === 'Rechazado'
                                                         ? 'bg-danger text-white'
                                                         : 'bg-light text-muted'
-                                             "
-                                             style="width:40px;height:40px;">
-                                            <i class="fa-solid small"
-                                               [ngClass]="
+                                             " style="width:40px;height:40px;">
+                                            <i class="fa-solid small" [ngClass]="
                                                     ap.estado === 'Aprobado'
                                                         ? 'fa-check'
                                                         : ap.estado === 'Rechazado'
@@ -654,8 +874,7 @@
                                         {{ ap.nombre }}
                                     </div>
 
-                                    <span class="badge"
-                                          [ngClass]="aprobacionBadgeClass(ap.estado)">
+                                    <span class="badge" [ngClass]="aprobacionBadgeClass(ap.estado)">
                                         {{ getEstadoAprobacionTexto(ap.estado) }}
                                     </span>
                                 </div>
@@ -671,28 +890,21 @@
                             Comentario / Observación
                         </label>
 
-                        <textarea class="form-control border-0"
-                                  rows="3"
-                                  name="comentarioAccion"
-                                  [(ngModel)]="comentarioAccion"
-                                  placeholder="Escriba un comentario..."></textarea>
+                        <textarea class="form-control border-0" rows="3" name="comentarioAccion"
+                            [(ngModel)]="comentarioAccion" placeholder="Escriba un comentario..."></textarea>
                     </div>
                 </div>
 
             </div>
 
             <div class="modal-footer border-0 p-3">
-                <button type="button"
-                        class="btn btn-secondary px-4"
-                        (click)="cerrarModalAccion()"
-                        [disabled]="processing">
+                <button type="button" class="btn btn-secondary px-4" (click)="cerrarModalAccion()"
+                    [disabled]="processing">
                     {{ 'solicitudCreditoLista.actions.cancelar' | translate }}
                 </button>
 
-                <button type="button"
-                        [class]="modalButtonClass() + ' px-4'"
-                        (click)="confirmarAccion()"
-                        [disabled]="processing">
+                <button type="button" [class]="modalButtonClass() + ' px-4'" (click)="confirmarAccion()"
+                    [disabled]="processing">
                     @if (processing) {
                     <span class="spinner-border spinner-border-sm me-2"></span>
                     }

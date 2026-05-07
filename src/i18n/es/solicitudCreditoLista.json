@@ -2,6 +2,8 @@
     "solicitudCreditoLista": {
         "title": "Aprobaciones de crédito",
         "subtitle": "Gestión de solicitudes y flujo de aprobaciones",
+        "title2": "Solicitudes de crédito",
+        "subtitle2": "Gestión de solicitudes",
         "breadcrumbs": [
             {
                 "label": "Créditos"
@@ -10,6 +12,24 @@
                 "label": "Aprobaciones de crédito"
             }
         ],
+         "breadcrumbs2": [
+            {
+                "label": "Créditos"
+            },
+            {
+                "label": "Solicitudes de crédito"
+            }
+        ],
+        "committee": {
+            "credit": {
+                "title": "Comité de Crédito",
+                "subtitle": "Evaluación y análisis de solicitudes"
+            },
+            "board": {
+                "title": "Junta Directiva",
+                "subtitle": "Aprobación final y supervisión"
+            }
+        },
         "filters": {
             "buscar": "Buscar",
             "buscarPlaceholder": "Buscar por socio, solicitud, identificación...",
@@ -47,7 +67,7 @@
             "aprobado": "Aprobado",
             "rechazado": "Rechazado",
             "actual": "Actual",
-            "denegada" : "Denegada",
+            "denegada": "Denegada",
             "pendienteRevision": "Pendiente de revisión"
         },
         "approval": {

@@ -27,6 +27,7 @@ export class SolicitudCreditoListaService extends BrowserApiService {
         .set('page', filtro.page)
         .set('pageSize', filtro.pageSize);
 
+      if (filtro.modo?.trim()) params = params.set('modo', filtro.modo.trim());
       if (filtro.search?.trim()) params = params.set('search', filtro.search.trim());
       if (filtro.estado?.trim()) params = params.set('estado', filtro.estado.trim());
       if (filtro.etapa?.trim()) params = params.set('etapa', filtro.etapa.trim());

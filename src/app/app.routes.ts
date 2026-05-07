@@ -366,20 +366,35 @@ export const routes: Routes = [
 
       // APROBACIONES DE CRÉDITO
       {
-        path: 'aprobaciones-credito',
+        path: 'solicitudes-credito/registros',
         loadComponent: () =>
           import('./features/credito/pages/components/solicitud-credito-lista/solicitud-credito-lista.component')
             .then(m => m.SolicitudCreditoListaComponent),
         canActivate: [permissionGuard],
         data: {
-          permission: '/aprobaciones-credito',
+          permission: 'solicitudes-credito/registros',
           action: 'view',
-            tableFilterKey: 'aprobaciones-credito-lista',
+          modo: 'registros',
+          tableFilterKey: 'solicitudes-credito-lista',
           tableFilterEnter: true
         },
-         providers: [JMartMassiveValidationService]
+        providers: [JMartMassiveValidationService]
       },
-
+      {
+        path: 'solicitudes-credito/aprobaciones',
+        loadComponent: () =>
+          import('./features/credito/pages/components/solicitud-credito-lista/solicitud-credito-lista.component')
+            .then(m => m.SolicitudCreditoListaComponent),
+        canActivate: [permissionGuard],
+        data: {
+          permission: '/solicitudes-credito/aprobaciones',
+          action: 'view',
+          modo: 'aprobaciones',
+          tableFilterKey: 'aprobaciones-credito-lista',
+          tableFilterEnter: true
+        },
+        providers: [JMartMassiveValidationService]
+      },
 
 
 

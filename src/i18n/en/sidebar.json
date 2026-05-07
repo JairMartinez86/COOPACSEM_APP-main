@@ -15,16 +15,14 @@
       "account": "Account",
       "activity": "Activity",
       "rolesPermissions": "Roles and Permissions",
-
       "partnerPanel": "Member Administration",
       "partner": "Member",
       "saving": "Savings",
       "saverList": "My Savings",
       "estadoCuentaList": "Account statement",
-      "aprobacionCredito": "Requests and Approvals",
-
+      "registrosSolicitudesCredito": "Credit Application Records",
+      "aprobacionCredito": "Credit Approvals",
       "supplier": "Supplier",
-
       "emptyPanel": "Empty",
       "empty": "Empty"
     }
