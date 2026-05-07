@@ -7,7 +7,8 @@
             <div>
                 <h1 class="page-title mb-1">
 
-                    <i class="text-success" ngClass="{{modo ==='registros' ? 'fa-regular fa-list' : 'fa-duotone fa-solid fa-file-signature' }}"></i>
+                    <i class="text-success"
+                        ngClass="{{modo ==='registros' ? 'fa-regular fa-list' : 'fa-duotone fa-solid fa-file-signature' }}"></i>
 
                     {{
                     (esModoAprobacion
@@ -554,9 +555,8 @@
 
                         <div class="step-progress position-relative">
 
-                            <!-- 🔥 LINEA DINÁMICA -->
-                            <div class="step-progress-colored-line" [ngClass]="getFlowLineClass()"
-                                [style.width.%]="getFlowProgress(solicitudFlujoSeleccionada)">
+                            <!-- LINEA -->
+                            <div class="step-progress-colored-line" [ngClass]="getFlowLineClass()">
                             </div>
 
                             <!-- PASOS -->
@@ -566,25 +566,43 @@
                                 [class.completed-danger]="isStepRejected(i)"
                                 [class.active]="isStepActualPendiente(ap, i)">
 
+                                <!-- CIRCULO -->
                                 <div class="step-progress-marker">
-                                    <i class="bi" [ngClass]="getStepProgressIcon(ap, i)"></i>
-                                </div>
 
+                                    @if (isStepCompleted(i) || isStepRejected(i)) {
+
+                                    {{ i + 1 }}
+
+                                    } @else {
+
+                                    <i class="bi" [ngClass]="getStepProgressIcon(ap, i)">
+                                    </i>
+
+                                    }
+
+                                </div>
+                                <!-- NOMBRE -->
                                 <span class="step-progress-label">
                                     {{ ap.nombre }}
                                 </span>
 
-                                <div class="small mt-1">
+                                <!-- ESTADO -->
+                                <div class="small mt-2">
                                     <span class="badge" [ngClass]="aprobacionBadgeClass(ap.estado)">
                                         {{ getEstadoAprobacionTexto(ap.estado) }}
                                     </span>
                                 </div>
 
+                                <!-- FECHA -->
                                 <div class="small text-muted mt-1">
                                     @if (ap.fecha) {
+
                                     {{ formatDateTime(ap.fecha) }}
+
                                     } @else {
+
                                     {{ 'solicitudCreditoLista.status.pendienteRevision' | translate }}
+
                                     }
                                 </div>
 

@@ -124,48 +124,146 @@
 
 .step-progress {
   position: relative;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding-top: 20px;
+
+  min-height: 130px;
 }
 
+
+/* LINEA COMPLETA */
 .step-progress-colored-line {
   position: absolute;
+
   left: 0;
-  top: 54px;
+  right: 0;
+
+  top: 36px;
+
   height: 3px;
-  z-index: 1;
-  transition: width 0.25s ease;
+
+  z-index: 0;
+
   border-radius: 999px;
+
+  transition:
+    background-color .25s ease,
+    width .25s ease;
 }
 
-.step-line-success { background-color: #20c997 !important; }
-.step-line-warning { background-color: #ffc107 !important; }
-.step-line-danger  { background-color: #dc3545 !important; }
-.step-line-primary { background-color: #0d6efd !important; }
-.step-line-secondary { background-color: #6c757d !important; }
+/* COLORES LINEA */
+.step-line-success {
+  background-color: #20c997 !important;
+}
 
+.step-line-warning {
+  background-color: #ffc107 !important;
+}
+
+.step-line-danger {
+  background-color: #dc3545 !important;
+}
+
+.step-line-primary {
+  background-color: #0d6efd !important;
+}
+
+.step-line-secondary {
+  background-color: #6c757d !important;
+}
+
+/* ITEMS */
 .step-progress-item {
   position: relative;
+
   z-index: 2;
+
+  flex: 1;
+
+  text-align: center;
 }
 
+/* CIRCULO */
+.step-progress-marker {
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff;
+
+  border: 2px solid rgba(148, 163, 184, 0.45);
+
+  color: #64748b;
+
+  font-size: 14px;
+
+  transition: all .2s ease;
+}
+
+/* LABEL */
+.step-progress-label {
+  display: block;
+
+  margin-top: 10px;
+
+  font-size: .82rem;
+  font-weight: 600;
+
+  color: #475569;
+}
+
+/* COMPLETADO */
 .step-progress-item.completed .step-progress-marker {
   background-color: #20c997 !important;
   border-color: #20c997 !important;
   color: #fff !important;
 }
 
+/* RECHAZADO */
 .step-progress-item.completed-danger .step-progress-marker {
   background-color: #dc3545 !important;
   border-color: #dc3545 !important;
   color: #fff !important;
 }
 
+/* ACTIVO */
 .step-progress-item.active .step-progress-marker {
   background-color: #ffc107 !important;
   border-color: #ffc107 !important;
   color: #fff !important;
+
+  box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.2);
 }
 
-.step-progress-item .step-progress-marker {
-  background-color: transparent;
-  border-color: rgba(148, 163, 184, 0.45);
+/* FECHAS */
+.step-progress-item .small.text-muted {
+  font-size: .72rem;
+}
+
+/* BADGES */
+.step-progress-item .badge {
+  font-size: .68rem;
+}
+
+.step-progress-marker {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+.step-progress::before,
+.step-progress::after,
+.step-progress-item::before,
+.step-progress-item::after {
+  content: none !important;
+  display: none !important;
 }
