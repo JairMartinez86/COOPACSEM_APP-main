@@ -1,4 +1,4 @@
-@import '@jairmartinez86/jmartinez-validator/styles/massive-forms';
+@use '../node_modules/@jairmartinez86/jmartinez-validator/styles/massive-forms.scss';
 
 body.modal-open {
   overflow: hidden;
