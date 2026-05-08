@@ -456,14 +456,14 @@
 
                                         @if (puedeMostrarAprobar(row) && modo === 'aprobaciones') {
 
-                                        @if(fechaServidor >= row.fechaInicioPago)
-                                        {
+                                        <!--@if(fechaServidor >= row.fechaInicioPago)-->
+                                        <!--{-->
                                         <button type="button" class="btn btn-sm btn-success"
                                             (click)="$event.stopPropagation(); abrirModalAccion(row, 'aprobar')">
                                             {{ 'solicitudCreditoLista.actions.aprobar' | translate }}
                                         </button>
 
-                                        }
+                                        <!--}-->
 
                                         <button type="button" class="btn btn-sm btn-outline-danger"
                                             (click)="$event.stopPropagation(); abrirModalAccion(row, 'rechazar')">
