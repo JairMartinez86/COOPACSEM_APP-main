@@ -35,17 +35,11 @@
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
             "security": {
               "allowedHosts": [
                 "*.use.devtunnels.ms"
               ]
-            },
-            "ssr": {
-              "entry": "src/server.ts"
-            },
-            "prerender": false
+            }
           },
           "configurations": {
             "production": {
