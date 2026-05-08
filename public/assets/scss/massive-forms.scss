@@ -1,0 +1,438 @@
+/* =========================================
+   NGX MASSIVE FORMS - VALIDATION UI
+   ========================================= */
+
+.mf-field {
+  display: block;
+  position: relative;
+  margin-bottom: 18px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* =========================
+   LABEL
+   ========================= */
+
+.mf-field label,
+.mf-field .form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  position: relative;
+}
+
+.mf-label-text {
+  display: inline-block;
+  position: relative;
+}
+
+/*.mf-field .form-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}*/
+
+.mf-field .form-label span {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.mf-field .form-label a {
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  color: #93c5fd;
+  cursor: pointer;
+}
+
+.mf-field .form-label a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   INPUT BASE
+   ========================= */
+
+.mf-field input,
+.mf-field textarea,
+.mf-field select {
+  width: 100%;
+  padding: 6px 36px 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+  box-sizing: border-box;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 18px 18px !important;
+}
+
+/* =========================
+   ANCLAS / WRAPPERS
+   ========================= */
+
+.mf-input-anchor {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: visible !important;
+}
+
+.mf-field .input-group,
+.mf-field .pw-wrap {
+  position: relative;
+  overflow: visible !important;
+}
+
+.mf-field .input-group > .form-control,
+.mf-field .input-group > .btn,
+.mf-field .pw-wrap > .form-control,
+.mf-field .pw-wrap > .btn {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   STATES
+   ========================= */
+
+.mf-neutral input,
+.mf-neutral textarea,
+.mf-neutral select {
+  border-color: #334155;
+  box-shadow: none;
+  background-image: none !important;
+}
+
+.mf-valid input,
+.mf-valid textarea,
+.mf-valid select {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1'/%3e%3c/svg%3e") !important;
+}
+
+.mf-invalid input,
+.mf-invalid textarea,
+.mf-invalid select {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e") !important;
+}
+
+.mf-no-icons input,
+.mf-no-icons textarea,
+.mf-no-icons select {
+  background-image: none !important;
+}
+
+/* =========================
+   INLINE ERROR
+   ========================= */
+
+.mf-field .mf-msg {
+  display: none;
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.mf-invalid .mf-msg {
+  color: #ef4444;
+}
+
+/* =========================
+   TOOLTIP VALIDACIÓN
+   ========================= */
+
+.mf-tooltip-on .mf-tooltip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: auto;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 1100;
+  margin-top: 0 !important;
+}
+
+/* flecha base del tooltip de validación */
+.mf-tooltip-on .mf-tooltip::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 14px;
+  border: 7px solid transparent;
+  border-bottom-color: #24324a;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .15s ease, visibility .15s ease;
+  z-index: 1002;
+}
+
+.mf-tooltip-on .mf-tooltip .mf-tipbox {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.3;
+  background: #24324a;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .08);
+  width: max-content;
+  min-width: 220px;
+  max-width: min(280px, calc(100vw - 24px));
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, .25);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .15s ease, visibility .15s ease;
+  z-index: 1001;
+  margin: 0;
+}
+
+.mf-tooltip-on .mf-tooltip .mf-tiplist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mf-tooltip-on .mf-tooltip .mf-tiplist li {
+  position: relative;
+  padding: 2px 0 2px 22px;
+  margin: 0;
+  min-height: 16px;
+  list-style: none;
+}
+
+.mf-tooltip-on .mf-tooltip .mf-tiplist li + li {
+  margin-top: 4px;
+}
+
+.mf-tooltip-on .mf-tooltip .mf-tiplist li::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px 14px;
+}
+
+.mf-tooltip-on .mf-tooltip .mf-tiplist li.mf-bad::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ef4444' viewBox='0 0 16 16'%3E%3Cpath d='M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 1 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 0 1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E");
+}
+
+.mf-tooltip-on .mf-tooltip .mf-tiplist li.mf-ok::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%2322c55e' viewBox='0 0 16 16'%3E%3Cpath d='M13.78 4.22a.75.75 0 0 1 0 1.06l-6.5 6.5a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l2.47 2.47 5.97-5.97a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E");
+}
+
+/* iconos custom reales */
+.mf-tooltip-on .mf-tooltip .mf-tiplist li.mf-has-custom-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 0;
+}
+
+.mf-tooltip-on .mf-tooltip .mf-tiplist li.mf-has-custom-icon::before {
+  display: none !important;
+}
+
+.mf-inline-icon {
+  font-size: 14px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14px;
+}
+
+.mf-invalid.mf-tooltip-on.mf-show-tip .mf-tooltip::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mf-invalid.mf-tooltip-on.mf-show-tip .mf-tooltip .mf-tipbox {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =========================
+   TOOLTIP HELP DEL LABEL
+   ========================= */
+
+.mf-help {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+}
+
+.mf-helpbox {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  min-width: 220px;
+  max-width: min(320px, calc(100vw - 24px));
+  padding: 10px 12px 10px 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  background: #24324a;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, .25);
+  font-size: 10px;
+  line-height: 1.3;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  z-index: 1200;
+}
+
+/* flecha del tooltip informativo */
+.mf-helpbox::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 12px;
+  transform: rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: #24324a;
+}
+
+.mf-helpbox::before {
+  content: "i";
+  position: absolute;
+  left: 12px;
+  top: 9px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: #3b82f6;
+}
+
+.mf-help-info::before { content: "i"; background: #3b82f6; }
+.mf-help-help::before { content: "?"; background: #3b82f6; }
+.mf-help-warn::before { content: "!"; background: #f59e0b; }
+.mf-help-ok::before { content: "✓"; background: #22c55e; }
+.mf-help-error::before { content: "×"; background: #ef4444; }
+.mf-help-secure::before { content: "🔒"; background: #6366f1; font-size: 10px; }
+.mf-help-tip::before { content: "💡"; background: #0ea5e9; font-size: 10px; }
+.mf-help-note::before { content: "•"; background: #64748b; }
+
+/* icono custom real para help */
+.mf-helpbox.mf-help-custom-icon {
+  padding-left: 36px;
+}
+
+.mf-helpbox.mf-help-custom-icon::before {
+  display: none !important;
+}
+
+.mf-help-inline-icon {
+  position: absolute;
+  left: 12px;
+  top: 9px;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* =========================
+   MODAL / ALERT HTML
+   ========================= */
+
+.mf-errors {
+  text-align: left;
+}
+
+.mf-error-group {
+  margin-bottom: 12px;
+}
+
+.mf-error-group:last-child {
+  margin-bottom: 0;
+}
+
+.mf-error-group-title {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #111827;
+}
+
+.mf-modal-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mf-modal-list li {
+  position: relative;
+  padding: 2px 0 2px 22px;
+  margin: 0;
+  min-height: 16px;
+  list-style: none;
+  color: #111827;
+}
+
+.mf-modal-list li + li {
+  margin-top: 4px;
+}
+
+.mf-modal-list li::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px 14px;
+}
+
+.mf-modal-list li.mf-bad::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ef4444' viewBox='0 0 16 16'%3E%3Cpath d='M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 1 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 0 1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E");
+}
+
+/* =========================
+   ANIMATION
+   ========================= */
+
+@keyframes mfFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
