@@ -271,10 +271,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
   get planPreview(): PlanPagoItem[] {
     if (this.debeUsarPlanGuardado) {
-      return this.planPagos; // 🔥 USA EL PLAN GUARDADO
+      return this.planPagos; 
     }
 
-    return this.generarPlanPagos(); // 🔥 SOLO EN BORRADOR
+    return this.generarPlanPagos(); 
   }
 
   get cuotaQuincenal(): number {
