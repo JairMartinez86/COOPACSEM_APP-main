@@ -21,6 +21,7 @@ interface ActionItem {
   icon: string;
   titleKey: string;
   order: number;
+  class?: string;
 }
 
 @Component({
@@ -65,14 +66,20 @@ export class SolicitudCreditoListSocioComponent implements OnInit, OnDestroy {
   totalRecords = 0;
 
   readonly pageSizeOptions = [10, 20, 50, 100];
-
-  actions: ActionItem[] = [
-    {
-      icon: 'fa-solid fa-handshake',
-      titleKey: 'solicitudCreditoListSocio.actions.newRequest',
-      order: 1
-    }
-  ];
+actions: ActionItem[] = [
+  {
+    icon: 'fa-solid fa-handshake',
+    titleKey: 'solicitudCreditoListSocio.actions.newRequest',
+    order: 1,
+    class: 'is-success'
+  },
+  {
+      icon: 'bi bi-cash-stack',
+    titleKey: 'solicitudCreditoListSocio.actions.refinancing',
+    order: 2,
+    class: 'is-info'
+  }
+];
 
   ngOnInit(): void {
     this.setBreadcrumbs();
@@ -228,6 +235,8 @@ export class SolicitudCreditoListSocioComponent implements OnInit, OnDestroy {
 
   onActionClick(action: ActionItem): void {
     if (!this.selectedSocio) {
+
+
       this.notify.show(
         this.translate.instant('solicitudCreditoListSocio.messages.selectSocio'),
         '',
@@ -236,10 +245,24 @@ export class SolicitudCreditoListSocioComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.router.navigate([
-      '/solicitud-credito/new',
-      this.selectedSocio.id
-    ]);
+
+    if (action.order === 1) {
+      this.router.navigate([
+        '/solicitud-credito/new',
+        this.selectedSocio.id, 
+        "credito"
+      ]);
+    }
+
+     if (action.order === 2) {
+      this.router.navigate([
+        '/solicitud-credito/new',
+        this.selectedSocio.id,
+        "refinanciamiento"
+      ]);
+    }
+
+
   }
 
   get orderedActions(): ActionItem[] {

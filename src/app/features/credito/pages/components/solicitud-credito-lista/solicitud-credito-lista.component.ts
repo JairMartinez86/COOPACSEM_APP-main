@@ -178,14 +178,14 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
 
 
     private setBreadcrumbs(): void {
-       const key = this.esModoAprobacion
-        ? 'solicitudCreditoLista.breadcrumbs'
-        : 'solicitudCreditoLista.breadcrumbs2';
+        const key = this.esModoAprobacion
+            ? 'solicitudCreditoLista.breadcrumbs'
+            : 'solicitudCreditoLista.breadcrumbs2';
 
-    const value = this.translate.instant(key);
+        const value = this.translate.instant(key);
 
 
-        this.breadcrumbs =  value
+        this.breadcrumbs = value
 
     }
 
@@ -300,20 +300,37 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     }
 
     verDetalle(row: SolicitudCreditoListaItem): void {
+
+        const tipoSolicitud =
+            row.tipoCredito?.toLowerCase().includes('refinanciamiento')
+                ? 'refinanciamiento'
+                : 'credito';
+
         this.router.navigate([
             '/solicitud-credito/view',
             row.socioId,
-            row.id
+            row.id,
+            tipoSolicitud
         ]);
     }
 
+
+
     editar(row: SolicitudCreditoListaItem): void {
+
+        const tipoSolicitud =
+            row.tipoCredito?.toLowerCase().includes('refinanciamiento')
+                ? 'refinanciamiento'
+                : 'credito';
+
         this.router.navigate([
             '/solicitud-credito/edit',
             row.socioId,
-            row.id
+            row.id,
+            tipoSolicitud
         ]);
     }
+
 
     seleccionarSolicitudFlujo(row: SolicitudCreditoListaItem): void {
         this.solicitudFlujoSeleccionada = row;

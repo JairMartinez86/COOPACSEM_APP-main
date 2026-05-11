@@ -324,7 +324,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'solicitud-credito/new/:socioId',
+        path: 'solicitud-credito/new/:socioId/:tipo',
         loadComponent: () =>
           import('./features/credito/pages/components/solicitud-credito/solicitud-credito.component')
             .then(m => m.SolicitudCreditoComponent),
@@ -339,7 +339,7 @@ export const routes: Routes = [
 
 
       {
-        path: 'solicitud-credito/view/:socioId/:solicitudId',
+        path: 'solicitud-credito/view/:socioId/:solicitudId/:tipo',
         loadComponent: () =>
           import('./features/credito/pages/components/solicitud-credito/solicitud-credito.component')
             .then(m => m.SolicitudCreditoComponent),
@@ -350,7 +350,7 @@ export const routes: Routes = [
         providers: [JMartMassiveValidationService]
       },
       {
-        path: 'solicitud-credito/edit/:socioId/:solicitudId',
+        path: 'solicitud-credito/edit/:socioId/:solicitudId/:tipo',
         loadComponent: () =>
           import('./features/credito/pages/components/solicitud-credito/solicitud-credito.component')
             .then(m => m.SolicitudCreditoComponent),

@@ -124,7 +124,8 @@
       "enviarAprobacion": "Enviar Aprobación",
       "imprimir": "Imprimir",
       "cancelar": "Cancelar",
-      "ajustarMaximo": "Ajustar al máximo"
+      "ajustarMaximo": "Ajustar al máximo",
+      "selectLoansToRefinance": "Seleccionar préstamos a refinanciar"
     },
     "messages": {
       "amountExceedsLimitTitle": "Excede el límite",
@@ -149,6 +150,29 @@
       "providerRequired": "Seleccione el proveedor",
       "planNotGenerated": "No se pudo generar el plan de pagos",
       "atLeastOneObservationRequired": "Ingrese al menos una observación"
+    },
+     "refinancing": {
+      "modal": {
+        "title": "Créditos pendientes de pago",
+        "subtitle": "Seleccione los préstamos que desea refinanciar",
+        "totalSelected": "Total refinanciamiento",
+        "totalSelectedSubtitle": "Monto calculado automáticamente según selección"
+      },
+      "fields": {
+        "noCredito": "No. crédito",
+        "saldoPendiente": "Saldo pendiente",
+        "principalPendiente": "Principal pendiente",
+        "interesPendiente": "Interés pendiente",
+        "saldoVencido": "Saldo vencido",
+        "porcentajePagado": "% pagado"
+      },
+      "messages": {
+        "noLoansAvailable": "No existen créditos disponibles para refinanciar"
+      },
+      "actions": {
+        "confirmSelection": "Confirmar selección"
+         
+      }
     },
     "exportModal": {
       "title": "Exportar solicitud",

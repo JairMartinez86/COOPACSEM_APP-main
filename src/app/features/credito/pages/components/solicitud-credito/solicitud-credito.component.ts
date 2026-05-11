@@ -19,6 +19,7 @@ import { AppConfigService } from '../../../../../core/services/app-config.servic
 import { Breadcrumb } from '../../../../../shared/components/breadcrumb/breadcrumb';
 import { SolicitudCreditoService } from '../../../services/solicitud-credito.service';
 import {
+  CreditoPendienteRefin,
   PlanPagoItem,
   SocioCreditoResumen,
   SolicitudCreditoForm,
@@ -80,6 +81,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   montoTouched = false;
 
   estadoSolicitud = 'EN_EVALUACION';
+  tipoSolicitud: 'credito' | 'refinanciamiento' = 'credito';
 
   socio: SocioCreditoResumen | null = null;
 
@@ -93,6 +95,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   planPagos: PlanPagoItem[] = [];
   mostrarModalPlan = false;
   modalExportacionOpen = false;
+
+
+  creditosPendientesRefin: CreditoPendienteRefin[] = [];
+  mostrarModalRefinanciamiento = false;
 
   requiereProveedor = false;
 
@@ -129,13 +135,13 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     cuotaCoopacsem: 0
   };
 
-flujoAprobacion = [
-  { orden: 1, labelKey: 'solicitudCredito.approval.comiteCredito1', estado: 'Pendiente', usuario: '', fecha: null },
-  { orden: 2, labelKey: 'solicitudCredito.approval.comiteCredito2', estado: 'Pendiente', usuario: '', fecha: null },
-  { orden: 3, labelKey: 'solicitudCredito.approval.comiteVigilancia', estado: 'Pendiente', usuario: '', fecha: null },
-  { orden: 4, labelKey: 'solicitudCredito.approval.vicepresidente', estado: 'Pendiente', usuario: '', fecha: null },
-  { orden: 5, labelKey: 'solicitudCredito.approval.presidente', estado: 'Pendiente', usuario: '', fecha: null }
-];
+  flujoAprobacion = [
+    { orden: 1, labelKey: 'solicitudCredito.approval.comiteCredito1', estado: 'Pendiente', usuario: '', fecha: null },
+    { orden: 2, labelKey: 'solicitudCredito.approval.comiteCredito2', estado: 'Pendiente', usuario: '', fecha: null },
+    { orden: 3, labelKey: 'solicitudCredito.approval.comiteVigilancia', estado: 'Pendiente', usuario: '', fecha: null },
+    { orden: 4, labelKey: 'solicitudCredito.approval.vicepresidente', estado: 'Pendiente', usuario: '', fecha: null },
+    { orden: 5, labelKey: 'solicitudCredito.approval.presidente', estado: 'Pendiente', usuario: '', fecha: null }
+  ];
 
   cuotaDisponibleApi = 0;
   nivelEndeudamientoApi = 0;
@@ -164,6 +170,9 @@ flujoAprobacion = [
       this.route.snapshot.paramMap.get('id') ??
       '';
 
+    this.tipoSolicitud =
+      (this.route.snapshot.paramMap.get('tipo') as 'credito' | 'refinanciamiento')
+      ?? 'credito';
 
 
     this.solicitudId = this.route.snapshot.paramMap.get('solicitudId') ?? '';
@@ -277,9 +286,12 @@ flujoAprobacion = [
   }
 
   get cuotaNuevoCredito(): number {
+    const monto = this.toNumber(this.solicitud.montoSolicitado);
+
+    if (monto <= 0) return 0;
+
     return this.cuotaQuincenal;
   }
-
   get interesesTotales(): number {
     const plan = this.planPreview;
 
@@ -293,7 +305,11 @@ flujoAprobacion = [
   }
 
   get totalDeduccionesProyectadas(): number {
-    return this.totalDeducciones + this.cuotaNuevoCredito;
+    if (!this.esRefinanciamiento) {
+      return this.totalDeducciones + this.cuotaNuevoCredito;
+    }
+
+    return this.totalDeducciones - this.cuotaActualRefinanciada + this.cuotaNuevoCredito;
   }
 
   get nivelEndeudamientoProyectado(): number {
@@ -301,22 +317,56 @@ flujoAprobacion = [
 
     if (salario <= 0) return 0;
 
-    return (this.totalDeduccionesProyectadas / salario) * 100;
+    const totalDeducciones = Number(this.totalDeducciones ?? 0);
+    const cuotaNueva = Number(this.cuotaNuevoCredito ?? 0);
+
+    const cuotaRefinanciada = this.esRefinanciamiento
+      ? this.cuotaActualRefinanciada
+      : 0;
+
+    return ((totalDeducciones - cuotaRefinanciada + cuotaNueva) / salario) * 100;
   }
 
   get capacidadPagoPorcentaje(): number {
-    if (this.cuotaDisponible <= 0) return 100;
+    const monto = this.toNumber(this.solicitud.montoSolicitado);
 
-    return (this.cuotaQuincenal / this.cuotaDisponible) * 100;
+    if (monto <= 0) return 0;
+
+    const disponible = this.esRefinanciamiento
+      ? this.cuotaDisponibleRefinanciamiento
+      : this.cuotaDisponible;
+
+    if (disponible <= 0) return 0;
+
+    return (this.cuotaQuincenal / disponible) * 100;
   }
-
   get montoExcedeLimite(): boolean {
     const monto = this.toNumber(this.solicitud.montoSolicitado);
 
     if (monto <= 0) return false;
 
-    return monto > Number((this.socio as any)?.limiteCreditoDisponible ?? 0);
+    const limite = this.esRefinanciamiento
+      ? this.limiteCreditoRefinanciado
+      : Number((this.socio as any)?.limiteCreditoDisponible ?? 0);
+
+    return monto > limite;
   }
+
+  get montoMenorMinimoRegla(): boolean {
+    const monto = this.toNumber(this.solicitud.montoSolicitado);
+
+    if (monto <= 0) return false;
+
+    const reglasAplicables = this.reglasCredito
+      .filter(x => this.reglaAplicaPorTipoYProposito(x));
+
+    if (reglasAplicables.length === 0) return false;
+
+    const minimo = Math.min(...reglasAplicables.map(x => Number(x.montoDesde ?? 0)));
+
+    return monto < minimo;
+  }
+
 
   get montoInvalidoPorTipoCredito(): boolean {
     const monto = this.toNumber(this.solicitud.montoSolicitado);
@@ -341,13 +391,29 @@ flujoAprobacion = [
 
     return exceso > 0 ? exceso : 0;
   }
-
   get cuotaExcedeCapacidad(): boolean {
     const monto = this.toNumber(this.solicitud.montoSolicitado);
 
     if (monto <= 0) return false;
 
-    return this.cuotaQuincenal > this.cuotaDisponible;
+    const cuotaDisponible = this.esRefinanciamiento
+      ? this.cuotaDisponibleRefinanciamiento
+      : this.cuotaDisponible;
+
+    return this.cuotaQuincenal > cuotaDisponible;
+  }
+
+  get cuotaDisponibleRefinanciamiento(): number {
+    return this.cuotaDisponible + this.cuotaActualRefinanciada;
+  }
+
+
+  get cuotaActualRefinanciada(): number {
+    return this.creditosPendientesRefin
+      .filter(x => x.seleccionado)
+      .reduce((sum, x: any) => {
+        return sum + Number(x.cuotaActual ?? x.cuota ?? 0);
+      }, 0);
   }
 
   get mesNoPermitidoPorRegla(): boolean {
@@ -382,15 +448,6 @@ flujoAprobacion = [
     return !this.toBoolean((this.socio as any)?.tieneCreditosVigentes ?? false);
   }
 
-  get noCumplePorcentajePrincipalPagado(): boolean {
-    const porcMin = this.porcMinPrincipalPagadoTipo;
-
-    if (porcMin <= 0) return false;
-
-    const porcentaje = Number((this.socio as any)?.porcentajePrincipalPagado ?? 0);
-
-    return porcentaje < porcMin;
-  }
 
   get plazoExcedeMaximoRegla(): boolean {
     if (!this.reglaCreditoActual) return false;
@@ -405,10 +462,10 @@ flujoAprobacion = [
 
   get esViable(): boolean {
     return !this.montoExcedeLimite &&
+      !this.montoMenorMinimoRegla &&
       !this.cuotaExcedeCapacidad &&
       !this.montoInvalidoPorTipoCredito &&
       !this.mesNoPermitidoPorRegla &&
-      !this.noCumplePorcentajePrincipalPagado &&
       !this.noTieneCreditosVigentes &&
       !this.plazoExcedeMaximoRegla;
   }
@@ -440,7 +497,7 @@ flujoAprobacion = [
 
     this.loading = true;
 
-    this.service.getNuevo(this.socioId)
+    this.service.getNuevo(this.socioId, this.tipoSolicitud)
       .pipe(finalize(() => {
         this.loading = false;
         this.sincronizarValoresValidacion();
@@ -463,7 +520,6 @@ flujoAprobacion = [
             ahorrosDisponibles: Number(socio?.ahorrosDisponibles ?? socio?.ahorroDisponible ?? 0),
             creditosActivos: Number(socio?.creditosActivos ?? 0),
             limiteCreditoDisponible: Number(socio?.limiteCreditoDisponible ?? 0),
-            porcentajePrincipalPagado: Number(socio?.porcentajePrincipalPagado ?? 0),
             tieneCreditosVigentes: this.toBoolean(socio?.tieneCreditosVigentes ?? false)
           } as any;
 
@@ -519,6 +575,23 @@ flujoAprobacion = [
             cuotaCoopacsem: Number(data?.deducciones?.cuotaCoopacsem ?? 0)
           };
 
+
+          this.creditosPendientesRefin = (data?.creditosPendientes ?? []).map((x: any) => ({
+            noCredito: String(x?.noCredito ?? ''),
+            saldoPendiente: Number(x?.saldoPendiente ?? 0),
+            principalPendiente: Number(x?.principalPendiente ?? 0),
+            interesPendiente: Number(x?.interesPendiente ?? 0),
+            saldoVencido: Number(x?.saldoVencido ?? 0),
+            principalVencido: Number(x?.principalVencido ?? 0),
+            interesVencido: Number(x?.interesVencido ?? 0),
+            montoPendientePago: Number(x?.montoPendientePago ?? 0),
+            porcentajePagado: Number(x?.porcentajePagado ?? 0),
+            cuotaActual: Number(x?.cuotaActual ?? 0),
+            seleccionado: false
+          }));
+
+
+
           this.totalDeduccionesApi = Number(data?.deducciones?.totalDeducciones ?? 0);
           this.cuotaDisponibleApi = Number(data?.deducciones?.cuotaDisponible ?? 0);
           this.nivelEndeudamientoApi = Number(data?.deducciones?.nivelEndeudamiento ?? 0);
@@ -544,6 +617,27 @@ flujoAprobacion = [
             this.solicitud.proveedorId = '';
             this.reglaCreditoActual = null;
           }
+
+
+          if (this.tiposCredito.length > 0) {
+            this.solicitud.tipoCredito = this.tiposCredito[0].id;
+            this.onTipoCreditoChange();
+          } else {
+            this.propositosCreditoFiltrados = [];
+            this.requiereProveedor = false;
+            this.solicitud.tipoCredito = '';
+            this.solicitud.proposito = '';
+            this.solicitud.proveedorId = '';
+            this.reglaCreditoActual = null;
+          }
+
+          if (this.esRefinanciamiento) {
+            this.solicitud.montoSolicitado = 0;
+            this.planPagos = [];
+            this.mostrarModalRefinanciamiento = true;
+            this.sincronizarValoresValidacion();
+          }
+
 
         },
         error: (err: any) => {
@@ -574,6 +668,22 @@ flujoAprobacion = [
 
           this.cargarDatosBaseDesdeResponse(data);
 
+          this.creditosPendientesRefin = (data?.creditosPendientes ?? []).map((x: any) => ({
+            noCredito: String(x?.noCredito ?? ''),
+            saldoPendiente: Number(x?.saldoPendiente ?? 0),
+            principalPendiente: Number(x?.principalPendiente ?? 0),
+            interesPendiente: Number(x?.interesPendiente ?? 0),
+            saldoVencido: Number(x?.saldoVencido ?? 0),
+            principalVencido: Number(x?.principalVencido ?? 0),
+            interesVencido: Number(x?.interesVencido ?? 0),
+            montoPendientePago: Number(x?.montoPendientePago ?? 0),
+            cuotaActual: Number(x?.cuotaActual ?? 0),
+            porcentajePagado: Number(x?.porcentajePagado ?? 0),
+            seleccionado: this.toBoolean(x?.seleccionado ?? false)
+          }));
+
+
+
           const s = data?.solicitud ?? {};
 
           this.puedeEditarSolicitud = !!s.puedeEditar;
@@ -596,42 +706,42 @@ flujoAprobacion = [
 
 
           this.flujoAprobacion = [
-  {
-    orden: 1,
-    labelKey: 'solicitudCredito.approval.comiteCredito1',
-    estado: String(s.estadoComiteCredito1 ?? 'Pendiente'),
-    usuario: String(s.usuarioAutorizaComiteCredito1 ?? ''),
-    fecha: s.fechaAutorizaComiteCredito1 ?? null
-  },
-  {
-    orden: 2,
-    labelKey: 'solicitudCredito.approval.comiteCredito2',
-    estado: String(s.estadoComiteCredito2 ?? 'Pendiente'),
-    usuario: String(s.usuarioAutorizaComiteCredito2 ?? ''),
-    fecha: s.fechaAutorizaComiteCredito2 ?? null
-  },
-  {
-    orden: 3,
-    labelKey: 'solicitudCredito.approval.comiteVigilancia',
-    estado: String(s.estadoComiteVigilancia ?? 'Pendiente'),
-    usuario: String(s.usuarioAutorizaComiteVigilancia ?? ''),
-    fecha: s.fechaAutorizaComiteVigilancia ?? null
-  },
-  {
-    orden: 4,
-    labelKey: 'solicitudCredito.approval.vicepresidente',
-    estado: String(s.estadoVicepresidente ?? 'Pendiente'),
-    usuario: String(s.usuarioAutorizaVicepresidente ?? ''),
-    fecha: s.fechaAutorizaVicepresidente ?? null
-  },
-  {
-    orden: 5,
-    labelKey: 'solicitudCredito.approval.presidente',
-    estado: String(s.estadoPresidente ?? 'Pendiente'),
-    usuario: String(s.usuarioAutorizaPresidente ?? ''),
-    fecha: s.fechaAutorizaPresidente ?? null
-  }
-];
+            {
+              orden: 1,
+              labelKey: 'solicitudCredito.approval.comiteCredito1',
+              estado: String(s.estadoComiteCredito1 ?? 'Pendiente'),
+              usuario: String(s.usuarioAutorizaComiteCredito1 ?? ''),
+              fecha: s.fechaAutorizaComiteCredito1 ?? null
+            },
+            {
+              orden: 2,
+              labelKey: 'solicitudCredito.approval.comiteCredito2',
+              estado: String(s.estadoComiteCredito2 ?? 'Pendiente'),
+              usuario: String(s.usuarioAutorizaComiteCredito2 ?? ''),
+              fecha: s.fechaAutorizaComiteCredito2 ?? null
+            },
+            {
+              orden: 3,
+              labelKey: 'solicitudCredito.approval.comiteVigilancia',
+              estado: String(s.estadoComiteVigilancia ?? 'Pendiente'),
+              usuario: String(s.usuarioAutorizaComiteVigilancia ?? ''),
+              fecha: s.fechaAutorizaComiteVigilancia ?? null
+            },
+            {
+              orden: 4,
+              labelKey: 'solicitudCredito.approval.vicepresidente',
+              estado: String(s.estadoVicepresidente ?? 'Pendiente'),
+              usuario: String(s.usuarioAutorizaVicepresidente ?? ''),
+              fecha: s.fechaAutorizaVicepresidente ?? null
+            },
+            {
+              orden: 5,
+              labelKey: 'solicitudCredito.approval.presidente',
+              estado: String(s.estadoPresidente ?? 'Pendiente'),
+              usuario: String(s.usuarioAutorizaPresidente ?? ''),
+              fecha: s.fechaAutorizaPresidente ?? null
+            }
+          ];
 
 
 
@@ -672,7 +782,6 @@ flujoAprobacion = [
       ahorrosDisponibles: Number(socio?.ahorrosDisponibles ?? socio?.ahorroDisponible ?? 0),
       creditosActivos: Number(socio?.creditosActivos ?? 0),
       limiteCreditoDisponible: Number(socio?.limiteCreditoDisponible ?? 0),
-      porcentajePrincipalPagado: Number(socio?.porcentajePrincipalPagado ?? 0),
       tieneCreditosVigentes: this.toBoolean(socio?.tieneCreditosVigentes ?? false)
     } as any;
 
@@ -1079,7 +1188,6 @@ flujoAprobacion = [
       cuotaExcedeCapacidad: this.cuotaExcedeCapacidad,
       mesNoPermitidoPorRegla: this.mesNoPermitidoPorRegla,
       noTieneCreditosVigentes: this.noTieneCreditosVigentes,
-      noCumplePorcentajePrincipalPagado: this.noCumplePorcentajePrincipalPagado,
       plazoExcedeMaximoRegla: this.plazoExcedeMaximoRegla,
       planPagos: plan.map(x => ({
         noCuota: x.noCuota,
@@ -1089,7 +1197,18 @@ flujoAprobacion = [
         pagoPrincipal: x.pagoPrincipal,
         pagoInteres: x.pagoInteres,
         principalCancelado: x.principalCancelado
-      }))
+      })),
+      creditosRefinanciados: this.esRefinanciamiento
+        ? this.creditosPendientesRefin
+          .filter(x => x.seleccionado)
+          .map(x => ({
+            noCredito: x.noCredito,
+            saldoPendiente: x.saldoPendiente,
+            principalPendiente: x.principalPendiente,
+            interesPendiente: x.interesPendiente,
+            cuotaActual: x.cuotaActual ?? 0
+          }))
+        : []
     };
   }
 
@@ -1589,33 +1708,103 @@ flujoAprobacion = [
     window.URL.revokeObjectURL(url);
   }
 
-formatDateTime(value: string | Date | null | undefined): string {
-  if (!value) return '';
+  formatDateTime(value: string | Date | null | undefined): string {
+    if (!value) return '';
 
-  const settings = this.appConfigService.getCurrentSettings();
-  const format = settings?.dateFormat || 'dd/MM/yyyy';
+    const settings = this.appConfigService.getCurrentSettings();
+    const format = settings?.dateFormat || 'dd/MM/yyyy';
 
-  const d = new Date(value);
+    const d = new Date(value);
 
-  const fecha = this.formatDate(d, format);
-  const hora = d.toLocaleTimeString('es-NI', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  });
+    const fecha = this.formatDate(d, format);
+    const hora = d.toLocaleTimeString('es-NI', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
 
-  return `${fecha} ${hora}`;
-}
+    return `${fecha} ${hora}`;
+  }
 
-private formatDate(date: Date, format: string): string {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
+  private formatDate(date: Date, format: string): string {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
 
-  return format
-    .replace('dd', day)
-    .replace('MM', month)
-    .replace('yyyy', String(year));
-}
+    return format
+      .replace('dd', day)
+      .replace('MM', month)
+      .replace('yyyy', String(year));
+  }
+
+
+  get esRefinanciamiento(): boolean {
+    return this.tipoSolicitud === 'refinanciamiento';
+  }
+
+  get totalRefinanciar(): number {
+    return this.round2(
+      this.creditosPendientesRefin
+        .filter(x => x.seleccionado)
+        .reduce((sum, x) => sum + Number(x.principalPendiente ?? 0), 0)
+    );
+  }
+
+  toggleCreditoRefin(credito: CreditoPendienteRefin): void {
+    credito.seleccionado = !credito.seleccionado;
+
+    this.solicitud.montoSolicitado = this.totalRefinanciar;
+
+    this.aplicarReglaCreditoPorMonto(true);
+    this.sincronizarValoresValidacion();
+    this.engine.validateByIds(['MontoSolicitado', 'Plazo']);
+  }
+
+  confirmarRefinanciamiento(): void {
+    if (this.totalRefinanciar <= 0) {
+      this.notify.show('Debe seleccionar al menos un crédito para refinanciar.', '', 'warning');
+      return;
+    }
+
+    this.solicitud.montoSolicitado = this.totalRefinanciar;
+    this.mostrarModalRefinanciamiento = false;
+
+    this.aplicarReglaCreditoPorMonto(true);
+    this.sincronizarValoresValidacion();
+  }
+
+  abrirModalRefinanciamiento(): void {
+    if (!this.esRefinanciamiento) return;
+
+    this.mostrarModalRefinanciamiento = true;
+  }
+
+  get totalPrincipalRefinanciado(): number {
+    return this.creditosPendientesRefin
+      .filter(x => x.seleccionado)
+      .reduce((sum, x) => sum + Number(x.principalPendiente ?? 0), 0);
+  }
+
+  get limiteCreditoRefinanciado(): number {
+    const limiteBase = Number((this.socio as any)?.limiteCreditoDisponible ?? 0);
+
+    return limiteBase + this.totalPrincipalRefinanciado;
+  }
+
+
+  get cuotaDisponibleDespuesCredito(): number {
+
+    const disponibleBase = Number(this.cuotaDisponible ?? 0);
+
+    if (!this.esRefinanciamiento) {
+      return disponibleBase - this.cuotaQuincenal;
+    }
+
+    return (
+      disponibleBase
+      + this.cuotaActualRefinanciada
+      - this.cuotaQuincenal
+    );
+  }
 
 }

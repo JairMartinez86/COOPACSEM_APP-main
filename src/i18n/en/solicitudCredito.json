@@ -116,7 +116,8 @@
       "enviarAprobacion": "Send for Approval",
       "imprimir": "Print",
       "cancelar": "Cancel",
-      "ajustarMaximo": "Set to max"
+      "ajustarMaximo": "Set to max",
+      "selectLoansToRefinance": "Select loans to refinance"
     },
     "messages": {
       "notViable": "Request is not viable",
@@ -138,6 +139,29 @@
       "providerRequired": "Select the provider",
       "planNotGenerated": "The payment plan could not be generated",
       "atLeastOneObservationRequired": "Enter at least one observation"
+    },
+    "refinancing": {
+      "modal": {
+        "title": "Pending loans",
+        "subtitle": "Select the loans you want to refinance",
+        "totalSelected": "Total refinancing",
+        "totalSelectedSubtitle": "Amount automatically calculated from selection"
+      },
+      "fields": {
+        "noCredito": "Loan No.",
+        "saldoPendiente": "Pending balance",
+        "principalPendiente": "Pending principal",
+        "interesPendiente": "Pending interest",
+        "saldoVencido": "Past due balance",
+        "porcentajePagado": "Paid %"
+      },
+      "messages": {
+        "noLoansAvailable": "No loans available for refinancing"
+      },
+      "actions": {
+        "confirmSelection": "Confirm selection"
+        
+      }
     },
     "exportModal": {
       "title": "Export request",

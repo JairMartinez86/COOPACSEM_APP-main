@@ -45,7 +45,8 @@
       "selectSocio": "Debe seleccionar un socio"
     },
     "actions": {
-      "newRequest": "Nueva solicitud"
+      "newRequest": "Nueva solicitud",
+     "refinancing": "Refinanciamiento"
     },
     "side": {
       "quickActions": "Acciones rápidas",

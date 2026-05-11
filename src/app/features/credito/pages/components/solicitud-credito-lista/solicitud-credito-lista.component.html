@@ -371,7 +371,10 @@
                                 (click)="seleccionarSolicitudFlujo(row)">
 
                                 <td>
-                                    <strong>{{ row.documento }}</strong>
+                    
+                                     <strong>{{ row.documento || '-' }}</strong>
+                                    <div class="text-muted small">{{ row.noCredito || '-' }}</div>
+
                                 </td>
 
                                 <td>

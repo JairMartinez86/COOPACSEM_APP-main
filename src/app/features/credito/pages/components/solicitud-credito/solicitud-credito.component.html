@@ -31,7 +31,7 @@
         <div class="card-body">
           <div class="row g-4">
 
-            <div class="col-xl-2 col-lg-4 col-md-6">
+            <div class="col-xl-2 col-lg-4 col-md-6 mt-0">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-success fa-2x">
                   <i class="fa-duotone fa-solid fa-circle-user"></i>
@@ -43,7 +43,7 @@
               </div>
             </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-0">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-success fa-2x">
                   <i class="fa-duotone fa-solid fa-user-check"></i>
@@ -55,7 +55,7 @@
               </div>
             </div>
 
-            <div class="col-xl-2 col-lg-4 col-md-6">
+            <div class="col-xl-2 col-lg-4 col-md-6 mt-0">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-success fa-2x">
                   <i class="fa-duotone fa-solid fa-address-card"></i>
@@ -67,7 +67,7 @@
               </div>
             </div>
 
-            <div class="col-xl-2 col-lg-4 col-md-6">
+            <div class="col-xl-2 col-lg-4 col-md-6 mt-0">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-success fa-2x">
                   <i class="fa-duotone fa-solid fa-clipboard-check"></i>
@@ -86,7 +86,7 @@
               </div>
             </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-0">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-success fa-2x">
                   <i class="fa-duotone fa-solid fa-shield-check"></i>
@@ -104,11 +104,11 @@
               </div>
             </div>
 
-            <div class="col-12">
+            <div class="col-12 mt-0">
               <hr class="my-1">
             </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-0">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-warning fa-2x">
                   <i class="fa-duotone fa-solid fa-money-check-dollar"></i>
@@ -120,7 +120,7 @@
               </div>
             </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-0">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-primary fa-2x">
                   <i class="fa-duotone fa-solid fa-piggy-bank"></i>
@@ -132,7 +132,7 @@
               </div>
             </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-0">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-purple fa-2x">
                   <i class="fa-duotone fa-solid fa-credit-card"></i>
@@ -144,7 +144,7 @@
               </div>
             </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-0">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-success fa-2x">
                   <i class="fa-duotone fa-solid fa-shield-check"></i>
@@ -155,7 +155,16 @@
                     <i class="fa-duotone fa-solid fa-circle-info text-muted ms-1"></i>
                   </div>
 
-                  <strong>{{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }}</strong>
+                  <strong>
+                    {{ currency }}
+                    {{
+                    formatCurrency(
+                    esRefinanciamiento
+                    ? limiteCreditoRefinanciado
+                    : (socio?.limiteCreditoDisponible ?? 0)
+                    )
+                    }}
+                  </strong>
                 </div>
               </div>
             </div>
@@ -182,7 +191,7 @@
 
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-md-6 border-end">
+                    <div class="col-md-6 mt-0 border-end">
                       <div class="mb-3">
                         <div class="text-muted small">{{ 'solicitudCredito.fields.departamento' | translate }}</div>
                         <div>{{ laboral.departamento || '-' }}</div>
@@ -205,7 +214,7 @@
                       </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-6 mt-0">
                       <div class="text-muted small mb-2">
                         {{ 'solicitudCredito.fields.deduccionesMensuales' | translate }}
                       </div>
@@ -244,7 +253,7 @@
                     </div>
                   </div>
 
-                  <div class="border rounded p-2 mt-3">
+                  <div class="border rounded p-2 mt-0">
 
                     <div class="d-flex justify-content-between">
 
@@ -282,9 +291,12 @@
                           </small>
 
                           <span class="fw-bold"
-                            [ngClass]="cuotaDisponible - cuotaQuincenal < 0 ? 'text-danger' : 'text-success'">
+                            [ngClass]="cuotaDisponibleDespuesCredito < 0 ? 'text-danger' : 'text-success'">
+
                             {{ 'solicitudCredito.fields.afterCredit' | translate }}:
-                            {{ currency }} {{ formatCurrency(cuotaDisponible - cuotaQuincenal) }}
+
+                            {{ currency }}
+                            {{ formatCurrency(cuotaDisponibleDespuesCredito) }}
                           </span>
                         </div>
                       </div>
@@ -292,23 +304,23 @@
                     </div>
 
                   </div>
-                  
 
-                   <div class="col-md-12" error-notify="Observaciones" error-display="inline">
-                      <label for="Observaciones" class="form-label">
-                        {{ 'solicitudCredito.fields.observaciones' | translate }}
-                        <span class="text-danger">*</span>
-                      </label>
 
-                      <div class="input-group">
-             
+                  <div class="col-md-12 mt-0" error-notify="Observaciones" error-display="inline">
+                    <label for="Observaciones" class="form-label">
+                      {{ 'solicitudCredito.fields.observaciones' | translate }}
+                      <span class="text-danger">*</span>
+                    </label>
 
-                        <textarea #Observaciones rows="2" class="form-control text-end" id="Observaciones"
-                          name="Observaciones" [(ngModel)]="solicitud.Observaciones"
-                          engineSync="Observaciones"   required autoFocusNext [next]="saveButton" [disabled]="modo=='view'" ></textarea>
-                      </div>
+                    <div class="input-group">
+
+
+                      <textarea #Observaciones rows="2" class="form-control text-end" id="Observaciones"
+                        name="Observaciones" [(ngModel)]="solicitud.Observaciones" engineSync="Observaciones" required
+                        autoFocusNext [next]="saveButton" [disabled]="modo=='view'"></textarea>
                     </div>
-                    
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -327,7 +339,7 @@
                   <div class="row g-3">
 
                     <!-- TIPO CREDITO -->
-                    <div class="col-md-6" error-notify="TipoCredito" error-display="inline">
+                    <div class="col-md-6 mt-0" error-notify="TipoCredito" error-display="inline">
                       <label for="TipoCredito" class="form-label">
                         {{ 'solicitudCredito.fields.tipoCredito' | translate }}
                         <span class="text-danger">*</span>
@@ -355,7 +367,7 @@
                     </div>
 
                     <!-- FECHA INICIO PAGO -->
-                    <div class="col-md-6" error-notify="FechaInicioPago" error-display="inline">
+                    <div class="col-md-6 mt-0" error-notify="FechaInicioPago" error-display="inline">
                       <label for="FechaInicioPago" class="form-label">
                         {{ 'solicitudCredito.fields.fechaInicioPago' | translate }}
                         <span class="text-danger">*</span>
@@ -374,7 +386,7 @@
                     </div>
 
                     <!-- PROPOSITO -->
-                    <div class="col-md-6" error-notify="Proposito" error-display="inline">
+                    <div class="col-md-6 mt-0" error-notify="Proposito" error-display="inline">
                       <label for="Proposito" class="form-label">
                         {{ 'solicitudCredito.fields.proposito' | translate }}
                         <span class="text-danger">*</span>
@@ -404,7 +416,7 @@
 
 
                     <!-- TASA INTERES -->
-                    <div class="col-md-6" error-notify="TasaInteresAnual" error-display="inline">
+                    <div class="col-md-6 mt-0" error-notify="TasaInteresAnual" error-display="inline">
                       <label for="TasaInteresAnual" class="form-label">
                         {{ 'solicitudCredito.fields.tasaInteresAnual' | translate }}
                         <span class="text-danger">*</span>
@@ -425,7 +437,7 @@
 
                     <!-- PROVEEDOR -->
                     @if (requiereProveedor) {
-                    <div class="col-md-12" error-notify="Proveedor" error-display="inline">
+                    <div class="col-md-12 mt-0" error-notify="Proveedor" error-display="inline">
                       <label for="Proveedor" class="form-label">
                         {{ 'solicitudCredito.fields.proveedor' | translate }}
                         <span class="text-danger">*</span>
@@ -456,7 +468,7 @@
 
 
                     <!-- MONTO SOLICITADO -->
-                    <div class="col-md-6" error-notify="MontoSolicitado" error-display="inline">
+                    <div class="col-md-6 mt-0" error-notify="MontoSolicitado" error-display="inline">
                       <label for="MontoSolicitado" class="form-label">
                         {{ 'solicitudCredito.fields.montoSolicitado' | translate }}
                         <span class="text-danger">*</span>
@@ -473,7 +485,7 @@
                           [ngClass]="montoSolicitadoInvalido ? 'is-invalid' : ''" numberFormat [decimals]="2"
                           [decimalSeparator]="settings.decimalSeparator"
                           [thousandSeparator]="settings.thousandSeparator" required JmartAutoFocus
-                          [disabled]="modo=='view'" />
+                          [disabled]="modo=='view' || esRefinanciamiento" />
                       </div>
 
 
@@ -519,7 +531,7 @@
                     </div>
 
                     <!-- COMISION -->
-                    <div class="col-md-6" error-notify="ComisionDesembolso" error-display="inline">
+                    <div class="col-md-6 mt-0" error-notify="ComisionDesembolso" error-display="inline">
                       <label for="ComisionDesembolso" class="form-label">
                         {{ 'solicitudCredito.fields.comisionDesembolso' | translate }}
                         <span class="text-danger">*</span>
@@ -539,7 +551,7 @@
                     </div>
 
                     <!-- PLAZO -->
-                    <div class="col-md-4" error-notify="Plazo" error-display="inline">
+                    <div class="col-md-4 mt-0" error-notify="Plazo" error-display="inline">
                       <label for="Plazo" class="form-label">
                         {{ 'solicitudCredito.fields.plazo' | translate }}
                         <span class="text-danger">*</span>
@@ -558,13 +570,13 @@
                       </div>
                     </div>
 
-                    <div class="col-md-2 d-flex align-items-end">
+                    <div class="col-md-2 mt-0 d-flex align-items-end">
                       <span>{{ etiquetaPeriodoKey | translate }}</span>
                     </div>
 
-                  
+
                     <!-- NUMERO FACTURA -->
-                    <div class="col-md-6" error-notify="NumeroFactura" error-display="inline">
+                    <div class="col-md-6 mt-0" error-notify="NumeroFactura" error-display="inline">
                       <label for="NumeroFactura" class="form-label">
                         {{ 'solicitudCredito.fields.numeroFactura' | translate }}
                       </label>
@@ -575,17 +587,29 @@
                         </span>
 
                         <input #NumeroFactura type="text" class="form-control" id="NumeroFactura" name="NumeroFactura"
-                          [(ngModel)]="solicitud.numeroFactura" engineSync="NumeroFactura" autoFocusNext  [next]="Observaciones"
-                           />
+                          [(ngModel)]="solicitud.numeroFactura" engineSync="NumeroFactura" autoFocusNext
+                          [next]="Observaciones" />
                       </div>
                     </div>
 
-                     
 
 
 
 
-                    <div class="col-12 d-flex align-items-center gap-3 flex-wrap">
+
+                    <div class="col-12 mt-0 d-flex align-items-center gap-3 flex-wrap">
+
+                      @if (esRefinanciamiento) {
+                      <button type="button" class="btn btn-primary mt-2" (click)="abrirModalRefinanciamiento()"
+                        >
+
+                        <i class="fa-duotone fa-solid fa-list-check me-1"></i>
+
+                        {{ 'solicitudCredito.actions.selectLoansToRefinance' | translate }}
+                      </button>
+                      }
+
+
                       <button type="button" class="btn btn-success" (click)="ajustarMaximoPermitido()"
                         [disabled]="modo=='view'">
                         <i class="fa-solid fa-arrows-rotate me-1"></i>
@@ -595,7 +619,14 @@
                       <span>
                         {{ 'solicitudCredito.fields.montoMaximoDisponible' | translate }}:
                         <strong class="text-success">
-                          {{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }}
+                          {{ currency }}
+                          {{
+                          formatCurrency(
+                          esRefinanciamiento
+                          ? limiteCreditoRefinanciado
+                          : (socio?.limiteCreditoDisponible ?? 0)
+                          )
+                          }}
                         </strong>
                       </span>
                     </div>
@@ -619,7 +650,7 @@
             <div class="card-body">
               <div class="row g-3 align-items-center">
 
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 mt-0">
                   <div class="d-flex align-items-center gap-3">
                     <span class="text-success fa-2x">
                       <i class="fa-duotone fa-solid fa-house"></i>
@@ -631,7 +662,7 @@
                   </div>
                 </div>
 
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 mt-0">
                   <div class="d-flex align-items-center gap-3">
                     <span class="text-success fa-2x">
                       <i class="fa-duotone fa-solid fa-circle-dollar"></i>
@@ -643,7 +674,7 @@
                   </div>
                 </div>
 
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 mt-0">
                   <div class="d-flex align-items-center gap-3">
                     <span class="text-success fa-2x">
                       <i class="fa-duotone fa-solid fa-calendar-check"></i>
@@ -655,7 +686,7 @@
                   </div>
                 </div>
 
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 mt-0">
                   <div class="d-flex justify-content-between">
                     <div>
                       <div class="text-muted">{{ 'solicitudCredito.fields.capacidadPago' | translate }}</div>
@@ -670,7 +701,7 @@
                     </div>
                   </div>
 
-                  <div class="progress mt-2">
+                  <div class="progress mt-0">
                     <div class="progress-bar" [ngClass]="esViable ? 'bg-success' : 'bg-danger'"
                       [style.width.%]="capacidadProgress">
                     </div>
@@ -690,7 +721,7 @@
 
             <div class="row g-3">
 
-              <div class="col-xl-3 col-md-6">
+              <div class="col-xl-3 col-md-6 mt-0">
                 <div class="alert" [ngClass]="socio?.activo ? 'alert-success' : 'alert-danger'">
                   <i class="fa-solid me-1"
                     [ngClass]="socio?.activo ? 'fa-circle-check' : 'fa-triangle-exclamation'"></i>
@@ -705,7 +736,7 @@
                 </div>
               </div>
 
-              <div class="col-xl-3 col-md-6">
+              <div class="col-xl-3 col-md-6 mt-0">
                 <div class="alert mb-0" [ngClass]="
          nivelEndeudamientoProyectado <= 30
            ? 'alert-success'
@@ -730,7 +761,7 @@
                 </div>
               </div>
 
-              <div class="col-xl-3 col-md-6">
+              <div class="col-xl-3 col-md-6 mt-0">
                 <div class="alert mb-0" [ngClass]="esViable ? 'alert-success' : 'alert-danger'">
                   <i class="fa-solid me-1" [ngClass]="esViable ? 'fa-circle-check' : 'fa-triangle-exclamation'"></i>
 
@@ -741,8 +772,8 @@
                   </div>
                 </div>
               </div>
-
-              <div class="col-xl-3 col-md-6">
+ 
+              <div class="col-xl-3 col-md-6 mt-0">
                 <div class="alert alert-success mb-0">
                   <i class="fa-solid fa-circle-check me-1"></i>
                   <strong>{{ 'solicitudCredito.validations.sinMora' | translate }}</strong>
@@ -768,54 +799,50 @@
 
                 <div class="card-body">
                   <div class="approval-progress">
-  @for (step of flujoAprobacion; track step.orden; let last = $last) {
-    <div class="approval-step">
+                    @for (step of flujoAprobacion; track step.orden; let last = $last) {
+                    <div class="approval-step">
 
-      <div class="approval-line"
-           [class.d-none]="last"
-           [ngClass]="{
+                      <div class="approval-line" [class.d-none]="last" [ngClass]="{
              'line-success': (step.estado || '').toLowerCase() === 'aprobado',
              'line-danger': (step.estado || '').toLowerCase() === 'rechazado',
              'line-warning': (step.estado || '').toLowerCase() === 'pendiente'
            }">
-      </div>
+                      </div>
 
-      <div class="approval-circle"
-           [ngClass]="{
+                      <div class="approval-circle" [ngClass]="{
              'bg-success': (step.estado || '').toLowerCase() === 'aprobado',
              'bg-danger': (step.estado || '').toLowerCase() === 'rechazado',
              'bg-warning': (step.estado || '').toLowerCase() === 'pendiente',
              'bg-secondary': !['aprobado','rechazado','pendiente'].includes((step.estado || '').toLowerCase())
            }">
-        {{ step.orden }}
-      </div>
+                        {{ step.orden }}
+                      </div>
 
-      <div class="mt-2 fw-semibold">
-        {{ step.labelKey | translate }}
-      </div>
+                      <div class="mt-2 fw-semibold">
+                        {{ step.labelKey | translate }}
+                      </div>
 
-      <span class="badge"
-            [ngClass]="{
+                      <span class="badge" [ngClass]="{
               'badge-soft-success': (step.estado || '').toLowerCase() === 'aprobado',
               'badge-soft-danger': (step.estado || '').toLowerCase() === 'rechazado',
               'badge-soft-warning': (step.estado || '').toLowerCase() === 'pendiente',
               'badge-soft-secondary': !['aprobado','rechazado','pendiente'].includes((step.estado || '').toLowerCase())
             }">
-        {{ step.estado }}
-      </span>
+                        {{ step.estado }}
+                      </span>
 
-      <div class="text-muted small mt-1">
-        @if (step.fecha) {
-          {{ formatDateTime(step.fecha) }}
-        } @else {
-          {{ 'solicitudCredito.status.pendienteRevision' | translate }}
-        }
-      </div>
+                      <div class="text-muted small mt-0">
+                        @if (step.fecha) {
+                        {{ formatDateTime(step.fecha) }}
+                        } @else {
+                        {{ 'solicitudCredito.status.pendienteRevision' | translate }}
+                        }
+                      </div>
 
-    </div>
-  }
-</div>
-                 
+                    </div>
+                    }
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -906,7 +933,16 @@
 
                 <div class="d-flex justify-content-between mt-2">
                   <span>{{ 'solicitudCredito.fields.limiteDisponible' | translate }}:</span>
-                  <strong>{{ currency }} {{ formatCurrency(socio?.limiteCreditoDisponible ?? 0) }}</strong>
+                  <strong>
+                    {{ currency }}
+                    {{
+                    formatCurrency(
+                    esRefinanciamiento
+                    ? limiteCreditoRefinanciado
+                    : (socio?.limiteCreditoDisponible ?? 0)
+                    )
+                    }}
+                  </strong>
                 </div>
 
                 <div class="d-flex justify-content-between">
@@ -1077,7 +1113,7 @@
         <p class="mb-2">{{ 'solicitudCredito.exportModal.selectDocumentType' | translate }}</p>
 
         <div class="d-flex gap-2">
-          <button class="btn btn-danger"  (click)="exportarComoPdf()">
+          <button class="btn btn-danger" (click)="exportarComoPdf()">
             PDF
           </button>
 
@@ -1098,4 +1134,196 @@
 </div>
 
 <div class="modal-backdrop fade show"></div>
+}
+
+
+
+@if (mostrarModalRefinanciamiento) {
+
+<div class="modal-backdrop fade show"></div>
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true">
+
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+
+        <div>
+          <h5 class="modal-title mb-1">
+            <i class="fa-duotone fa-solid fa-money-bill-transfer text-success me-2"></i>
+
+            {{ 'solicitudCredito.refinancing.modal.title' | translate }}
+          </h5>
+
+          <div class="small text-muted">
+            {{ 'solicitudCredito.refinancing.modal.subtitle' | translate }}
+          </div>
+        </div>
+
+        <button type="button" class="btn-close" (click)="mostrarModalRefinanciamiento = false">
+        </button>
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body">
+
+        <div class="alert  border mb-3">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+            <div>
+              <div class="fw-semibold">
+                {{ 'solicitudCredito.refinancing.modal.totalSelected' | translate }}
+              </div>
+
+              <div class="small text-muted">
+                {{ 'solicitudCredito.refinancing.modal.totalSelectedSubtitle' | translate }}
+              </div>
+            </div>
+
+            <div class="fs-4 fw-bold text-success">
+              {{ appConfigService.getCurrentSettings().currency }}
+              {{ formatCurrency(totalRefinanciar) }}
+            </div>
+
+          </div>
+        </div>
+
+        <div class="table-responsive border rounded-3">
+
+          <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-light">
+
+              <tr>
+
+                <th style="width: 60px;" class="text-center">
+                  *
+                </th>
+
+                <th>
+                  {{ 'solicitudCredito.refinancing.fields.noCredito' | translate }}
+                </th>
+
+                <th class="text-end">
+                  {{ 'solicitudCredito.refinancing.fields.saldoPendiente' | translate }}
+                </th>
+
+                <th class="text-end">
+                  {{ 'solicitudCredito.refinancing.fields.principalPendiente' | translate }}
+                </th>
+
+                <th class="text-end">
+                  {{ 'solicitudCredito.refinancing.fields.interesPendiente' | translate }}
+                </th>
+
+                <th class="text-end">
+                  {{ 'solicitudCredito.refinancing.fields.saldoVencido' | translate }}
+                </th>
+
+                <th class="text-end">
+                  {{ 'solicitudCredito.refinancing.fields.porcentajePagado' | translate }}
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              @if (creditosPendientesRefin.length === 0) {
+
+              <tr>
+                <td colspan="7" class="text-center py-5 text-muted">
+
+                  <i class="fa-duotone fa-solid fa-circle-info fs-2 d-block mb-2"></i>
+
+                  {{ 'solicitudCredito.refinancing.messages.noLoansAvailable' | translate }}
+
+                </td>
+              </tr>
+
+              }
+
+              @for (credito of creditosPendientesRefin; track credito.noCredito) {
+
+              <tr [class.table-success]="credito.seleccionado">
+
+                <td class="text-center">
+
+                  <div class="form-check d-flex justify-content-center">
+                    <input class="form-check-input" type="checkbox" [checked]="credito.seleccionado"
+                      (change)="toggleCreditoRefin(credito)" [disabled]="modo === 'view'">
+                  </div>
+
+                </td>
+
+                <td>
+
+                  <div class="fw-semibold">
+                    {{ credito.noCredito }}
+                  </div>
+
+                </td>
+
+                <td class="text-end fw-semibold">
+                  {{ formatCurrency(credito.saldoPendiente) }}
+                </td>
+
+                <td class="text-end">
+                  {{ formatCurrency(credito.principalPendiente) }}
+                </td>
+
+                <td class="text-end">
+                  {{ formatCurrency(credito.interesPendiente) }}
+                </td>
+
+                <td class="text-end text-danger">
+                  {{ formatCurrency(credito.saldoVencido) }}
+                </td>
+
+                <td class="text-end">
+
+                  <span class="badge  text-success">
+                    {{ formatPercent(credito.porcentajePagado) }}
+                  </span>
+
+                </td>
+
+              </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-light" (click)="mostrarModalRefinanciamiento = false">
+
+          {{ 'solicitudCredito.common.close' | translate }}
+
+        </button>
+
+        <button type="button" class="btn btn-success" (click)="confirmarRefinanciamiento()" [disabled]="modo === 'view'">
+
+          <i class="fa-duotone fa-solid fa-check me-1"></i>
+
+          {{ 'solicitudCredito.refinancing.actions.confirmSelection' | translate }}
+
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
 }

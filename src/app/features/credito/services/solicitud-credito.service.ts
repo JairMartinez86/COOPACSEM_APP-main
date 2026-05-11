@@ -49,13 +49,17 @@ export class SolicitudCreditoService extends BrowserApiService {
   }
 
 
-  getNuevo(socioId: string, skipLoader = false) {
+  getNuevo(
+    socioId: string,
+    tipoSolicitud: string,
+    skipLoader = false
+  ) {
     const headers = skipLoader
       ? { 'X-Skip-Loader': 'false' }
       : undefined;
 
     return this.http.get<any>(
-      `${this.api.baseUrl}/SolicitudCreditoListaSocio/${socioId}/nuevo`,
+      `${this.api.baseUrl}/SolicitudCreditoListaSocio/${socioId}/nuevo/${tipoSolicitud}`,
       {
         headers,
         withCredentials: true

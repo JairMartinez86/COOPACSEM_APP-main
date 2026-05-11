@@ -45,7 +45,8 @@
       "selectSocio": "You must select a member"
     },
     "actions": {
-      "newRequest": "New request"
+      "newRequest": "New request",
+      "refinancing": "Refinancing"
     },
     "side": {
       "quickActions": "Quick actions",

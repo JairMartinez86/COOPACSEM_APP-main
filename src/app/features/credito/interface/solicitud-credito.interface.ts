@@ -12,7 +12,6 @@ export interface SocioCreditoResumen {
   ahorrosDisponibles?: number;
   creditosActivos?: number;
   limiteCreditoDisponible?: number;
-  porcentajePrincipalPagado?: number;
   tieneCreditosVigentes?: boolean;
 }
 
@@ -95,4 +94,19 @@ export interface PlanPagoItem {
   pagoPrincipal: number;
   pagoInteres: number;
   principalCancelado: number;
+}
+
+
+export interface CreditoPendienteRefin {
+  noCredito: string;
+  saldoPendiente: number;
+  principalPendiente: number;
+  interesPendiente: number;
+  saldoVencido: number;
+  principalVencido: number;
+  interesVencido: number;
+  montoPendientePago: number;
+  cuotaActual: number;
+  porcentajePagado: number;
+  seleccionado?: boolean;
 }
