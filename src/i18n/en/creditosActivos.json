@@ -1,0 +1,73 @@
+{
+  "creditosActivos": {
+    "title": "Active loans",
+    "subtitle": "Summary of approved and active loan portfolio.",
+    "breadcrumbs": [
+      { "label": "Loans" },
+      { "label": "Active loans" }
+    ],
+    "actions": {
+      "exportReport": "Export report",
+      "filters": "Filters",
+      "verCronograma": "View schedule"
+    },
+    "labels": {
+      "creditos": "loans"
+    },
+    "kpis": {
+      "carteraTotal": "Total portfolio",
+      "carteraVigente": "Current portfolio",
+      "carteraVencida": "Overdue portfolio",
+      "carteraMora": "Delinquent portfolio",
+      "proximasVencer": "Due soon (30 days)"
+    },
+    "charts": {
+      "distribucionCartera": "Portfolio distribution",
+      "moraRangos": "Delinquent portfolio by day ranges",
+      "tipoCredito": "Portfolio by loan type",
+      "total": "Total",
+      "amount": "Amount"
+    },
+    "filters": {
+       "cutoffDate": "Cutoff date",
+      "search": "Search",
+      "searchPlaceholder": "Search credit, member or type..."
+    },
+    "table": {
+      "title": "Active loans list",
+      "noCredito": "Loan No.",
+      "socio": "Member",
+      "tipoCredito": "Loan type",
+      "montoAprobado": "Approved amount",
+      "saldoCapital": "Principal balance",
+      "tasa": "Rate",
+      "estado": "Status",
+      "proximaCuota": "Next installment",
+      "diasMora": "Days past due"
+    },
+    "detail": {
+      "title": "Loan detail",
+      "resumen": "Loan summary",
+      "montoAprobado": "Approved amount",
+      "saldoCapital": "Principal balance",
+      "tasa": "Rate",
+      "cuotas": "Installments",
+      "progresoPagos": "Payment progress",
+      "proximaCuota": "Next installment"
+    },
+    "progress": {
+      "desembolso": "Disbursement",
+      "pagadas": "Paid",
+      "completado": "Completed",
+      "proxima": "Next",
+      "final": "Final",
+      "pendiente": "Pending"
+    },
+    "status": {
+      "vigente": "Current",
+      "vencida": "Overdue",
+      "mora": "Delinquent",
+      "unknown": "No status"
+    }
+  }
+}

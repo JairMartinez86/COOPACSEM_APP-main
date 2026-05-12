@@ -1,0 +1,73 @@
+{
+  "creditosActivos": {
+    "title": "Créditos activos",
+    "subtitle": "Resumen de la cartera de créditos aprobados y vigentes.",
+    "breadcrumbs": [
+      { "label": "Créditos" },
+      { "label": "Créditos activos" }
+    ],
+    "actions": {
+      "exportReport": "Exportar reporte",
+      "filters": "Filtros",
+      "verCronograma": "Ver cronograma"
+    },
+    "labels": {
+      "creditos": "créditos"
+    },
+    "kpis": {
+      "carteraTotal": "Cartera total",
+      "carteraVigente": "Cartera vigente",
+      "carteraVencida": "Cartera vencida",
+      "carteraMora": "Cartera en mora",
+      "proximasVencer": "Próximas a vencer (30 días)"
+    },
+    "charts": {
+      "distribucionCartera": "Distribución de la cartera",
+      "moraRangos": "Cartera en mora por rangos de días",
+      "tipoCredito": "Cartera por tipo de crédito",
+      "total": "Total",
+      "amount": "Monto"
+    },
+    "filters": {
+      "cutoffDate": "Fecha de corte",
+      "search": "Buscar",
+      "searchPlaceholder": "Buscar crédito, socio o tipo..."
+    },
+    "table": {
+      "title": "Listado de créditos activos",
+      "noCredito": "N° Crédito",
+      "socio": "Socio",
+      "tipoCredito": "Tipo de crédito",
+      "montoAprobado": "Monto aprobado",
+      "saldoCapital": "Saldo capital",
+      "tasa": "Tasa",
+      "estado": "Estado",
+      "proximaCuota": "Próxima cuota",
+      "diasMora": "Días mora"
+    },
+    "detail": {
+      "title": "Detalle del crédito",
+      "resumen": "Resumen del crédito",
+      "montoAprobado": "Monto aprobado",
+      "saldoCapital": "Saldo capital",
+      "tasa": "Tasa",
+      "cuotas": "Cuotas",
+      "progresoPagos": "Progreso de pagos",
+      "proximaCuota": "Próxima cuota"
+    },
+    "progress": {
+      "desembolso": "Desembolso",
+      "pagadas": "Pagadas",
+      "completado": "Completado",
+      "proxima": "Próxima",
+      "final": "Final",
+      "pendiente": "Pendiente"
+    },
+    "status": {
+      "vigente": "Vigente",
+      "vencida": "Vencida",
+      "mora": "Mora",
+      "unknown": "Sin estado"
+    }
+  }
+}

@@ -398,6 +398,22 @@ export const routes: Routes = [
 
 
 
+       {
+        path: 'creditos-activos',
+        loadComponent: () =>
+          import('./features/credito/pages/components/creditos-activos/creditos-activos.component')
+            .then(m => m.CreditosActivosComponent),
+        canActivate: [permissionGuard],
+        data: {
+          permission: '/creditos-activos',
+          action: 'view',
+          tableFilterKey: 'creditos-activos',
+          tableFilterEnter: true
+        },
+        providers: [JMartMassiveValidationService]
+      },
+
+
 
       // PROVEEDORES
       {

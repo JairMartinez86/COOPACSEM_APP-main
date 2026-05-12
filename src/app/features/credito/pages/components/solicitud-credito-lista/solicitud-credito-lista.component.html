@@ -289,7 +289,7 @@
                                 {{ 'solicitudCreditoLista.filters.fechaInicio' | translate }}
                             </label>
 
-                            <input class="form-control" name="fechaInicio" [(ngModel)]="filtro.fechaInicio"
+                            <input class="form-control" name="fechaInicio" id="fechaInicio" [(ngModel)]="filtro.fechaInicio"
                                 engineSync="fechaInicio" autoFocusNext [next]="fecha2" type="text" dateFormat
                                 [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
                         </div>
@@ -299,7 +299,7 @@
                                 {{ 'solicitudCreditoLista.filters.fechaFin' | translate }}
                             </label>
 
-                            <input #fecha2 class="form-control" name="fechaFin" [(ngModel)]="filtro.fechaFin"
+                            <input #fecha2 class="form-control" name="fechaFin" id="fechaFin" [(ngModel)]="filtro.fechaFin"
                                 engineSync="fechaFin" type="text" dateFormat
                                 [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
                         </div>

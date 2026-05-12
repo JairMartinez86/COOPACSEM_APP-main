@@ -1,0 +1,348 @@
+.credit-page {
+  padding: 1rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1rem;
+  align-items: start;
+}
+
+.main-area,
+.side-area {
+  min-width: 0;
+}
+
+.kpi-card,
+.chart-card,
+.table-card,
+.detail-card {
+  border: 0;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.kpi-card .card-body {
+  min-height: 100px;
+}
+
+.kpi-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-purple {
+  background: #8b5cf6;
+}
+
+.chart-card .card-body {
+  min-height: 210px;
+  padding: .5rem .75rem;
+}
+
+.chart-card .apexcharts-legend-text {
+  line-height: 1.25 !important;
+  white-space: pre-line !important;
+  font-weight: 600 !important;
+}
+
+.detail-card {
+  position: sticky;
+  top: 90px;
+}
+
+.table-card table th,
+.table-card table td {
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.table-success {
+  --bs-table-bg: rgba(34, 197, 94, 0.10);
+  --bs-table-hover-bg: rgba(34, 197, 94, 0.14);
+}
+
+.badge-soft-success {
+  color: #15803d;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.badge-soft-warning {
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.badge-soft-danger {
+  color: #b91c1c;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.next-payment {
+  border: 1px solid rgba(34, 197, 94, 0.20);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.next-payment-header {
+  padding: .85rem;
+  background: rgba(34, 197, 94, 0.12);
+  display: flex;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.next-payment-body {
+  padding: .85rem;
+}
+
+/* progreso */
+.credit-progress-steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.credit-progress-steps::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 2px;
+  background: rgba(148, 163, 184, 0.35);
+  z-index: 1;
+}
+
+.credit-progress-steps::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 12.5%;
+  width: 50%;
+  height: 2px;
+  background: #16a34a;
+  z-index: 2;
+}
+
+.credit-progress-step {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  min-width: 0;
+  padding: 0 2px;
+}
+
+.credit-progress-dot {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 7px;
+  border-radius: 50%;
+  background: var(--bs-body-bg);
+  color: var(--bs-secondary-color);
+  border: 2px solid rgba(148, 163, 184, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.credit-progress-step.done .credit-progress-dot,
+.credit-progress-step.active .credit-progress-dot {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+}
+
+.credit-progress-step.muted .credit-progress-dot {
+  background: var(--bs-secondary-bg);
+}
+
+.credit-progress-step .fw-semibold {
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.credit-progress-step small {
+  display: block;
+  font-size: 9px;
+  line-height: 1.15;
+  margin-top: 2px;
+}
+
+/* 1700+ escritorio amplio: tabla y detalle a la par */
+@media (min-width: 1700px) {
+  .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+
+  .main-area .row.g-3 > .col-xl-4 {
+    width: 33.333333%;
+  }
+}
+
+/* 1400 - 1699: detalle abajo, gráficos 3 columnas */
+@media (min-width: 1400px) and (max-width: 1699.98px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-card {
+    position: static;
+  }
+
+  .main-area .row.g-3 > .col-xl-4 {
+    width: 33.333333%;
+  }
+}
+
+/* 1200 - 1399: detalle abajo, gráficos 2 columnas */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-card {
+    position: static;
+  }
+
+  .main-area .row.g-3 > .col-xl-4 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+
+  .main-area .row.g-3 > .col-xl-4:nth-child(3) {
+    width: 100%;
+  }
+}
+
+/* 992 - 1199: todo en una columna */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-card {
+    position: static;
+  }
+
+  .chart-card .card-body {
+    min-height: auto;
+  }
+}
+
+/* tablet */
+@media (max-width: 991.98px) {
+  .credit-page {
+    padding: .75rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-card {
+    position: static;
+  }
+
+  .chart-card .card-body {
+    min-height: auto;
+  }
+
+  .table-card table th,
+  .table-card table td {
+    font-size: 11px;
+  }
+}
+
+/* móvil */
+@media (max-width: 767.98px) {
+  .kpi-card .card-body {
+    min-height: auto;
+  }
+
+  .kpi-icon {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+  }
+
+  .next-payment-header {
+    flex-direction: column;
+  }
+
+  .credit-progress-step .fw-semibold {
+    font-size: 9px;
+  }
+
+  .credit-progress-step small {
+    font-size: 8px;
+  }
+}
+
+
+/* =========================
+   FILAS
+========================= */
+
+.socios-click-row {
+  cursor: pointer;
+}
+
+.socios-table tbody tr.socios-click-row:hover > td {
+  background-color: rgba(59, 130, 246, 0.06) !important;
+}
+
+.socios-table tbody tr.socios-row-selected > td {
+  background-color: rgba(59, 130, 246, 0.16) !important;
+}
+
+.socios-table tbody tr.socios-row-selected > td:first-child {
+  border-left: 4px solid #3b82f6;
+}
+
+
+
+
+
+
+
+//FILTRO
+
+.credit-table-filters {
+  display: grid;
+  grid-template-columns: 170px minmax(240px, 360px) auto;
+  gap: .75rem;
+  align-items: end;
+  justify-content: end;
+}
+
+.credit-filter-item {
+  min-width: 0;
+}
+
+.credit-filter-actions {
+  display: flex;
+  align-items: end;
+}
+
+@media (max-width: 991.98px) {
+  .credit-table-filters {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+
+  .credit-filter-actions .btn {
+    width: 100%;
+  }
+}
