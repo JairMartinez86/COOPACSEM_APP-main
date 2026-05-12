@@ -211,7 +211,7 @@ export const SIDEBAR_DATA: SidebarItem[] = [
   {
     type: 'link',
     titleKey: 'sidebar.items.creditoActivo',
-    iconclass: 'fa-duotone fa-solid fa-circle-check',
+    iconclass: 'fa-solid fa-money-bill-trend-up',
     router: '/creditos-activos',
     permissions: {
       view: false,
