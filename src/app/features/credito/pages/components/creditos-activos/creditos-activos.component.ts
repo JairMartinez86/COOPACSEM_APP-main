@@ -46,7 +46,6 @@ import { AppPermissionDirective } from '../../../../../core/services/app-permiss
     NgApexchartsModule,
       JMartAutoFocusNextDirective,
         JMartDateFormatDirective,
-        AppPermissionDirective,
     Breadcrumb
   ],
   templateUrl: './creditos-activos.component.html',
@@ -478,7 +477,7 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
       ] as ApexAxisChartSeries,
       chart: {
         type: 'bar',
-        height: 200,
+        height: 190,
         toolbar: { show: false }
       } as ApexChart,
       colors: ['#3b82f6'],

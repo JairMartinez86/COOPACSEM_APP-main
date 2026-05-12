@@ -103,16 +103,39 @@ export class CreditosActivosService extends BrowserApiService {
   }
 
   private buildParams(filtro: Partial<CreditosActivosFiltro>): HttpParams {
-    let params = new HttpParams();
+  let params = new HttpParams();
 
-    if (filtro.fechaCorte?.trim()) {
-      params = params.set('fechaCorte', filtro.fechaCorte.trim());
-    }
+  const fechaCorte = this.toApiDate(filtro.fechaCorte);
 
-    if (filtro.codSocio?.trim()) {
-      params = params.set('codSocio', filtro.codSocio.trim());
-    }
-
-    return params;
+  if (fechaCorte) {
+    params = params.set('fechaCorte', fechaCorte);
   }
+
+  if (filtro.codSocio?.trim()) {
+    params = params.set('codSocio', filtro.codSocio.trim());
+  }
+
+  return params;
+}
+
+private toApiDate(value: string | null | undefined): string {
+  if (!value?.trim()) return '';
+
+  const text = value.trim();
+
+  // Ya viene correcto: yyyy-MM-dd
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    return text;
+  }
+
+  // Viene como dd/MM/yyyy
+  const match = text.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+
+  if (match) {
+    const [, day, month, year] = match;
+    return `${year}-${month}-${day}`;
+  }
+
+  return text;
+}
 }
