@@ -2,22 +2,14 @@
   padding: 1rem;
 }
 
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 1rem;
-  align-items: start;
-}
-
-.main-area,
-.side-area {
+.main-area {
+  width: 100%;
   min-width: 0;
 }
 
 .kpi-card,
 .chart-card,
-.table-card,
-.detail-card {
+.table-card {
   border: 0;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
@@ -52,20 +44,10 @@
   font-weight: 600 !important;
 }
 
-.detail-card {
-  position: sticky;
-  top: 90px;
-}
-
 .table-card table th,
 .table-card table td {
   white-space: nowrap;
   font-size: 12px;
-}
-
-.table-success {
-  --bs-table-bg: rgba(34, 197, 94, 0.10);
-  --bs-table-hover-bg: rgba(34, 197, 94, 0.14);
 }
 
 .badge-soft-success {
@@ -86,6 +68,45 @@
   border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
+.badge-soft-secondary {
+  color: #475569;
+  background: rgba(148, 163, 184, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.socios-click-row {
+  cursor: pointer;
+}
+
+.socios-table tbody tr.socios-click-row:hover > td {
+  background-color: rgba(59, 130, 246, 0.06) !important;
+}
+
+.socios-table tbody tr.socios-row-selected > td {
+  background-color: rgba(59, 130, 246, 0.16) !important;
+}
+
+.socios-table tbody tr.socios-row-selected > td:first-child {
+  border-left: 4px solid #3b82f6;
+}
+
+.credit-table-filters {
+  display: grid;
+  grid-template-columns: 170px minmax(240px, 360px) auto;
+  gap: .75rem;
+  align-items: end;
+  justify-content: end;
+}
+
+.credit-filter-item {
+  min-width: 0;
+}
+
+.credit-filter-actions {
+  display: flex;
+  align-items: end;
+}
+
 .next-payment {
   border: 1px solid rgba(34, 197, 94, 0.20);
   border-radius: 12px;
@@ -101,11 +122,6 @@
   gap: .75rem;
 }
 
-.next-payment-body {
-  padding: .85rem;
-}
-
-/* progreso */
 .credit-progress-steps {
   position: relative;
   display: grid;
@@ -180,79 +196,27 @@
   margin-top: 2px;
 }
 
-/* 1700+ escritorio amplio: tabla y detalle a la par */
-@media (min-width: 1700px) {
-  .dashboard-grid {
-    grid-template-columns: minmax(0, 1fr) 340px;
-  }
-
-  .main-area .row.g-3 > .col-xl-4 {
-    width: 33.333333%;
-  }
+.credito-detalle-offcanvas {
+  width: 430px;
+  max-width: 100%;
 }
 
-/* 1400 - 1699: detalle abajo, gráficos 3 columnas */
-@media (min-width: 1400px) and (max-width: 1699.98px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .detail-card {
-    position: static;
-  }
-
-  .main-area .row.g-3 > .col-xl-4 {
-    width: 33.333333%;
-  }
+.credito-detalle-offcanvas .offcanvas-body {
+  overflow-y: auto;
 }
 
-/* 1200 - 1399: detalle abajo, gráficos 2 columnas */
-@media (min-width: 1200px) and (max-width: 1399.98px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .detail-card {
-    position: static;
-  }
-
-  .main-area .row.g-3 > .col-xl-4 {
-    flex: 0 0 auto;
-    width: 50%;
-  }
-
-  .main-area .row.g-3 > .col-xl-4:nth-child(3) {
-    width: 100%;
-  }
-}
-
-/* 992 - 1199: todo en una columna */
-@media (min-width: 992px) and (max-width: 1199.98px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .detail-card {
-    position: static;
-  }
-
-  .chart-card .card-body {
-    min-height: auto;
-  }
-}
-
-/* tablet */
 @media (max-width: 991.98px) {
   .credit-page {
     padding: .75rem;
   }
 
-  .dashboard-grid {
+  .credit-table-filters {
     grid-template-columns: 1fr;
+    justify-content: stretch;
   }
 
-  .detail-card {
-    position: static;
+  .credit-filter-actions .btn {
+    width: 100%;
   }
 
   .chart-card .card-body {
@@ -265,7 +229,6 @@
   }
 }
 
-/* móvil */
 @media (max-width: 767.98px) {
   .kpi-card .card-body {
     min-height: auto;
@@ -280,69 +243,10 @@
   .next-payment-header {
     flex-direction: column;
   }
-
-  .credit-progress-step .fw-semibold {
-    font-size: 9px;
-  }
-
-  .credit-progress-step small {
-    font-size: 8px;
-  }
 }
 
-
-/* =========================
-   FILAS
-========================= */
-
-.socios-click-row {
-  cursor: pointer;
-}
-
-.socios-table tbody tr.socios-click-row:hover > td {
-  background-color: rgba(59, 130, 246, 0.06) !important;
-}
-
-.socios-table tbody tr.socios-row-selected > td {
-  background-color: rgba(59, 130, 246, 0.16) !important;
-}
-
-.socios-table tbody tr.socios-row-selected > td:first-child {
-  border-left: 4px solid #3b82f6;
-}
-
-
-
-
-
-
-
-//FILTRO
-
-.credit-table-filters {
-  display: grid;
-  grid-template-columns: 170px minmax(240px, 360px) auto;
-  gap: .75rem;
-  align-items: end;
-  justify-content: end;
-}
-
-.credit-filter-item {
-  min-width: 0;
-}
-
-.credit-filter-actions {
-  display: flex;
-  align-items: end;
-}
-
-@media (max-width: 991.98px) {
-  .credit-table-filters {
-    grid-template-columns: 1fr;
-    justify-content: stretch;
-  }
-
-  .credit-filter-actions .btn {
+@media (max-width: 576px) {
+  .credito-detalle-offcanvas {
     width: 100%;
   }
 }

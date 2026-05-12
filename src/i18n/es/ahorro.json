@@ -17,6 +17,9 @@
       "intereses": "Intereses",
       "credit": "Crédito"
     },
+    "sidePanel": {
+      "title": "Panel del socio"
+    },
     "status": {
       "active": "Activo",
       "inactive": "Inactivo",

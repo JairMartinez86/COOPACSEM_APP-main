@@ -25,6 +25,8 @@ import {
 import { Subscription, Subject, of, timer } from 'rxjs';
 import { switchMap, finalize } from 'rxjs/operators';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-ahorro',
   standalone: true,
@@ -52,6 +54,7 @@ export class AhorroComponent implements OnInit, OnDestroy {
   readonly pageSize = 20;
   loading = false;
   detailLoading = false;
+ 
 
   selectedSocioId: string | null = null;
   selectedSocio: SocioDetail | null = null;
@@ -238,10 +241,25 @@ export class AhorroComponent implements OnInit, OnDestroy {
     this.loadDashboard(page, false);
   }
 
-  onSelectSocio(row: SocioRow): void {
-    this.selectedSocioId = row.id;
-    this.loadSocioDetail(row.id);
-  }
+onSelectSocio(row: SocioRow): void {
+  this.selectedSocioId = row.id;
+  this.loadSocioDetail(row.id);
+  this.openSidePanel();
+}
+
+private openSidePanel(): void {
+  setTimeout(() => {
+    const element = document.getElementById('ahorroSidePanelOffcanvas');
+
+    if (!element || typeof bootstrap === 'undefined') {
+      return;
+    }
+
+    const instance = bootstrap.Offcanvas.getOrCreateInstance(element);
+    instance.show();
+  }, 50);
+}
+
 
   private loadDashboard(page = 1, debounce = false): void {
     this.dashboardReload$.next({ page, debounce });

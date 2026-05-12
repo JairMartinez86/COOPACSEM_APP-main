@@ -17,6 +17,9 @@
       "intereses": "Interest",
       "credit": "Credit"
     },
+    "sidePanel": {
+      "title": "Member panel"
+    },
     "status": {
       "active": "Active",
       "inactive": "Inactive",
