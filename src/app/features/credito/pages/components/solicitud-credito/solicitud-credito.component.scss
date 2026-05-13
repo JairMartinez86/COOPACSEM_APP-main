@@ -48,3 +48,141 @@
 .line-warning {
   background: #ff9f43;
 }
+
+
+
+
+//DATOS LABORALES
+.laboral-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1rem;
+}
+
+.laboral-info {
+  padding-right: 1rem;
+  border-right: 1px solid rgba(255, 255, 255, .22);
+}
+
+.laboral-item {
+  margin-bottom: .9rem;
+}
+
+.laboral-item span,
+.laboral-section-title {
+  display: block;
+  color: #8fb5ef;
+  font-size: .82rem;
+  margin-bottom: .25rem;
+}
+
+.laboral-item strong {
+  display: block;
+  color: #fff;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.deduccion-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .75rem;
+  align-items: start;
+  padding: .32rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .22);
+}
+
+.deduccion-row span {
+  min-width: 0;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.deduccion-row strong {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.deduccion-row.total {
+  border-bottom: 0;
+  padding-top: .6rem;
+  font-weight: 700;
+}
+
+.laboral-metricas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: .35rem;
+  padding: .75rem;
+}
+
+.laboral-metricas span,
+.laboral-metricas small,
+.laboral-metricas strong {
+  display: block;
+}
+
+.laboral-metricas span {
+  font-weight: 700;
+}
+
+.laboral-metricas small {
+  color: #9db8e8;
+}
+
+@media (max-width: 1399.98px) {
+  .laboral-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .laboral-info {
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .22);
+    padding-bottom: .75rem;
+  }
+
+  .laboral-metricas {
+    grid-template-columns: 1fr;
+  }
+
+  .laboral-metricas .text-end {
+    text-align: left !important;
+  }
+}
+
+
+
+
+//RESUMEN
+.resumen-solicitud-card {
+  min-width: 250px;
+}
+
+.resumen-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .75rem;
+  align-items: start;
+  margin-bottom: .65rem;
+}
+
+.resumen-row span {
+  min-width: 0;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.resumen-row strong {
+  text-align: right;
+  white-space: nowrap;
+  line-height: 1.25;
+}
+
+@media (max-width: 1399.98px) {
+  .resumen-solicitud-card {
+    min-width: 100%;
+  }
+}

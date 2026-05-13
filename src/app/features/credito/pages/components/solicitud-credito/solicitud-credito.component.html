@@ -173,15 +173,15 @@
         </div>
       </div>
 
-      <div class="row g-3">
+      <div class="row g-3 solicitud-layout">
 
-        <div class="col-xl-10 col-lg-9">
+        <div class="col-12 col-xl-9">
 
           <div class="row g-3 mb-3">
 
             <!-- DATOS LABORALES -->
             <div class="col-xl-5 col-lg-12">
-              <div class="card h-100">
+              <div class="card h-100 laboral-card">
                 <div class="card-header">
                   <h5 class="card-title mb-0">
                     <i class="fa-duotone fa-solid fa-briefcase text-success me-1"></i>
@@ -190,137 +190,106 @@
                 </div>
 
                 <div class="card-body">
-                  <div class="row">
-                    <div class="col-md-6 mt-0 border-end">
-                      <div class="mb-3">
-                        <div class="text-muted small">{{ 'solicitudCredito.fields.departamento' | translate }}</div>
-                        <div>{{ laboral.departamento || '-' }}</div>
+                  <div class="laboral-grid">
+
+                    <div class="laboral-info">
+                      <div class="laboral-item">
+                        <span>{{ 'solicitudCredito.fields.departamento' | translate }}</span>
+                        <strong>{{ laboral.departamento || '-' }}</strong>
                       </div>
 
-                      <div class="mb-3">
-                        <div class="text-muted small">{{ 'solicitudCredito.fields.nomina' | translate }}</div>
-                        <div>{{ laboral.nomina || '-' }}</div>
+                      <div class="laboral-item">
+                        <span>{{ 'solicitudCredito.fields.nomina' | translate }}</span>
+                        <strong>{{ laboral.nomina || '-' }}</strong>
                       </div>
 
-                      <div class="mb-3">
-                        <div class="text-muted small">{{ 'solicitudCredito.fields.ingresoEmpresa' | translate }}</div>
-                        <div>{{ currency }} {{ formatCurrency(laboral.ingresoEmpresa) }}</div>
+                      <div class="laboral-item">
+                        <span>{{ 'solicitudCredito.fields.ingresoEmpresa' | translate }}</span>
+                        <strong>{{ currency }} {{ formatCurrency(laboral.ingresoEmpresa) }}</strong>
                       </div>
 
-                      <div>
-                        <div class="text-muted small">{{ 'solicitudCredito.fields.antiguedadLaboral' | translate }}
-                        </div>
+                      <div class="laboral-item">
+                        <span>{{ 'solicitudCredito.fields.antiguedadLaboral' | translate }}</span>
                         <strong>{{ laboral.antiguedadLaboral || '-' }}</strong>
                       </div>
                     </div>
 
-                    <div class="col-md-6 mt-0">
-                      <div class="text-muted small mb-2">
+                    <div class="laboral-deducciones">
+                      <div class="laboral-section-title">
                         {{ 'solicitudCredito.fields.deduccionesMensuales' | translate }}
                       </div>
 
-                      <div class="d-flex justify-content-between border-bottom py-1">
+                      <div class="deduccion-row">
                         <span>{{ 'solicitudCredito.fields.cuotaCreditoTiendas' | translate }}</span>
-                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaCreditoTiendas) }}</span>
+                        <strong>{{ currency }} {{ formatCurrency(deducciones.cuotaCreditoTiendas) }}</strong>
                       </div>
 
-                      <div class="d-flex justify-content-between border-bottom py-1">
+                      <div class="deduccion-row">
                         <span>{{ 'solicitudCredito.fields.pensionAlimenticia' | translate }}</span>
-                        <span>{{ currency }} {{ formatCurrency(deducciones.pensionAlimenticia) }}</span>
+                        <strong>{{ currency }} {{ formatCurrency(deducciones.pensionAlimenticia) }}</strong>
                       </div>
 
-                      <div class="d-flex justify-content-between border-bottom py-1">
+                      <div class="deduccion-row">
                         <span>{{ 'solicitudCredito.fields.otrasCxc' | translate }}</span>
-                        <span>{{ currency }} {{ formatCurrency(deducciones.otrasCxC) }}</span>
+                        <strong>{{ currency }} {{ formatCurrency(deducciones.otrasCxC) }}</strong>
                       </div>
 
-                      <div class="d-flex justify-content-between border-bottom py-1">
+                      <div class="deduccion-row">
                         <span>{{ 'solicitudCredito.fields.cuotaBdf' | translate }}</span>
-                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaBdf) }}</span>
+                        <strong>{{ currency }} {{ formatCurrency(deducciones.cuotaBdf) }}</strong>
                       </div>
 
-                      <div class="d-flex justify-content-between border-bottom py-1">
+                      <div class="deduccion-row">
                         <span>{{ 'solicitudCredito.fields.cuotaCoopacsem' | translate }}</span>
-                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaCoopacsem) }}</span>
+                        <strong>{{ currency }} {{ formatCurrency(deducciones.cuotaCoopacsem) }}</strong>
                       </div>
 
-                      <div class="d-flex justify-content-between fw-bold pt-2">
+                      <div class="deduccion-row total">
                         <span>{{ 'solicitudCredito.fields.totalDeducciones' | translate }}</span>
-                        <span>{{ currency }} {{ formatCurrency(deducciones.cuotaCreditoTiendas +
-                          deducciones.pensionAlimenticia + deducciones.otrasCxC + deducciones.cuotaBdf +
-                          deducciones.cuotaCoopacsem) }}</span>
+                        <strong>{{ currency }} {{ formatCurrency(totalDeducciones) }}</strong>
                       </div>
-                    </div>
-                  </div>
-
-                  <div class="border rounded p-2 mt-0">
-
-                    <div class="d-flex justify-content-between">
-
-                      <!-- NIVEL ENDEUDAMIENTO -->
-                      <div>
-                        <strong>% {{ 'solicitudCredito.fields.nivelEndeudamiento' | translate }}</strong>
-
-                        <div class="ms-3">
-                          <small class="text-muted d-block">
-                            {{ 'solicitudCredito.fields.actual' | translate }}:
-                            {{ formatPercent(nivelEndeudamientoBase) }}
-                          </small>
-
-                          <span class="fw-bold" [ngClass]="
-    nivelEndeudamientoProyectado <= 30
-      ? 'text-success'
-      : nivelEndeudamientoProyectado <= 40
-      ? 'text-warning'
-      : 'text-danger'
-  ">
-                            {{ 'solicitudCredito.fields.proyectado' | translate }}:
-                            {{ formatPercent(nivelEndeudamientoProyectado) }}
-                          </span>
-                        </div>
-                      </div>
-
-                      <!-- CUOTA DISPONIBLE -->
-                      <div class="text-end">
-                        <strong>{{ 'solicitudCredito.fields.cuotaDisponible' | translate }}</strong>
-
-                        <div>
-                          <small class="text-muted d-block">
-                            {{ 'solicitudCredito.fields.actual' | translate }}:
-                            {{ currency }} {{ formatCurrency(cuotaDisponible) }}
-                          </small>
-
-                          <span class="fw-bold"
-                            [ngClass]="cuotaDisponibleDespuesCredito < 0 ? 'text-danger' : 'text-success'">
-
-                            {{ 'solicitudCredito.fields.afterCredit' | translate }}:
-
-                            {{ currency }}
-                            {{ formatCurrency(cuotaDisponibleDespuesCredito) }}
-                          </span>
-                        </div>
-                      </div>
-
                     </div>
 
                   </div>
 
+                  <div class="laboral-metricas mt-3">
+                    <div>
+                      <span>% {{ 'solicitudCredito.fields.nivelEndeudamiento' | translate }}</span>
+                      <small>{{ 'solicitudCredito.fields.actual' | translate }}: {{
+                        formatPercent(nivelEndeudamientoBase) }}</small>
+                      <strong [ngClass]="
+            nivelEndeudamientoProyectado <= 30
+              ? 'text-success'
+              : nivelEndeudamientoProyectado <= 40
+              ? 'text-warning'
+              : 'text-danger'
+          ">
+                        {{ 'solicitudCredito.fields.proyectado' | translate }}:
+                        {{ formatPercent(nivelEndeudamientoProyectado) }}
+                      </strong>
+                    </div>
 
-                  <div class="col-md-12 mt-0" error-notify="Observaciones" error-display="inline">
+                    <div class="text-end">
+                      <span>{{ 'solicitudCredito.fields.cuotaDisponible' | translate }}</span>
+                      <small>{{ 'solicitudCredito.fields.actual' | translate }}: {{ currency }} {{
+                        formatCurrency(cuotaDisponible) }}</small>
+                      <strong [ngClass]="cuotaDisponibleDespuesCredito < 0 ? 'text-danger' : 'text-success'">
+                        {{ 'solicitudCredito.fields.afterCredit' | translate }}:
+                        {{ currency }} {{ formatCurrency(cuotaDisponibleDespuesCredito) }}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="mt-3" error-notify="Observaciones" error-display="inline">
                     <label for="Observaciones" class="form-label">
                       {{ 'solicitudCredito.fields.observaciones' | translate }}
                       <span class="text-danger">*</span>
                     </label>
 
-                    <div class="input-group">
-
-
-                      <textarea #Observaciones rows="2" class="form-control text-end" id="Observaciones"
-                        name="Observaciones" [(ngModel)]="solicitud.Observaciones" engineSync="Observaciones" required
-                        autoFocusNext [next]="saveButton" [disabled]="modo=='view'"></textarea>
-                    </div>
+                    <textarea #Observaciones rows="3" class="form-control" id="Observaciones" name="Observaciones"
+                      [(ngModel)]="solicitud.Observaciones" engineSync="Observaciones" required autoFocusNext
+                      [next]="saveButton" [disabled]="modo=='view'"></textarea>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -919,8 +888,8 @@
         </div>
 
         <!-- RESUMEN DERECHO -->
-        <div class="col-xl-2 col-lg-3">
-          <div class="card border-danger">
+        <div class="col-12 col-xl-3">
+          <div class="card border-danger resumen-solicitud-card">
             <div class="card-header">
               <strong>{{ 'solicitudCredito.sections.resumenSolicitud' | translate }}</strong>
             </div>
@@ -934,7 +903,7 @@
                   {{ 'solicitudCredito.messages.amountExceedsLimitTitle' | translate }}
                 </strong>
 
-                <div class="d-flex justify-content-between mt-2">
+                <div class="resumen-row mt-2">
                   <span>{{ 'solicitudCredito.fields.limiteDisponible' | translate }}:</span>
                   <strong>
                     {{ currency }}
@@ -948,28 +917,24 @@
                   </strong>
                 </div>
 
-                <div class="d-flex justify-content-between">
+                <div class="resumen-row">
                   <span>{{ 'solicitudCredito.fields.montoSolicitado' | translate }}:</span>
                   <strong>{{ currency }} {{ formatCurrency(solicitud.montoSolicitado ?? 0) }}</strong>
                 </div>
 
-                <div class="d-flex justify-content-between">
+                <div class="resumen-row">
                   <span>{{ 'solicitudCredito.fields.exceso' | translate }}:</span>
                   <strong>{{ currency }} {{ formatCurrency(excedenteLimite) }}</strong>
                 </div>
               </div>
               }
 
-              <!-- PLAZO -->
-              <div class="d-flex justify-content-between mb-2">
+              <div class="resumen-row">
                 <span>{{ 'solicitudCredito.fields.plazo' | translate }}</span>
-                <strong>
-                  {{ solicitud.plazo || 0 }} {{ etiquetaPeriodoKey | translate }}
-                </strong>
+                <strong>{{ solicitud.plazo || 0 }} {{ etiquetaPeriodoKey | translate }}</strong>
               </div>
 
-              <!-- CUOTA -->
-              <div class="d-flex justify-content-between mb-2">
+              <div class="resumen-row">
                 <span>
                   {{
                   esQuincenal
@@ -980,37 +945,31 @@
                 <strong>{{ currency }} {{ formatCurrency(cuotaQuincenal) }}</strong>
               </div>
 
-              <!-- INTERESES -->
-              <div class="d-flex justify-content-between mb-2">
+              <div class="resumen-row">
                 <span>{{ 'solicitudCredito.fields.interesesTotales' | translate }}</span>
                 <strong>{{ currency }} {{ formatCurrency(interesesTotales) }}</strong>
               </div>
 
-              <!-- TOTAL -->
-              <div class="d-flex justify-content-between mb-2">
+              <div class="resumen-row">
                 <span>{{ 'solicitudCredito.fields.totalPagar' | translate }}</span>
                 <strong>{{ currency }} {{ formatCurrency(totalPagar) }}</strong>
               </div>
 
-              <!-- FECHA -->
-              <div class="d-flex justify-content-between mb-2">
+              <div class="resumen-row">
                 <span>{{ 'solicitudCredito.fields.fechaInicioPago' | translate }}</span>
                 <strong>{{ solicitud.fechaInicioPago || '-' }}</strong>
               </div>
 
-              <!-- TASA -->
-              <div class="d-flex justify-content-between mb-2">
+              <div class="resumen-row">
                 <span>{{ 'solicitudCredito.fields.tasaInteresAnual' | translate }}</span>
                 <strong>{{ formatPercent(solicitud.tasaInteresAnual) }}</strong>
               </div>
 
-              <!-- COMISIÓN -->
-              <div class="d-flex justify-content-between mb-2">
+              <div class="resumen-row">
                 <span>{{ 'solicitudCredito.fields.comisionDesembolso' | translate }}</span>
                 <strong>{{ formatPercent(solicitud.comisionDesembolso) }}</strong>
               </div>
 
-              <!-- VALIDACIÓN PLAZO -->
               @if (plazoExcedeMaximoRegla) {
               <div class="alert alert-warning mt-2 mb-0">
                 <i class="fa-solid fa-circle-exclamation me-1"></i>
@@ -1019,7 +978,6 @@
               </div>
               }
 
-              <!-- INFO -->
               <div class="alert alert-primary mt-3 mb-0">
                 <i class="fa-solid fa-circle-info me-1"></i>
                 {{ 'solicitudCredito.messages.approvalPolicy' | translate }}
