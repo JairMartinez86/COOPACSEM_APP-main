@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div class="two-column-layout socios-layout">
+    <div class="socios-layout">
 
       <div class="d-flex flex-column min-h-0">
         <div class="card socios-main-card">
@@ -22,12 +22,8 @@
             </div>
 
             <div class="d-flex align-items-center gap-2 flex-wrap">
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                [appPermission]="['new']"
-                [permissionRoute]="['/socios', '/ahorro']"
-                (click)="onCreate()">
+              <button type="button" class="btn btn-primary btn-sm" [appPermission]="['new']"
+                [permissionRoute]="['/socios', '/ahorro']" (click)="onCreate()">
                 <i class="bi bi-plus-lg me-1"></i>
                 {{ 'socios.list.newButton' | translate }}
               </button>
@@ -37,332 +33,337 @@
           <div class="card-body p-0 socios-main-card-body">
 
             @if (loading) {
-              <div class="py-4 text-center text-muted">
-                {{ 'socios.list.loading' | translate }}
-              </div>
+            <div class="py-4 text-center text-muted">
+              {{ 'socios.list.loading' | translate }}
+            </div>
             } @else {
-              @if (socios.length > 0) {
+            @if (socios.length > 0) {
 
-                <div class="table-responsive socios-table-scroll">
-                  <table class="table table-sm socios-table mb-0">
-                    <thead>
-                      <tr>
-                        <th>{{ 'socios.list.columns.code' | translate }}</th>
-                        <th>{{ 'socios.list.columns.member' | translate }}</th>
-                        <th>{{ 'socios.list.columns.saving' | translate }}</th>
-                        <th>{{ 'socios.list.columns.status' | translate }}</th>
-                        <th>{{ 'socios.list.columns.date' | translate }}</th>
-                        <th>{{ 'socios.list.columns.accounts' | translate }}</th>
-                        <th class="text-end">{{ 'socios.list.columns.actions' | translate }}</th>
-                      </tr>
-                    </thead>
+            <div class="table-responsive socios-table-scroll">
+              <table class="table table-sm socios-table mb-0">
+                <thead>
+                  <tr>
+                    <th>{{ 'socios.list.columns.code' | translate }}</th>
+                    <th>{{ 'socios.list.columns.member' | translate }}</th>
+                    <th>{{ 'socios.list.columns.saving' | translate }}</th>
+                    <th>{{ 'socios.list.columns.status' | translate }}</th>
+                    <th>{{ 'socios.list.columns.date' | translate }}</th>
+                    <th>{{ 'socios.list.columns.accounts' | translate }}</th>
+                    <th>{{ 'socios.list.columns.actions' | translate }}</th>
+                  </tr>
+                </thead>
 
-                    <tbody>
-                      @for (item of socios; track item.id) {
-                        <tr
-                          class="socios-click-row"
-                          [class.socios-row-selected]="selectedSocio?.id === item.id"
-                          (click)="selectSocio(item)">
+                <tbody>
+                  @for (item of socios; track item.id) {
+                  <tr class="socios-click-row" [class.socios-row-selected]="selectedSocio?.id === item.id"
+                    (click)="selectSocio(item)" data-bs-toggle="offcanvas" data-bs-target="#socioDetailOffcanvas">
 
-                          <td>
-                            <div class="table-user">
-                              <div class="position-relative d-inline-block">
-                                <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
-                                  {{ getInitials(item.nombreCompleto) }}
-                                </div>
+                    <td>
+                      <div class="table-user">
+                        <div class="position-relative d-inline-block">
+                          <div class="table-user-avatar table-user-avatar-text" [ngStyle]="getAvatarStyle()">
+                            {{ getInitials(item.nombreCompleto) }}
+                          </div>
 
-                                @if (item.alerts.count) {
-                                  <i
-                                    class="fa-solid fa-triangle-exclamation text-warning position-absolute top-0 start-100 translate-middle"
-                                    style="font-size: 14px;">
-                                  </i>
-                                }
-                              </div>
-
-                              <div>
-                                {{ item.codigoSocio || '-' }}
-                              </div>
-                            </div>
-                          </td>
-
-                          <td>
-                            <div class="table-user-name">{{ item.nombreCompleto || '-' }}</div>
-                            <div>{{ item.numeroIdentificacion || '-' }}</div>
-                          </td>
-
-                          <td>
-                            {{ appConfigService.getCurrentSettings().currency }}
-                            {{ formatCurrency(item.dashboard?.totalAhorro) }}
-                          </td>
-
-                          <td>
-                            <span class="badge" [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
-                              {{
-                                item.activo
-                                  ? ('socios.stats.active' | translate)
-                                  : ('socios.stats.inactive' | translate)
-                              }}
-                            </span>
-                          </td>
-
-                          <td>{{ formatDate(item.createdAtUtc) }}</td>
-
-                          <td>
-                            <div class="d-flex flex-wrap gap-1">
-                              <span
-                                class="badge d-inline-flex align-items-center gap-1"
-                                [ngClass]="item.cuentaCorrienteActiva ? 'badge-soft-success' : 'badge-soft-secondary'">
-                                <i
-                                  class="bi"
-                                  [ngClass]="item.cuentaCorrienteActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
-                                </i>
-                                {{ 'socios.accounts.current' | translate }}
-                              </span>
-
-                              <span
-                                class="badge d-inline-flex align-items-center gap-1"
-                                [ngClass]="item.cuentaNavidenaActiva ? 'badge-soft-warning' : 'badge-soft-secondary'">
-                                <i
-                                  class="bi"
-                                  [ngClass]="item.cuentaNavidenaActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
-                                </i>
-                                {{ 'socios.accounts.christmas' | translate }}
-                              </span>
-                            </div>
-                          </td>
-
-                          <td class="text-end">
-                            <div class="table-actions" (click)="$event.stopPropagation()">
-
-                              <button
-                                type="button"
-                                class="btn btn-icon btn-sm btn-light"
-                                (click)="onView(item.id)"
-                                [permissionRoute]="['/socios']"
-                                [appPermission]="['view']">
-                                <i class="bi bi-eye"></i>
-                              </button>
-
-                              <button
-                                type="button"
-                                class="btn btn-icon btn-sm btn-light"
-                                (click)="onEdit(item.id)"
-                                [permissionRoute]="['/socios']"
-                                [appPermission]="['edit']">
-                                <i class="bi bi-pencil"></i>
-                              </button>
-
-                              <button
-                                type="button"
-                                class="btn btn-icon btn-sm btn-light"
-                                (click)="onToggleStatus(item)"
-                                [permissionRoute]="['/socios']"
-                                [appPermission]="['delete']">
-                                <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'"></i>
-                              </button>
-
-                            </div>
-                          </td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="users-pagination socios-pagination d-flex justify-content-between align-items-center flex-wrap gap-2">
-                  <div class="users-pagination-info">
-                    {{ 'socios.list.pagination.showing' | translate }}
-                    <strong>{{ visibleStart }}-{{ visibleEnd }}</strong>
-                    {{ 'socios.list.pagination.of' | translate }}
-                    <strong>{{ totalRecords }}</strong>
-                    {{ 'socios.list.pagination.users' | translate }}
-                  </div>
-
-                  <div class="d-flex align-items-center gap-2">
-                    <select
-                      class="form-select form-select-sm"
-                      [ngModel]="pageSize"
-                      (ngModelChange)="changePageSize($event)">
-                      @for (size of pageSizeOptions; track size) {
-                        <option [ngValue]="size">{{ size }}</option>
-                      }
-                    </select>
-
-                    <nav>
-                      <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item" [class.disabled]="currentPage === 1">
-                          <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage - 1)">
-                            <i class="bi bi-chevron-left"></i>
-                          </a>
-                        </li>
-
-                        @for (page of pageNumbers; track page) {
-                          @if (page === '...') {
-                            <li class="page-item disabled">
-                              <a class="page-link" href="javascript:void(0)">...</a>
-                            </li>
-                          } @else {
-                            <li class="page-item" [class.active]="page === currentPage">
-                              <a class="page-link" href="javascript:void(0)" (click)="goToPage(+page)">
-                                {{ page }}
-                              </a>
-                            </li>
+                          @if (item.alerts.count) {
+                          <i class="fa-solid fa-triangle-exclamation text-warning position-absolute top-0 start-100 translate-middle"
+                            style="font-size: 14px;">
+                          </i>
                           }
-                        }
+                        </div>
 
-                        <li class="page-item" [class.disabled]="currentPage === totalPages">
-                          <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage + 1)">
-                            <i class="bi bi-chevron-right"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
+                        <div>
+                          {{ item.codigoSocio || '-' }}
+                        </div>
+                      </div>
+                    </td>
 
-              } @else {
-                <div class="py-4 text-center text-muted">
-                  {{ 'socios.list.empty' | translate }}
-                </div>
-              }
+                    <td>
+                      <div class="table-user-name">{{ item.nombreCompleto || '-' }}</div>
+                      <div>{{ item.numeroIdentificacion || '-' }}</div>
+                    </td>
+
+                    <td>
+                      {{ appConfigService.getCurrentSettings().currency }}
+                      {{ formatCurrency(item.dashboard?.totalAhorro) }}
+                    </td>
+
+                    <td>
+                      <span class="badge" [ngClass]="item.activo ? 'badge-soft-success' : 'badge-soft-danger'">
+                        {{
+                        item.activo
+                        ? ('socios.stats.active' | translate)
+                        : ('socios.stats.inactive' | translate)
+                        }}
+                      </span>
+                    </td>
+
+                    <td>{{ formatDate(item.createdAtUtc) }}</td>
+
+                    <td>
+                      <div class="d-flex flex-wrap gap-1">
+                        <span class="badge d-inline-flex align-items-center gap-1"
+                          [ngClass]="item.cuentaCorrienteActiva ? 'badge-soft-success' : 'badge-soft-secondary'">
+                          <i class="bi"
+                            [ngClass]="item.cuentaCorrienteActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
+                          </i>
+                          {{ 'socios.accounts.current' | translate }}
+                        </span>
+
+                        <span class="badge d-inline-flex align-items-center gap-1"
+                          [ngClass]="item.cuentaNavidenaActiva ? 'badge-soft-warning' : 'badge-soft-secondary'">
+                          <i class="bi"
+                            [ngClass]="item.cuentaNavidenaActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
+                          </i>
+                          {{ 'socios.accounts.christmas' | translate }}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td class="text-end">
+                      <div class="table-actions" (click)="$event.stopPropagation()">
+
+                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onView(item.id)"
+                          [permissionRoute]="['/socios']" [appPermission]="['view']">
+                          <i class="bi bi-eye"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onEdit(item.id)"
+                          [permissionRoute]="['/socios']" [appPermission]="['edit']">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-icon btn-sm btn-light" (click)="onToggleStatus(item)"
+                          [permissionRoute]="['/socios']" [appPermission]="['delete']">
+                          <i class="bi" [ngClass]="item.activo ? 'bi-person-dash' : 'bi-person-check'"></i>
+                        </button>
+
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              class="users-pagination socios-pagination d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <div class="users-pagination-info">
+                {{ 'socios.list.pagination.showing' | translate }}
+                <strong>{{ visibleStart }}-{{ visibleEnd }}</strong>
+                {{ 'socios.list.pagination.of' | translate }}
+                <strong>{{ totalRecords }}</strong>
+                {{ 'socios.list.pagination.users' | translate }}
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                <select class="form-select form-select-sm" [ngModel]="pageSize"
+                  (ngModelChange)="changePageSize($event)">
+                  @for (size of pageSizeOptions; track size) {
+                  <option [ngValue]="size">{{ size }}</option>
+                  }
+                </select>
+
+                <nav>
+                  <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                      <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage - 1)">
+                        <i class="bi bi-chevron-left"></i>
+                      </a>
+                    </li>
+
+                    @for (page of pageNumbers; track page) {
+                    @if (page === '...') {
+                    <li class="page-item disabled">
+                      <a class="page-link" href="javascript:void(0)">...</a>
+                    </li>
+                    } @else {
+                    <li class="page-item" [class.active]="page === currentPage">
+                      <a class="page-link" href="javascript:void(0)" (click)="goToPage(+page)">
+                        {{ page }}
+                      </a>
+                    </li>
+                    }
+                    }
+
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                      <a class="page-link" href="javascript:void(0)" (click)="goToPage(currentPage + 1)">
+                        <i class="bi bi-chevron-right"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+
+            } @else {
+            <div class="py-4 text-center text-muted">
+              {{ 'socios.list.empty' | translate }}
+            </div>
+            }
             }
 
           </div>
         </div>
       </div>
 
-      <div class="d-flex flex-column min-h-0 socios-side-column">
+    </div>
 
-        @if (selectedSocio) {
-          <div class="d-flex flex-column gap-3 h-100 min-h-0">
+    <div class="card socios-movements-card">
+      <div class="card-header flex-shrink-0">
+        <h5 class="card-title mb-0">
+          {{ 'socios.movements.title' | translate }}
+        </h5>
+      </div>
 
-            <div class="card flex-shrink-0">
-              <div class="card-body">
-                <div class="d-flex align-items-center gap-3 mb-3">
-                  <div class="table-user-avatar table-user-avatar-text socios-profile-avatar" [ngStyle]="getAvatarStyle()">
-                    {{ getInitials(selectedSocio.nombreCompleto) }}
-                  </div>
+      <div class="card-body p-0 socios-movements-body">
+        @if (ultimosMovimientosGlobales.length === 0) {
+        <div class="px-3 py-3 text-muted small text-center">
+          {{ 'socios.movements.empty' | translate }}
+        </div>
+        } @else {
+        <div class="table-responsive socios-movements-scroll">
+          <table class="table mb-0 movimientos-table">
+            <thead>
+              <tr>
+                <th>{{ 'socios.movements.columns.date' | translate }}</th>
+                <th>{{ 'socios.movements.columns.description' | translate }}</th>
+              </tr>
+            </thead>
 
-                  <div class="min-w-0">
-                    <h5 class="card-title mb-1 text-truncate">{{ selectedSocio.nombreCompleto || '-' }}</h5>
-                    <div class="text-muted small">{{ selectedSocio.codigoSocio || '-' }}</div>
-                    <div class="text-muted small">
-                      {{ 'socios.profile.memberSince' | translate }} {{ formatDate(selectedSocio.createdAtUtc) }}
-                    </div>
-
-                    <div class="d-flex flex-wrap gap-2 mt-2">
-                      <span
-                        class="badge d-inline-flex align-items-center gap-1"
-                        [ngClass]="selectedSocio.cuentaCorrienteActiva ? 'badge-soft-success' : 'badge-soft-secondary'">
-                        <i
-                          class="bi"
-                          [ngClass]="selectedSocio.cuentaCorrienteActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
-                        </i>
-                        {{ 'socios.accounts.current' | translate }}
-                      </span>
-
-                      <span
-                        class="badge d-inline-flex align-items-center gap-1"
-                        [ngClass]="selectedSocio.cuentaNavidenaActiva ? 'badge-soft-warning' : 'badge-soft-secondary'">
-                        <i
-                          class="bi"
-                          [ngClass]="selectedSocio.cuentaNavidenaActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
-                        </i>
-                        {{ 'socios.accounts.christmas' | translate }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="socios-summary-strip socios-summary-strip--ahorro mb-3">
-                  <div class="socios-summary-strip__label">{{ 'socios.dashboard.totalSaving' | translate }}</div>
-                  <div class="socios-summary-strip__value">
-                    {{ appConfigService.getCurrentSettings().currency }}
-                    {{ formatCurrency(selectedSocio.dashboard?.totalAhorro) }}
-                  </div>
-                </div>
-
-                <div class="socios-summary-strip socios-summary-strip--credito">
-                  <div class="socios-summary-strip__label">{{ 'socios.dashboard.pendingCredit' | translate }}</div>
-                  <div class="socios-summary-strip__value">
-                    {{ appConfigService.getCurrentSettings().currency }}
-                    {{ formatCurrency(selectedSocio.dashboard?.creditoPendiente) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card flex-shrink-0">
-              <div class="card-header border-0 pb-2">
-                <h5 class="card-title mb-0">{{ 'ahorro.side.quickActions' | translate }}</h5>
-              </div>
-
-              <div class="card-body pt-0">
-                <div class="quick-actions-grid">
-                  @for (action of orderedActions; track $index) {
-                    <button
-                      type="button"
-                      class="quick-action-btn fa-lg"
-                      [ngClass]="{
-                        'is-green': action.accent === 'green',
-                        'is-blue': action.accent === 'blue',
-                        'is-violet': action.accent === 'violet',
-                        'is-cyan': action.accent === 'cyan',
-                        'is-amber': action.accent === 'amber',
-                        'is-emerald': action.accent === 'emerald',
-                        'is-orange': action.accent === 'orange',
-                        'is-teal': action.accent === 'teal'
-                      }"
-                      (click)="onActionClick(action)"
-                      [appPermission]="['create']"
-                      [permissionRoute]="'/ahorro'">
-                      <i [class]="action.icon"></i>
-                      <span>{{ action.titleKey | translate }}</span>
-                    </button>
-                  }
-                </div>
-              </div>
-            </div>
-
-            <div class="card socios-movements-card">
-              <div class="card-header flex-shrink-0">
-                <h5 class="card-title mb-0">{{ 'socios.movements.title' | translate }}</h5>
-              </div>
-
-              <div class="card-body p-0 socios-movements-body">
-                @if (selectedSocio.ultimosMovimientos.length === 0) {
-                  <div class="px-3 py-3 text-muted small text-center">
-                    {{ 'socios.movements.empty' | translate }}
-                  </div>
-                } @else {
-                  <div class="table-responsive socios-movements-scroll">
-                    <table class="table mb-0 movimientos-table">
-                      <thead>
-                        <tr>
-                          <th>{{ 'socios.movements.columns.date' | translate }}</th>
-                          <th>{{ 'socios.movements.columns.description' | translate }}</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        @for (mov of selectedSocio.ultimosMovimientos; track $index) {
-                          <tr>
-                            <td>{{ formatDateTimeAmPm(mov.fecha) }}</td>
-                            <td>{{ mov.descripcion || '-' }}</td>
-                          </tr>
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                }
-              </div>
-            </div>
-
-          </div>
+            <tbody>
+              @for (mov of ultimosMovimientosGlobales; track $index) {
+              <tr>
+                <td>{{ formatDateTimeAmPm(mov.fecha) }}</td>
+                <td>{{ mov.descripcion || '-' }}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
         }
+      </div>
+    </div>
+
+  </div>
+
+  <!-- OFFCANVAS PANEL DERECHO -->
+  <div class="offcanvas offcanvas-end socios-side-offcanvas" tabindex="-1" id="socioDetailOffcanvas">
+
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">
+        {{ 'socios.sidePanel.title' | translate }}
+      </h5>
+
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas">
+      </button>
+    </div>
+
+    <div class="offcanvas-body">
+
+      @if (selectedSocio) {
+
+      <div class="d-flex flex-column gap-3 min-h-0">
+
+        <div class="card flex-shrink-0">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="table-user-avatar table-user-avatar-text socios-profile-avatar" [ngStyle]="getAvatarStyle()">
+                {{ getInitials(selectedSocio.nombreCompleto) }}
+              </div>
+
+              <div class="min-w-0">
+                <h5 class="card-title mb-1 text-truncate">
+                  {{ selectedSocio.nombreCompleto || '-' }}
+                </h5>
+
+                <div class="text-muted small">
+                  {{ selectedSocio.codigoSocio || '-' }}
+                </div>
+
+                <div class="text-muted small">
+                  {{ 'socios.profile.memberSince' | translate }}
+                  {{ formatDate(selectedSocio.createdAtUtc) }}
+                </div>
+
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                  <span class="badge d-inline-flex align-items-center gap-1"
+                    [ngClass]="selectedSocio.cuentaCorrienteActiva ? 'badge-soft-success' : 'badge-soft-secondary'">
+                    <i class="bi"
+                      [ngClass]="selectedSocio.cuentaCorrienteActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
+                    </i>
+                    {{ 'socios.accounts.current' | translate }}
+                  </span>
+
+                  <span class="badge d-inline-flex align-items-center gap-1"
+                    [ngClass]="selectedSocio.cuentaNavidenaActiva ? 'badge-soft-warning' : 'badge-soft-secondary'">
+                    <i class="bi"
+                      [ngClass]="selectedSocio.cuentaNavidenaActiva ? 'bi-check-circle-fill' : 'bi-dash-circle'">
+                    </i>
+                    {{ 'socios.accounts.christmas' | translate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="socios-summary-strip socios-summary-strip--ahorro mb-3">
+              <div class="socios-summary-strip__label">
+                {{ 'socios.dashboard.totalSaving' | translate }}
+              </div>
+
+              <div class="socios-summary-strip__value">
+                {{ appConfigService.getCurrentSettings().currency }}
+                {{ formatCurrency(selectedSocio.dashboard?.totalAhorro) }}
+              </div>
+            </div>
+
+            <div class="socios-summary-strip socios-summary-strip--credito">
+              <div class="socios-summary-strip__label">
+                {{ 'socios.dashboard.pendingCredit' | translate }}
+              </div>
+
+              <div class="socios-summary-strip__value">
+                {{ appConfigService.getCurrentSettings().currency }}
+                {{ formatCurrency(selectedSocio.dashboard?.creditoPendiente) }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card flex-shrink-0">
+          <div class="card-header border-0 pb-2">
+            <h5 class="card-title mb-0">
+              {{ 'ahorro.side.quickActions' | translate }}
+            </h5>
+          </div>
+
+          <div class="card-body pt-0">
+            <div class="quick-actions-grid">
+              @for (action of orderedActions; track $index) {
+              <button type="button" class="quick-action-btn fa-lg" [ngClass]="{
+                  'is-green': action.accent === 'green',
+                  'is-blue': action.accent === 'blue',
+                  'is-violet': action.accent === 'violet',
+                  'is-cyan': action.accent === 'cyan',
+                  'is-amber': action.accent === 'amber',
+                  'is-emerald': action.accent === 'emerald',
+                  'is-orange': action.accent === 'orange',
+                  'is-teal': action.accent === 'teal'
+                }" (click)="onActionClick(action)" [appPermission]="['create']" [permissionRoute]="'/ahorro'">
+                <i [class]="action.icon"></i>
+                <span>{{ action.titleKey | translate }}</span>
+              </button>
+              }
+            </div>
+          </div>
+        </div>
+
 
       </div>
 
+      }
+
     </div>
   </div>
+
 </section>

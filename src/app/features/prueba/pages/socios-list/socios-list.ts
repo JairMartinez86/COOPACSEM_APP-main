@@ -55,7 +55,6 @@ interface SocioRow {
   updatedBy?: string | null;
   dashboard?: SocioDashboardRow | null;
   alerts: SocioAlerts;
-  ultimosMovimientos: SocioMovimientoRow[];
 }
 
 @Component({
@@ -85,6 +84,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'socios';
+  public ultimosMovimientosGlobales: SocioMovimientoRow[] = [];
 
   public importingExcel = false;
   socios: SocioRow[] = [];
@@ -101,8 +101,8 @@ export class SociosListComponent implements OnInit, OnDestroy {
     aprobacionesPendientes: 0
   };
 
-      currentPage = 1;
-    pageSize = 20;
+  currentPage = 1;
+  pageSize = 10;
   readonly pageSizeOptions = [10, 20, 50, 100];
 
 
@@ -113,7 +113,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
     { icon: 'fa-solid fa-arrow-up', titleKey: 'ahorro.actions.newWithdrawal', accent: 'violet', order: 4 },
     { icon: 'fa-solid fa-arrow-trend-up', titleKey: 'ahorro.actions.increaseInstallment', accent: 'teal', order: 5 },
     { icon: 'fa-solid fa-arrow-trend-down', titleKey: 'ahorro.actions.decreaseInstallment', accent: 'orange', order: 6 },
-   
+
   ];
 
 
@@ -183,6 +183,15 @@ export class SociosListComponent implements OnInit, OnDestroy {
 
           this.socios = raw.map((item: any) => this.normalizeSocio(item));
           this.totalRecords = Number(data?.totalRecords ?? 0);
+
+          this.ultimosMovimientosGlobales =
+            Array.isArray(data?.ultimosMovimientos)
+              ? data.ultimosMovimientos.map((mov: any) => ({
+                fecha: mov?.fecha ?? null,
+                descripcion: mov?.descripcion ?? null
+              }))
+              : [];
+
 
           if (!this.socios.length) {
             this.selectedSocio = null;
@@ -391,16 +400,16 @@ export class SociosListComponent implements OnInit, OnDestroy {
     this.loadData();
   }
   changePageSize(value: number | string): void {
-        const size = Number(value);
+    const size = Number(value);
 
-        if (!size || size === this.pageSize) {
-            return;
-        }
-
-        this.pageSize = size;
-        this.currentPage = 1;
-        this.loadData();
+    if (!size || size === this.pageSize) {
+      return;
     }
+
+    this.pageSize = size;
+    this.currentPage = 1;
+    this.loadData();
+  }
 
 
   formatDate(value?: string | null): string {
@@ -471,12 +480,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
       createdBy: item?.createdBy ?? null,
       updatedBy: item?.updatedBy ?? null,
 
-      ultimosMovimientos: Array.isArray(item?.ultimosMovimientos)
-        ? item.ultimosMovimientos.map((mov: any) => ({
-          fecha: mov?.fecha ?? null,
-          descripcion: mov?.descripcion ?? null
-        }))
-        : [],
+
 
       dashboard: {
         totalAhorro: Number(item?.dashboard?.totalAhorro ?? 0),

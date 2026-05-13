@@ -29,21 +29,11 @@
 }
 
 /* =========================
-   LAYOUT 2 COLUMNAS
+   LAYOUT
 ========================= */
 
-.two-column-layout,
 .socios-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 500px;
-  gap: 1rem;
-  align-items: start;
   width: 100%;
-  overflow: visible;
-}
-
-.two-column-layout > div,
-.socios-layout > div {
   min-width: 0;
 }
 
@@ -101,6 +91,7 @@
 .socios-table th,
 .socios-table td {
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .socios-click-row {
@@ -124,19 +115,21 @@
 ========================= */
 
 .socios-table-scroll::-webkit-scrollbar,
-.socios-movements-scroll::-webkit-scrollbar {
+.socios-movements-scroll::-webkit-scrollbar,
+.offcanvas-body::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 .socios-table-scroll::-webkit-scrollbar-thumb,
-.socios-movements-scroll::-webkit-scrollbar-thumb {
+.socios-movements-scroll::-webkit-scrollbar-thumb,
+.offcanvas-body::-webkit-scrollbar-thumb {
   border-radius: 8px;
   background: rgba(120, 120, 120, 0.45);
 }
 
 /* =========================
-   PAGINACIÓN FIJA ABAJO
+   PAGINACIÓN
 ========================= */
 
 .socios-pagination {
@@ -178,20 +171,6 @@
 
 .table-user-avatar-text {
   color: #fff;
-}
-
-/* =========================
-   SIDEBAR DERECHA
-========================= */
-
-.socios-side-column {
-  height: auto;
-  overflow: visible;
-}
-
-.socios-side-column > .d-flex {
-  height: auto !important;
-  overflow: visible;
 }
 
 /* =========================
@@ -346,7 +325,7 @@
 }
 
 /* =========================
-   MOVIMIENTOS DERECHA
+   MOVIMIENTOS
 ========================= */
 
 .socios-movements-card {
@@ -475,6 +454,19 @@
 }
 
 /* =========================
+   OFFCANVAS
+========================= */
+
+.socios-side-offcanvas {
+  width: 460px;
+  max-width: 100%;
+}
+
+.socios-side-offcanvas .offcanvas-body {
+  overflow-y: auto;
+}
+
+/* =========================
    PAGINACIÓN LEGACY
 ========================= */
 
@@ -507,18 +499,7 @@
    RESPONSIVE
 ========================= */
 
-@media (max-width: 1400px) {
-  .two-column-layout,
-  .socios-layout {
-    grid-template-columns: minmax(0, 1fr) 380px;
-  }
-}
-
 @media (max-width: 1200px) {
-  .two-column-layout,
-  .socios-layout {
-    grid-template-columns: 1fr;
-  }
 
   .dashboard-grid-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -534,6 +515,7 @@
 }
 
 @media (max-width: 768px) {
+
   .dashboard-grid-4 {
     grid-template-columns: 1fr;
   }
@@ -553,12 +535,17 @@
   }
 }
 
-@media (max-width: 575px) {
+@media (max-width: 576px) {
+
   .socios-summary-strip__value {
     font-size: 1.5rem;
   }
 
   .quick-actions-grid {
     grid-template-columns: 1fr;
+  }
+
+  .socios-side-offcanvas {
+    width: 100%;
   }
 }
