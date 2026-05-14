@@ -6,10 +6,22 @@ import { ApiConfigService } from '../../../core/services/ApiConfigService ';
     providedIn: 'root'
 })
 export class EstadoCuentaService {
-   private readonly http = inject(HttpClient);
-     private readonly api = inject(ApiConfigService);
 
-    getAll(page = 1, pageSize = 20, search = '', tipoCuenta = '', estado = '') {
+    private readonly http = inject(HttpClient);
+    private readonly api = inject(ApiConfigService);
+
+    private get baseUrl(): string {
+        return `${this.api.baseUrl}/EstadoCuentaLista`;
+    }
+
+    getAll(
+        page = 1,
+        pageSize = 20,
+        search = '',
+        tipoCuenta = '',
+        estado = ''
+    ) {
+
         let params = new HttpParams()
             .set('page', page)
             .set('pageSize', pageSize);
@@ -26,7 +38,10 @@ export class EstadoCuentaService {
             params = params.set('estado', estado);
         }
 
-        return this.http.get(this.api.baseUrl, { params });
+        return this.http.get(this.baseUrl, {
+            params,
+            withCredentials: true
+        });
     }
 
     getDetalle(
@@ -41,19 +56,45 @@ export class EstadoCuentaService {
             anio?: number;
         }
     ) {
+
         let params = new HttpParams();
 
-        if (filtros?.tipoReporte) params = params.set('tipoReporte', filtros.tipoReporte);
-        if (filtros?.tipoCuenta) params = params.set('tipoCuenta', filtros.tipoCuenta);
-        if (filtros?.fechaCorte) params = params.set('fechaCorte', filtros.fechaCorte);
-        if (filtros?.fechaDesde) params = params.set('fechaDesde', filtros.fechaDesde);
-        if (filtros?.fechaHasta) params = params.set('fechaHasta', filtros.fechaHasta);
-        if (filtros?.mes) params = params.set('mes', filtros.mes);
-        if (filtros?.anio) params = params.set('anio', filtros.anio);
+        if (filtros?.tipoReporte) {
+            params = params.set('tipoReporte', filtros.tipoReporte);
+        }
 
-        return this.http.get(`${this.api.baseUrl}/${socioId}/detalle`, { params });
+        if (filtros?.tipoCuenta) {
+            params = params.set('tipoCuenta', filtros.tipoCuenta);
+        }
+
+        if (filtros?.fechaCorte) {
+            params = params.set('fechaCorte', filtros.fechaCorte);
+        }
+
+        if (filtros?.fechaDesde) {
+            params = params.set('fechaDesde', filtros.fechaDesde);
+        }
+
+        if (filtros?.fechaHasta) {
+            params = params.set('fechaHasta', filtros.fechaHasta);
+        }
+
+        if (filtros?.mes) {
+            params = params.set('mes', filtros.mes);
+        }
+
+        if (filtros?.anio) {
+            params = params.set('anio', filtros.anio);
+        }
+
+        return this.http.get(
+            `${this.baseUrl}/${socioId}/detalle`,
+            {
+                params,
+                withCredentials: true
+            }
+        );
     }
-
 
     getReporteSaldosAhorroActual(
         tipoCuenta: string,
@@ -62,6 +103,7 @@ export class EstadoCuentaService {
         fechaFin?: string | null,
         estado?: string | null
     ) {
+
         let params = new HttpParams()
             .set('tipoCuenta', tipoCuenta)
             .set('formato', formato);
@@ -78,7 +120,13 @@ export class EstadoCuentaService {
             params = params.set('estado', estado);
         }
 
-        return this.http.get(`${this.api.baseUrl}/reporte/saldos-ahorro-actual`, { params });
+        return this.http.get(
+            `${this.baseUrl}/reporte/saldos-ahorro-actual`,
+            {
+                params,
+                withCredentials: true
+            }
+        );
     }
 
     getReporteSaldosHistoricosAhorro(
@@ -88,15 +136,30 @@ export class EstadoCuentaService {
         fechaFin?: string | null,
         estado?: string | null
     ) {
+
         let params = new HttpParams()
             .set('tipoCuenta', tipoCuenta)
             .set('formato', formato);
 
-        if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
-        if (fechaFin) params = params.set('fechaFin', fechaFin);
-        if (estado) params = params.set('estado', estado);
+        if (fechaInicio) {
+            params = params.set('fechaInicio', fechaInicio);
+        }
 
-        return this.http.get(`${this.api.baseUrl}/reporte/saldos-historicos-ahorro`, { params });
+        if (fechaFin) {
+            params = params.set('fechaFin', fechaFin);
+        }
+
+        if (estado) {
+            params = params.set('estado', estado);
+        }
+
+        return this.http.get(
+            `${this.baseUrl}/reporte/saldos-historicos-ahorro`,
+            {
+                params,
+                withCredentials: true
+            }
+        );
     }
 
     getReporteAfiliacionMembresia(
@@ -104,6 +167,7 @@ export class EstadoCuentaService {
         fechaFin?: string | null,
         estado?: string | null
     ) {
+
         let params = new HttpParams()
             .set('formato', formato);
 
@@ -115,44 +179,68 @@ export class EstadoCuentaService {
             params = params.set('estado', estado);
         }
 
-
-        return this.http.get(`${this.api.baseUrl}/reporte/afiliacion-membresia`, { params });
+        return this.http.get(
+            `${this.baseUrl}/reporte/afiliacion-membresia`,
+            {
+                params,
+                withCredentials: true
+            }
+        );
     }
-
 
     getReporteIntegracionAhorro(
-    formato: 'pdf' | 'excel',
-    anio: number,
-    tipoCuenta: string,
-    estado?: string | null
-) {
-    let params = new HttpParams()
-        .set('formato', formato)
-        .set('anio', anio)
-        .set('tipoCuenta', tipoCuenta);
+        formato: 'pdf' | 'excel',
+        anio: number,
+        tipoCuenta: string,
+        estado?: string | null
+    ) {
 
-    if (estado) {
-        params = params.set('estado', estado);
+        let params = new HttpParams()
+            .set('formato', formato)
+            .set('anio', anio)
+            .set('tipoCuenta', tipoCuenta);
+
+        if (estado) {
+            params = params.set('estado', estado);
+        }
+
+        return this.http.get(
+            `${this.baseUrl}/reporte/integracion-ahorro`,
+            {
+                params,
+                withCredentials: true
+            }
+        );
     }
 
-    return this.http.get(`${this.api.baseUrl}/reporte/integracion-ahorro`, { params });
-}
-
     getReportePagosAfiliaciones(
-    formato: 'pdf' | 'excel',
-    fechaInicio?: string | null,
-    fechaFin?: string | null,
-    estado?: string | null
-) {
-    let params = new HttpParams()
-        .set('formato', formato);
+        formato: 'pdf' | 'excel',
+        fechaInicio?: string | null,
+        fechaFin?: string | null,
+        estado?: string | null
+    ) {
 
-    if (fechaInicio) params = params.set('fechaInicio', fechaInicio);
-    if (fechaFin) params = params.set('fechaFin', fechaFin);
-    if (estado) params = params.set('estado', estado);
+        let params = new HttpParams()
+            .set('formato', formato);
 
-    return this.http.get(`${this.api.baseUrl}/reporte/pagos-afiliaciones`, { params });
-}
+        if (fechaInicio) {
+            params = params.set('fechaInicio', fechaInicio);
+        }
 
+        if (fechaFin) {
+            params = params.set('fechaFin', fechaFin);
+        }
 
+        if (estado) {
+            params = params.set('estado', estado);
+        }
+
+        return this.http.get(
+            `${this.baseUrl}/reporte/pagos-afiliaciones`,
+            {
+                params,
+                withCredentials: true
+            }
+        );
+    }
 }
