@@ -667,35 +667,81 @@
               <div class="card-body p-4">
                 <div class="row g-3">
                   <div class="col-md-6" error-notify="sociedadLabora" error-display="inline">
-                    <label for="sociedadLabora" class="form-label required">{{ 'socios.fields.sociedadLabora.label' |
-                      translate }}</label>
+                    <label for="sociedadLabora" class="form-label required">
+                      {{ 'socios.fields.sociedadLabora.label' | translate }}
+                    </label>
+
                     <select #sociedadLabora id="sociedadLabora" name="sociedadLabora" [(ngModel)]="socio.sociedadLabora"
-                      engineSync="sociedadLabora" autoFocusNext [next]="area" class="form-select required">
+                      engineSync="sociedadLabora" autoFocusNext [next]="ubicacionLaboral" class="form-select required">
+
                       <option value="">{{ 'socios.common.selectOption' | translate }}</option>
-                      <option value="GMG Comercial">GMG Comercial
+
+                      @for (item of sociedadesLaborales; track item.codigo) {
+                      <option [value]="item.codigo">
+                        {{ item.displayText || (item.codigo + ' - ' + item.nombre) }}
                       </option>
-                      <option value="GMG Servicios">GMG Servicios
-                      </option>
-                      <option value="GMG Zona Franca">GMG Zona Franca
-                      </option>
+                      }
                     </select>
                   </div>
 
+                  <div class="col-md-6" error-notify="ubicacionLaboral" error-display="inline">
+                    <label for="ubicacionLaboral" class="form-label required">
+                      {{ 'socios.fields.ubicacionLaboral.label' | translate }}
+                    </label>
+
+                    <select #ubicacionLaboral id="ubicacionLaboral" name="ubicacionLaboral"
+                      [(ngModel)]="socio.ubicacionLaboral" engineSync="ubicacionLaboral" autoFocusNext [next]="area"
+                      class="form-select required">
+
+                      <option value="">{{ 'socios.common.selectOption' | translate }}</option>
+
+                      @for (item of ubicacionesLaborales; track item.codigo) {
+                      <option [value]="item.codigo">
+                        {{ item.displayText || (item.codigo + ' - ' + item.nombre) }}
+                      </option>
+                      }
+                    </select>
+                  </div>
+
+
+
                   <div class="col-md-6" error-notify="area" error-display="inline">
-                    <label for="area" class="form-label required">{{ 'socios.fields.area.label' | translate }}</label>
-                    <input #area id="area" name="area" [(ngModel)]="socio.area" engineSync="area" autoFocusNext
-                      [next]="cargo" type="text" class="form-control"
-                      [placeholder]="'socios.fields.area.placeholder' | translate">
+                    <label for="area" class="form-label required">
+                      {{ 'socios.fields.area.label' | translate }}
+                    </label>
+
+                    <select #area id="area" name="area" [(ngModel)]="socio.area" engineSync="area" autoFocusNext
+                      [next]="cargo" class="form-select required">
+
+                      <option value="">{{ 'socios.common.selectOption' | translate }}</option>
+
+                      @for (item of areasLaborales; track item.codigo) {
+                      <option [value]="item.codigo">
+                        {{ item.displayText || (item.codigo + ' - ' + item.nombre) }}
+                      </option>
+                      }
+                    </select>
                   </div>
 
-                  <div class="col-md-4" error-notify="cargo" error-display="inline">
-                    <label for="cargo" class="form-label required">{{ 'socios.fields.cargo.label' | translate }}</label>
-                    <input #cargo id="cargo" name="cargo" [(ngModel)]="socio.cargo" engineSync="cargo" autoFocusNext
-                      [next]="fechaIngreso" type="text" class="form-control"
-                      [placeholder]="'socios.fields.cargo.placeholder' | translate">
+                  <div class="col-md-6" error-notify="cargo" error-display="inline">
+                    <label for="cargo" class="form-label required">
+                      {{ 'socios.fields.cargo.label' | translate }}
+                    </label>
+
+                    <select #cargo id="cargo" name="cargo" [(ngModel)]="socio.cargo" engineSync="cargo" autoFocusNext
+                      [next]="fechaIngreso" class="form-select required">
+
+                      <option value="">{{ 'socios.common.selectOption' | translate }}</option>
+
+                      @for (item of cargosLaborales; track item.codigo) {
+                      <option [value]="item.codigo">
+                        {{ item.displayText || (item.codigo + ' - ' + item.nombre) }}
+                      </option>
+                      }
+                    </select>
                   </div>
 
-                  <div class="col-md-4" error-notify="fechaIngreso" error-display="inline">
+                  <div class="col-md-6" error-notify="fechaIngreso" error-display="inline">
                     <label for="fechaIngreso" class="form-label required">{{ 'socios.fields.fechaIngreso.label' |
                       translate }}</label>
                     <input #fechaIngreso id="fechaIngreso" name="fechaIngreso" [(ngModel)]="socio.fechaIngreso"
@@ -703,7 +749,7 @@
                       dateFormat [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
                   </div>
 
-                  <div class="col-md-4" error-notify="numeroIp" error-display="inline">
+                  <div class="col-md-6" error-notify="numeroIp" error-display="inline">
                     <label for="numeroIp" class="form-label">{{ 'socios.fields.numeroIp.label' | translate }}</label>
                     <input #numeroIp id="numeroIp" name="numeroIp" [(ngModel)]="socio.numeroIp" engineSync="numeroIp"
                       autoFocusNext [next]="correoLaboral" type="text" class="form-control"
@@ -754,7 +800,8 @@
                     </div>
                   </div>
                   <div class="col-md-4" error-notify="ingresosAnuales" error-display="inline">
-                    <label for="ingresosAnuales" class="form-label required">{{ 'socios.fields.ingresosAnuales.label' |
+                    <label for="ingresosAnuales" class="form-label required">{{ 'socios.fields.ingresosAnuales.label'
+                      |
                       translate }}</label>
                     <div class="input-group">
                       <input #ingresosAnuales id="ingresosAnuales" name="ingresosAnualesView"
@@ -815,36 +862,35 @@
                             <td>{{ item.observaciones || '-' }}</td>
 
 
-                            
-                          <div class="table-actions">
+
+                            <div class="table-actions">
 
 
 
 
 
-                            @if(this.mode != "view"){
+                              @if(this.mode != "view"){
 
-                            <button type="button" class="btn btn-icon btn-sm btn-light"
-                              [appPermission]="['new', 'edit']" [permissionRoute]="['/socios', '/ahorro']"
-                              [title]="'common.actions.edit' | translate" (click)="openOtroIngresoModal(item)">
-                              <i class="bi"
-                                [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
-                            </button>
+                              <button type="button" class="btn btn-icon btn-sm btn-light"
+                                [appPermission]="['new', 'edit']" [permissionRoute]="['/socios', '/ahorro']"
+                                [title]="'common.actions.edit' | translate" (click)="openOtroIngresoModal(item)">
+                                <i class="bi"
+                                  [ngClass]="permissionService.has('edit','/socios') ? 'bi-pencil' : 'bi-eye'"></i>
+                              </button>
 
-                            <button type="button" class="btn btn-icon btn-sm btn-light"
-                              [appPermission]="['new', 'delete']" [permissionRoute]="['/socios', '/ahorro']"
-                              [title]="'common.actions.delete' | translate" (click)="removeOtroIngreso(item)">
-                              <i class="bi bi-trash"></i>
-                            </button>
-                            }
-
-
-                          </div>
+                              <button type="button" class="btn btn-icon btn-sm btn-light"
+                                [appPermission]="['new', 'delete']" [permissionRoute]="['/socios', '/ahorro']"
+                                [title]="'common.actions.delete' | translate" (click)="removeOtroIngreso(item)">
+                                <i class="bi bi-trash"></i>
+                              </button>
+                              }
 
 
+                            </div>
 
-                          </tr
-                          >
+
+
+                          </tr>
                           }
                         </tbody>
                         <tfoot>
@@ -873,11 +919,10 @@
 
             </div>
 
-            
-              <app-otro-ingreso-modal [open]="otroIngresoModalOpen" [saving]="otroIngresoSaving"
-                [model]="otroIngresoEditing" (closed)="closeOtroIngresoModal()"
-                (saved)="onOtroIngresoModalSaved($event)">
-              </app-otro-ingreso-modal>
+
+            <app-otro-ingreso-modal [open]="otroIngresoModalOpen" [saving]="otroIngresoSaving"
+              [model]="otroIngresoEditing" (closed)="closeOtroIngresoModal()" (saved)="onOtroIngresoModalSaved($event)">
+            </app-otro-ingreso-modal>
 
 
             <div id="datos-conyuge" class="card ue-shell-card socio-card socio-scroll-section">
@@ -889,7 +934,8 @@
               <div class="card-body p-4">
                 <div class="row g-3">
                   <div class="col-md-6" error-notify="conyugeNombreCompleto" error-display="inline">
-                    <label for="conyugeNombreCompleto" class="form-label">{{ 'socios.fields.conyugeNombreCompleto.label'
+                    <label for="conyugeNombreCompleto" class="form-label">{{
+                      'socios.fields.conyugeNombreCompleto.label'
                       | translate }}</label>
                     <input #conyugeNombreCompleto id="conyugeNombreCompleto" name="conyugeNombreCompleto"
                       [(ngModel)]="socio.conyugeNombreCompleto" engineSync="conyugeNombreCompleto" autoFocusNext
@@ -904,7 +950,8 @@
                       [(ngModel)]="socio.conyugeTipoIdentificacion" engineSync="conyugeTipoIdentificacion" autoFocusNext
                       [next]="conyugeNumeroIdentificacion" class="form-select">
                       <option value="">{{ 'socios.common.selectOption' | translate }}</option>
-                      <option value="cedula">{{ 'socios.common.options.conyugeTipoIdentificacion.cedula' | translate }}
+                      <option value="cedula">{{ 'socios.common.options.conyugeTipoIdentificacion.cedula' | translate
+                        }}
                       </option>
                       <option value="pasaporte">{{ 'socios.common.options.conyugeTipoIdentificacion.pasaporte' |
                         translate }}

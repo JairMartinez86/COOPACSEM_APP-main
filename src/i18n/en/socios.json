@@ -43,7 +43,7 @@
         "origen": "Source",
         "ingresoMensual": "Monthly Income",
         "observaciones": "Observations",
-         "actions": "Actions"
+        "actions": "Actions"
       },
       "modal": {
         "title": "Other Income Details"
@@ -213,6 +213,10 @@
       "sociedadLabora": {
         "label": "Company where employed",
         "placeholder": "Company where employed"
+      },
+      "ubicacionLaboral": {
+        "label": "Location",
+        "placeholder": "Select a location"
       },
       "area": {
         "label": "Area",
@@ -441,6 +445,10 @@
           "tooltip": "Optional field"
         },
         "sociedadLabora": {
+          "label": "Economic activity or employment",
+          "tooltip": "Required field"
+        },
+         "ubicacionLaboral": {
           "label": "Economic activity or employment",
           "tooltip": "Required field"
         },
@@ -759,6 +767,16 @@
               "value": "0",
               "when": "",
               "msj": "Select a company"
+            }
+          }
+        },
+        "ubicacionLaboral": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Select a location"
             }
           }
         },
@@ -1296,6 +1314,7 @@
       },
       "noDate": "Date unavailable",
       "selectOption": "Select...",
+      "searchOption": "Search",
       "options": {
         "tipoIdentificacion": {
           "cedula": "ID card",

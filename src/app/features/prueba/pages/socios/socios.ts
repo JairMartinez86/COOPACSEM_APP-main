@@ -86,6 +86,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('wizardSteps') wizardStepsRef?: ElementRef<HTMLElement>;
   @ViewChildren('wizardStep') wizardStepRefs?: QueryList<ElementRef<HTMLElement>>;
   @ViewChild('ingresosAnuales') ingresosAnualesRef?: ElementRef<HTMLInputElement>;
+  @ViewChild('ubicacionLaboral') ubicacionLaboralSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('area') areaSelectRef?: ElementRef<HTMLSelectElement>;
+  @ViewChild('cargo') cargoSelectRef?: ElementRef<HTMLSelectElement>;
 
 
   @ViewChild('tipoIdentificacion') tipoIdentificacionSelectRef?: ElementRef<HTMLSelectElement>;
@@ -163,6 +166,10 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   departamentos: CatalogoItem[] = [];
   municipios: MunicipioItem[] = [];
   bancos: Banco[] = [];
+  sociedadesLaborales: any[] = [];
+  ubicacionesLaborales: any[] = [];
+  areasLaborales: any[] = [];
+  cargosLaborales: any[] = [];
 
 
   afiliacionCuotasOptions: number[] = [];
@@ -200,6 +207,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   private conyugePaisNacimientoChoices: any;
   private conyugeNacionalidadChoices: any;
   public FechaCreacion: any;
+  private ubicacionLaboralChoices: any;
+  private areaChoices: any;
+  private cargoChoices: any;
 
 
   beneficiarios: BeneficiarioForm[] = [];
@@ -361,6 +371,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     try { this.conyugeTipoIdentificacionChoices?.destroy(); } catch { }
     try { this.conyugePaisNacimientoChoices?.destroy(); } catch { }
     try { this.conyugeNacionalidadChoices?.destroy(); } catch { }
+    try { this.ubicacionLaboralChoices?.destroy(); } catch { }
+    try { this.areaChoices?.destroy(); } catch { }
+    try { this.cargoChoices?.destroy(); } catch { }
 
     this.tipoIdentificacionChoices = null;
     this.paisEmisorChoices = null;
@@ -373,6 +386,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.conyugeTipoIdentificacionChoices = null;
     this.conyugePaisNacimientoChoices = null;
     this.conyugeNacionalidadChoices = null;
+    this.ubicacionLaboralChoices = null;
+    this.areaChoices = null;
+    this.cargoChoices = null;
   }
 
   private initAllChoices(): void {
@@ -384,6 +400,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initDepartamentoChoices();
     this.initMunicipioChoices();
     this.initSociedadLaboraChoices();
+    this.initUbicacionLaboralChoices();
+    this.initAreaChoices();
+    this.initCargoChoices();
     this.initConyugeTipoIdentificacionChoices();
     this.initConyugePaisNacimientoChoices();
     this.initConyugeNacionalidadChoices();
@@ -411,6 +430,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.setChoicesValue(this.conyugeTipoIdentificacionChoices, this.socio.conyugeTipoIdentificacion);
       this.setChoicesValue(this.conyugePaisNacimientoChoices, this.socio.conyugePaisNacimiento);
       this.setChoicesValue(this.conyugeNacionalidadChoices, this.socio.conyugeNacionalidadId);
+      this.setChoicesValue(this.ubicacionLaboralChoices, this.socio.ubicacionLaboral);
+      this.setChoicesValue(this.areaChoices, this.socio.area);
+      this.setChoicesValue(this.cargoChoices, this.socio.cargo);
     });
   }
 
@@ -426,6 +448,9 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.clearChoicesSelection(this.conyugeTipoIdentificacionChoices);
     this.clearChoicesSelection(this.conyugePaisNacimientoChoices);
     this.clearChoicesSelection(this.conyugeNacionalidadChoices);
+    this.clearChoicesSelection(this.ubicacionLaboralChoices);
+    this.clearChoicesSelection(this.areaChoices);
+    this.clearChoicesSelection(this.cargoChoices);
   }
 
   private clearChoicesSelection(instance: any): void {
@@ -790,6 +815,29 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private loadCatalogos(): void {
+
+    this.sociosService.getCatalogosEmpleo().subscribe({
+      next: (res: any) => {
+        this.sociedadesLaborales = [...(res?.data?.sociedades ?? [])];
+        this.ubicacionesLaborales = [...(res?.data?.ubicaciones ?? [])];
+        this.areasLaborales = [...(res?.data?.areas ?? [])];
+        this.cargosLaborales = [...(res?.data?.cargos ?? [])];
+
+        this.patchEngineFromSocio();
+        this.cdr.detectChanges();
+        this.refreshAllChoices();
+      },
+      error: () => {
+        this.sociedadesLaborales = [];
+        this.ubicacionesLaborales = [];
+        this.areasLaborales = [];
+        this.cargosLaborales = [];
+
+        this.refreshAllChoices();
+      }
+    });
+
+
     this.catalogosService.getPaises().subscribe({
       next: (res: any) => {
         this.paisesEmisor = [...(res?.data?.paises ?? [])];
@@ -2018,35 +2066,35 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   private syncAfiliacionConfigValues(): void {
-  const settings = this.appConfigService.getCurrentSettings();
+    const settings = this.appConfigService.getCurrentSettings();
 
-  const afiliacionMonto = Number(settings?.afiliacion?.total ?? 0);
-  const afiliacionCuentaMax = Number(settings?.afiliacion?.cuotaMax ?? 0);
+    const afiliacionMonto = Number(settings?.afiliacion?.total ?? 0);
+    const afiliacionCuentaMax = Number(settings?.afiliacion?.cuotaMax ?? 0);
 
-  const membresiaMonto = Number(settings?.membresia?.total ?? 0);
-  const membresiaCuentaMax = Number(settings?.membresia?.cuotaMax ?? 0);
+    const membresiaMonto = Number(settings?.membresia?.total ?? 0);
+    const membresiaCuentaMax = Number(settings?.membresia?.cuotaMax ?? 0);
 
-  // Solo usa la configuración actual cuando estás creando
-  if (this.mode === 'create') {
-    this.socio.afiliacionCostoTotal = afiliacionMonto;
-    this.socio.membresiaCostoTotal = membresiaMonto;
+    // Solo usa la configuración actual cuando estás creando
+    if (this.mode === 'create') {
+      this.socio.afiliacionCostoTotal = afiliacionMonto;
+      this.socio.membresiaCostoTotal = membresiaMonto;
 
-    this.copy.afiliacionCostoTotal = afiliacionMonto;
-    this.copy.membresiaCostoTotal = membresiaMonto;
+      this.copy.afiliacionCostoTotal = afiliacionMonto;
+      this.copy.membresiaCostoTotal = membresiaMonto;
+    }
+
+    this.afiliacionCuotasOptions = Array.from(
+      { length: afiliacionCuentaMax },
+      (_, i) => i + 1
+    );
+
+    this.membresiaCuotasOptions = Array.from(
+      { length: membresiaCuentaMax },
+      (_, i) => i + 1
+    );
+
+    this.patchEngineFromSocio();
   }
-
-  this.afiliacionCuotasOptions = Array.from(
-    { length: afiliacionCuentaMax },
-    (_, i) => i + 1
-  );
-
-  this.membresiaCuotasOptions = Array.from(
-    { length: membresiaCuentaMax },
-    (_, i) => i + 1
-  );
-
-  this.patchEngineFromSocio();
-}
 
 
   private normalizeEmpty(value: any): any {
@@ -2274,6 +2322,55 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
+  private initUbicacionLaboralChoices(): void {
+    if (!this.isBrowser || !this.ubicacionLaboralSelectRef?.nativeElement) return;
 
+    try { this.ubicacionLaboralChoices?.destroy(); } catch { }
+
+    const element = this.ubicacionLaboralSelectRef.nativeElement;
+    this.removeOrphanChoicesWrapper(element);
+
+    this.ubicacionLaboralChoices = new Choices(element, {
+      searchEnabled: true,
+      shouldSort: false,
+      itemSelectText: '',
+      placeholder: true,
+      searchPlaceholderValue: this.translate.instant('socios.common.searchOption')
+    });
+  }
+
+  private initAreaChoices(): void {
+    if (!this.isBrowser || !this.areaSelectRef?.nativeElement) return;
+
+    try { this.areaChoices?.destroy(); } catch { }
+
+    const element = this.areaSelectRef.nativeElement;
+    this.removeOrphanChoicesWrapper(element);
+
+    this.areaChoices = new Choices(element, {
+      searchEnabled: true,
+      shouldSort: false,
+      itemSelectText: '',
+      placeholder: true,
+      searchPlaceholderValue: this.translate.instant('socios.common.searchOption')
+    });
+  }
+
+  private initCargoChoices(): void {
+    if (!this.isBrowser || !this.cargoSelectRef?.nativeElement) return;
+
+    try { this.cargoChoices?.destroy(); } catch { }
+
+    const element = this.cargoSelectRef.nativeElement;
+    this.removeOrphanChoicesWrapper(element);
+
+    this.cargoChoices = new Choices(element, {
+      searchEnabled: true,
+      shouldSort: false,
+      itemSelectText: '',
+      placeholder: true,
+      searchPlaceholderValue: this.translate.instant('socios.common.searchOption')
+    });
+  }
 
 }

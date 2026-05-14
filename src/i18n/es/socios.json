@@ -214,6 +214,10 @@
         "label": "Sociedad en la que labora",
         "placeholder": "Sociedad en la que labora"
       },
+      "ubicacionLaboral": {
+        "label": "Ubicación",
+        "placeholder": "Seleccione una ubicación"
+      },
       "area": {
         "label": "Área",
         "placeholder": "Área"
@@ -441,6 +445,10 @@
           "tooltip": "Campo opcional"
         },
         "sociedadLabora": {
+          "label": "Actividad económica o empleo",
+          "tooltip": "Campo requerido"
+        },
+        "ubicacionLaboral": {
           "label": "Actividad económica o empleo",
           "tooltip": "Campo requerido"
         },
@@ -759,6 +767,16 @@
               "value": "0",
               "when": "",
               "msj": "Seleccione una sociedad"
+            }
+          }
+        },
+        "ubicacionLaboral": {
+          "data": {
+            "1": {
+              "rule": "LEN>",
+              "value": "0",
+              "when": "",
+              "msj": "Seleccione una ubicación laboral"
             }
           }
         },
@@ -1296,6 +1314,7 @@
       },
       "noDate": "Fecha no disponible",
       "selectOption": "Seleccione...",
+      "searchOption": "Buscar",
       "options": {
         "tipoIdentificacion": {
           "cedula": "Cédula",

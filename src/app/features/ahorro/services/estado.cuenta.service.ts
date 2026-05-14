@@ -1,12 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { ApiConfigService } from '../../../core/services/ApiConfigService ';
 
 @Injectable({
     providedIn: 'root'
 })
 export class EstadoCuentaService {
-    private readonly http = inject(HttpClient);
-    private readonly baseUrl = 'api/EstadoCuentaLista';
+   private readonly http = inject(HttpClient);
+     private readonly api = inject(ApiConfigService);
 
     getAll(page = 1, pageSize = 20, search = '', tipoCuenta = '', estado = '') {
         let params = new HttpParams()
@@ -25,7 +26,7 @@ export class EstadoCuentaService {
             params = params.set('estado', estado);
         }
 
-        return this.http.get(this.baseUrl, { params });
+        return this.http.get(this.api.baseUrl, { params });
     }
 
     getDetalle(
@@ -50,7 +51,7 @@ export class EstadoCuentaService {
         if (filtros?.mes) params = params.set('mes', filtros.mes);
         if (filtros?.anio) params = params.set('anio', filtros.anio);
 
-        return this.http.get(`${this.baseUrl}/${socioId}/detalle`, { params });
+        return this.http.get(`${this.api.baseUrl}/${socioId}/detalle`, { params });
     }
 
 
@@ -77,7 +78,7 @@ export class EstadoCuentaService {
             params = params.set('estado', estado);
         }
 
-        return this.http.get(`${this.baseUrl}/reporte/saldos-ahorro-actual`, { params });
+        return this.http.get(`${this.api.baseUrl}/reporte/saldos-ahorro-actual`, { params });
     }
 
     getReporteSaldosHistoricosAhorro(
@@ -95,7 +96,7 @@ export class EstadoCuentaService {
         if (fechaFin) params = params.set('fechaFin', fechaFin);
         if (estado) params = params.set('estado', estado);
 
-        return this.http.get(`${this.baseUrl}/reporte/saldos-historicos-ahorro`, { params });
+        return this.http.get(`${this.api.baseUrl}/reporte/saldos-historicos-ahorro`, { params });
     }
 
     getReporteAfiliacionMembresia(
@@ -115,7 +116,7 @@ export class EstadoCuentaService {
         }
 
 
-        return this.http.get(`${this.baseUrl}/reporte/afiliacion-membresia`, { params });
+        return this.http.get(`${this.api.baseUrl}/reporte/afiliacion-membresia`, { params });
     }
 
 
@@ -134,7 +135,7 @@ export class EstadoCuentaService {
         params = params.set('estado', estado);
     }
 
-    return this.http.get(`${this.baseUrl}/reporte/integracion-ahorro`, { params });
+    return this.http.get(`${this.api.baseUrl}/reporte/integracion-ahorro`, { params });
 }
 
     getReportePagosAfiliaciones(
@@ -150,7 +151,7 @@ export class EstadoCuentaService {
     if (fechaFin) params = params.set('fechaFin', fechaFin);
     if (estado) params = params.set('estado', estado);
 
-    return this.http.get(`${this.baseUrl}/reporte/pagos-afiliaciones`, { params });
+    return this.http.get(`${this.api.baseUrl}/reporte/pagos-afiliaciones`, { params });
 }
 
 

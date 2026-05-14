@@ -32,6 +32,7 @@ export interface SocioForm {
   sociedadLabora: string | null;
   area: string | null;
   cargo: string | null;
+  ubicacionLaboral: string | null;
   fechaIngreso: string | null;
   numeroIp: string | null;
   correoLaboral: string | null;
@@ -39,6 +40,7 @@ export interface SocioForm {
   ingresosMensuales: number | null;
   otrosIngresos: number | null;
   ingresosAnuales: number | null;
+
 
   conyugeNombreCompleto: string | null;
   conyugeTipoIdentificacion: string | null;
@@ -98,6 +100,7 @@ export const EMPTY_SOCIO: SocioForm = {
   sociedadLabora: null,
   area: null,
   cargo: null,
+  ubicacionLaboral: null,
   fechaIngreso: null,
   numeroIp: null,
   correoLaboral: null,

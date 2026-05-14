@@ -126,32 +126,41 @@ export class SociosService extends BrowserApiService {
 
 
   getOtrosIngresos(socioId: string): Observable<any> {
-  return this.http.get<any>(
-    `${this.api.baseUrl}/socios/${socioId}/otros-ingresos`,
-    { withCredentials: true }
-  );
-}
+    return this.http.get<any>(
+      `${this.api.baseUrl}/socios/${socioId}/otros-ingresos`,
+      { withCredentials: true }
+    );
+  }
 
-createOtroIngreso(socioId: string, body: OtroIngresoForm): Observable<ApiResponse> {
-  return this.http.post<ApiResponse>(
-    `${this.api.baseUrl}/socios/${socioId}/otros-ingresos`,
-    body,
-    { withCredentials: true }
-  );
-}
+  createOtroIngreso(socioId: string, body: OtroIngresoForm): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/otros-ingresos`,
+      body,
+      { withCredentials: true }
+    );
+  }
 
-updateOtroIngreso(socioId: string, otroIngresoId: string, body: OtroIngresoForm): Observable<ApiResponse> {
-  return this.http.put<ApiResponse>(
-    `${this.api.baseUrl}/socios/${socioId}/otros-ingresos/${otroIngresoId}`,
-    body,
-    { withCredentials: true }
-  );
-}
+  updateOtroIngreso(socioId: string, otroIngresoId: string, body: OtroIngresoForm): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/otros-ingresos/${otroIngresoId}`,
+      body,
+      { withCredentials: true }
+    );
+  }
 
-deleteOtroIngreso(socioId: string, otroIngresoId: string): Observable<ApiResponse> {
-  return this.http.delete<ApiResponse>(
-    `${this.api.baseUrl}/socios/${socioId}/otros-ingresos/${otroIngresoId}`,
-    { withCredentials: true }
-  );
-}
+  deleteOtroIngreso(socioId: string, otroIngresoId: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(
+      `${this.api.baseUrl}/socios/${socioId}/otros-ingresos/${otroIngresoId}`,
+      { withCredentials: true }
+    );
+  }
+
+  getCatalogosEmpleo(): Observable<any> {
+    return this.browserOnly(() =>
+      this.http.get<any>(
+        `${this.api.baseUrl}/socios/catalogos-empleo`,
+        { withCredentials: true }
+      )
+    );
+  }
 }
