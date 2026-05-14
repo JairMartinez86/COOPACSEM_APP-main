@@ -90,10 +90,11 @@
        "pdf": "PDF",
       "excel": "Excel"
     },
-    "reportes": {
-      "title": "Generate reports",
-      "subtitle": "Select the report you want to generate using the applied filters."
+   "reportes": {
+      "title": "Generar reportes",
+      "subtitle": "Seleccione el reporte que desea generar con los filtros aplicados."
     },
+
     "side": {
       "quickActions": "Acciones rápidas",
       "alerts": "Alertas",
