@@ -87,6 +87,7 @@
       "increaseInstallment": "Aumento de cuota",
       "decreaseInstallment": "Disminución de cuota",
       "exportExcel": "Exportar Excel",
+      "print": "Imprimir",
        "pdf": "PDF",
       "excel": "Excel"
     },

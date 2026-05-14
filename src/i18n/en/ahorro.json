@@ -83,6 +83,7 @@
       "increaseInstallment": "Increase installment",
       "decreaseInstallment": "Decrease installment",
       "exportExcel": "Export Excel",
+      "print": "Print",
        "pdf": "PDF",
       "excel": "Excel"
     },

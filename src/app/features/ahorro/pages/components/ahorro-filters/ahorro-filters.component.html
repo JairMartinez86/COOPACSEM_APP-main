@@ -350,19 +350,34 @@
               class="btn btn-outline-secondary"
               (click)="clearFilters()">
 
-              <i class="fa-solid fa-broom-wide me-1"></i>
+              <i class="fa-solid fa-broom-wide fa-xl  me-1"></i>
 
               {{ 'ahorro.filters.clear' | translate }}
 
             </button>
 
-            <button
+             <button
               type="button"
               class="btn btn-primary"
               [disabled]="!reporteSeleccionado || procesandoReporte"
+              (click)="procesarReporte('print')">
+
+              <i class="fa-duotone fa-solid fa-print fa-xl  me-1"></i>
+
+           
+
+              {{ 'ahorro.actions.print' | translate }}
+
+            </button>
+
+
+            <button
+              type="button"
+              class="btn btn-secondary"
+              [disabled]="!reporteSeleccionado || procesandoReporte"
               (click)="procesarReporte('pdf')">
 
-              <i class="fa-solid fa-file-pdf me-1"></i>
+              <i class="fa-solid fa-file-pdf fa-xl  me-1"></i>
 
               {{ 'ahorro.actions.pdf' | translate }}
 
@@ -374,7 +389,7 @@
               [disabled]="!reporteSeleccionado || procesandoReporte"
               (click)="procesarReporte('excel')">
 
-              <i class="fa-solid fa-file-excel me-1"></i>
+              <i class="fa-solid fa-file-excel fa-xl me-1"></i>
 
               {{ 'ahorro.actions.excel' | translate }}
 

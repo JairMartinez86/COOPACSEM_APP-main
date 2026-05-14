@@ -4,8 +4,8 @@
   //apiUrl: 'https://gh6wc6dg-5251.use.devtunnels.ms/api'
   production: false,
   apiUrl: '/api'
-};
-*/
+};*/
+
 
 export const environment = {
   production: true,
