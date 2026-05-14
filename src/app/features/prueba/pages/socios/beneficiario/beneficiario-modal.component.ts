@@ -50,12 +50,16 @@ export class BeneficiarioModalComponent implements OnChanges {
   @Input() saving = false;
   @Input() PorcMax: number = 100;
   @Input() Porc: number = 0;
+  @Input() parentescos: any[] = [];
 
 
   @Output() closed = new EventEmitter<void>();
   @Output() saved = new EventEmitter<BeneficiarioForm>();
 
   draft: BeneficiarioForm = { ...EMPTY_BENEFICIARIO };
+
+
+  
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['open'] || changes['item'] || changes['socioId'] || changes['Porc']) {

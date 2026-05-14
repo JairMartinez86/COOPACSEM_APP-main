@@ -163,4 +163,11 @@ export class SociosService extends BrowserApiService {
       )
     );
   }
+  getCatalogosParentesco() {
+    return this.http.get<any>(
+      `${this.api.baseUrl}/socios/catalogos-parentesco`,
+      { withCredentials: true }
+    );
+  }
+
 }

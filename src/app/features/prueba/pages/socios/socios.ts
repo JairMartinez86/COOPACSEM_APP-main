@@ -170,6 +170,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   ubicacionesLaborales: any[] = [];
   areasLaborales: any[] = [];
   cargosLaborales: any[] = [];
+  parentescos: any[] = [];
 
 
   afiliacionCuotasOptions: number[] = [];
@@ -836,6 +837,18 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.refreshAllChoices();
       }
     });
+
+
+    this.sociosService.getCatalogosParentesco().subscribe({
+      next: (res: any) => {
+        this.parentescos = [...(res?.data?.parentescos ?? [])];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.parentescos = [];
+      }
+    });
+
 
 
     this.catalogosService.getPaises().subscribe({
