@@ -5,11 +5,26 @@
       "subtitle": "View, manage, and monitor members' savings. Review movements, requests, plans, and reports."
     },
     "filters": {
-      "searchPlaceholder": "Search by code, name, or document...",
-      "accountType": "Account type",
-      "status": "Status",
+       "search": "Search member",
+      "searchPlaceholder": "Search by name, code or identification",
+      "accountType": "Savings type",
+      "status": "Member status",
       "all": "All",
-      "clear": "Clear"
+
+      "period": "Report period",
+
+      "cutoffDate": "Cutoff date",
+      "startDate": "Start date",
+      "endDate": "End date",
+
+      "clear": "Clear",
+
+      "periodTypes": {
+        "cutoff": "As of date",
+        "range": "Range",
+        "month": "Month",
+        "year": "Year"
+      }
     },
     "accountTypes": {
       "current": "Current",
@@ -67,7 +82,13 @@
       "affiliation": "Affiliation Payment",
       "increaseInstallment": "Increase installment",
       "decreaseInstallment": "Decrease installment",
-      "exportExcel": "Export Excel"
+      "exportExcel": "Export Excel",
+       "pdf": "PDF",
+      "excel": "Excel"
+    },
+    "reportes": {
+      "title": "Generate reports",
+      "subtitle": "Select the report you want to generate using the applied filters."
     },
     "side": {
       "quickActions": "Quick actions",

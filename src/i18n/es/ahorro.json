@@ -5,11 +5,28 @@
       "subtitle": "Consulta, gestiona y monitorea los ahorros de los socios. Revisa movimientos, solicitudes, planes y genera reportes."
     },
     "filters": {
-      "searchPlaceholder": "Buscar por código, nombre o documento...",
-      "accountType": "Tipo de cuenta",
-      "status": "Estado",
+       "search": "Buscar socio",
+      "searchPlaceholder": "Buscar por nombre, código o identificación",
+      "accountType": "Tipo de ahorro",
+      "status": "Estado del socio",
       "all": "Todos",
-      "clear": "Limpiar"
+
+      "period": "Periodo del reporte",
+
+      "cutoffDate": "Fecha de corte",
+      "startDate": "Fecha inicio",
+      "endDate": "Fecha fin",
+
+      "clear": "Limpiar",
+
+      "periodTypes": {
+        "cutoff": "Al corte",
+        "range": "Rango",
+        "month": "Mes",
+        "year": "Año"
+      }
+      
+      
     },
     "accountTypes": {
       "current": "Corriente",
@@ -20,6 +37,7 @@
     "sidePanel": {
       "title": "Panel del socio"
     },
+    
     "status": {
       "active": "Activo",
       "inactive": "Inactivo",
@@ -68,7 +86,13 @@
       "lastMovement": "Último movimiento",
       "increaseInstallment": "Aumento de cuota",
       "decreaseInstallment": "Disminución de cuota",
-      "exportExcel": "Exportar Excel"
+      "exportExcel": "Exportar Excel",
+       "pdf": "PDF",
+      "excel": "Excel"
+    },
+    "reportes": {
+      "title": "Generate reports",
+      "subtitle": "Select the report you want to generate using the applied filters."
     },
     "side": {
       "quickActions": "Acciones rápidas",
