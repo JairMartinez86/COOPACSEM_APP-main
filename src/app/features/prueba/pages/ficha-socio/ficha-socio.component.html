@@ -302,7 +302,7 @@
             <div class="fw-bold mb-2">{{ 'fichaSocio.accounts.current' | translate }}</div>
             <div class="small mb-1">
               {{ 'fichaSocio.fields.status' | translate }}:
-              <strong>{{ getStatusLabel(socio.cuentaCorrienteActiva) }}</strong>
+              <strong>{{ getStatusLabel(socio.cuentaCorrienteActiva!) }}</strong>
             </div>
             <div class="small mb-1">
               {{ 'fichaSocio.fields.startDate' | translate }}:
@@ -323,11 +323,11 @@
             <div class="fw-bold mb-2">{{ 'fichaSocio.accounts.christmas' | translate }}</div>
             <div class="small mb-1">
               {{ 'fichaSocio.fields.status' | translate }}:
-              <strong>{{ getStatusLabel(socio.cuentaNavidenaActiva) }}</strong>
+              <strong>{{ getStatusLabel(socio.cuentaNavidenaActiva!) }}</strong> 
             </div>
             <div class="small mb-1">
               {{ 'fichaSocio.fields.startDate' | translate }}:
-              <strong>{{ socio.cuentaNavidenaFechaInicioDeduccion || '-' }}</strong>
+              <strong>{{ socio.cuentaNavidenaFechaInicioDeduccion || '-' }}</strong> 
             </div>
             <div class="small">
               {{ 'fichaSocio.fields.installment' | translate }}:

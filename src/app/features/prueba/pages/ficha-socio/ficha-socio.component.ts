@@ -114,14 +114,45 @@ export class FichaSocioComponent implements OnInit {
 
           this.socio = {
             ...socioApi,
-            fechaEmision: this.appConfigService.formatDate(socioApi.fechaEmision),
-            fechaVencimiento: this.appConfigService.formatDate(socioApi.fechaVencimiento),
-            fechaNacimiento: this.appConfigService.formatDate(socioApi.fechaNacimiento),
-            fechaIngreso: this.appConfigService.formatDate(socioApi.fechaIngreso),
-            cuentaCorrienteFechaInicioDeduccion: this.appConfigService.formatDate(socioApi.cuentaCorrienteFechaInicioDeduccion),
-            cuentaNavidenaFechaInicioDeduccion: this.appConfigService.formatDate(socioApi.cuentaNavidenaFechaInicioDeduccion),
-            createdAtUtc: this.appConfigService.formatDate(socioApi.createdAtUtc)
+
+            edad: socioApi.edad ?? null,
+
+            ubicacionLaboral: socioApi.ubicacionLaboral ?? '-',
+
+            familiares: socioApi.familiares ?? [],
+            beneficiarios: socioApi.beneficiarios ?? [],
+            otrosIngresosDetalle: socioApi.otrosIngresosDetalle ?? [],
+
+            cuentaCorrienteActiva: socioApi.cuentaCorrienteActiva,
+            cuentaNavidenaActiva: socioApi.cuentaNavidenaActiva,
+
+            fechaNacimiento: this.appConfigService.formatDate(
+              socioApi.fechaNacimiento
+            ),
+
+            fechaIngreso: this.appConfigService.formatDate(
+              socioApi.fechaIngreso
+            ),
+
+            fechaEmision: this.appConfigService.formatDate(
+              socioApi.fechaEmision
+            ),
+
+            fechaVencimiento: this.appConfigService.formatDate(
+              socioApi.fechaVencimiento
+            ),
+
+            cuentaCorrienteFechaInicioDeduccion:
+              this.appConfigService.formatDate(
+                socioApi.cuentaCorrienteFechaInicioDeduccion
+              ),
+
+            cuentaNavidenaFechaInicioDeduccion:
+              this.appConfigService.formatDate(
+                socioApi.cuentaNavidenaFechaInicioDeduccion
+              ),
           };
+
         },
         error: () => {
           this.notify.show?.(
@@ -129,36 +160,21 @@ export class FichaSocioComponent implements OnInit {
             '',
             'error'
           );
-          this.router.navigate(['/socios']);
+
         }
       });
   }
 
   get edad(): number | null {
-    const raw = this.socio?.fechaNacimiento;
-    if (!raw) return null;
+    const value = this.socio?.edad;
 
-    const parts = String(raw).split(/[\/-]/);
-    if (parts.length !== 3) return null;
-
-    const day = Number(parts[0]);
-    const month = Number(parts[1]);
-    const year = Number(parts[2]);
-
-    if (!day || !month || !year) return null;
-
-    const birth = new Date(year, month - 1, day);
-    const today = new Date();
-
-    let age = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-      age--;
+    if (value === null || value === undefined || value === '') {
+      return null;
     }
 
-    return age;
+    return Number(value);
   }
+
 
   get totalBeneficiarios(): number {
     return (this.socio?.beneficiarios ?? []).reduce(
@@ -203,11 +219,32 @@ export class FichaSocioComponent implements OnInit {
     return translated !== `fichaSocio.maritalStatus.${key}` ? translated : value || '-';
   }
 
-  getStatusLabel(value: boolean): string {
-    return value
-      ? this.translate.instant('fichaSocio.status.active')
-      : this.translate.instant('fichaSocio.status.inactive');
+  getStatusLabel(value: any): string {
+
+  if (
+    value === true ||
+    value === 'true' ||
+    value === 1 ||
+    value === '1'
+  ) {
+    return this.translate.instant(
+      'fichaSocio.status.active'
+    );
   }
+
+  if (
+    value === false ||
+    value === 'false' ||
+    value === 0 ||
+    value === '0'
+  ) {
+    return this.translate.instant(
+      'fichaSocio.status.inactive'
+    );
+  }
+
+  return '-';
+}
 
   imprimirPdfFicha(): void {
     const base64 = this.socio?.pdf_ficha;

@@ -94,14 +94,11 @@ actions: ActionItem[] = [
       })
     );
 
-    this.subs.add(
-      this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
-        this.search = String(query ?? '').trim();
-        this.currentPage = 1;
-        this.loadData();
-      })
-    );
-
+  this.subs.add(
+  this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
+    this.search = String(query ?? '').trim();
+  })
+);
     this.subs.add(
       this.translate.onLangChange.subscribe(() => {
         this.setBreadcrumbs();
@@ -123,44 +120,51 @@ actions: ActionItem[] = [
     this.breadcrumbs = this.translate.instant('solicitudCreditoListSocio.breadcrumbs') || [];
   }
 
-  loadData(): void {
-    this.loading = true;
+ loadData(): void {
 
-    this.service.getAll(
-      this.currentPage,
-      this.pageSize,
-      this.search,
-      this.tipoCuenta,
-      this.estado,
-    )
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (res: any) => {
-          const data = res?.data ?? {};
-          const raw = Array.isArray(data?.items) ? data.items : [];
+  this.loading = true;
 
-          this.socios = raw.map((item: any) => this.normalizeSocio(item));
-          this.totalRecords = Number(data?.totalRecords ?? 0);
+  //const start = performance.now();
 
-          if (!this.socios.length) {
-            this.selectedSocio = null;
-            return;
-          }
+  this.service.getAll(
+    this.currentPage,
+    this.pageSize,
+    this.search,
+    this.tipoCuenta,
+    this.estado,
+  )
+    .pipe(finalize(() => {
+      this.loading = false;
 
-          if (!this.selectedSocio) {
-            this.selectedSocio = this.socios[0];
-            return;
-          }
+     /* const end = performance.now();
+      console.log(`Socios request: ${(end - start).toFixed(2)} ms`);*/
+    }))
+    .subscribe({
+      next: (res: any) => {
+        const data = res?.data ?? {};
+        const raw = Array.isArray(data?.items) ? data.items : [];
 
-          const selected = this.socios.find(x => x.id === this.selectedSocio?.id);
-          this.selectedSocio = selected ?? this.socios[0];
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        this.socios = raw.map((item: any) => this.normalizeSocio(item));
+        this.totalRecords = Number(data?.totalRecords ?? 0);
+
+        if (!this.socios.length) {
+          this.selectedSocio = null;
+          return;
         }
-      });
-  }
 
+        if (!this.selectedSocio) {
+          this.selectedSocio = this.socios[0];
+          return;
+        }
+
+        const selected = this.socios.find(x => x.id === this.selectedSocio?.id);
+        this.selectedSocio = selected ?? this.socios[0];
+      },
+      error: (err: any) => {
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      }
+    });
+}
   selectSocio(item: SolicitudCreditoSocioRow): void {
     if (item.alerts?.count > 0) {
       const type =

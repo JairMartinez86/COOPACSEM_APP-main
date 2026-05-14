@@ -12,8 +12,14 @@ export class SolicitudCreditoService extends BrowserApiService {
   private readonly http = inject(HttpClient);
   private readonly api = inject(ApiConfigService);
 
+  private readonly baseUrl = `${this.api.baseUrl}/SolicitudCreditoListaSocio`;
+
   constructor(@Inject(PLATFORM_ID) platformId: object) {
     super(platformId);
+  }
+
+  private getHeaders(skipLoader: boolean): Record<string, string> | undefined {
+    return skipLoader ? { 'X-Skip-Loader': 'true' } : undefined;
   }
 
   getAll(
@@ -33,78 +39,73 @@ export class SolicitudCreditoService extends BrowserApiService {
       if (tipoCuenta) params = params.set('tipoCuenta', tipoCuenta);
       if (estado) params = params.set('estado', estado);
 
-      const headers = skipLoader
-        ? { 'X-Skip-Loader': 'false' }
-        : undefined;
-
-      return this.http.get<any>(
-        `${this.api.baseUrl}/SolicitudCreditoListaSocio`,
-        {
-          params,
-          headers,
-          withCredentials: true
-        }
-      );
+      return this.http.get<any>(this.baseUrl, {
+        params,
+        headers: this.getHeaders(skipLoader),
+        withCredentials: true
+      });
     });
   }
-
 
   getNuevo(
     socioId: string,
     tipoSolicitud: string,
     skipLoader = false
-  ) {
-    const headers = skipLoader
-      ? { 'X-Skip-Loader': 'false' }
-      : undefined;
-
-    return this.http.get<any>(
-      `${this.api.baseUrl}/SolicitudCreditoListaSocio/${socioId}/nuevo/${tipoSolicitud}`,
-      {
-        headers,
-        withCredentials: true
-      }
+  ): Observable<any> {
+    return this.browserOnly(() =>
+      this.http.get<any>(
+        `${this.baseUrl}/${socioId}/nuevo/${tipoSolicitud}`,
+        {
+          headers: this.getHeaders(skipLoader),
+          withCredentials: true
+        }
+      )
     );
   }
 
   postSolicitudCredito(payload: any, skipLoader = false): Observable<any> {
-    const headers = skipLoader
-      ? { 'X-Skip-Loader': 'false' }
-      : undefined;
-
-    return this.http.post<any>(
-      `${this.api.baseUrl}/SolicitudCreditoListaSocio/solicitud`,
-      payload,
-      {
-        headers,
-        withCredentials: true
-      }
+    return this.browserOnly(() =>
+      this.http.post<any>(
+        `${this.baseUrl}/solicitud`,
+        payload,
+        {
+          headers: this.getHeaders(skipLoader),
+          withCredentials: true
+        }
+      )
     );
   }
 
-
-  getSolicitud(socioId: string, solicitudId: string, skipLoader = false) {
-    const headers = skipLoader ? { 'X-Skip-Loader': 'false' } : undefined;
-
-    return this.http.get<any>(
-      `${this.api.baseUrl}/SolicitudCreditoListaSocio/${socioId}/solicitud/${solicitudId}`,
-      {
-        headers,
-        withCredentials: true
-      }
+  getSolicitud(
+    socioId: string,
+    solicitudId: string,
+    skipLoader = false
+  ): Observable<any> {
+    return this.browserOnly(() =>
+      this.http.get<any>(
+        `${this.baseUrl}/${socioId}/solicitud/${solicitudId}`,
+        {
+          headers: this.getHeaders(skipLoader),
+          withCredentials: true
+        }
+      )
     );
   }
 
-  putSolicitudCredito(solicitudId: string, payload: any, skipLoader = false) {
-    const headers = skipLoader ? { 'X-Skip-Loader': 'false' } : undefined;
-
-    return this.http.put<any>(
-      `${this.api.baseUrl}/SolicitudCreditoListaSocio/solicitud/${solicitudId}`,
-      payload,
-      {
-        headers,
-        withCredentials: true
-      }
+  putSolicitudCredito(
+    solicitudId: string,
+    payload: any,
+    skipLoader = false
+  ): Observable<any> {
+    return this.browserOnly(() =>
+      this.http.put<any>(
+        `${this.baseUrl}/solicitud/${solicitudId}`,
+        payload,
+        {
+          headers: this.getHeaders(skipLoader),
+          withCredentials: true
+        }
+      )
     );
   }
 

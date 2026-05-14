@@ -136,52 +136,45 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
   constructor(@Inject(PLATFORM_ID) platformId: object) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
+ngOnInit(): void {
+  if (!this.isBrowser) return;
 
-  ngOnInit(): void {
-    if (!this.isBrowser) return;
+  this.setBreadcrumbs();
 
-    this.setBreadcrumbs();
+  const fechaServidor = this.appConfigService.getCurrentSettings().fechaServidor;
 
-        const fechaServidor =
-            this.appConfigService.getCurrentSettings().fechaServidor;
+  this.filtro.fechaCorte = fechaServidor
+    ? this.formatDate(fechaServidor)
+    : '';
 
-        this.filtro.fechaCorte = fechaServidor
-            ? this.formatDate(fechaServidor)
-            : '';
+  this.subs.add(
+    this.translate.onLangChange.subscribe(() => {
+      this.setBreadcrumbs();
+      this.cargarGraficos(true);
+    })
+  );
 
+  this.subs.add(
+    this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
+      const value = String(draft ?? '');
 
-
-    this.subs.add(
-      this.translate.onLangChange.subscribe(() => {
-        this.setBreadcrumbs();
-        this.cargarGraficos(true);
-      })
-    );
-
-    this.subs.add(
-      this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
-        const value = String(draft ?? '');
-
-        if (this.filtro.search !== value) {
-          this.filtro.search = value;
-        }
-      })
-    );
-
-    this.subs.add(
-      this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
-        const value = String(query ?? '').trim();
-
+      if (this.filtro.search !== value) {
         this.filtro.search = value;
-        this.filtro.page = 1;
+      }
+    })
+  );
 
-        this.cargarTodo();
-      })
-    );
+  this.subs.add(
+    this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
+      const value = String(query ?? '').trim();
 
-    this.cargarTodo();
-  }
+      this.filtro.search = value;
+      this.filtro.page = 1;
+    })
+  );
 
+  this.cargarTodo();
+}
   ngOnDestroy(): void {
     this.subs.unsubscribe();
 
@@ -238,90 +231,110 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }
 
-  cargarTodo(): void {
-    this.cargarKpis(true);
-    this.cargarGraficos(true);
-    this.cargarLista();
-  }
+cargarTodo(): void {
+  //const start = performance.now();
 
-  cargarKpis(skipLoader = false): void {
-    this.service.getKpis(this.filtro, skipLoader)
-      .subscribe({
-        next: (res: any) => {
-          this.kpis = res?.data ?? this.kpis;
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+  this.cargarKpis(true);
+  this.cargarGraficos(true);
+  this.cargarLista();
+
+  //console.log(`cargarTodo disparó requests en: ${(performance.now() - start).toFixed(2)} ms`);
+}
+
+cargarKpis(skipLoader = false): void {
+  //const start = performance.now();
+
+  this.service.getKpis(this.filtro, skipLoader)
+    .pipe(finalize(() => {
+      //console.log(`Kpis request: ${(performance.now() - start).toFixed(2)} ms`);
+    }))
+    .subscribe({
+      next: (res: any) => {
+        this.kpis = res?.data ?? this.kpis;
+      },
+      error: (err: any) => {
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      }
+    });
+}
+
+
+ cargarGraficos(skipLoader = false): void {
+  //const start = performance.now();
+
+  this.service.getGraficos(this.filtro, skipLoader)
+    .pipe(finalize(() => {
+      //console.log(`Graficos request: ${(performance.now() - start).toFixed(2)} ms`);
+    }))
+    .subscribe({
+      next: (res: any) => {
+        const data: CreditosActivosGraficos = res?.data ?? {
+          distribucionCartera: [],
+          moraRangos: [],
+          tipoCredito: []
+        };
+
+        this.carteraDistribucion = this.buildDonutChart(
+          data.distribucionCartera.map(x => Number(x.porcentaje ?? 0)),
+          data.distribucionCartera.map(x => this.getGraficoEtiqueta(x.etiqueta)),
+          data.distribucionCartera.map(x => Number(x.monto ?? 0)),
+          ['#22c55e', '#f59e0b', '#ef4444']
+        );
+
+        this.moraRangosChart = this.buildBarChart(
+          data.moraRangos.map(x => x.etiqueta),
+          data.moraRangos.map(x => Number(x.monto ?? 0))
+        );
+
+        this.tipoCreditoChart = this.buildDonutChart(
+          data.tipoCredito.map(x => Number(x.porcentaje ?? 0)),
+          data.tipoCredito.map(x => x.etiqueta),
+          data.tipoCredito.map(x => Number(x.monto ?? 0)),
+          ['#2563eb', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4', '#64748b']
+        );
+      },
+      error: (err: any) => {
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      }
+    });
+}
+
+
+cargarLista(): void {
+  this.loading = true;
+
+  //const start = performance.now();
+
+  this.service.getAll(this.filtro)
+    .pipe(finalize(() => {
+      this.loading = false;
+      //console.log(`Lista creditos request: ${(performance.now() - start).toFixed(2)} ms`);
+    }))
+    .subscribe({
+      next: (res: any) => {
+        const data = res?.data ?? res;
+
+        this.creditos = data?.items ?? [];
+        this.totalRecords = Number(data?.totalRecords ?? 0);
+        this.totalPages = Number(data?.totalPages ?? 0);
+
+        if (this.creditos.length > 0) {
+          const selected = this.selectedCredito
+            ? this.creditos.find(x => x.noCredito === this.selectedCredito?.noCredito)
+            : null;
+
+          this.seleccionarCredito(selected ?? this.creditos[0]);
+        } else {
+          this.selectedCredito = null;
+          this.detalle = null;
+          this.updateAvanceChart(0);
         }
-      });
-  }
-
-  cargarGraficos(skipLoader = false): void {
-    this.service.getGraficos(this.filtro, skipLoader)
-      .subscribe({
-        next: (res: any) => {
-          const data: CreditosActivosGraficos = res?.data ?? {
-            distribucionCartera: [],
-            moraRangos: [],
-            tipoCredito: []
-          };
-
-          this.carteraDistribucion = this.buildDonutChart(
-            data.distribucionCartera.map(x => Number(x.porcentaje ?? 0)),
-            data.distribucionCartera.map(x => this.getGraficoEtiqueta(x.etiqueta)),
-            data.distribucionCartera.map(x => Number(x.monto ?? 0)),
-            ['#22c55e', '#f59e0b', '#ef4444']
-          );
-
-          this.moraRangosChart = this.buildBarChart(
-            data.moraRangos.map(x => x.etiqueta),
-            data.moraRangos.map(x => Number(x.monto ?? 0))
-          );
-
-          this.tipoCreditoChart = this.buildDonutChart(
-            data.tipoCredito.map(x => Number(x.porcentaje ?? 0)),
-            data.tipoCredito.map(x => x.etiqueta),
-            data.tipoCredito.map(x => Number(x.monto ?? 0)),
-            ['#2563eb', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4', '#64748b']
-          );
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-        }
-      });
-  }
-
-  cargarLista(): void {
-    this.loading = true;
-
-    this.service.getAll(this.filtro)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (res: any) => {
-          const data = res?.data ?? res;
-
-          this.creditos = data?.items ?? [];
-          this.totalRecords = Number(data?.totalRecords ?? 0);
-          this.totalPages = Number(data?.totalPages ?? 0);
-
-          if (this.creditos.length > 0) {
-            const selected = this.selectedCredito
-              ? this.creditos.find(x => x.noCredito === this.selectedCredito?.noCredito)
-              : null;
-
-            this.seleccionarCredito(selected ?? this.creditos[0]);
-          } else {
-            this.selectedCredito = null;
-            this.detalle = null;
-            this.updateAvanceChart(0);
-          }
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-        }
-      });
-  }
-
+      },
+      error: (err: any) => {
+        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+      }
+    });
+}
   seleccionarCredito(credito: CreditoActivoItem): void {
     this.selectedCredito = credito;
     this.cargarDetalle(credito.noCredito);

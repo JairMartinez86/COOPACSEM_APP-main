@@ -110,55 +110,49 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         this.isBrowser = isPlatformBrowser(platformId);
     }
 
+ngOnInit(): void {
+    if (!this.isBrowser) return;
 
-    ngOnInit(): void {
+    this.modo = this.route.snapshot.data['modo'] === 'aprobaciones'
+        ? 'aprobaciones'
+        : 'registros';
 
-        if (!this.isBrowser) return;
+    this.setBreadcrumbs();
 
-        this.modo = this.route.snapshot.data['modo'] === 'aprobaciones'
-            ? 'aprobaciones'
-            : 'registros';
+    this.subs.add(
+        this.translate.onLangChange.subscribe(() => this.setBreadcrumbs())
+    );
 
-        this.setBreadcrumbs();
+    const fechaServidor =
+        this.appConfigService.getCurrentSettings().fechaServidor;
 
-        this.subs.add(
-            this.translate.onLangChange.subscribe(() => this.setBreadcrumbs())
-        );
+    this.fechaServidor = new Date(fechaServidor);
 
-        const fechaServidor =
-            this.appConfigService.getCurrentSettings().fechaServidor;
-        this.fechaServidor = new Date(this.appConfigService.getCurrentSettings().fechaServidor);
+    this.filtro.fechaFin = fechaServidor
+        ? this.formatDate(fechaServidor)
+        : '';
 
-        this.filtro.fechaFin = fechaServidor
-            ? this.formatDate(fechaServidor)
-            : '';
+    this.subs.add(
+        this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
+            const value = String(draft ?? '');
 
-        this.subs.add(
-            this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
-
-                const value = String(draft ?? '');
-
-                if (this.filtro.search !== value) {
-                    this.filtro.search = value;
-                }
-            })
-        );
-
-        this.subs.add(
-            this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
-
-                const value = String(query ?? '').trim();
-
+            if (this.filtro.search !== value) {
                 this.filtro.search = value;
-                this.filtro.page = 1;
+            }
+        })
+    );
 
-                this.cargarSolicitudes();
-            })
-        );
+    this.subs.add(
+        this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
+            const value = String(query ?? '').trim();
 
-        this.cargarSolicitudes();
-    }
+            this.filtro.search = value;
+            this.filtro.page = 1;
+        })
+    );
 
+    this.cargarSolicitudes();
+}
 
     ngOnDestroy(): void {
         this.subs.unsubscribe();
@@ -197,42 +191,66 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         return this.settings?.currency || 'C$';
     }
 
-    cargarSolicitudes(): void {
-        this.loading = true;
+cargarSolicitudes(): void {
 
-        this.filtro.modo = this.modo;
+    this.loading = true;
 
+    //const start = performance.now();
 
-        this.service.getAll(this.filtro)
-            .pipe(finalize(() => this.loading = false))
-            .subscribe({
-                next: (res: any) => {
-                    const data = res?.data ?? res;
+    this.filtro.modo = this.modo;
 
-                    this.items = (data?.items ?? []).map((x: SolicitudCreditoListaItem) => ({
-                        ...x,
-                        aprobaciones: x.aprobaciones ?? []
-                    }));
+    const filtro = {
+        ...this.filtro,
 
-                    this.totalRecords = Number(data?.totalRecords ?? 0);
-                    this.totalPages = Number(data?.totalPages ?? 0);
-                    this.autorizadores = data?.autorizadores ?? [];
+        fechaInicio: this.formatDateApi(this.filtro.fechaInicio),
+        fechaFin: this.formatDateApi(this.filtro.fechaFin)
+    };
 
+    this.service.getAll(filtro)
+        .pipe(finalize(() => {
 
+            this.loading = false;
 
-                    if (this.items.length > 0) {
-                        const selected = this.items.find(x => x.id === this.solicitudFlujoSeleccionada?.id);
-                        this.solicitudFlujoSeleccionada = selected ?? this.items[0];
-                    } else {
-                        this.solicitudFlujoSeleccionada = null;
-                    }
-                },
-                error: (err: any) => {
-                    this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+          /*  const end = performance.now();
+
+            console.log(
+                `SolicitudCredito request: ${(end - start).toFixed(2)} ms`
+            );*/
+
+        }))
+        .subscribe({
+            next: (res: any) => {
+
+                const data = res?.data ?? res;
+
+                this.items = (data?.items ?? []).map((x: SolicitudCreditoListaItem) => ({
+                    ...x,
+                    aprobaciones: x.aprobaciones ?? []
+                }));
+
+                this.totalRecords = Number(data?.totalRecords ?? 0);
+                this.totalPages = Number(data?.totalPages ?? 0);
+                this.autorizadores = data?.autorizadores ?? [];
+
+                if (this.items.length > 0) {
+
+                    const selected = this.items.find(
+                        x => x.id === this.solicitudFlujoSeleccionada?.id
+                    );
+
+                    this.solicitudFlujoSeleccionada =
+                        selected ?? this.items[0];
+
+                } else {
+
+                    this.solicitudFlujoSeleccionada = null;
                 }
-            });
-    }
-
+            },
+            error: (err: any) => {
+                this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+            }
+        });
+}
     buscar(): void {
         this.filtro.page = 1;
         this.cargarSolicitudes();
@@ -726,28 +744,21 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
 
 
 
+onSearchKeyup(event: KeyboardEvent): void {
+    if (event.key !== 'Enter') return;
 
-    onSearchKeyup(event: KeyboardEvent): void {
-        if (event.key !== 'Enter') return;
+    clearTimeout(this.searchTimeout);
 
-        clearTimeout(this.searchTimeout);
+    const value = String(this.filtro.search ?? '').trim();
 
-        const value = String(this.filtro.search ?? '').trim();
+    this.filtro.search = value;
+    this.filtro.page = 1;
 
-        this.filtro.search = value;
-        this.filtro.page = 1;
+    this.filterSvc.setDraft(this.filterKey, value);
+    this.filterSvc.setQuery(this.filterKey, value);
 
-        if (!value) {
-            this.filterSvc.clear(this.filterKey);
-            this.cargarSolicitudes();
-            return;
-        }
-
-        this.filterSvc.setDraft(this.filterKey, value);
-        this.filterSvc.setQuery(this.filterKey, value);
-
-        this.cargarSolicitudes();
-    }
+    this.cargarSolicitudes();
+}
 
     getAutorizadorCargo(codigo: string): string {
 
@@ -784,6 +795,37 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
         }
 
         return codigo;
+    }
+
+
+    private formatDateApi(value: string | Date | null | undefined): string {
+        if (!value) return '';
+
+        if (typeof value === 'string') {
+            const raw = value.substring(0, 10);
+
+            if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+                return raw;
+            }
+
+            const parts = raw.split('/');
+            if (parts.length === 3) {
+                const [dd, mm, yyyy] = parts;
+                return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
+            }
+        }
+
+        const date = value instanceof Date
+            ? value
+            : new Date(`${value}T00:00:00`);
+
+        if (Number.isNaN(date.getTime())) return '';
+
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+
+        return `${yyyy}-${mm}-${dd}`;
     }
 
 

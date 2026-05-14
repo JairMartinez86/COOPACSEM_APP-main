@@ -613,10 +613,19 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
    * - plan
    */
   loadData(): void {
+
+   // const start = performance.now();
+
     this.loading = true;
 
     this.service.getData(this.socioId)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => {
+        this.loading = false;
+
+       /* console.log(
+          `Apertura/Plan request: ${(performance.now() - start).toFixed(2)} ms`
+        );*/
+      }))
       .subscribe({
         next: (res: any) => {
           const data = res?.data ?? {};
@@ -657,22 +666,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
             }))
             : [];
 
-          this.plan = Array.isArray(data?.plan)
-            ? data.plan.map((x: any) => ({
-              id: String(x?.id ?? `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`),
-              noCuota: String(x?.noCuota ?? ''),
-              fechaProgramada: String(x?.fechaProgramada ?? ''),
-              montoCuota: Number(x?.montoCuota ?? 0),
-              deposito: Number(x?.deposito ?? 0),
-              retiro: Number(x?.retiro ?? 0),
-              interes: Number(x?.interes ?? 0),
-              saldoInteres: Number(x?.saldoInteres ?? 0),
-              estado: String(x?.estado ?? ''),
-              pagado: !!x?.pagado || String(x?.estado ?? '').toLowerCase() === 'pagada',
-              fechaPago: x?.fechaPago ?? null,
-              usuarioPago: x?.usuarioPago ?? null
-            }))
-            : [];
+          this.plan = [];
 
           this.movimientos = [...this.movimientosAll];
           this.applyMovimientosFilter();
@@ -824,6 +818,87 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   /* =========================================================
    * MODAL DEL PLAN
    * ========================================================= */
+
+
+  simularPlan(): void {
+
+    if (!this.socioId) return;
+
+    const fechaServidor =
+      this.appConfigService.getCurrentSettings().fechaServidor;
+
+    //const start = performance.now();
+
+    this.loading = true;
+
+    this.service.simularPlan(
+      this.socioId,
+      this.normalizeDate(fechaServidor) ?? undefined
+    )
+      .pipe(finalize(() => {
+
+        this.loading = false;
+
+       /* console.log(
+          `Simular plan request: ${(performance.now() - start).toFixed(2)} ms`
+        );*/
+      }))
+      .subscribe({
+        next: (res: any) => {
+
+          const data = res?.data ?? {};
+
+          this.plan = Array.isArray(data?.plan)
+            ? data.plan.map((x: any) => ({
+              id: String(
+                x?.id ??
+                `${x?.fechaProgramada ?? ''}-${x?.montoCuota ?? 0}`
+              ),
+
+              noCuota: Number(x?.noCuota ?? 0),
+
+              fechaProgramada: String(x?.fechaProgramada ?? ''),
+
+              tipoLinea: String(x?.tipoLinea ?? ''),
+
+              descripcion: String(x?.descripcion ?? ''),
+
+              montoCuota: Number(x?.montoCuota ?? 0),
+
+              deposito: Number(x?.deposito ?? 0),
+
+              retiro: Number(x?.retiro ?? 0),
+
+              interes: Number(x?.interes ?? 0),
+
+              estado: String(x?.estado ?? ''),
+
+              saldo: Number(x?.saldo ?? 0),
+
+              saldoInteres: Number(x?.saldoInteres ?? 0),
+
+              pagado:
+                !!x?.pagado ||
+                String(x?.estado ?? '').toLowerCase() === 'pagado',
+
+              fechaPago: x?.fechaPago ?? null,
+
+              usuarioPago: x?.usuarioPago ?? null
+            }))
+            : [];
+
+          this.openPlanModal();
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(
+            err?.error ?? err,
+            'error'
+          );
+        }
+      });
+  }
+
+
 
   /**
    * Abre el modal del plan.

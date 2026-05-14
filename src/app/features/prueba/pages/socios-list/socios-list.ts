@@ -174,8 +174,19 @@ export class SociosListComponent implements OnInit, OnDestroy {
   loadData(): void {
     this.loading = true;
 
+
+ // const start = performance.now();
+
     this.sociosService.getAll(this.currentPage, this.pageSize, this.currentTerm)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => {
+
+      this.loading = false;
+
+    /*  const end = performance.now();
+      const totalMs = end - start;
+
+      console.log(`Tiempo total request: ${totalMs.toFixed(2)} ms`);*/
+    }))
       .subscribe({
         next: (res: any) => {
           const data = res?.data ?? {};

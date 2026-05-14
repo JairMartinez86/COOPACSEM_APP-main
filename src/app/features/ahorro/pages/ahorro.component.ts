@@ -54,7 +54,7 @@ export class AhorroComponent implements OnInit, OnDestroy {
   readonly pageSize = 20;
   loading = false;
   detailLoading = false;
- 
+
 
   selectedSocioId: string | null = null;
   selectedSocio: SocioDetail | null = null;
@@ -88,33 +88,33 @@ export class AhorroComponent implements OnInit, OnDestroy {
   }
 
 
-    reports: any[] = [
-        {
-            titleKey: 'estadoCuentaLista.reports.saldosAhorroActual.title',
-            subtitleKey: 'estadoCuentaLista.reports.saldosAhorroActual.subtitle',
-            type: 'saldosAhorroActual'
-        },
-        {
-            titleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.title',
-            subtitleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.subtitle',
-            type: 'saldosHistoricosAhorro'
-        },
-        {
-            titleKey: 'estadoCuentaLista.reports.integracionAhorro.title',
-            subtitleKey: 'estadoCuentaLista.reports.integracionAhorro.subtitle',
-            type: 'integracionAhorro'
-        },
-        {
-            titleKey: 'estadoCuentaLista.reports.saldosAfiliacion.title',
-            subtitleKey: 'estadoCuentaLista.reports.saldosAfiliacion.subtitle',
-            type: 'saldosAfiliacion'
-        },
-        {
-            titleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.title',
-            subtitleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.subtitle',
-            type: 'deduccionesAfiliacion'
-        }
-    ];
+  reports: any[] = [
+    {
+      titleKey: 'estadoCuentaLista.reports.saldosAhorroActual.title',
+      subtitleKey: 'estadoCuentaLista.reports.saldosAhorroActual.subtitle',
+      type: 'saldosAhorroActual'
+    },
+    {
+      titleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.title',
+      subtitleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.subtitle',
+      type: 'saldosHistoricosAhorro'
+    },
+    {
+      titleKey: 'estadoCuentaLista.reports.integracionAhorro.title',
+      subtitleKey: 'estadoCuentaLista.reports.integracionAhorro.subtitle',
+      type: 'integracionAhorro'
+    },
+    {
+      titleKey: 'estadoCuentaLista.reports.saldosAfiliacion.title',
+      subtitleKey: 'estadoCuentaLista.reports.saldosAfiliacion.subtitle',
+      type: 'saldosAfiliacion'
+    },
+    {
+      titleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.title',
+      subtitleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.subtitle',
+      type: 'deduccionesAfiliacion'
+    }
+  ];
 
   socioRows: SocioRow[] = [];
   pagination: PaginationMeta = {
@@ -134,6 +134,8 @@ export class AhorroComponent implements OnInit, OnDestroy {
     estado: ''
   };
 
+  requestTime = 0;
+
   ngOnInit(): void {
     this.breadcrumbs = this.translate.instant('ahorro.breadcrumbs') || [];
 
@@ -147,7 +149,13 @@ export class AhorroComponent implements OnInit, OnDestroy {
       this.dashboardReload$
         .pipe(
           switchMap(({ page, debounce }) => {
+
+           // const start = performance.now();
+
+
             this.loading = true;
+
+
 
             const wait$ = debounce ? timer(300) : of(0);
 
@@ -162,7 +170,14 @@ export class AhorroComponent implements OnInit, OnDestroy {
                 })
               ),
               finalize(() => {
+
                 this.loading = false;
+
+              /*  const end = performance.now();
+
+                this.requestTime = Number((end - start).toFixed(2));
+
+                console.log(`Dashboard request: ${this.requestTime} ms`);*/
               })
             );
           })
@@ -241,66 +256,76 @@ export class AhorroComponent implements OnInit, OnDestroy {
     this.loadDashboard(page, false);
   }
 
-onSelectSocio(row: SocioRow): void {
-  this.selectedSocioId = row.id;
-  this.loadSocioDetail(row.id);
-  this.openSidePanel();
-}
+  onSelectSocio(row: SocioRow): void {
+    this.selectedSocioId = row.id;
+    this.loadSocioDetail(row.id);
+    this.openSidePanel();
+  }
 
-private openSidePanel(): void {
-  setTimeout(() => {
-    const element = document.getElementById('ahorroSidePanelOffcanvas');
+  private openSidePanel(): void {
+    setTimeout(() => {
+      const element = document.getElementById('ahorroSidePanelOffcanvas');
 
-    if (!element || typeof bootstrap === 'undefined') {
-      return;
-    }
+      if (!element || typeof bootstrap === 'undefined') {
+        return;
+      }
 
-    const instance = bootstrap.Offcanvas.getOrCreateInstance(element);
-    instance.show();
-  }, 50);
-}
+      const instance = bootstrap.Offcanvas.getOrCreateInstance(element);
+      instance.show();
+    }, 50);
+  }
 
 
   private loadDashboard(page = 1, debounce = false): void {
     this.dashboardReload$.next({ page, debounce });
   }
 
-  private loadSocioDetail(socioId: string): void {
-    this.detailLoading = true;
+ private loadSocioDetail(socioId: string): void {
+  //const start = performance.now();
 
-    this.ahorroService.getSocioDetail(socioId, true)
-      .pipe(finalize(() => {
-        this.detailLoading = false;
-      }))
-      .subscribe({
-        next: (response) => {
-          const data = response?.data;
+  this.detailLoading = true;
 
-          this.selectedSocio = data?.selectedSocio ?? null;
-          this.ahorroRows = data?.detail?.ahorros ?? [];
-          this.retiroRows = data?.detail?.retiros ?? [];
-          this.depositoRows = data?.detail?.depositos ?? [];
-          this.cambioCuotaRows = data?.detail?.cambiosCuota ?? [];
-          this.solicitudRows = data?.detail?.solicitudes ?? [];
-          this.planesRows = data?.detail?.planes ?? [];
-          this.afiliacionMembresiaRows = data?.detail?.afiliacionMembresia ?? [];
-          this.alerts = data?.alerts ?? null;
-        },
-        error: (error) => {
-          this.notificationService.showFromApiResponse(error);
-        }
-      });
-  }
+  this.ahorroService.getSocioDetail(socioId, true)
+    .pipe(finalize(() => {
+      this.detailLoading = false;
 
- private clearDetail(): void {
-  this.selectedSocio = null;
-  this.ahorroRows = [];
-  this.retiroRows = [];
-  this.depositoRows = [];
-  this.cambioCuotaRows = [];
-  this.solicitudRows = [];
-  this.afiliacionMembresiaRows = [];
-  this.planesRows = [];
-  this.alerts = null;
+      /*const end = performance.now();
+      const totalMs = end - start;
+
+      console.log(`Socio detail request: ${totalMs.toFixed(2)} ms`);*/
+    }))
+    .subscribe({
+      next: (response) => {
+        const data = response?.data;
+
+        console.log(data)
+
+        this.selectedSocio = data?.selectedSocio ?? null;
+        this.ahorroRows = data?.detail?.ahorros ?? [];
+        this.retiroRows = data?.detail?.retiros ?? [];
+        this.depositoRows = data?.detail?.depositos ?? [];
+        this.cambioCuotaRows = data?.detail?.cambiosCuota ?? [];
+        this.solicitudRows = data?.detail?.solicitudes ?? [];
+        this.planesRows = data?.detail?.planes ?? [];
+        this.afiliacionMembresiaRows = data?.detail?.afiliacionMembresia ?? [];
+        this.alerts = data?.alerts ?? null;
+      },
+      error: (error) => {
+        this.notificationService.showFromApiResponse(error);
+      }
+    });
 }
+
+
+  private clearDetail(): void {
+    this.selectedSocio = null;
+    this.ahorroRows = [];
+    this.retiroRows = [];
+    this.depositoRows = [];
+    this.cambioCuotaRows = [];
+    this.solicitudRows = [];
+    this.afiliacionMembresiaRows = [];
+    this.planesRows = [];
+    this.alerts = null;
+  }
 }
