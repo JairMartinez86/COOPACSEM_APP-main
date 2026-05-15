@@ -42,7 +42,8 @@
     "loading": "Loading data...",
     "empty": "No members available",
     "messages": {
-      "selectSocio": "You must select a member"
+      "selectSocio": "You must select a member",
+      "ahorroInsuficiente": "The selected member does not have enough savings to request a credit."
     },
     "actions": {
       "newRequest": "New request",

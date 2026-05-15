@@ -42,7 +42,8 @@
     "loading": "Cargando información...",
     "empty": "No hay socios disponibles",
     "messages": {
-      "selectSocio": "Debe seleccionar un socio"
+      "selectSocio": "Debe seleccionar un socio",
+      "ahorroInsuficiente": "El socio seleccionado no tiene suficiente ahorro para solicitar un crédito."
     },
     "actions": {
       "newRequest": "Nueva solicitud",

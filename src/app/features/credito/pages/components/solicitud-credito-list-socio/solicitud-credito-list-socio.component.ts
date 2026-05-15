@@ -66,20 +66,20 @@ export class SolicitudCreditoListSocioComponent implements OnInit, OnDestroy {
   totalRecords = 0;
 
   readonly pageSizeOptions = [10, 20, 50, 100];
-actions: ActionItem[] = [
-  {
-    icon: 'fa-solid fa-handshake',
-    titleKey: 'solicitudCreditoListSocio.actions.newRequest',
-    order: 1,
-    class: 'is-success'
-  },
-  {
+  actions: ActionItem[] = [
+    {
+      icon: 'fa-solid fa-handshake',
+      titleKey: 'solicitudCreditoListSocio.actions.newRequest',
+      order: 1,
+      class: 'is-success'
+    },
+    {
       icon: 'bi bi-cash-stack',
-    titleKey: 'solicitudCreditoListSocio.actions.refinancing',
-    order: 2,
-    class: 'is-info'
-  }
-];
+      titleKey: 'solicitudCreditoListSocio.actions.refinancing',
+      order: 2,
+      class: 'is-info'
+    }
+  ];
 
   ngOnInit(): void {
     this.setBreadcrumbs();
@@ -94,11 +94,11 @@ actions: ActionItem[] = [
       })
     );
 
-  this.subs.add(
-  this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
-    this.search = String(query ?? '').trim();
-  })
-);
+    this.subs.add(
+      this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
+        this.search = String(query ?? '').trim();
+      })
+    );
     this.subs.add(
       this.translate.onLangChange.subscribe(() => {
         this.setBreadcrumbs();
@@ -120,51 +120,51 @@ actions: ActionItem[] = [
     this.breadcrumbs = this.translate.instant('solicitudCreditoListSocio.breadcrumbs') || [];
   }
 
- loadData(): void {
+  loadData(): void {
 
-  this.loading = true;
+    this.loading = true;
 
-  //const start = performance.now();
+    //const start = performance.now();
 
-  this.service.getAll(
-    this.currentPage,
-    this.pageSize,
-    this.search,
-    this.tipoCuenta,
-    this.estado,
-  )
-    .pipe(finalize(() => {
-      this.loading = false;
+    this.service.getAll(
+      this.currentPage,
+      this.pageSize,
+      this.search,
+      this.tipoCuenta,
+      this.estado,
+    )
+      .pipe(finalize(() => {
+        this.loading = false;
 
-     /* const end = performance.now();
-      console.log(`Socios request: ${(end - start).toFixed(2)} ms`);*/
-    }))
-    .subscribe({
-      next: (res: any) => {
-        const data = res?.data ?? {};
-        const raw = Array.isArray(data?.items) ? data.items : [];
+        /* const end = performance.now();
+         console.log(`Socios request: ${(end - start).toFixed(2)} ms`);*/
+      }))
+      .subscribe({
+        next: (res: any) => {
+          const data = res?.data ?? {};
+          const raw = Array.isArray(data?.items) ? data.items : [];
 
-        this.socios = raw.map((item: any) => this.normalizeSocio(item));
-        this.totalRecords = Number(data?.totalRecords ?? 0);
+          this.socios = raw.map((item: any) => this.normalizeSocio(item));
+          this.totalRecords = Number(data?.totalRecords ?? 0);
 
-        if (!this.socios.length) {
-          this.selectedSocio = null;
-          return;
+          if (!this.socios.length) {
+            this.selectedSocio = null;
+            return;
+          }
+
+          if (!this.selectedSocio) {
+            this.selectedSocio = this.socios[0];
+            return;
+          }
+
+          const selected = this.socios.find(x => x.id === this.selectedSocio?.id);
+          this.selectedSocio = selected ?? this.socios[0];
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
         }
-
-        if (!this.selectedSocio) {
-          this.selectedSocio = this.socios[0];
-          return;
-        }
-
-        const selected = this.socios.find(x => x.id === this.selectedSocio?.id);
-        this.selectedSocio = selected ?? this.socios[0];
-      },
-      error: (err: any) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      }
-    });
-}
+      });
+  }
   selectSocio(item: SolicitudCreditoSocioRow): void {
     if (item.alerts?.count > 0) {
       const type =
@@ -238,8 +238,9 @@ actions: ActionItem[] = [
   }
 
   onActionClick(action: ActionItem): void {
-    if (!this.selectedSocio) {
 
+
+    if (!this.selectedSocio) {
 
       this.notify.show(
         this.translate.instant('solicitudCreditoListSocio.messages.selectSocio'),
@@ -250,15 +251,25 @@ actions: ActionItem[] = [
     }
 
 
+    if (this.selectedSocio?.ahorroDisponible == 0) {
+      this.notify.show(
+        this.translate.instant('solicitudCreditoListSocio.messages.ahorroInsuficiente'),
+        '',
+        'warning'
+      );
+      return;
+    }
+
+
     if (action.order === 1) {
       this.router.navigate([
         '/solicitud-credito/new',
-        this.selectedSocio.id, 
+        this.selectedSocio.id,
         "credito"
       ]);
     }
 
-     if (action.order === 2) {
+    if (action.order === 2) {
       this.router.navigate([
         '/solicitud-credito/new',
         this.selectedSocio.id,
