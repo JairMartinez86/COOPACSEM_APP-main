@@ -1232,62 +1232,48 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   // REEMPLAZAR COMPLETO
   // buildPreviewPlan()
   // ============================
-  private buildPreviewPlan(): void {
-    const fecha = this.normalizeDate(this.form.fechaInicio);
-    const monto = Number(this.form.montoCuota ?? 0);
+private buildPreviewPlan(): void {
+  const fecha = this.normalizeDate(this.form.fechaInicio);
+  const monto = Number(this.form.montoCuota ?? 0);
 
-    if (!fecha || monto <= 0) {
-      this.previewPlan = [];
-      return;
-    }
-
-    let current = this.normalizePlanDate(new Date(`${fecha}T00:00:00`));
-    const end = new Date(current.getFullYear(), 9, 31); //Fecha Max para generar year-10-31
-
-    const rows: PlanItem[] = [];
-    let i = 1;
-
-    while (current <= end) {
-      rows.push({
-        id: `preview-${i}`,
-        noCuota: i + 1,
-        fechaProgramada: this.toIsoDate(current),
-
-        tipoLinea: 'PLAN',
-        descripcion: 'PLAN',
-
-        montoCuota: monto,
-
-        deposito: null,
-        retiro: null,
-        interes: null,
-
-        estado: 'Pendiente',
-        pagado: false,
-
-        saldo: 0,
-        saldoInteres: 0,
-
-        fechaPago: null,
-        usuarioPago: null
-      });
-
-      current = this.getNextBiweeklyDate(current);
-      i++;
-    }
-
-    this.previewPlan = rows;
-
-
+  if (!fecha || monto <= 0) {
+    this.previewPlan = [];
     this.updateResumenFromPreview();
-
-    if (!fecha || monto <= 0) {
-  this.previewPlan = [];
-  this.updateResumenFromPreview();
-  return;
-}
-
+    return;
   }
+
+  let current = this.normalizePlanDate(new Date(`${fecha}T00:00:00`));
+  const end = new Date(current.getFullYear(), 9, 31);
+
+  const rows: PlanItem[] = [];
+  let i = 1;
+
+  while (current <= end) {
+    rows.push({
+      id: `preview-${i}`,
+      noCuota: i,
+      fechaProgramada: this.toIsoDate(current),
+      tipoLinea: 'PLAN',
+      descripcion: 'PLAN',
+      montoCuota: monto,
+      deposito: null,
+      retiro: null,
+      interes: null,
+      estado: 'Pendiente',
+      pagado: false,
+      saldo: 0,
+      saldoInteres: 0,
+      fechaPago: null,
+      usuarioPago: null
+    });
+
+    current = this.getNextBiweeklyDate(current);
+    i++;
+  }
+
+  this.previewPlan = rows;
+  this.updateResumenFromPreview();
+}
 
   private normalizePlanDate(date: Date): Date {
     const year = date.getFullYear();
@@ -1318,32 +1304,32 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
 
 
   private updateResumenFromPreview(): void {
-  const ahorroActual = Number(this.resumen?.ahorroActual ?? 0);
-  const totalCuotas = this.previewPlan.length;
-  const meta = this.previewPlan.reduce(
-    (sum, x) => sum + Number(x.montoCuota ?? 0),
-    0
-  );
+    const ahorroActual = Number(this.resumen?.ahorroActual ?? 0);
+    const totalCuotas = this.previewPlan.length;
+    const meta = this.previewPlan.reduce(
+      (sum, x) => sum + Number(x.montoCuota ?? 0),
+      0
+    );
 
-  const faltante = Math.max(0, meta - ahorroActual);
+    const faltante = Math.max(0, meta - ahorroActual);
 
-  const cuotasPagadas = Number(this.resumen?.cuotasPagadas ?? 0);
+    const cuotasPagadas = Number(this.resumen?.cuotasPagadas ?? 0);
 
-  const porcentaje = meta <= 0
-    ? 0
-    : Math.round((ahorroActual / meta) * 10000) / 100;
+    const porcentaje = meta <= 0
+      ? 0
+      : Math.round((ahorroActual / meta) * 10000) / 100;
 
-  this.resumen = {
-    ahorroActual,
-    meta,
-    faltante,
-    porcentaje,
-    totalCuotas,
-    cuotasPagadas
-  };
+    this.resumen = {
+      ahorroActual,
+      meta,
+      faltante,
+      porcentaje,
+      totalCuotas,
+      cuotasPagadas
+    };
 
-  this.loadChartSeries();
-}
+    this.loadChartSeries();
+  }
 
 
 
