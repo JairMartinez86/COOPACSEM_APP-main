@@ -1,116 +1,124 @@
 {
   "fichaSocio": {
-    "title": "Member record",
-    "subtitle": "Summary record view",
-    "recordTitle": "Member file",
-    "loading": "Loading member record...",
-    "breadcrumbs": {
-      "socios": "Members",
-      "ficha": "Member record"
+    "title": "Member Record",
+    "subtitle": "General member information",
+
+    "loading": "Loading information...",
+
+    "recordTitle": "Member File",
+
+    "labels": {
+      "years": "YEARS"
     },
+
     "buttons": {
       "back": "Back",
       "export": "Export",
-      "record": "Record",
-      "affiliation": "Affiliation",
+      "record": "Print Record",
+      "affiliation": "Print Affiliation",
       "cancel": "Cancel"
     },
-    "messages": {
-      "noId": "Member ID was not provided.",
-      "notFound": "Member information was not found.",
-      "loadError": "Error loading member record."
-    },
+
     "sections": {
-      "personalData": "Personal information",
-      "contactData": "Address and contact information",
-      "workData": "Employment information",
-      "economicData": "Financial and cooperative information",
-      "spouseData": "Spouse information",
-      "otherIncome": "Other income",
-      "beneficiaries": "Beneficiaries"
+      "personalData": "Personal Information",
+      "contactData": "Contact Information",
+      "workData": "Employment Information",
+      "otherIncome": "Other Income",
+      "beneficiaries": "Beneficiaries",
+      "familyMembers": "Family Members"
     },
+
     "fields": {
       "date": "Date",
-      "memberCode": "Member code",
-      "identification": "Identification",
-      "identificationType": "Identification type",
-      "identificationNumber": "Identification number",
-      "admission": "Admission",
-      "savingsBalance": "Savings balance",
-      "fullName": "Full name",
-      "publicName": "Public name",
-      "inssNumber": "INSS number",
-      "gender": "Gender",
-      "maritalStatus": "Marital status",
-      "birthDate": "Birth date",
-      "age": "Age",
       "nationality": "Nationality",
-      "issuingCountry": "Issuing country",
-      "birthCountry": "Country of birth",
-      "issueDate": "Issue date",
-      "expirationDate": "Expiration date",
+      "birthDate": "Birth Date",
+      "admission": "Creation Date",
+      "employmentDate": "Employment Date",
+      "identification": "Identification",
+      "gender": "Gender",
+      "inssNumber": "INSS Number",
+      "maritalStatus": "Marital Status",
       "observations": "Observations",
+
       "address": "Address",
-      "department": "Department",
-      "municipality": "Municipality",
-      "phone": "Phone",
-      "mobile": "Mobile",
+      "mobilePhone": "Mobile Phone",
+      "homePhone": "Home Phone",
       "email": "Email",
+
+      "monthlyIncome": "Monthly Income",
+      "directSupervisor": "Direct Supervisor",
       "companyWorksFor": "Company",
+      "workLocation": "Location",
       "area": "Area",
       "position": "Position",
-      "admissionDate": "Admission date",
-      "directSupervisor": "Direct supervisor",
-      "workEmail": "Work email",
-      "payrollNumber": "IP / Payroll number",
-      "monthlyIncome": "Monthly income",
-      "otherIncome": "Other income",
-      "annualIncome": "Annual income",
-      "status": "Status",
-      "startDate": "Start date",
-      "installment": "Installment",
+
       "source": "Source",
       "amount": "Amount",
+
       "name": "Name",
-      "relationship": "Relationship"
+      "relationship": "Relationship",
+
+      "biweeklyCurrentFee": "Biweekly Current Contribution",
+      "biweeklyChristmasFee": "Biweekly Christmas Contribution"
     },
-    "accounts": {
-      "current": "Current account",
-      "christmas": "Christmas savings account"
+
+    "table": {
+      "index": "#",
+      "name": "Name",
+      "identification": "Identification",
+      "percentage": "%",
+      "noRecords": "NO RECORDS FOUND"
     },
+
+    "empty": {
+      "otherIncome": "NO RECORDS FOUND",
+      "beneficiaries": "NO RECORDS FOUND",
+      "familyMembers": "NO RECORDS FOUND"
+    },
+
     "status": {
       "active": "Active",
       "inactive": "Inactive"
     },
-    "identificationTypes": {
-      "cedula": "ID card",
-      "pasaporte": "Passport",
-      "residencia": "Residence permit",
-      "otro": "Other"
-    },
+
     "gender": {
       "M": "Male",
       "F": "Female"
     },
+
     "maritalStatus": {
       "soltero": "Single",
       "casado": "Married",
       "divorciado": "Divorced",
       "viudo": "Widowed",
-      "union_libre": "Common-law union"
+      "union libre": "Common-law Union"
     },
-    "empty": {
-      "notRegisteredFemale": "Not registered",
-      "otherIncome": "No other income registered",
-      "beneficiaries": "No beneficiaries registered"
+
+    "identificationTypes": {
+      "cedula": "National ID",
+      "pasaporte": "Passport",
+      "residencia": "Residence Permit"
     },
+
+    "breadcrumbs": {
+      "socios": "Members",
+      "ficha": "Member Record"
+    },
+
+    "messages": {
+      "noId": "Member identifier was not found.",
+      "notFound": "Member was not found.",
+      "loadError": "An error occurred while loading the information."
+    },
+
     "exportModal": {
-      "title": "Select format",
-      "selectDocumentType": "Select the document type:",
+      "title": "Export Document",
+      "selectDocumentType": "Select document type",
       "memberRecord": "Member Record",
       "affiliationLetter": "Affiliation Letter",
-      "selectFormat": "Select the format:"
+      "selectFormat": "Select format"
     },
+
     "fileNames": {
       "memberRecord": "MEMBER RECORD",
       "affiliationLetter": "AFFILIATION LETTER"

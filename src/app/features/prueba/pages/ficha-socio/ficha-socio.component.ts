@@ -153,6 +153,8 @@ export class FichaSocioComponent implements OnInit {
               ),
           };
 
+          console.log('Socio cargado:', this.socio);
+
         },
         error: () => {
           this.notify.show?.(
@@ -221,30 +223,30 @@ export class FichaSocioComponent implements OnInit {
 
   getStatusLabel(value: any): string {
 
-  if (
-    value === true ||
-    value === 'true' ||
-    value === 1 ||
-    value === '1'
-  ) {
-    return this.translate.instant(
-      'fichaSocio.status.active'
-    );
-  }
+    if (
+      value === true ||
+      value === 'true' ||
+      value === 1 ||
+      value === '1'
+    ) {
+      return this.translate.instant(
+        'fichaSocio.status.active'
+      );
+    }
 
-  if (
-    value === false ||
-    value === 'false' ||
-    value === 0 ||
-    value === '0'
-  ) {
-    return this.translate.instant(
-      'fichaSocio.status.inactive'
-    );
-  }
+    if (
+      value === false ||
+      value === 'false' ||
+      value === 0 ||
+      value === '0'
+    ) {
+      return this.translate.instant(
+        'fichaSocio.status.inactive'
+      );
+    }
 
-  return '-';
-}
+    return '-';
+  }
 
   imprimirPdfFicha(): void {
     const base64 = this.socio?.pdf_ficha;
@@ -410,4 +412,66 @@ export class FichaSocioComponent implements OnInit {
 
     window.URL.revokeObjectURL(url);
   }
+
+
+private parseDate(value: string | null | undefined): Date | null {
+  if (!value) {
+    return null;
+  }
+
+  // yyyy-MM-dd
+  if (value.includes('-')) {
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  // dd/MM/yyyy
+  const parts = value.split('/');
+
+  if (parts.length !== 3) {
+    return null;
+  }
+
+  const day = Number(parts[0]);
+  const month = Number(parts[1]) - 1;
+  const year = Number(parts[2]);
+
+  const date = new Date(year, month, day);
+
+  return isNaN(date.getTime()) ? null : date;
+}
+
+anosIngreso(tipo: 'ingreso' | 'creado'): number | null {
+  const fechaBase =
+    tipo === 'ingreso'
+      ? this.socio?.fechaIngreso
+      : this.socio?.createdAtUtc ?? this.socio?.CreatedAtUtc;
+
+  const ingreso = this.parseDate(fechaBase);
+
+  if (!ingreso) {
+    return null;
+  }
+
+  const fechaServidor =
+    this.parseDate(this.appConfigService.getCurrentSettings().fechaServidor) ??
+    new Date();
+
+  let anos = fechaServidor.getFullYear() - ingreso.getFullYear();
+
+  if (
+    fechaServidor.getMonth() < ingreso.getMonth() ||
+    (
+      fechaServidor.getMonth() === ingreso.getMonth() &&
+      fechaServidor.getDate() < ingreso.getDate()
+    )
+  ) {
+    anos--;
+  }
+
+  return anos >= 0 ? anos : 0;
+}
+
+
+
 }

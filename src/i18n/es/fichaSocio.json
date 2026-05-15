@@ -1,119 +1,127 @@
 {
   "fichaSocio": {
     "title": "Ficha de socio",
-    "subtitle": "Vista resumida estilo expediente",
+    "subtitle": "Información general del socio",
+
+    "loading": "Cargando información...",
+
     "recordTitle": "Expediente de socio",
-    "loading": "Cargando ficha del socio...",
-    "breadcrumbs": {
-      "socios": "Socios",
-      "ficha": "Ficha de socio"
+
+    "labels": {
+      "years": "AÑOS"
     },
+
     "buttons": {
-      "back": "Volver",
+      "back": "Regresar",
       "export": "Exportar",
-      "record": "Expediente",
-      "affiliation": "Afiliación",
+      "record": "Imprimir ficha",
+      "affiliation": "Imprimir afiliación",
       "cancel": "Cancelar"
     },
-    "messages": {
-      "noId": "No se recibió el id del socio.",
-      "notFound": "No se encontró información del socio.",
-      "loadError": "Error cargando la ficha del socio."
-    },
+
     "sections": {
       "personalData": "Datos personales",
-      "contactData": "Domicilio e información de contacto",
-      "workData": "Información laboral",
-      "economicData": "Datos económicos y cooperativos",
-      "spouseData": "Datos del cónyuge",
+      "contactData": "Datos de contacto",
+      "workData": "Datos laborales",
       "otherIncome": "Otros ingresos",
-      "beneficiaries": "Beneficiarios"
+      "beneficiaries": "Beneficiarios",
+      "familyMembers": "Familiares"
     },
+
     "fields": {
       "date": "Fecha",
-      "memberCode": "Código de socio",
-      "identification": "Identificación",
-      "identificationType": "Tipo identificación",
-      "identificationNumber": "Número identificación",
-      "admission": "Ingreso",
-      "savingsBalance": "Saldo ahorro",
-      "fullName": "Nombre completo",
-      "publicName": "Nombre público",
-      "inssNumber": "Número INSS",
-      "gender": "Sexo",
-      "maritalStatus": "Estado civil",
-      "birthDate": "Fecha nacimiento",
-      "age": "Edad",
       "nationality": "Nacionalidad",
-      "issuingCountry": "País emisor",
-      "birthCountry": "País nacimiento",
-      "issueDate": "Fecha emisión",
-      "expirationDate": "Fecha vencimiento",
+      "birthDate": "Fecha de nacimiento",
+      "admission": "Fecha de creación",
+      "employmentDate": "Fecha de ingreso",
+      "identification": "Identificación",
+      "gender": "Sexo",
+      "inssNumber": "Número INSS",
+      "maritalStatus": "Estado civil",
       "observations": "Observaciones",
+
       "address": "Dirección",
-      "department": "Departamento",
-      "municipality": "Municipio",
-      "phone": "Teléfono",
-      "mobile": "Celular",
-      "email": "Correo",
-      "companyWorksFor": "Sociedad labora",
+      "mobilePhone": "Teléfono celular",
+      "homePhone": "Teléfono domicilio",
+      "email": "Correo electrónico",
+
+      "monthlyIncome": "Ingreso mensual",
+      "directSupervisor": "Jefe inmediato",
+      "companyWorksFor": "Empresa donde labora",
+      "workLocation": "Ubicación",
       "area": "Área",
       "position": "Cargo",
-      "admissionDate": "Fecha ingreso",
-      "directSupervisor": "Jefe inmediato",
-      "workEmail": "Correo laboral",
-      "payrollNumber": "Número IP / Nómina",
-      "monthlyIncome": "Ingresos mensuales",
-      "otherIncome": "Otros ingresos",
-      "annualIncome": "Ingresos anuales",
-      "status": "Estado",
-      "startDate": "Fecha inicio",
-      "installment": "Cuota",
+
       "source": "Origen",
       "amount": "Monto",
+
       "name": "Nombre",
-      "relationship": "Parentesco"
+      "relationship": "Parentesco",
+
+      "biweeklyCurrentFee": "Cuota Quincenal Corriente",
+      "biweeklyChristmasFee": "Cuota Quincenal Navideña"
     },
-    "accounts": {
-      "current": "Cuenta corriente",
-      "christmas": "Cuenta navideña"
+
+    "table": {
+      "index": "*",
+      "name": "Nombre",
+      "identification": "Identificación",
+      "percentage": "%",
+      "noRecords": "NO SE ENCONTRARON REGISTROS"
     },
+
+    "empty": {
+      "otherIncome": "NO SE ENCONTRARON REGISTROS",
+      "beneficiaries": "NO SE ENCONTRARON REGISTROS",
+      "familyMembers": "NO SE ENCONTRARON REGISTROS"
+    },
+
     "status": {
       "active": "Activo",
       "inactive": "Inactivo"
     },
-    "identificationTypes": {
-      "cedula": "Cédula",
-      "pasaporte": "Pasaporte",
-      "residencia": "Residencia",
-      "otro": "Otro"
-    },
+
     "gender": {
       "M": "Masculino",
       "F": "Femenino"
     },
+
     "maritalStatus": {
-      "soltero": "Soltero(a)",
-      "casado": "Casado(a)",
-      "divorciado": "Divorciado(a)",
-      "viudo": "Viudo(a)",
-      "union_libre": "Unión libre"
+      "soltero": "Soltero",
+      "casado": "Casado",
+      "divorciado": "Divorciado",
+      "viudo": "Viudo",
+      "union libre": "Unión libre"
     },
-    "empty": {
-      "notRegisteredFemale": "No registrada",
-      "otherIncome": "No se registraron otros ingresos",
-      "beneficiaries": "No se registraron beneficiarios"
+
+    "identificationTypes": {
+      "cedula": "Cédula",
+      "pasaporte": "Pasaporte",
+      "residencia": "Residencia"
     },
+
+    "breadcrumbs": {
+      "socios": "Socios",
+      "ficha": "Ficha de socio"
+    },
+
+    "messages": {
+      "noId": "No se encontró el identificador del socio.",
+      "notFound": "No se encontró el socio.",
+      "loadError": "Ocurrió un error al cargar la información."
+    },
+
     "exportModal": {
-      "title": "Seleccionar formato",
-      "selectDocumentType": "Seleccione el tipo de documento:",
-      "memberRecord": "Expediente de Socio",
-      "affiliationLetter": "Carta de Afiliación",
-      "selectFormat": "Seleccione el formato:"
+      "title": "Exportar documento",
+      "selectDocumentType": "Seleccione el tipo de documento",
+      "memberRecord": "Ficha de socio",
+      "affiliationLetter": "Carta de afiliación",
+      "selectFormat": "Seleccione el formato"
     },
+
     "fileNames": {
-      "memberRecord": "EXPEDIENTE SOCIO",
-      "affiliationLetter": "CARTA AFILIACION"
+      "memberRecord": "FICHA DE SOCIO",
+      "affiliationLetter": "CARTA DE AFILIACIÓN"
     }
   }
 }
