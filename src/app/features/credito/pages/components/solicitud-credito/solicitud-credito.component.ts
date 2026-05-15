@@ -124,7 +124,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     departamento: '',
     nomina: '',
     ingresoEmpresa: 0,
-    antiguedadLaboral: ''
+    antiguedadLaboral: '',
+    fechaIngreso: '',
+    createdAtUtc: '',
+    antiguedadSistemaTexto: ''
   };
 
   deducciones = {
@@ -271,10 +274,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
   get planPreview(): PlanPagoItem[] {
     if (this.debeUsarPlanGuardado) {
-      return this.planPagos; 
+      return this.planPagos;
     }
 
-    return this.generarPlanPagos(); 
+    return this.generarPlanPagos();
   }
 
   get cuotaQuincenal(): number {
@@ -520,7 +523,12 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
             ahorrosDisponibles: Number(socio?.ahorrosDisponibles ?? socio?.ahorroDisponible ?? 0),
             creditosActivos: Number(socio?.creditosActivos ?? 0),
             limiteCreditoDisponible: Number(socio?.limiteCreditoDisponible ?? 0),
-            tieneCreditosVigentes: this.toBoolean(socio?.tieneCreditosVigentes ?? false)
+            tieneCreditosVigentes: this.toBoolean(socio?.tieneCreditosVigentes ?? false),
+            indemnizacionBase: Number(socio?.indemnizacionBase ?? socio?.indemnizacionBase ?? 0),
+             garantiaTotal: Number(socio?.garantiaTotal ?? socio?.garantiaTotal ?? 0),
+             principalPendienteCredito : Number(socio?.principalPendienteCredito ?? socio?.principalPendienteCredito ?? 0),
+
+
           } as any;
 
           this.tiposCredito = (data?.tiposCredito ?? []).map((x: any) => ({
@@ -564,7 +572,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
             departamento: String(data?.laboral?.departamento ?? ''),
             nomina: String(data?.laboral?.nomina ?? ''),
             ingresoEmpresa: Number(data?.laboral?.ingresoEmpresa ?? (this.socio as any)?.salarioMensual ?? 0),
-            antiguedadLaboral: String(data?.laboral?.antiguedadLaboral ?? (this.socio as any)?.antiguedadTexto ?? '')
+            antiguedadLaboral: String(data?.laboral?.antiguedadLaboral ?? (this.socio as any)?.antiguedadTexto ?? ''),
+            fechaIngreso: String(data?.laboral?.fechaIngreso ?? ''),
+            createdAtUtc: String(data?.laboral?.createdAtUtc ?? ''),
+            antiguedadSistemaTexto: String(data?.laboral?.antiguedadSistemaTexto ?? '')
           };
 
           this.deducciones = {
@@ -825,7 +836,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       departamento: String(data?.laboral?.departamento ?? ''),
       nomina: String(data?.laboral?.nomina ?? ''),
       ingresoEmpresa: Number(data?.laboral?.ingresoEmpresa ?? (this.socio as any)?.salarioMensual ?? 0),
-      antiguedadLaboral: String(data?.laboral?.antiguedadLaboral ?? (this.socio as any)?.antiguedadTexto ?? '')
+      antiguedadLaboral: String(data?.laboral?.antiguedadLaboral ?? (this.socio as any)?.antiguedadTexto ?? ''),
+      fechaIngreso: String(data?.laboral?.fechaIngreso ?? ''),
+      createdAtUtc: String(data?.laboral?.createdAtUtc ?? ''),
+      antiguedadSistemaTexto: String(data?.laboral?.antiguedadSistemaTexto ?? '')
     };
 
     this.deducciones = {
@@ -1708,7 +1722,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     window.URL.revokeObjectURL(url);
   }
 
-  formatDateTime(value: string | Date | null | undefined): string {
+  formatDateTimeHora(value: string | Date | null | undefined): string {
     if (!value) return '';
 
     const settings = this.appConfigService.getCurrentSettings();
@@ -1725,6 +1739,26 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
     return `${fecha} ${hora}`;
   }
+
+  formatDateTime(value: string | Date | null | undefined): string {
+    if (!value) return '';
+
+    const settings = this.appConfigService.getCurrentSettings();
+    const format = settings?.dateFormat || 'dd/MM/yyyy';
+
+    const d = new Date(value);
+
+    const fecha = this.formatDate(d, format);
+    const hora = d.toLocaleTimeString('es-NI', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    return `${fecha}`;
+  }
+
+
 
   private formatDate(date: Date, format: string): string {
     const day = String(date.getDate()).padStart(2, '0');

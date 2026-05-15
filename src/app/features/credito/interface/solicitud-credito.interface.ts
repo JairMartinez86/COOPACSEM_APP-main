@@ -13,6 +13,9 @@ export interface SocioCreditoResumen {
   creditosActivos?: number;
   limiteCreditoDisponible?: number;
   tieneCreditosVigentes?: boolean;
+  indemnizacionBase : number;
+  garantiaTotal : number;
+  principalPendienteCredito : number;
 }
 
 export interface TipoCreditoItem {

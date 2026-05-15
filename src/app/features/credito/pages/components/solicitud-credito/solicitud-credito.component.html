@@ -120,7 +120,58 @@
               </div>
             </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6 mt-0">
+
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-2">
+
+              <div class="d-flex align-items-center gap-3">
+                <span class="fa-2x">
+                  <i class="fa-duotone fa-solid fa-file-invoice-dollar"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.principalPendiente' | translate }}</div>
+                  <strong>{{ currency }} {{ formatCurrency(socio?.principalPendienteCredito ?? 0) }}</strong>
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-2">
+              <div class="d-flex align-items-center gap-3">
+                <span class="fa-2x">
+                  <i class="fa-duotone fa-solid fa-hand-holding-dollar"></i>
+                </span>
+                <div>
+                  <div class="text-muted"> {{ 'solicitudCredito.fields.antiguedadEstimada' | translate }}</div>
+                  <strong>{{ currency }} {{ formatCurrency(socio?.indemnizacionBase ?? 0) }}</strong>
+                </div>
+              </div>
+            </div>
+
+
+
+
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-2">
+
+              <div class="d-flex align-items-center gap-3">
+                <span class="fa-2x">
+                 <i class="fa-duotone fa-solid fa-vault"></i>
+                </span>
+                <div>
+                  <div class="text-muted">{{ 'solicitudCredito.fields.limiteCredito' | translate }}</div>
+                  <strong>{{ currency }} {{ formatCurrency(socio?.garantiaTotal ?? 0) }}</strong>
+                </div>
+              </div>
+
+
+
+            </div>
+
+
+
+
+
+            <div class="col-xl-3 col-lg-4 col-md-6 mt-2">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-primary fa-2x">
                   <i class="fa-duotone fa-solid fa-piggy-bank"></i>
@@ -132,7 +183,11 @@
               </div>
             </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6 mt-0">
+
+
+
+            <div class="col-xl-6 col-lg-4 col-md-6 mt-2">
+
               <div class="d-flex align-items-center gap-3">
                 <span class="text-purple fa-2x">
                   <i class="fa-duotone fa-solid fa-credit-card"></i>
@@ -144,7 +199,12 @@
               </div>
             </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6 mt-0">
+
+
+
+
+
+            <div class="col-xl-3 col-lg-4 col-md-6  mt-2">
               <div class="d-flex align-items-center gap-3">
                 <span class="text-success fa-2x">
                   <i class="fa-duotone fa-solid fa-shield-check"></i>
@@ -168,6 +228,8 @@
                 </div>
               </div>
             </div>
+
+
 
           </div>
         </div>
@@ -205,11 +267,13 @@
 
                       <div class="laboral-item">
                         <span>{{ 'solicitudCredito.fields.ingresoEmpresa' | translate }}</span>
-                        <strong>{{ currency }} {{ formatCurrency(laboral.ingresoEmpresa) }}</strong>
+                        <strong>{{ formatDateTime(laboral.createdAtUtc) || '-' }}</strong>
+                        <strong>{{ laboral.antiguedadSistemaTexto || '-' }}</strong>
                       </div>
 
                       <div class="laboral-item">
                         <span>{{ 'solicitudCredito.fields.antiguedadLaboral' | translate }}</span>
+                        <strong>{{ formatDateTime(laboral.fechaIngreso) || '-' }}</strong>
                         <strong>{{ laboral.antiguedadLaboral || '-' }}</strong>
                       </div>
                     </div>
@@ -805,7 +869,7 @@
 
                       <div class="text-muted small mt-0">
                         @if (step.fecha) {
-                        {{ formatDateTime(step.fecha) }}
+                        {{ formatDateTimeHora(step.fecha) }}
                         } @else {
                         {{ 'solicitudCredito.status.pendienteRevision' | translate }}
                         }
