@@ -614,7 +614,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
    */
   loadData(): void {
 
-   // const start = performance.now();
+    // const start = performance.now();
 
     this.loading = true;
 
@@ -622,13 +622,19 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => {
         this.loading = false;
 
-       /* console.log(
-          `Apertura/Plan request: ${(performance.now() - start).toFixed(2)} ms`
-        );*/
+        /* console.log(
+           `Apertura/Plan request: ${(performance.now() - start).toFixed(2)} ms`
+         );*/
       }))
       .subscribe({
         next: (res: any) => {
           const data = res?.data ?? {};
+
+          console.log('DATA RESPONSE', data);
+          console.log('SOCIO', data?.socio);
+          console.log('RESUMEN', data?.resumen);
+          console.log('APERTURA', data?.apertura);
+          console.log('MOVIMIENTOS', data?.movimientos);
 
           this.socio = data?.socio ?? null;
           this.apertura = data?.apertura ?? null;
@@ -680,14 +686,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
             this.form.montoCuota = this.form.montoCuota ?? null;
             this.form.observacion = this.form.observacion || '';
           }
-
           if (!this.yaAperturada) {
-            this.buildPreviewPlan();
-          } else if (
-            (!this.plan || this.plan.length === 0) &&
-            this.form.fechaInicio &&
-            Number(this.form.montoCuota ?? 0) > 0
-          ) {
             this.buildPreviewPlan();
           } else {
             this.previewPlan = [];
@@ -839,9 +838,9 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
 
         this.loading = false;
 
-       /* console.log(
-          `Simular plan request: ${(performance.now() - start).toFixed(2)} ms`
-        );*/
+        /* console.log(
+           `Simular plan request: ${(performance.now() - start).toFixed(2)} ms`
+         );*/
       }))
       .subscribe({
         next: (res: any) => {
@@ -1176,13 +1175,16 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
    * Devuelve el plan real o el preview dependiendo del estado.
    */
   get displayedPlan(): PlanItem[] {
-    if (this.yaAperturada && this.plan.length > 0) {
+    if (this.plan.length > 0) {
       return this.plan;
     }
 
-    return this.previewPlan;
-  }
+    if (!this.yaAperturada) {
+      return this.previewPlan;
+    }
 
+    return [];
+  }
 
 
 
@@ -1275,6 +1277,16 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     }
 
     this.previewPlan = rows;
+
+
+    this.updateResumenFromPreview();
+
+    if (!fecha || monto <= 0) {
+  this.previewPlan = [];
+  this.updateResumenFromPreview();
+  return;
+}
+
   }
 
   private normalizePlanDate(date: Date): Date {
@@ -1303,6 +1315,35 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     return new Date(year, month + 1, 15);
   }
 
+
+
+  private updateResumenFromPreview(): void {
+  const ahorroActual = Number(this.resumen?.ahorroActual ?? 0);
+  const totalCuotas = this.previewPlan.length;
+  const meta = this.previewPlan.reduce(
+    (sum, x) => sum + Number(x.montoCuota ?? 0),
+    0
+  );
+
+  const faltante = Math.max(0, meta - ahorroActual);
+
+  const cuotasPagadas = Number(this.resumen?.cuotasPagadas ?? 0);
+
+  const porcentaje = meta <= 0
+    ? 0
+    : Math.round((ahorroActual / meta) * 10000) / 100;
+
+  this.resumen = {
+    ahorroActual,
+    meta,
+    faltante,
+    porcentaje,
+    totalCuotas,
+    cuotasPagadas
+  };
+
+  this.loadChartSeries();
+}
 
 
 
