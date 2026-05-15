@@ -17,10 +17,7 @@
 
       @for (report of reports; track report.type) {
 
-      <button
-        type="button"
-        class="report-option-card"
-        [class.active]="reporteSeleccionado?.type === report.type"
+      <button type="button" class="report-option-card" [class.active]="reporteSeleccionado?.type === report.type"
         (click)="seleccionarReporte(report)">
 
         <span class="report-option-icon">
@@ -58,24 +55,28 @@
               {{ 'ahorro.filters.accountType' | translate }}
             </label>
 
-            <select
-              class="form-select"
-              [(ngModel)]="tipoCuenta"
-              (ngModelChange)="onTipoCuentaChange()">
+           <select
+  class="form-select"
+  [(ngModel)]="tipoCuenta"
+  (ngModelChange)="onTipoCuentaChange()">
 
-              <option value="">
-                {{ 'ahorro.filters.all' | translate }}
-              </option>
+  @if (!soloCorrienteReporte) {
 
-              <option value="Corriente">
-                {{ 'ahorro.accountTypes.current' | translate }}
-              </option>
+    <option value="Todos">
+      {{ 'ahorro.filters.all' | translate }}
+    </option>
 
-              <option value="Navidena">
-                {{ 'ahorro.accountTypes.christmas' | translate }}
-              </option>
+    <option value="Navidena">
+      {{ 'ahorro.accountTypes.christmas' | translate }}
+    </option>
 
-            </select>
+  }
+
+  <option value="Corriente">
+    {{ 'ahorro.accountTypes.current' | translate }}
+  </option>
+
+</select>
 
           </div>
 
@@ -86,10 +87,7 @@
               {{ 'ahorro.filters.status' | translate }}
             </label>
 
-            <select
-              class="form-select"
-              [(ngModel)]="estado"
-              (ngModelChange)="onEstadoChange()">
+            <select class="form-select" [(ngModel)]="estado" (ngModelChange)="onEstadoChange()">
 
               <option value="">
                 {{ 'ahorro.filters.all' | translate }}
@@ -116,13 +114,8 @@
 
             <div class="input-group">
 
-              <input
-                type="text"
-                class="form-control"
-                [(ngModel)]="search"
-                (ngModelChange)="onSearchInputChange()"
-                (keyup)="onSearchKeyup($event)"
-                [placeholder]="'ahorro.filters.searchPlaceholder' | translate" />
+              <input type="text" class="form-control" [(ngModel)]="search" (ngModelChange)="onSearchInputChange()"
+                (keyup)="onSearchKeyup($event)" [placeholder]="'ahorro.filters.searchPlaceholder' | translate" />
 
               <span class="input-group-text">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -151,12 +144,8 @@
 
             @if (!permiteSoloAnio) {
 
-            <button
-              type="button"
-              class="period-tab"
-              [class.active]="periodoReporte === 'corte'"
-              [disabled]="!permiteSoloCorte && !permiteRango"
-              (click)="setPeriodoReporte('corte')">
+            <button type="button" class="period-tab" [class.active]="periodoReporte === 'corte'"
+              [disabled]="!permiteSoloCorte && !permiteRango" (click)="setPeriodoReporte('corte')">
 
               {{ 'ahorro.filters.periodTypes.cutoff' | translate }}
 
@@ -166,20 +155,14 @@
 
             @if (permiteRango) {
 
-            <button
-              type="button"
-              class="period-tab"
-              [class.active]="periodoReporte === 'rango'"
+            <button type="button" class="period-tab" [class.active]="periodoReporte === 'rango'"
               (click)="setPeriodoReporte('rango')">
 
               {{ 'ahorro.filters.periodTypes.range' | translate }}
 
             </button>
 
-            <button
-              type="button"
-              class="period-tab"
-              [class.active]="periodoReporte === 'mes'"
+            <button type="button" class="period-tab" [class.active]="periodoReporte === 'mes'"
               (click)="setPeriodoReporte('mes')">
 
               {{ 'ahorro.filters.periodTypes.month' | translate }}
@@ -190,10 +173,7 @@
 
             @if (permiteSoloAnio || permiteRango) {
 
-            <button
-              type="button"
-              class="period-tab"
-              [class.active]="periodoReporte === 'anio'"
+            <button type="button" class="period-tab" [class.active]="periodoReporte === 'anio'"
               (click)="setPeriodoReporte('anio')">
 
               {{ 'ahorro.filters.periodTypes.year' | translate }}
@@ -221,10 +201,7 @@
                 {{ 'ahorro.filters.cutoffDate' | translate }}
               </label>
 
-              <input
-                type="date"
-                class="form-control"
-                [(ngModel)]="fechaFinReporte">
+              <input type="date" class="form-control" [(ngModel)]="fechaFinReporte">
 
             </div>
 
@@ -239,10 +216,7 @@
                 {{ 'ahorro.filters.startDate' | translate }}
               </label>
 
-              <input
-                type="date"
-                class="form-control"
-                [(ngModel)]="fechaInicioReporte">
+              <input type="date" class="form-control" [(ngModel)]="fechaInicioReporte">
 
             </div>
 
@@ -252,10 +226,7 @@
                 {{ 'ahorro.filters.endDate' | translate }}
               </label>
 
-              <input
-                type="date"
-                class="form-control"
-                [(ngModel)]="fechaFinReporte">
+              <input type="date" class="form-control" [(ngModel)]="fechaFinReporte">
 
             </div>
 
@@ -270,10 +241,7 @@
                 {{ 'ahorro.filters.periodTypes.month' | translate }}
               </label>
 
-              <select
-                class="form-select"
-                [(ngModel)]="mesReporte"
-                (ngModelChange)="onMesReporteChange()">
+              <select class="form-select" [(ngModel)]="mesReporte" (ngModelChange)="onMesReporteChange()">
 
                 @for (mes of mesesReporte; track mes.value) {
 
@@ -293,10 +261,7 @@
                 {{ 'ahorro.filters.periodTypes.year' | translate }}
               </label>
 
-              <select
-                class="form-select"
-                [(ngModel)]="anioReporte"
-                (ngModelChange)="onAnioReporteChange()">
+              <select class="form-select" [(ngModel)]="anioReporte" (ngModelChange)="onAnioReporteChange()">
 
                 @for (anio of aniosReporte; track anio) {
 
@@ -321,10 +286,7 @@
                 {{ 'ahorro.filters.periodTypes.year' | translate }}
               </label>
 
-              <select
-                class="form-select"
-                [(ngModel)]="anioReporte"
-                (ngModelChange)="onAnioReporteChange()">
+              <select class="form-select" [(ngModel)]="anioReporte" (ngModelChange)="onAnioReporteChange()">
 
                 @for (anio of aniosReporte; track anio) {
 
@@ -345,10 +307,7 @@
           <!-- BOTONES -->
           <div class="toolbar-actions">
 
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="clearFilters()">
+            <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">
 
               <i class="fa-solid fa-broom-wide fa-xl  me-1"></i>
 
@@ -356,25 +315,19 @@
 
             </button>
 
-             <button
-              type="button"
-              class="btn btn-primary"
-              [disabled]="!reporteSeleccionado || procesandoReporte"
+            <button type="button" class="btn btn-primary" [disabled]="!reporteSeleccionado || procesandoReporte"
               (click)="procesarReporte('print')">
 
               <i class="fa-duotone fa-solid fa-print fa-xl  me-1"></i>
 
-           
+
 
               {{ 'ahorro.actions.print' | translate }}
 
             </button>
 
 
-            <button
-              type="button"
-              class="btn btn-secondary"
-              [disabled]="!reporteSeleccionado || procesandoReporte"
+            <button type="button" class="btn btn-secondary" [disabled]="!reporteSeleccionado || procesandoReporte"
               (click)="procesarReporte('pdf')">
 
               <i class="fa-solid fa-file-pdf fa-xl  me-1"></i>
@@ -383,10 +336,7 @@
 
             </button>
 
-            <button
-              type="button"
-              class="btn btn-success"
-              [disabled]="!reporteSeleccionado || procesandoReporte"
+            <button type="button" class="btn btn-success" [disabled]="!reporteSeleccionado || procesandoReporte"
               (click)="procesarReporte('excel')">
 
               <i class="fa-solid fa-file-excel fa-xl me-1"></i>

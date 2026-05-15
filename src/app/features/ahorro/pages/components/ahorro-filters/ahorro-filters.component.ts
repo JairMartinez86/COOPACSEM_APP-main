@@ -48,7 +48,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
   private readonly filterKey = 'ahorro';
 
   search = '';
-  tipoCuenta = '';
+  tipoCuenta = 'Todos';
   estado = '';
   requireEnter = false;
 
@@ -83,7 +83,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
   reporteSeleccionado: any | null = null;
   procesandoReporte = false;
 
-  tipoCuentaReporte: 'Corriente' | 'Navidena' | '' = 'Corriente';
+  tipoCuentaReporte: 'Corriente' | 'Navidena' | 'Todos' = 'Todos';
   estadoReporte: '' | 'Activo' | 'Inactivo' = '';
 
   fechaInicioReporte: string | null = null;
@@ -170,9 +170,12 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
   }
 
   onTipoCuentaChange(): void {
-    this.tipoCuentaReporte = this.tipoCuenta === 'Navidena'
-      ? 'Navidena'
-      : 'Corriente';
+    this.tipoCuentaReporte =
+      this.tipoCuenta === 'Navidena'
+        ? 'Navidena'
+        : this.tipoCuenta === 'Corriente'
+          ? 'Corriente'
+          : 'Todos';
 
     this.emitFiltersUsingCurrentSearch();
   }
@@ -196,33 +199,45 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
       estado: '',
     });
   }
-seleccionarReporte(report: any): void {
-  this.reporteSeleccionado = report;
+  seleccionarReporte(report: any): void {
+    this.reporteSeleccionado = report;
 
-  this.tipoCuentaReporte = this.tipoCuenta === 'Navidena'
-    ? 'Navidena'
-    : 'Corriente';
+    this.tipoCuentaReporte =
+      this.tipoCuenta === 'Navidena'
+        ? 'Navidena'
+        : this.tipoCuenta === 'Corriente'
+          ? 'Corriente'
+          : 'Todos';
 
-  this.estadoReporte = this.estado as any;
 
-  if (this.permiteSoloAnio) {
-    this.periodoReporte = 'anio';
-    this.fechaInicioReporte = `${this.anioReporte}-01-01`;
-    this.fechaFinReporte = `${this.anioReporte}-12-31`;
-    return;
-  }
+    this.estadoReporte = this.estado as any;
 
-  if (this.permiteSoloCorte) {
-    this.periodoReporte = 'corte';
-    this.fechaInicioReporte = null;
+    if (this.soloCorrienteReporte) {
+
+      this.tipoCuenta = 'Corriente';
+      this.tipoCuentaReporte = 'Corriente';
+
+    }
+
+
+    if (this.permiteSoloAnio) {
+      this.periodoReporte = 'anio';
+      this.fechaInicioReporte = `${this.anioReporte}-01-01`;
+      this.fechaFinReporte = `${this.anioReporte}-12-31`;
+      return;
+    }
+
+    if (this.permiteSoloCorte) {
+      this.periodoReporte = 'corte';
+      this.fechaInicioReporte = null;
+      this.fechaFinReporte = this.getFechaHoy();
+      return;
+    }
+
+    this.periodoReporte = 'rango';
+    this.fechaInicioReporte = this.getPrimerDiaMesActual();
     this.fechaFinReporte = this.getFechaHoy();
-    return;
   }
-
-  this.periodoReporte = 'rango';
-  this.fechaInicioReporte = this.getPrimerDiaMesActual();
-  this.fechaFinReporte = this.getFechaHoy();
-}
 
   setPeriodoReporte(tipo: PeriodoReporte): void {
     this.periodoReporte = tipo;
@@ -282,7 +297,7 @@ seleccionarReporte(report: any): void {
     }
 
     if (!this.tipoCuentaReporte) {
-      this.tipoCuentaReporte = 'Corriente';
+      this.tipoCuentaReporte = 'Todos';
     }
 
     switch (this.reporteSeleccionado.type) {
@@ -348,7 +363,7 @@ seleccionarReporte(report: any): void {
 
     this.procesandoReporte = true;
 
-    
+
     this.service.getReporteSaldosHistoricosAhorro(
       this.tipoCuentaReporte,
       formato,
@@ -669,19 +684,19 @@ seleccionarReporte(report: any): void {
     return 'TODOS';
   }
 
-private formatFecha(fecha: string): string {
-  if (!fecha) return '';
+  private formatFecha(fecha: string): string {
+    if (!fecha) return '';
 
-  const raw = fecha.substring(0, 10);
-  const parts = raw.split('-');
+    const raw = fecha.substring(0, 10);
+    const parts = raw.split('-');
 
-  if (parts.length === 3) {
-    const [yyyy, mm, dd] = parts;
-    return `${dd}/${mm}/${yyyy}`;
+    if (parts.length === 3) {
+      const [yyyy, mm, dd] = parts;
+      return `${dd}/${mm}/${yyyy}`;
+    }
+
+    return fecha;
   }
-
-  return fecha;
-}
 
   get permiteSoloCorte(): boolean {
     return [
@@ -698,4 +713,13 @@ private formatFecha(fecha: string): string {
   get permiteRango(): boolean {
     return this.reporteSeleccionado?.type === 'saldosHistoricosAhorro';
   }
+
+ get soloCorrienteReporte(): boolean {
+
+  return [
+    'saldosAfiliacion',
+    'deduccionesAfiliacion'
+  ].includes(this.reporteSeleccionado?.type);
+
+}
 }
