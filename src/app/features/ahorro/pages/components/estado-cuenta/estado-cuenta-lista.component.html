@@ -224,58 +224,94 @@
             </div>
 
             <div class="col-xl-3 col-lg-4 col-md-12 d-flex flex-column min-h-0">
-                <div class="d-flex flex-column gap-3 h-100 min-h-0">
 
-                    <div class="card flex-shrink-0">
-                        <div class="card-header border-0 pb-2">
-                            <h5 class="card-title mb-0">{{ 'estadoCuentaLista.side.quickActions' | translate }}</h5>
-                        </div>
+    <div class="d-flex flex-column gap-3 h-100 min-h-0">
 
-                        <div class="card-body pt-0">
-                            <div class="quick-actions-grid">
-                                @for (action of orderedActions; track action.titleKey) {
-                                <button type="button" class="quick-action-btn is-blue fa-lg"
-                                    (click)="onActionClick(action)" [disabled]="!selectedSocio"
-                                    [permissionRoute]="['/estado-cuenta']" [appPermission]="['view']">
+        <div class="card flex-shrink-0">
 
+            <div class="card-header border-0 pb-2">
+                <h5 class="card-title mb-0">
+                    {{ 'estadoCuentaLista.side.quickActions' | translate }}
+                </h5>
+            </div>
 
-                                    <i [class]="action.icon"></i>
-                                    <span>{{ action.titleKey | translate }}</span>
-                                </button>
-                                }
-                            </div>
-                        </div>
-                    </div>
+            <div class="card-body pt-0">
 
-                    @if (selectedSocio) {
-                    <div class="card flex-shrink-0">
-                        <div class="card-body">
-                            <h6 class="mb-1">{{ selectedSocio.nombreCompleto }}</h6>
-                            <div class="text-muted small">{{ selectedSocio.codigoSocio }}</div>
+                <div class="quick-actions-grid">
 
-                            <div class="d-flex flex-wrap gap-1 mt-2">
-                                <span class="badge"
-                                    [ngClass]="selectedSocio.cuentas.corriente ? 'badge-soft-success' : 'badge-soft-secondary'">
-                                    {{ 'estadoCuentaLista.accounts.current' | translate }}
-                                </span>
+                    @for (action of orderedActions; track action.titleKey) {
 
-                                <span class="badge"
-                                    [ngClass]="selectedSocio.cuentas.navidena ? 'badge-soft-warning' : 'badge-soft-secondary'">
-                                    {{ 'estadoCuentaLista.accounts.christmas' | translate }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                    <button type="button"
+                            class="quick-action-btn fa-lg"
+                            [ngClass]="'is-' + action.accent"
+                            (click)="onActionClick(action)"
+                            [disabled]="!selectedSocio"
+                            [permissionRoute]="['/estado-cuenta']"
+                            [appPermission]="['view']">
+
+                        <i [class]="action.icon"></i>
+
+                        <span>
+                            {{ action.titleKey | translate }}
+                        </span>
+
+                    </button>
+
                     }
-
-
 
                 </div>
 
+            </div>
 
+        </div>
+
+        @if (selectedSocio) {
+
+        <div class="card flex-shrink-0">
+
+            <div class="card-body">
+
+                <h6 class="mb-1">
+                    {{ selectedSocio.nombreCompleto }}
+                </h6>
+
+                <div class="text-muted small">
+                    {{ selectedSocio.codigoSocio }}
+                </div>
+
+                <div class="d-flex flex-wrap gap-1 mt-2">
+
+                    <span class="badge"
+                          [ngClass]="selectedSocio.cuentas.corriente
+                          ? 'badge-soft-success'
+                          : 'badge-soft-secondary'">
+
+                        {{ 'estadoCuentaLista.accounts.current' | translate }}
+
+                    </span>
+
+                    <span class="badge"
+                          [ngClass]="selectedSocio.cuentas.navidena
+                          ? 'badge-soft-warning'
+                          : 'badge-soft-secondary'">
+
+                        {{ 'estadoCuentaLista.accounts.christmas' | translate }}
+
+                    </span>
+
+                </div>
 
             </div>
 
+        </div>
+
+        }
+
+    </div>
+
+</div>
+
+         
         </div>
     </div>
 </section>

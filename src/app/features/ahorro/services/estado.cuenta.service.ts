@@ -243,4 +243,33 @@ export class EstadoCuentaService {
             }
         );
     }
+
+
+    getDetalleIntereses(
+  socioId: string,
+  params: {
+    tipoConsulta?: string;
+    fechaDesde?: string;
+    fechaHasta?: string;
+    mes?: number;
+    anio?: number;
+    trimestre?: number;
+  }
+) {
+  return this.http.get(
+    `${this.baseUrl}/${socioId}/intereses-detalle`,
+    {
+      params: {
+        tipoConsulta: params.tipoConsulta ?? 'Trimestre',
+        fechaDesde: params.fechaDesde ?? '',
+        fechaHasta: params.fechaHasta ?? '',
+        mes: params.mes ?? '',
+        anio: params.anio ?? '',
+        trimestre: params.trimestre ?? ''
+      } as any,
+      withCredentials: true
+    }
+  );
+}
+    
 }

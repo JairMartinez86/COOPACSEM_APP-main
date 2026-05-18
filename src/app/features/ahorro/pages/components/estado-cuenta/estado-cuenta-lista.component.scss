@@ -192,3 +192,31 @@
   border-color: rgba(var(--bs-primary-rgb), 0.45);
   color: var(--bs-primary);
 }
+
+
+
+/* GREEN */
+.quick-action-btn.is-green {
+  background: rgba(40, 199, 111, 0.14);
+  border-color: rgba(40, 199, 111, 0.28);
+  color: #28c76f;
+}
+
+.quick-action-btn.is-green:hover {
+  background: #28c76f;
+  border-color: #28c76f;
+  color: #fff;
+}
+
+/* VIOLET */
+.quick-action-btn.is-violet {
+  background: rgba(115, 103, 240, 0.14);
+  border-color: rgba(115, 103, 240, 0.28);
+  color: #7367f0;
+}
+
+.quick-action-btn.is-violet:hover {
+  background: #7367f0;
+  border-color: #7367f0;
+  color: #fff;
+}

@@ -71,9 +71,10 @@
       "active": "Activo",
       "inactive": "Inactivo"
     },
-    "actions": {
-      "accountStatement": "Estado de cuenta"
-    },
+   "actions": {
+  "accountStatement": "Estado de cuenta",
+  "interestAccountStatement": "Estado de cuenta de intereses"
+},
     "filters": {
       "searchPlaceholder": "Buscar socio...",
       "accountType": "Tipo de cuenta",

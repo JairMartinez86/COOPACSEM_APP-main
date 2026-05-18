@@ -80,14 +80,20 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
 
     readonly pageSizeOptions = [10, 20, 50, 100];
 
-    actions: ActionItem[] = [
-        {
-            icon: 'fa-solid fa-file-invoice',
-            titleKey: 'estadoCuentaLista.actions.accountStatement',
-            accent: 'green',
-            order: 1
-        }
-    ];
+actions: ActionItem[] = [
+    {
+        icon: 'fa-solid fa-file-invoice',
+        titleKey: 'estadoCuentaLista.actions.accountStatement',
+        accent: 'green',
+        order: 1
+    },
+    {
+        icon: 'fa-solid fa-piggy-bank',
+        titleKey: 'estadoCuentaLista.actions.interestAccountStatement',
+        accent: 'violet',
+        order: 2
+    }
+];
 
     ngOnInit(): void {
   this.setBreadcrumbs();
@@ -233,25 +239,41 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
         this.loadData();
     }
 
-    onActionClick(action: ActionItem): void {
-        if (!this.selectedSocio) {
-            this.notify.show(
-                this.translate.instant('estadoCuentaLista.messages.selectSocio'),
-                '',
-                'warning'
-            );
-            return;
-        }
+onActionClick(action: ActionItem): void {
 
-        if (action.titleKey === 'estadoCuentaLista.actions.accountStatement') {
-            this.router.navigate([
-                '/estado-cuenta',
-                this.selectedSocio.id,
-                'detalle'
-            ]);
-        }
+    if (!this.selectedSocio) {
+
+        this.notify.show(
+            this.translate.instant('estadoCuentaLista.messages.selectSocio'),
+            '',
+            'warning'
+        );
+
+        return;
     }
 
+    if (action.titleKey === 'estadoCuentaLista.actions.accountStatement') {
+
+        this.router.navigate([
+            '/estado-cuenta',
+            this.selectedSocio.id,
+            'detalle'
+        ]);
+
+        return;
+    }
+
+    if (action.titleKey === 'estadoCuentaLista.actions.interestAccountStatement') {
+
+        this.router.navigate([
+            '/estado-cuenta-intereses',
+            this.selectedSocio.id,
+            'detalle'
+        ]);
+
+        return;
+    }
+}
     get orderedActions(): ActionItem[] {
         return [...this.actions].sort((a, b) => a.order - b.order);
     }

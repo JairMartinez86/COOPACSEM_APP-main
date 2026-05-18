@@ -70,9 +70,10 @@
       "active": "Active",
       "inactive": "Inactive"
     },
-    "actions": {
-      "accountStatement": "Account statement"
-    },
+  "actions": {
+  "accountStatement": "Account statement",
+  "interestAccountStatement": "Interest account statement"
+},
     "filters": {
       "searchPlaceholder": "Search member...",
       "accountType": "Account type",

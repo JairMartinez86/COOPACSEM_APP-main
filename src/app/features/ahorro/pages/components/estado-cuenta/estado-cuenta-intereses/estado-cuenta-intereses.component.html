@@ -1,0 +1,600 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+    <div class="main-content">
+
+        @if (loading) {
+        <div class="py-5 text-center text-muted">
+            {{ 'estadoCuentaIntereses.loading' | translate }}
+        </div>
+        }
+
+        @if (!loading && socio) {
+
+        <!-- HEADER -->
+        <div class="page-header mb-3 d-flex justify-content-between align-items-start flex-wrap gap-2">
+
+            <div>
+                <h1 class="page-title d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-piggy-bank text-danger"></i>
+
+                    {{ 'estadoCuentaIntereses.title' | translate }}
+                </h1>
+
+                <p class="mb-0 text-muted">
+                    {{ 'estadoCuentaIntereses.subtitle' | translate }}
+                </p>
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <button type="button" class="btn btn-light" (click)="imprimir()">
+
+                    <i class="fa-solid fa-print me-1"></i>
+
+                    {{ 'estadoCuentaIntereses.actions.print' | translate }}
+                </button>
+
+                <div class="dropdown">
+
+                    <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+
+                        {{ 'estadoCuentaIntereses.actions.download' | translate }}
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+
+                        <li>
+                            <a class="dropdown-item" href="javascript:void(0)" (click)="descargarPdf()">
+
+                                PDF
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="javascript:void(0)" (click)="descargarExcel()">
+
+                                Excel
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RESUMEN -->
+        <div class="card mb-3">
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <!-- INFO SOCIO -->
+                    <div class="col-xl-4 col-lg-5">
+
+                        <h6 class="fw-semibold mb-3">
+                            {{ 'estadoCuentaIntereses.info.title' | translate }}
+                        </h6>
+
+                        <div class="d-flex flex-column gap-3">
+
+                            <div>
+                                <div class="text-muted small">
+                                    {{ 'estadoCuentaIntereses.info.member' | translate }}
+                                </div>
+
+                                <div class="fw-semibold text-danger">
+                                    {{ socio.codigoSocio }} - {{ socio.nombreCompleto }}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="text-muted small">
+                                    {{ 'estadoCuentaIntereses.info.identification' | translate }}
+                                </div>
+
+                                <div>
+                                    {{ socio.numeroIdentificacion || '-' }}
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="text-muted small">
+                                    {{ 'estadoCuentaIntereses.info.status' | translate }}
+                                </div>
+
+                                <span class="badge" [ngClass]="socio.activo
+                                      ? 'badge-soft-success'
+                                      : 'badge-soft-danger'">
+
+                                    {{
+                                    socio.activo
+                                    ? ('estadoCuentaIntereses.status.active' | translate)
+                                    : ('estadoCuentaIntereses.status.inactive' | translate)
+                                    }}
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- CARDS -->
+                    <div class="col-xl-8 col-lg-7">
+
+                        <div class="row g-3">
+
+                            <div class="col-xl-4 col-md-6">
+                                <div class="border rounded p-3 h-100">
+
+                                    <div class="text-muted small">
+                                        {{ 'estadoCuentaIntereses.cards.interestBalance' | translate }}
+                                    </div>
+
+                                    <div class="fw-semibold fs-5">
+                                        {{ formatCurrency(resumen.saldoInteresesAhorros) }}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-md-6">
+                                <div class="border rounded p-3 h-100">
+
+                                    <div class="text-muted small">
+                                        {{ 'estadoCuentaIntereses.cards.currentSaving' | translate }}
+                                    </div>
+
+                                    <div class="fw-semibold fs-5">
+                                        {{ formatCurrency(resumen.ahorrosCorriente) }}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-md-6">
+                                <div class="border rounded p-3 h-100">
+
+                                    <div class="text-muted small">
+                                        {{ 'estadoCuentaIntereses.cards.christmasSaving' | translate }}
+                                    </div>
+
+                                    <div class="fw-semibold fs-5">
+                                        {{ formatCurrency(resumen.ahorrosNavidena) }}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6">
+                                <div class="border rounded p-3 h-100">
+
+                                    <div class="text-muted small">
+                                        {{ 'estadoCuentaIntereses.cards.interestRate' | translate }}
+                                    </div>
+
+                                    <div class="fw-semibold">
+                                        {{ formatPercent(resumen.tasaInteresAnual) }}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6">
+                                <div class="border rounded p-3 h-100">
+
+                                    <div class="text-muted small">
+                                        {{ 'estadoCuentaIntereses.cards.paid' | translate }}
+                                    </div>
+
+                                    <div class="fw-semibold">
+                                        {{ formatCurrency(resumen.interesesPagados) }}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6">
+                                <div class="border rounded p-3 h-100">
+
+                                    <div class="text-muted small">
+                                        {{ 'estadoCuentaIntereses.cards.applied' | translate }}
+                                    </div>
+
+                                    <div class="fw-semibold">
+                                        {{ formatCurrency(resumen.interesesAplicadosAhorro) }}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6">
+                                <div class="border rounded p-3 h-100">
+
+                                    <div class="text-muted small">
+                                        {{ 'estadoCuentaIntereses.cards.generated' | translate }}
+                                    </div>
+
+                                    <div class="fw-semibold">
+                                        {{ formatCurrency(resumen.totalInteresesGenerados) }}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- FILTROS -->
+        <div class="card mb-3">
+
+            <div class="card-body">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-xl-3 col-lg-6">
+
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.queryType' | translate }}
+                        </label>
+
+                        <select class="form-select" [(ngModel)]="tipoConsulta">
+
+                            <option value="Corte">
+                                {{ 'estadoCuentaIntereses.filters.cutoff' | translate }}
+                            </option>
+
+                            <option value="Rango">
+                                {{ 'estadoCuentaIntereses.filters.range' | translate }}
+                            </option>
+
+                            <option value="Mes">
+                                {{ 'estadoCuentaIntereses.filters.month' | translate }}
+                            </option>
+
+                            <option value="Anio">
+                                {{ 'estadoCuentaIntereses.filters.year' | translate }}
+                            </option>
+
+                            <option value="Trimestre">
+                                {{ 'estadoCuentaIntereses.filters.quarter' | translate }}
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    @if (tipoConsulta === 'Trimestre') {
+
+                    <div class="col-xl-3 col-lg-6">
+
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.quarterCut' | translate }}
+                        </label>
+
+                        <select class="form-select" [(ngModel)]="trimestre" (ngModelChange)="setFechasPorTrimestre()">
+
+                            <option [ngValue]="1">
+                                {{ 'estadoCuentaIntereses.trimesters.q1' | translate:{ anio: anio } }}
+                            </option>
+
+                            <option [ngValue]="2">
+                                {{ 'estadoCuentaIntereses.trimesters.q2' | translate:{ anio: anio } }}
+                            </option>
+
+                            <option [ngValue]="3">
+                                {{ 'estadoCuentaIntereses.trimesters.q3' | translate:{ anio: anio } }}
+                            </option>
+
+                            <option [ngValue]="4">
+                                {{ 'estadoCuentaIntereses.trimesters.q4' | translate:{ anio: anio } }}
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    }
+
+                    <div class="col-xl-2 col-lg-6">
+
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.from' | translate }}
+                        </label>
+
+                        <input type="date" class="form-control" [(ngModel)]="fechaDesde">
+
+                    </div>
+
+                    <div class="col-xl-2 col-lg-6">
+
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.to' | translate }}
+                        </label>
+
+                        <input type="date" class="form-control" [(ngModel)]="fechaHasta">
+
+                    </div>
+
+                    <div class="col-xl-2 col-lg-12">
+
+                        <button type="button" class="btn btn-danger w-100" (click)="aplicarFiltros()">
+
+                            <i class="fa-solid fa-magnifying-glass me-1"></i>
+
+                            {{ 'estadoCuentaIntereses.actions.search' | translate }}
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLA -->
+        <div class="card">
+
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    {{ 'estadoCuentaIntereses.table.title' | translate }}
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="table-responsive">
+
+                    <table class="table table-sm align-middle mb-0">
+
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    {{ 'estadoCuentaIntereses.table.date' | translate }}
+                                </th>
+
+                                <th>
+                                    {{ 'estadoCuentaIntereses.table.concept' | translate }}
+                                </th>
+
+                                <th class="text-end">
+                                    {{ 'estadoCuentaIntereses.table.currentSaving' | translate }}
+                                </th>
+
+                                <th class="text-end">
+                                    {{ 'estadoCuentaIntereses.table.christmasSaving' | translate }}
+                                </th>
+
+                                <th class="text-end">
+                                    {{ 'estadoCuentaIntereses.table.currentInterestBalance' | translate }}
+                                </th>
+
+                                <th class="text-end">
+                                    {{ 'estadoCuentaIntereses.table.christmasInterestBalance' | translate }}
+                                </th>
+
+                                <th class="text-end">
+                                    {{ 'estadoCuentaIntereses.table.debit' | translate }}
+                                </th>
+
+                                <th class="text-end">
+                                    {{ 'estadoCuentaIntereses.table.credit' | translate }}
+                                </th>
+
+                                <th>
+                                    {{ 'estadoCuentaIntereses.table.observations' | translate }}
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @for (mov of movimientosPaginados; track mov.id) {
+
+                            <tr>
+
+                                <td>
+                                    {{ formatDate(mov.fecha) }}
+                                </td>
+
+                                <td>
+                                    {{ mov.concepto }}
+                                </td>
+
+                                <td class="text-end">
+                                    {{
+                                    mov.ahorroCorriente > 0
+                                    ? formatAmount(mov.ahorroCorriente)
+                                    : '-'
+                                    }}
+                                </td>
+
+                                <td class="text-end">
+                                    {{
+                                    mov.ahorroNavidena > 0
+                                    ? formatAmount(mov.ahorroNavidena)
+                                    : '-'
+                                    }}
+                                </td>
+
+                                <td class="text-end fw-semibold text-primary">
+                                    {{
+                                    mov.saldoInteresCorriente > 0
+                                    ? formatAmount(mov.saldoInteresCorriente)
+                                    : '-'
+                                    }}
+                                </td>
+
+                                <td class="text-end fw-semibold text-info">
+                                    {{
+                                    mov.saldoInteresNavidena > 0
+                                    ? formatAmount(mov.saldoInteresNavidena)
+                                    : '-'
+                                    }}
+                                </td>
+
+                                <td class="text-end text-success">
+                                    {{
+                                    mov.debito > 0
+                                    ? formatAmount(mov.debito)
+                                    : '-'
+                                    }}
+                                </td>
+
+                                <td class="text-end text-purple">
+                                    {{
+                                    mov.credito > 0
+                                    ? formatAmount(mov.credito)
+                                    : '-'
+                                    }}
+                                </td>
+
+                                <td>
+                                    {{ mov.observaciones || '-' }}
+                                </td>
+
+                            </tr>
+
+                            }
+
+                            @if (movTotalRecords === 0) {
+
+                            <tr>
+
+                                <td colspan="9" class="text-center text-muted py-4">
+
+                                    {{ 'estadoCuentaIntereses.table.empty' | translate }}
+
+                                </td>
+
+                            </tr>
+
+                            }
+
+                        </tbody>
+
+                        <tfoot>
+
+                            <tr class="fw-semibold">
+
+                                <td colspan="6" class="text-end">
+                                    {{ 'estadoCuentaIntereses.table.totals' | translate }}
+                                </td>
+
+                                <td class="text-end text-success">
+                                    {{
+                                    formatAmount(
+                                    movimientos.reduce((a, b) => a + (b.debito || 0), 0)
+                                    )
+                                    }}
+                                </td>
+
+                                <td class="text-end text-purple">
+                                    {{
+                                    formatAmount(
+                                    movimientos.reduce((a, b) => a + (b.credito || 0), 0)
+                                    )
+                                    }}
+                                </td>
+
+                                <td></td>
+
+                            </tr>
+
+                        </tfoot>
+
+
+
+
+
+                    </table>
+
+                    @if (movTotalRecords > 0) {
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-3">
+
+                        <div class="text-muted small">
+                            {{ 'estadoCuentaIntereses.pagination.showing' | translate }}
+                            <strong>{{ movVisibleStart }}-{{ movVisibleEnd }}</strong>
+                            {{ 'estadoCuentaIntereses.pagination.of' | translate }}
+                            <strong>{{ movTotalRecords }}</strong>
+                            {{ 'estadoCuentaIntereses.pagination.records' | translate }}
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <select class="form-select form-select-sm" [ngModel]="movPageSize"
+                                (ngModelChange)="changeMovPageSize($event)">
+
+                                @for (size of movPageSizeOptions; track size) {
+                                <option [ngValue]="size">{{ size }}</option>
+                                }
+
+                            </select>
+
+                            <nav>
+                                <ul class="pagination pagination-sm mb-0">
+
+                                    <li class="page-item" [class.disabled]="movPage === 1">
+                                        <a class="page-link" href="javascript:void(0)"
+                                            (click)="goToMovPage(movPage - 1)">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </a>
+                                    </li>
+
+                                    @for (page of movPageNumbers; track page) {
+                                    @if (page === '...') {
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="javascript:void(0)">...</a>
+                                    </li>
+                                    } @else {
+                                    <li class="page-item" [class.active]="page === movPage">
+                                        <a class="page-link" href="javascript:void(0)" (click)="goToMovPage(+page)">
+                                            {{ page }}
+                                        </a>
+                                    </li>
+                                    }
+                                    }
+
+                                    <li class="page-item" [class.disabled]="movPage === movTotalPages">
+                                        <a class="page-link" href="javascript:void(0)"
+                                            (click)="goToMovPage(movPage + 1)">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </nav>
+
+                        </div>
+                    </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+        }
+
+    </div>
+</section>

@@ -305,6 +305,18 @@ export const routes: Routes = [
         }
       },
 
+      {
+        path: 'estado-cuenta-intereses/:id/detalle',
+        loadComponent: () =>
+          import('./features/ahorro/pages/components/estado-cuenta/estado-cuenta-intereses/estado-cuenta-intereses.component')
+            .then(m => m.EstadoCuentaInteresesComponent),
+        canActivate: [permissionGuard],
+        data: {
+          permission: '/estado-cuenta',
+          action: 'view'
+        }
+      },
+
 
 
       //SOLICITUD DE CREDITO
@@ -398,7 +410,7 @@ export const routes: Routes = [
 
 
 
-       {
+      {
         path: 'creditos-activos',
         loadComponent: () =>
           import('./features/credito/pages/components/creditos-activos/creditos-activos.component')

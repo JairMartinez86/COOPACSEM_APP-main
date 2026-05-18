@@ -1,0 +1,118 @@
+
+{
+  "estadoCuentaIntereses": {
+    "title": "Estado de cuenta de intereses",
+    "subtitle": "Consulta detallada de intereses generados y aplicados",
+    "loading": "Cargando información...",
+
+    "breadcrumbs": [
+      {
+        "label": "Inicio",
+        "url": "/"
+      },
+      {
+        "label": "Estado de cuenta de intereses"
+      }
+    ],
+
+    "actions": {
+      "print": "Imprimir",
+      "download": "Descargar",
+      "search": "Buscar"
+    },
+
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+
+    "info": {
+      "title": "Información del socio",
+      "member": "Socio",
+      "identification": "Identificación",
+      "status": "Estado"
+    },
+
+    "summary": {
+      "interestBalance": "Saldo intereses",
+      "currentSaving": "Ahorro corriente",
+      "christmasSaving": "Ahorro navideño",
+      "interestRate": "Tasa interés anual",
+      "interestsPaid": "Intereses pagados",
+      "interestsApplied": "Intereses aplicados ahorro",
+      "totalGenerated": "Total intereses generados"
+    },
+
+    "cards": {
+      "interestBalance": "Saldo intereses",
+      "currentSaving": "Ahorro corriente",
+      "christmasSaving": "Ahorro navideño",
+      "interestRate": "Tasa interés",
+      "paid": "Intereses pagados",
+      "applied": "Intereses aplicados",
+      "generated": "Intereses generados",
+      "pending": "Pendiente pagar"
+    },
+
+    "filters": {
+      "queryType": "Tipo consulta",
+      "cutoff": "Corte",
+      "range": "Rango",
+      "month": "Mes",
+      "year": "Año",
+      "quarter": "Trimestre",
+      "quarterCut": "Corte trimestral",
+      "from": "Desde",
+      "to": "Hasta"
+    },
+
+    "months": {
+      "1": "Enero",
+      "2": "Febrero",
+      "3": "Marzo",
+      "4": "Abril",
+      "5": "Mayo",
+      "6": "Junio",
+      "7": "Julio",
+      "8": "Agosto",
+      "9": "Septiembre",
+      "10": "Octubre",
+      "11": "Noviembre",
+      "12": "Diciembre"
+    },
+
+    "trimesters": {
+      "q1": "Primer trimestre {{anio}}",
+      "q2": "Segundo trimestre {{anio}}",
+      "q3": "Tercer trimestre {{anio}}",
+      "q4": "Cuarto trimestre {{anio}}"
+    },
+
+    "table": {
+      "title": "Movimientos de intereses",
+      "date": "Fecha",
+      "concept": "Concepto",
+      "currentSaving": "Ahorro corriente",
+      "christmasSaving": "Ahorro navideño",
+      "currentInterestBalance": "Saldo interés corriente",
+      "christmasInterestBalance": "Saldo interés navideño",
+      "totalInterestBalance": "Saldo interés total",
+      "accumulatedBalance": "Saldo acumulado",
+      "debit": "Débito",
+      "credit": "Crédito",
+      "applied": "Aplicado ahorro",
+      "observations": "Observaciones",
+      "empty": "No hay movimientos disponibles",
+      "totals": "Totales"
+    },
+    "pagination": {
+  "showing": "Mostrando",
+  "of": "de",
+  "records": "registros"
+},
+
+    "messages": {
+      "invalidSocio": "Socio inválido"
+    }
+  }
+}

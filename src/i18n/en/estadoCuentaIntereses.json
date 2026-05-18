@@ -1,0 +1,117 @@
+
+{
+  "estadoCuentaIntereses": {
+    "title": "Interest account statement",
+    "subtitle": "Detailed inquiry of generated and applied interests",
+    "loading": "Loading information...",
+
+    "breadcrumbs": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Interest account statement"
+      }
+    ],
+
+    "actions": {
+      "print": "Print",
+      "download": "Download",
+      "search": "Search"
+    },
+
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+
+    "info": {
+      "title": "Member information",
+      "member": "Member",
+      "identification": "Identification",
+      "status": "Status"
+    },
+
+    "summary": {
+      "interestBalance": "Interest balance",
+      "currentSaving": "Current savings",
+      "christmasSaving": "Christmas savings",
+      "interestRate": "Annual interest rate",
+      "interestsPaid": "Paid interests",
+      "interestsApplied": "Applied interests to savings",
+      "totalGenerated": "Total generated interests"
+    },
+
+    "cards": {
+      "interestBalance": "Interest balance",
+      "currentSaving": "Current savings",
+      "christmasSaving": "Christmas savings",
+      "interestRate": "Interest rate",
+      "paid": "Paid interests",
+      "applied": "Applied interests",
+      "generated": "Generated interests",
+      "pending": "Pending payment"
+    },
+
+    "filters": {
+      "queryType": "Query type",
+      "cutoff": "Cutoff",
+      "range": "Range",
+      "month": "Month",
+      "year": "Year",
+      "quarter": "Quarter",
+      "quarterCut": "Quarter cutoff",
+      "from": "From",
+      "to": "To"
+    },
+
+    "months": {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
+    },
+
+    "trimesters": {
+      "q1": "First quarter {{anio}}",
+      "q2": "Second quarter {{anio}}",
+      "q3": "Third quarter {{anio}}",
+      "q4": "Fourth quarter {{anio}}"
+    },
+
+    "table": {
+      "title": "Interest movements",
+      "date": "Date",
+      "concept": "Concept",
+      "currentSaving": "Current savings",
+      "christmasSaving": "Christmas savings",
+      "currentInterestBalance": "Current interest balance",
+      "christmasInterestBalance": "Christmas interest balance",
+      "totalInterestBalance": "Total interest balance",
+      "accumulatedBalance": "Accumulated balance",
+      "debit": "Debit",
+      "credit": "Credit",
+      "applied": "Applied to savings",
+      "observations": "Observations",
+      "empty": "No movements available",
+      "totals": "Totals"
+    },
+"pagination": {
+  "showing": "Showing",
+  "of": "of",
+  "records": "records"
+},
+    "messages": {
+      "invalidSocio": "Invalid member"
+    }
+  }
+}
