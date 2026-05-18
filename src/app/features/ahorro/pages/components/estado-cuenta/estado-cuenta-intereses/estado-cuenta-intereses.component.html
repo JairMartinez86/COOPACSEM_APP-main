@@ -244,99 +244,140 @@
                 <div class="row g-3 align-items-end">
 
                     <div class="col-xl-3 col-lg-6">
-
                         <label class="form-label">
                             {{ 'estadoCuentaIntereses.filters.queryType' | translate }}
                         </label>
 
-                        <select class="form-select" [(ngModel)]="tipoConsulta">
+                        <select class="form-select" [(ngModel)]="tipoConsulta"
+                            (ngModelChange)="seleccionarConsulta($event)">
 
-                            <option value="Corte">
-                                {{ 'estadoCuentaIntereses.filters.cutoff' | translate }}
-                            </option>
-
-                            <option value="Rango">
-                                {{ 'estadoCuentaIntereses.filters.range' | translate }}
-                            </option>
-
-                            <option value="Mes">
-                                {{ 'estadoCuentaIntereses.filters.month' | translate }}
-                            </option>
-
-                            <option value="Anio">
-                                {{ 'estadoCuentaIntereses.filters.year' | translate }}
-                            </option>
-
-                            <option value="Trimestre">
-                                {{ 'estadoCuentaIntereses.filters.quarter' | translate }}
-                            </option>
+                            <option value="Corte">{{ 'estadoCuentaIntereses.filters.cutoff' | translate }}</option>
+                            <option value="Rango">{{ 'estadoCuentaIntereses.filters.range' | translate }}</option>
+                            <option value="Mes">{{ 'estadoCuentaIntereses.filters.month' | translate }}</option>
+                            <option value="Anio">{{ 'estadoCuentaIntereses.filters.year' | translate }}</option>
+                            <option value="Trimestre">{{ 'estadoCuentaIntereses.filters.quarter' | translate }}</option>
 
                         </select>
-
                     </div>
 
+                    @if (tipoConsulta === 'Corte') {
+                    <div class="col-xl-3 col-lg-6">
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.cutoffDate' | translate }}
+                        </label>
+
+                        <input type="date" class="form-control" [(ngModel)]="fechaCorte">
+                    </div>
+                    }
+
+                    @if (tipoConsulta === 'Rango') {
+                    <div class="col-xl-2 col-lg-6">
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.from' | translate }}
+                        </label>
+
+                        <input type="date" class="form-control" [(ngModel)]="fechaDesde">
+                    </div>
+
+                    <div class="col-xl-2 col-lg-6">
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.to' | translate }}
+                        </label>
+
+                        <input type="date" class="form-control" [(ngModel)]="fechaHasta">
+                    </div>
+                    }
+
+                    @if (tipoConsulta === 'Mes') {
+                    <div class="col-xl-2 col-lg-6">
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.month' | translate }}
+                        </label>
+
+                        <select class="form-select" [(ngModel)]="mes" (ngModelChange)="setFechasPorMes()">
+
+                            @for (m of meses; track m) {
+                            <option [ngValue]="m">
+                                {{ 'estadoCuentaIntereses.months.' + m | translate }}
+                            </option>
+                            }
+
+                        </select>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-6">
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.year' | translate }}
+                        </label>
+
+                        <select class="form-select" [(ngModel)]="anio" (ngModelChange)="setFechasPorMes()">
+
+                            @for (y of anios; track y) {
+                            <option [ngValue]="y">{{ y }}</option>
+                            }
+
+                        </select>
+                    </div>
+                    }
+
+                    @if (tipoConsulta === 'Anio') {
+                    <div class="col-xl-3 col-lg-6">
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.year' | translate }}
+                        </label>
+
+                        <select class="form-select" [(ngModel)]="anio" (ngModelChange)="setFechasPorAnio()">
+
+                            @for (y of anios; track y) {
+                            <option [ngValue]="y">{{ y }}</option>
+                            }
+
+                        </select>
+                    </div>
+                    }
+
                     @if (tipoConsulta === 'Trimestre') {
+                    <div class="col-xl-2 col-lg-6">
+                        <label class="form-label">
+                            {{ 'estadoCuentaIntereses.filters.year' | translate }}
+                        </label>
+
+                        <select class="form-select" [(ngModel)]="anio" (ngModelChange)="setFechasPorTrimestre()">
+
+                            @for (y of anios; track y) {
+                            <option [ngValue]="y">{{ y }}</option>
+                            }
+
+                        </select>
+                    </div>
 
                     <div class="col-xl-3 col-lg-6">
-
                         <label class="form-label">
                             {{ 'estadoCuentaIntereses.filters.quarterCut' | translate }}
                         </label>
 
                         <select class="form-select" [(ngModel)]="trimestre" (ngModelChange)="setFechasPorTrimestre()">
 
-                            <option [ngValue]="1">
-                                {{ 'estadoCuentaIntereses.trimesters.q1' | translate:{ anio: anio } }}
+                            <option [ngValue]="1">{{ 'estadoCuentaIntereses.trimesters.q1' | translate:{ anio: anio } }}
                             </option>
-
-                            <option [ngValue]="2">
-                                {{ 'estadoCuentaIntereses.trimesters.q2' | translate:{ anio: anio } }}
+                            <option [ngValue]="2">{{ 'estadoCuentaIntereses.trimesters.q2' | translate:{ anio: anio } }}
                             </option>
-
-                            <option [ngValue]="3">
-                                {{ 'estadoCuentaIntereses.trimesters.q3' | translate:{ anio: anio } }}
+                            <option [ngValue]="3">{{ 'estadoCuentaIntereses.trimesters.q3' | translate:{ anio: anio } }}
                             </option>
-
-                            <option [ngValue]="4">
-                                {{ 'estadoCuentaIntereses.trimesters.q4' | translate:{ anio: anio } }}
+                            <option [ngValue]="4">{{ 'estadoCuentaIntereses.trimesters.q4' | translate:{ anio: anio } }}
                             </option>
 
                         </select>
-
                     </div>
-
                     }
 
-                    <div class="col-xl-2 col-lg-6">
-
-                        <label class="form-label">
-                            {{ 'estadoCuentaIntereses.filters.from' | translate }}
-                        </label>
-
-                        <input type="date" class="form-control" [(ngModel)]="fechaDesde">
-
-                    </div>
-
-                    <div class="col-xl-2 col-lg-6">
-
-                        <label class="form-label">
-                            {{ 'estadoCuentaIntereses.filters.to' | translate }}
-                        </label>
-
-                        <input type="date" class="form-control" [(ngModel)]="fechaHasta">
-
-                    </div>
-
                     <div class="col-xl-2 col-lg-12">
-
                         <button type="button" class="btn btn-danger w-100" (click)="aplicarFiltros()">
 
                             <i class="fa-solid fa-magnifying-glass me-1"></i>
-
                             {{ 'estadoCuentaIntereses.actions.search' | translate }}
 
                         </button>
-
                     </div>
 
                 </div>
