@@ -89,7 +89,7 @@
         "estado": "Estado",
         "saldoAcumulado": "Saldo",
         "interes": "Interés",
-         "saldoInteres": "Saldo + Interés"
+        "saldoInteres": "Saldo + Interés"
       }
     },
     "states": {
@@ -139,7 +139,7 @@
             "1": {
               "rule": "REGEX",
               "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
-              "when": "",
+              "when": "{yaAperturada}=false",
               "msj": "Ingrese la fecha de deducción"
             },
             "2": {
@@ -184,11 +184,11 @@
         }
       }
     },
-   "types": {
-  "plan": "Nómina",
-  "extraordinary": "Extraordinario",
-  "retiro": "Retiro"
-},
+    "types": {
+      "plan": "Nómina",
+      "extraordinary": "Extraordinario",
+      "retiro": "Retiro"
+    },
     "common": {
       "search": "Buscar",
       "close": "Cerrar",

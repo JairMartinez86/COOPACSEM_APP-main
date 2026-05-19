@@ -630,16 +630,14 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           const data = res?.data ?? {};
 
-          console.log('DATA RESPONSE', data);
-          console.log('SOCIO', data?.socio);
-          console.log('RESUMEN', data?.resumen);
-          console.log('APERTURA', data?.apertura);
-          console.log('MOVIMIENTOS', data?.movimientos);
+
 
           this.socio = data?.socio ?? null;
           this.apertura = data?.apertura ?? null;
           this.yaAperturada = !!data?.yaAperturada;
           this.tieneMovimiento = !!data?.tieneMovimiento;
+
+          this.engine.setControlValue('yaAperturada', this.yaAperturada);
 
           this.resumen = {
             ahorroActual: Number(data?.resumen?.ahorroActual ?? 0),
@@ -676,11 +674,16 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
 
           this.movimientos = [...this.movimientosAll];
           this.applyMovimientosFilter();
-
           if (this.apertura) {
-            this.form.fechaInicio = this.toDateInput(this.apertura.fechaInicio);
-            this.form.montoCuota = Number(this.apertura.montoCuota ?? 0);
-            this.form.observacion = this.apertura.observacion ?? '';
+
+            this.form.fechaInicio =
+              this.toDateInput(this.apertura.fechaInicio);
+
+            this.form.montoCuota =
+              Number(this.apertura.montoCuota ?? 0);
+
+            this.form.observacion =
+              this.apertura.observacion ?? '';
           } else {
             this.form.fechaInicio = this.form.fechaInicio || '';
             this.form.montoCuota = this.form.montoCuota ?? null;
@@ -691,7 +694,6 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
           } else {
             this.previewPlan = [];
           }
-
           this.engine.patchValues?.({
             FechaInicio: this.normalizeDate(this.form.fechaInicio) ?? '',
             MontoCuota: Number(this.form.montoCuota ?? 0),
@@ -699,8 +701,10 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
             yaAperturada: this.yaAperturada
           });
 
-          this.engine.clearErrors?.();
+
+
           this.loadChartSeries();
+          this.engine.clearErrors();
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -1232,48 +1236,48 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   // REEMPLAZAR COMPLETO
   // buildPreviewPlan()
   // ============================
-private buildPreviewPlan(): void {
-  const fecha = this.normalizeDate(this.form.fechaInicio);
-  const monto = Number(this.form.montoCuota ?? 0);
+  private buildPreviewPlan(): void {
+    const fecha = this.normalizeDate(this.form.fechaInicio);
+    const monto = Number(this.form.montoCuota ?? 0);
 
-  if (!fecha || monto <= 0) {
-    this.previewPlan = [];
+    if (!fecha || monto <= 0) {
+      this.previewPlan = [];
+      this.updateResumenFromPreview();
+      return;
+    }
+
+    let current = this.normalizePlanDate(new Date(`${fecha}T00:00:00`));
+    const end = new Date(current.getFullYear(), 9, 31);
+
+    const rows: PlanItem[] = [];
+    let i = 1;
+
+    while (current <= end) {
+      rows.push({
+        id: `preview-${i}`,
+        noCuota: i,
+        fechaProgramada: this.toIsoDate(current),
+        tipoLinea: 'PLAN',
+        descripcion: 'PLAN',
+        montoCuota: monto,
+        deposito: null,
+        retiro: null,
+        interes: null,
+        estado: 'Pendiente',
+        pagado: false,
+        saldo: 0,
+        saldoInteres: 0,
+        fechaPago: null,
+        usuarioPago: null
+      });
+
+      current = this.getNextBiweeklyDate(current);
+      i++;
+    }
+
+    this.previewPlan = rows;
     this.updateResumenFromPreview();
-    return;
   }
-
-  let current = this.normalizePlanDate(new Date(`${fecha}T00:00:00`));
-  const end = new Date(current.getFullYear(), 9, 31);
-
-  const rows: PlanItem[] = [];
-  let i = 1;
-
-  while (current <= end) {
-    rows.push({
-      id: `preview-${i}`,
-      noCuota: i,
-      fechaProgramada: this.toIsoDate(current),
-      tipoLinea: 'PLAN',
-      descripcion: 'PLAN',
-      montoCuota: monto,
-      deposito: null,
-      retiro: null,
-      interes: null,
-      estado: 'Pendiente',
-      pagado: false,
-      saldo: 0,
-      saldoInteres: 0,
-      fechaPago: null,
-      usuarioPago: null
-    });
-
-    current = this.getNextBiweeklyDate(current);
-    i++;
-  }
-
-  this.previewPlan = rows;
-  this.updateResumenFromPreview();
-}
 
   private normalizePlanDate(date: Date): Date {
     const year = date.getFullYear();

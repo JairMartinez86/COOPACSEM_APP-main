@@ -84,11 +84,11 @@
         "noCuota": "Installment No.",
         "fecha": "Date",
         "cuota": "Installment",
-         "deposito": "Deposit",
-      "retiro": "Withdrawal",
+        "deposito": "Deposit",
+        "retiro": "Withdrawal",
         "estado": "Status",
-         "saldoAcumulado": "Balance",
-         "interes": "Interest",
+        "saldoAcumulado": "Balance",
+        "interes": "Interest",
         "saldoInteres": "Balance + Interest"
       }
     },
@@ -139,7 +139,7 @@
             "1": {
               "rule": "REGEX",
               "value": "^((\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))|((0[1-9]|[12]\\d|3[01])\\/(0[1-9]|1[0-2])\\/\\d{4})|((0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/\\d{4}))$",
-              "when": "",
+              "when": "{yaAperturada}=false",
               "msj": "Enter the deduction date"
             },
             "2": {
@@ -185,20 +185,19 @@
       }
     },
     "types": {
-  "plan": "Nómina",
-  "extraordinary": "Extraordinario",
-  "retiro": "Retiro"
-},
-      "common": {
-    "search": "Search",
-    "close": "Close",
-    "cancel": "Cancel",
-    "yes": "Yes",
-    "no": "No",
-    "showing": "Showing",
-    "total": "Total",
-    "of": "of"
+      "plan": "Nómina",
+      "extraordinary": "Extraordinario",
+      "retiro": "Retiro"
+    },
+    "common": {
+      "search": "Search",
+      "close": "Close",
+      "cancel": "Cancel",
+      "yes": "Yes",
+      "no": "No",
+      "showing": "Showing",
+      "total": "Total",
+      "of": "of"
+    }
   }
-  }
-
 }
