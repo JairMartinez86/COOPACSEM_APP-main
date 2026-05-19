@@ -75,6 +75,7 @@ export class EstadoCuentaInteresesComponent implements OnInit, OnDestroy {
     fechaDesde = '';
     fechaHasta = '';
     fechaCorte = '';
+    
 
     mes = 1;
     anio = 2026;
@@ -273,7 +274,7 @@ aplicarFiltros(): void {
 }
 
     loadData(): void {
-        const start = performance.now();
+       // const start = performance.now();
         this.loading = true;
 
         this.service.getDetalleIntereses(this.socioId, {
@@ -286,7 +287,8 @@ aplicarFiltros(): void {
         })
             .pipe(finalize(() => {
                 this.loading = false;
-                this.requestTime = Number((performance.now() - start).toFixed(2));
+               /* this.requestTime = Number((performance.now() - start).toFixed(2));
+                console.log(this.requestTime )*/
             }))
             .subscribe({
                 next: (res: any) => {
