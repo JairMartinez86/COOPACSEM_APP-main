@@ -5,6 +5,7 @@
   production: false,
   apiUrl: '/api'
 };*/
+
 export const environment = {
   production: true,
   apiUrl: 'https://coopacsem-api-main.onrender.com/api'
