@@ -1,42 +1,69 @@
 /* =========================================
-   SUMMARY
+   SUMMARY + LEGEND
 ========================================= */
 
-.summary-grid {
+.summary-grid,
+.pago-legend-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: .55rem;
 }
 
-.summary-item {
+.summary-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.pago-legend-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.summary-item,
+.legend-card {
   display: flex;
+  gap: .6rem;
+
+  border-radius: 10px;
+
+  border: 1px solid rgba(148, 163, 184, .18);
+}
+
+.summary-item {
   align-items: center;
-  gap: .65rem;
 
   min-height: 78px;
 
   padding: .65rem .75rem;
 
-  border: 1px solid rgba(148, 163, 184, .22);
-  border-radius: 10px;
-
   background: rgba(148, 163, 184, .025);
 }
+
+.legend-card {
+  align-items: flex-start;
+
+  min-height: 66px;
+
+  padding: .7rem .8rem;
+
+  background: rgba(255,255,255,.03);
+}
+
+/* =========================================
+   ICONS
+========================================= */
 
 .summary-icon {
   width: 40px;
   height: 40px;
   min-width: 40px;
 
-  border-radius: 50%;
-
-  background: rgba(25, 135, 84, .12);
-
   display: flex;
   align-items: center;
   justify-content: center;
 
+  border-radius: 50%;
+
   font-size: 1rem;
+
+  background: rgba(25, 135, 84, .12);
 }
 
 .summary-icon-warning {
@@ -47,7 +74,14 @@
   background: rgba(108, 117, 125, .16);
 }
 
-.summary-label {
+/* =========================================
+   TEXT
+========================================= */
+
+.summary-label,
+.legend-card strong {
+  display: block;
+
   font-size: .68rem;
   font-weight: 700;
   line-height: 1.15;
@@ -59,36 +93,27 @@
   line-height: 1.1;
 }
 
-.summary-sub {
+.summary-sub,
+.legend-card small {
+  display: block;
+
   font-size: .62rem;
-  line-height: 1.15;
+  line-height: 1.2;
 
   color: var(--bs-secondary-color);
 }
 
-/* =========================================
-   LEGEND
-========================================= */
-
-.pago-legend-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: .55rem;
+.legend-card strong {
+  margin-bottom: .18rem;
 }
 
-.legend-card {
-  display: flex;
-  align-items: flex-start;
-  gap: .55rem;
+/* =========================================
+   LEGEND DOT
+========================================= */
 
-  min-height: 66px;
-
-  padding: .7rem .8rem;
-
-  border: 1px solid rgba(148, 163, 184, .18);
-  border-radius: 10px;
-
-  background: rgba(255,255,255,.03);
+.legend-dot,
+.capitalize-dot {
+  border-radius: 50%;
 }
 
 .legend-dot {
@@ -97,26 +122,6 @@
   min-width: 9px;
 
   margin-top: .25rem;
-
-  border-radius: 50%;
-}
-
-.legend-card strong {
-  display: block;
-
-  margin-bottom: .18rem;
-
-  font-size: .68rem;
-  line-height: 1.15;
-}
-
-.legend-card small {
-  display: block;
-
-  font-size: .62rem;
-  line-height: 1.25;
-
-  color: var(--bs-secondary-color);
 }
 
 /* =========================================
@@ -127,8 +132,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .75rem;
   flex-wrap: wrap;
+
+  gap: .75rem;
 
   padding: .65rem .85rem;
 
@@ -143,11 +149,11 @@
   min-width: 32px;
   height: 32px;
 
-  padding: 0 .45rem;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  padding: 0 .45rem;
 
   border-radius: 7px !important;
 
@@ -175,19 +181,18 @@
 /* =========================================
    CAPITALIZE DOT
 ========================================= */
+
 .capitalize-dot {
   width: 12px;
   height: 12px;
 
   display: inline-block;
 
-  border-radius: 50%;
+  background: transparent;
 
   border: 1.5px solid rgba(25, 135, 84, .55);
 
-  background: transparent;
-
-  transition: all .18s ease;
+  transition: .18s ease;
 }
 
 .capitalize-dot.active {
@@ -209,13 +214,32 @@
 
 .capitalize-dot.disabled {
   opacity: .45;
+
   cursor: not-allowed;
+  pointer-events: none;
 }
 
+/* =========================================
+   SORTABLE
+========================================= */
 
+.sortable {
+  cursor: pointer;
+
+  user-select: none;
+  white-space: nowrap;
+}
+
+.sortable:hover {
+  opacity: .75;
+}
+
+.sortable i {
+  font-size: .7rem;
+}
 
 /* =========================================
-   DARK MODE TEXT FIX
+   DARK MODE
 ========================================= */
 
 :host-context(.dark),
@@ -257,16 +281,13 @@
     border-color: rgba(255,255,255,.08);
   }
 
-  .badge {
+  .badge,
+  .pagination .page-link {
     color: #fff !important;
   }
 
   .btn-outline-secondary {
     color: rgba(255,255,255,.88) !important;
-  }
-
-  .pagination .page-link {
-    color: rgba(255,255,255,.9) !important;
   }
 }
 
@@ -276,7 +297,8 @@
 
 @media (max-width: 1366px) {
 
-  .summary-grid {
+  .summary-grid,
+  .pago-legend-grid {
     gap: .45rem;
   }
 
@@ -284,7 +306,12 @@
     min-height: 72px;
 
     padding: .55rem .6rem;
-    gap: .5rem;
+  }
+
+  .legend-card {
+    min-height: 58px;
+
+    padding: .5rem .6rem;
   }
 
   .summary-icon {
@@ -295,7 +322,8 @@
     font-size: .9rem;
   }
 
-  .summary-label {
+  .summary-label,
+  .legend-card strong {
     font-size: .64rem;
   }
 
@@ -303,24 +331,7 @@
     font-size: .86rem;
   }
 
-  .summary-sub {
-    font-size: .58rem;
-  }
-
-  .pago-legend-grid {
-    gap: .45rem;
-  }
-
-  .legend-card {
-    min-height: 58px;
-
-    padding: .5rem .6rem;
-  }
-
-  .legend-card strong {
-    font-size: .64rem;
-  }
-
+  .summary-sub,
   .legend-card small {
     font-size: .58rem;
   }
@@ -328,10 +339,7 @@
 
 @media (max-width: 1200px) {
 
-  .summary-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
+  .summary-grid,
   .pago-legend-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -346,25 +354,11 @@
 
   .pago-pagination-row {
     justify-content: center;
+
     text-align: center;
   }
 
   .pago-page-size {
     width: 100%;
   }
-}
-
-
-.sortable {
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-}
-
-.sortable:hover {
-  opacity: .75;
-}
-
-.sortable i {
-  font-size: .7rem;
 }
