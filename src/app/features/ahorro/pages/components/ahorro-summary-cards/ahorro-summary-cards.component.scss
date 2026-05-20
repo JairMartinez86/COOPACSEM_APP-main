@@ -1,75 +1,126 @@
+.card{
+  margin-bottom: 1px;
+}
+
 .ahorro-summary-grid {
   margin-bottom: 1px;
 }
 
+/* GRID */
 .dashboard-grid.dashboard-grid-4 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: .45rem;
 }
 
-.widget-stat {
+/* CARD */
+.widget-stat.card {
   border-radius: 10px;
   border: 1px solid rgba(148, 163, 184, .18);
-  padding: .55rem .65rem;
-  min-height: 72px;
+
   background: var(--bs-body-bg);
+
   box-shadow: 0 3px 10px rgba(15, 23, 42, .035);
 
-  display: flex;
-  align-items: center;
-  gap: .55rem;
+  min-height: 76px;
+
+  padding: .6rem .7rem;
+
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+
+  gap: .7rem;
+
+  overflow: hidden;
 }
 
+/* ICONO */
 .widget-stat-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  border-radius: 10px;
+
   background: rgba(var(--bs-primary-rgb), .08);
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: .85rem;
+
+  font-size: 1rem;
+
   flex-shrink: 0;
 }
 
+/* BODY */
 .widget-stat-body {
+  flex: 1;
   min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
+/* TITULO */
 .widget-stat-title {
   font-size: .66rem;
   font-weight: 700;
-  line-height: 1.05;
-  margin-bottom: .12rem;
+
+  line-height: 1.1;
+
+  margin-bottom: .15rem;
+
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* VALOR */
 .widget-stat-value {
-  font-size: .95rem;
+  font-size: 1rem;
   font-weight: 800;
-  line-height: 1.05;
-  margin-bottom: .1rem;
+
+  line-height: 1.1;
+
+  margin-bottom: .12rem;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
+/* DESCRIPCION */
 .widget-stat-desc {
   font-size: .58rem;
-  line-height: 1.05;
+
+  line-height: 1.1;
+
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* RESPONSIVE */
 @media (max-width: 1200px) {
+
   .dashboard-grid.dashboard-grid-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
 }
 
 @media (max-width: 768px) {
+
   .dashboard-grid.dashboard-grid-4 {
     grid-template-columns: 1fr;
   }
+
+  .widget-stat.card {
+    min-height: 72px;
+  }
+
 }
