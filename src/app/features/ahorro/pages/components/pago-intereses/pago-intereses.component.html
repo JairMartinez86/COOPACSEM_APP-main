@@ -1,0 +1,507 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<section class="section">
+    <div class="main-content pago-intereses-page">
+
+        <div class="page-header pago-intereses-header">
+            <div class="d-flex align-items-center gap-3">
+                <div class="pago-intereses-icon">
+                    <i class="fa-solid fa-piggy-bank"></i>
+                </div>
+
+                <div>
+                    <h1 class="page-title mb-1">
+                        {{ 'pagoIntereses.page.title' | translate }}
+                    </h1>
+
+                    <p class="text-muted mb-0">
+                        {{ 'pagoIntereses.page.subtitle' | translate }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card pago-card mb-2">
+            <div class="card-body p-3">
+                <div class="row g-3 align-items-start">
+
+                    <div class="col-xl-9">
+                        <h6 class="fw-bold mb-3">
+                            {{ 'pagoIntereses.filters.title' | translate }}
+                        </h6>
+
+                        <div class="row g-3 align-items-end">
+                            <div class="col-xl-3 col-lg-6">
+                                <label class="form-label">
+                                    {{ 'pagoIntereses.filters.cutoff' | translate }}
+                                </label>
+
+                                <select class="form-select" [(ngModel)]="filtro.corte"
+                                    (ngModelChange)="onCorteChange()">
+                                    <option value="Q1-2026">{{ 'pagoIntereses.cutoffs.q1' | translate:{ anio: anio } }}
+                                    </option>
+                                    <option value="Q2-2026">{{ 'pagoIntereses.cutoffs.q2' | translate:{ anio: anio } }}
+                                    </option>
+                                    <option value="Q3-2026">{{ 'pagoIntereses.cutoffs.q3' | translate:{ anio: anio } }}
+                                    </option>
+                                    <option value="Q4-2026">{{ 'pagoIntereses.cutoffs.q4' | translate:{ anio: anio } }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-xl-3 col-lg-6">
+                                <label class="form-label">
+                                    {{ 'pagoIntereses.filters.cutoffDate' | translate }}
+                                </label>
+
+                                <input type="date" class="form-control" [(ngModel)]="filtro.fechaCorte"
+                                    (ngModelChange)="onFechaCorteChange()">
+                            </div>
+
+                            <div class="col-xl-3 col-lg-6">
+                                <label class="form-label">
+                                    {{ 'pagoIntereses.filters.interestType' | translate }}
+                                </label>
+
+                                <select class="form-select" [(ngModel)]="filtro.tipoInteres">
+                                    <option value="">{{ 'pagoIntereses.common.all' | translate }}</option>
+                                    <option value="Corriente">{{ 'pagoIntereses.accountTypes.current' | translate }}
+                                    </option>
+                                    <option value="Navidena">{{ 'pagoIntereses.accountTypes.christmas' | translate }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-xl-3 col-lg-6">
+                                <label class="form-label">
+                                    {{ 'pagoIntereses.filters.memberStatus' | translate }}
+                                </label>
+
+                                <select class="form-select" [(ngModel)]="filtro.estadoSocio">
+                                    <option value="">{{ 'pagoIntereses.common.all' | translate }}</option>
+                                    <option value="Activo">{{ 'pagoIntereses.status.active' | translate }}</option>
+                                    <option value="Inactivo">{{ 'pagoIntereses.status.inactive' | translate }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-check pago-check">
+                                    <input class="form-check-input" type="checkbox" id="incluirCapitaliza"
+                                        [(ngModel)]="filtro.incluirCapitaliza">
+
+                                    <label class="form-check-label" for="incluirCapitaliza">
+                                        {{ 'pagoIntereses.filters.includeCapitalization' | translate:{ currency:
+                                        currency } }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3">
+                        <div class="rule-box">
+                            <div class="fw-bold mb-2">
+                                <i class="fa-regular fa-circle-info text-success me-2"></i>
+                                {{ 'pagoIntereses.rule.title' | translate }}
+                            </div>
+
+                            <div class="text-muted small">
+                                {{ 'pagoIntereses.rule.description' | translate:{ currency: currency } }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card pago-card mb-2">
+            <div class="card-body p-3">
+                <div class="summary-grid">
+
+                    <div class="summary-item">
+                        <div class="summary-icon text-success">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+
+                        <div>
+                            <div class="summary-label">
+                                {{ 'pagoIntereses.summary.totalMembers' | translate }}
+                            </div>
+                            <div class="summary-value">{{ resumen.totalSocios }}</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-icon text-success">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+
+                        <div>
+                            <div class="summary-label">
+                                {{ 'pagoIntereses.summary.totalGenerated' | translate }}
+                            </div>
+
+                            <div class="summary-sub">
+                                {{ 'pagoIntereses.summary.currencyLabel' | translate:{ currency: currency } }}
+                            </div>
+
+                            <div class="summary-value">
+                                {{ formatCurrency(resumen.totalIntereses) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-icon text-success">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>
+
+                        <div>
+                            <div class="summary-label">
+                                {{ 'pagoIntereses.summary.totalToPay' | translate }}
+                            </div>
+
+                            <div class="summary-sub">
+                                {{ 'pagoIntereses.summary.greaterThanLimit' | translate:{ currency: currency } }}
+                            </div>
+
+                            <div class="summary-value">
+                                {{ formatCurrency(resumen.totalPagar) }}
+                            </div>
+
+                            <div class="summary-sub">
+                                {{ resumen.sociosPagar }}
+                                {{ 'pagoIntereses.summary.members' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-icon text-warning summary-icon-warning">
+                            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                        </div>
+
+                        <div>
+                            <div class="summary-label">
+                                {{ 'pagoIntereses.summary.totalToTransfer' | translate }}
+                            </div>
+
+                            <div class="summary-sub">
+                                {{ 'pagoIntereses.summary.lessOrNoPayment' | translate:{ currency: currency } }}
+                            </div>
+
+                            <div class="summary-value">
+                                {{ formatCurrency(resumen.totalTrasladar) }}
+                            </div>
+
+                            <div class="summary-sub">
+                                {{ resumen.sociosTrasladar }}
+                                {{ 'pagoIntereses.summary.members' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <div class="summary-icon text-secondary summary-icon-secondary">
+                            <i class="fa-regular fa-clock"></i>
+                        </div>
+
+                        <div>
+                            <div class="summary-label">
+                                {{ 'pagoIntereses.summary.calculationDate' | translate }}
+                            </div>
+
+                            <div class="summary-sub">
+                                {{ resumen.fechaCalculo || '-' }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="pago-legend-grid mb-2">
+            <div class="legend-card">
+                <span class="legend-dot bg-success"></span>
+                <div>
+                    <strong>
+                        {{ 'pagoIntereses.legend.pay.title' | translate:{ currency: currency } }}
+                    </strong>
+                    <small>
+                        {{ 'pagoIntereses.legend.pay.description' | translate:{ currency: currency } }}
+                    </small>
+                </div>
+            </div>
+
+            <div class="legend-card">
+                <span class="legend-dot bg-primary"></span>
+                <div>
+                    <strong>{{ 'pagoIntereses.legend.capitalize.title' | translate }}</strong>
+                    <small>{{ 'pagoIntereses.legend.capitalize.description' | translate }}</small>
+                </div>
+            </div>
+
+            <div class="legend-card">
+                <span class="legend-dot bg-warning"></span>
+                <div>
+                    <strong>{{ 'pagoIntereses.legend.transfer.title' | translate }}</strong>
+                    <small>
+                        {{ 'pagoIntereses.legend.transfer.description' | translate:{ currency: currency } }}
+                    </small>
+                </div>
+            </div>
+
+            <div class="legend-card">
+                <span class="legend-dot bg-secondary"></span>
+                <div>
+                    <strong>{{ 'pagoIntereses.legend.noInterest.title' | translate }}</strong>
+                    <small>{{ 'pagoIntereses.legend.noInterest.description' | translate }}</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card pago-card">
+            <div class="card-header pago-table-header">
+                <div class="d-flex flex-column w-100 gap-2">
+
+                    <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                        <h6 class="mb-0 fw-bold">
+                            {{ 'pagoIntereses.table.title' | translate }}:
+                            {{ formatDate(filtro.fechaCorte) }}
+                        </h6>
+
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="exportar()">
+                                <i class="fa-solid fa-download me-1"></i>
+                                {{ 'pagoIntereses.actions.export' | translate }}
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-success" [disabled]="processing"
+                                (click)="procesarPago()">
+
+                                @if (processing) {
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                                } @else {
+                                <i class="fa-solid fa-gear me-1"></i>
+                                }
+
+                                {{ 'pagoIntereses.actions.process' | translate }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row g-2 align-items-center">
+                        <div class="col-xl-4 col-lg-5 col-md-6">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </span>
+
+                                <input type="text" class="form-control" [(ngModel)]="currentTerm"
+                                    (keyup.enter)="buscarDesdeFiltro()"
+                                    [placeholder]="'pagoIntereses.filters.searchPlaceholder' | translate">
+                            </div>
+                        </div>
+
+                        <div class="col-auto">
+                            @if (currentTerm) {
+                            <span class="badge badge-soft-primary px-2 py-2">
+                                {{ currentTerm }}
+                            </span>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0 pago-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" (click)="sortBy('codigoSocio')">
+                                    {{ 'pagoIntereses.table.memberCode' | translate }}
+                                    <i [class]="sortIcon('codigoSocio')" class="ms-1"></i>
+                                </th>
+
+                                <th class="sortable" (click)="sortBy('nombreCompleto')">
+                                    {{ 'pagoIntereses.table.name' | translate }}
+                                    <i [class]="sortIcon('nombreCompleto')" class="ms-1"></i>
+                                </th>
+
+                                <th class="sortable" (click)="sortBy('identificacion')">
+                                    {{ 'pagoIntereses.table.identification' | translate }}
+                                    <i [class]="sortIcon('identificacion')" class="ms-1"></i>
+                                </th>
+
+                                <th class="sortable" (click)="sortBy('activo')">
+                                    {{ 'pagoIntereses.table.status' | translate }}
+                                    <i [class]="sortIcon('activo')" class="ms-1"></i>
+                                </th>
+
+                                <th class="text-end sortable" (click)="sortBy('pendienteCorriente')">
+                                    {{ 'pagoIntereses.table.pendingCurrentInterest' | translate }}
+                                    <i [class]="sortIcon('pendienteCorriente')" class="ms-1"></i>
+                                </th>
+
+                                <th class="text-end sortable" (click)="sortBy('pendienteNavidena')">
+                                    {{ 'pagoIntereses.table.pendingChristmasInterest' | translate }}
+                                    <i [class]="sortIcon('pendienteNavidena')" class="ms-1"></i>
+                                </th>
+
+                                <th class="text-end sortable" (click)="sortBy('interesPendiente')">
+                                    {{ 'pagoIntereses.table.pendingInterest' | translate }}
+                                    <i [class]="sortIcon('interesPendiente')" class="ms-1"></i>
+                                </th>
+
+                                <th class="text-end sortable" (click)="sortBy('montoPagar')">
+                                    {{ 'pagoIntereses.table.toPay' | translate }}
+                                    <i [class]="sortIcon('montoPagar')" class="ms-1"></i>
+                                </th>
+
+                                <th class="text-center">
+                                    {{ 'pagoIntereses.table.capitalize' | translate }}
+                                </th>
+
+                                <th class="text-end sortable" (click)="sortBy('montoTrasladar')">
+                                    {{ 'pagoIntereses.table.toTransfer' | translate }}
+                                    <i [class]="sortIcon('montoTrasladar')" class="ms-1"></i>
+                                </th>
+
+                                <th class="text-center">
+                                    {{ 'pagoIntereses.table.action' | translate }}
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (loading) {
+                            <tr>
+                                <td colspan="11" class="text-center text-muted py-4">
+                                    <span class="spinner-border spinner-border-sm me-1"></span>
+                                    {{ 'pagoIntereses.common.loading' | translate }}
+                                </td>
+                            </tr>
+                            } @else if (rows.length === 0) {
+                            <tr>
+                                <td colspan="11" class="text-center text-muted py-4">
+                                    {{ 'pagoIntereses.common.noData' | translate }}
+                                </td>
+                            </tr>
+                            } @else {
+                            @for (row of rows; track row.socioId) {
+                            <tr>
+                                <td>{{ row.codigoSocio }}</td>
+                                <td>{{ row.nombreCompleto }}</td>
+                                <td>{{ row.identificacion || row.numeroIdentificacion || '-' }}</td>
+
+                                <td>
+                                    <span class="badge" [ngClass]="estadoBadgeClass(row.activo)">
+                                        {{
+                                        row.activo
+                                        ? ('pagoIntereses.status.active' | translate)
+                                        : ('pagoIntereses.status.inactive' | translate)
+                                        }}
+                                    </span>
+                                </td>
+
+                                <td class="text-end">
+                                    {{ formatCurrency(row.pendienteCorriente) }}
+                                </td>
+
+                                <td class="text-end">
+                                    {{ formatCurrency(row.pendienteNavidena) }}
+                                </td>
+
+                                <td class="text-end fw-semibold">
+                                    {{ formatCurrency(row.interesPendiente) }}
+                                </td>
+
+                                <td class="text-end fw-semibold">
+                                    {{ formatCurrency(row.montoPagar) }}
+                                </td>
+
+                                <td class="text-center">
+                                    <span class="capitalize-dot clickable" [class.active]="row.capitalizaAhorro"
+                                        [class.disabled]="debeBloquearCapitaliza(row)" (click)="toggleCapitaliza(row)">
+                                    </span>
+                                </td>
+
+                                <td class="text-end">
+                                    {{ formatCurrency(row.montoTrasladar) }}
+                                </td>
+
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-link text-success p-0"
+                                        (click)="ver(row)">
+
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (rows.length > 0) {
+                <div class="pago-pagination-row">
+                    <div class="text-muted small">
+                        {{ 'pagoIntereses.pagination.showing' | translate }}
+                        <strong>{{ filtro.page }}</strong>
+                        /
+                        <strong>{{ totalPages }}</strong>
+                    </div>
+
+                    <nav>
+                        <ul class="pagination pagination-sm pago-pagination mb-0">
+                            <li class="page-item" [class.disabled]="filtro.page <= 1">
+                                <button class="page-link" type="button" (click)="cambiarPagina(filtro.page - 1)">
+
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </button>
+                            </li>
+
+                            @for (p of paginas; track p) {
+                            <li class="page-item" [class.active]="p === filtro.page">
+                                <button class="page-link" type="button" (click)="cambiarPagina(p)">
+
+                                    {{ p }}
+                                </button>
+                            </li>
+                            }
+
+                            <li class="page-item" [class.disabled]="filtro.page >= totalPages">
+                                <button class="page-link" type="button" (click)="cambiarPagina(filtro.page + 1)">
+
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <select class="form-select form-select-sm pago-page-size" [(ngModel)]="filtro.pageSize"
+                        (change)="cambiarPageSize()">
+
+                        @for (size of pageSizeOptions; track size) {
+                        <option [value]="size">
+                            {{ size }} {{ 'pagoIntereses.pagination.perPage' | translate }}
+                        </option>
+                        }
+                    </select>
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="alert alert-primary pago-note mt-2 mb-0">
+            <i class="fa-regular fa-circle-info me-1"></i>
+            {{ 'pagoIntereses.note' | translate }}
+        </div>
+
+    </div>
+</section>

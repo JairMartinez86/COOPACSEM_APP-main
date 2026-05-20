@@ -1,0 +1,110 @@
+{
+    "pagoIntereses": {
+        "breadcrumbs": [
+            {
+                "label": "Home",
+                "url": "/"
+            },
+            {
+                "label": "Savings"
+            },
+            {
+                "label": "Interest Payments"
+            }
+        ],
+        "page": {
+            "title": "Interest Payments",
+            "subtitle": "Generate and process payments or transfers of accumulated interests based on the selected cutoff."
+        },
+        "filters": {
+            "title": "Interest payment cutoff selection",
+            "cutoff": "Settlement period",
+            "cutoffDate": "Cutoff date",
+            "interestType": "Interest type",
+            "memberStatus": "Member status",
+            "includeCapitalization": "Include members who voluntarily capitalize their interests into savings. (Only for interests > {{currency}} 100.00)",
+            "searchPlaceholder": "Search member, name or identification..."
+        },
+        "cutoffs": {
+            "q1": "January - March {{anio}}",
+            "q2": "April - June {{anio}}",
+            "q3": "July - September {{anio}}",
+            "q4": "October - December {{anio}}"
+        },
+        "rule": {
+            "title": "Payment rule",
+            "description": "Interests greater than {{currency}} 100.00 will be paid to the member, capitalized into savings (voluntary application), or left unpaid and transferred according to how the interests were generated. Interests equal to or lower than {{currency}} 100.00 will be transferred to savings regardless of the member's preference."
+        },
+        "summary": {
+            "totalMembers": "Total members",
+            "totalGenerated": "Total accumulated interests",
+            "totalToPay": "Total to pay",
+            "totalToTransfer": "Total to transfer",
+            "calculationDate": "Calculation date and time",
+            "members": "members",
+            "currencyLabel": "(In {{currency}})",
+            "greaterThanLimit": "(> {{currency}} 100.00)",
+            "lessOrNoPayment": "(≤ {{currency}} 100.00 or unpaid)"
+        },
+        "legend": {
+            "pay": {
+                "title": "Will be paid to the member (> {{currency}} 100.00)",
+                "description": "Interests greater than the configured limit."
+            },
+            "capitalize": {
+                "title": "Savings capitalization",
+                "description": "The member chose to capitalize generated interests."
+            },
+            "transfer": {
+                "title": "Will be transferred to savings",
+                "description": "Interests equal to or lower than the configured limit."
+            },
+            "noInterest": {
+                "title": "No accumulated interests",
+                "description": "No pending interests available."
+            }
+        },
+        "table": {
+            "title": "Pending interest detail",
+            "memberCode": "Member No.",
+            "name": "Name",
+            "identification": "Identification",
+            "status": "Status",
+            "pendingCurrentInterest": "Accrued current int. balance",
+            "pendingChristmasInterest": "Accrued Christmas int. balance",
+            "pendingInterest": "Total interests",
+            "toPay": "Amount to pay",
+            "capitalize": "Capitalize savings",
+            "toTransfer": "Amount to transfer",
+            "action": "Action"
+        },
+        "pagination": {
+            "pageSize": "Records per page",
+            "perPage": "per page",
+            "showing": "Page"
+        },
+        "actions": {
+            "clear": "Clear",
+            "filter": "Filter",
+            "export": "Export",
+            "process": "Process interest payment"
+        },
+        "common": {
+            "all": "(All)",
+            "loading": "Loading information...",
+            "noData": "No records found."
+        },
+        "status": {
+            "active": "Active",
+            "inactive": "Inactive"
+        },
+        "accountTypes": {
+            "current": "Current",
+            "christmas": "Christmas"
+        },
+        "messages": {
+            "processSuccess": "Interest payment processed successfully."
+        },
+        "note": "When processing interest payments, the system will take previously registered partial payments into account and calculate only the remaining pending balance."
+    }
+}

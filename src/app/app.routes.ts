@@ -275,6 +275,20 @@ export const routes: Routes = [
 
 
 
+      //PAGO INTERESES
+      {
+        path: 'pago-intereses',
+        loadComponent: () =>
+          import('./features/ahorro/pages/components/pago-intereses/pago-intereses.component')
+            .then(m => m.PagoInteresesComponent),
+        canActivate: [permissionGuard],
+        data: {
+          permission: '/pago-intereses',
+          action: 'view',
+           tableFilterKey: 'pago-intereses', tableFilterEnter: true
+        }
+      },
+
 
 
 

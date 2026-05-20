@@ -32,6 +32,7 @@ import solicitudCredito from './es/solicitudCredito.json';
 import solicitudCreditoLista from './es/solicitudCreditoLista.json';
 import creditosActivos from './es/creditosActivos.json';
 import estadoCuentaIntereses from './es/estadoCuentaIntereses.json';
+import pagoIntereses from './es/pagoIntereses.json';
 
 export const es = Object.assign({}, interceptor, alerts, file_manager, twoFactor, sidebar, navbar, modal, loader, auth, login, forgotPassword, resetPassword, company, userSettings, rolesPermissions, activity, userlist, socios, proveedor, socio_ahorro, socio_retiro, socio_cambio_cuota, socio_apertura_nav, ahorro,
-    afiliacion_pago, fichaSocio, estadoCuentaLista, estadoCuentaDet, solicitudCreditoListaSocio, solicitudCredito, solicitudCreditoLista, creditosActivos, estadoCuentaIntereses, draft);
+    afiliacion_pago, fichaSocio, estadoCuentaLista, estadoCuentaDet, solicitudCreditoListaSocio, solicitudCredito, solicitudCreditoLista, creditosActivos, estadoCuentaIntereses, pagoIntereses, draft);

@@ -1,0 +1,370 @@
+/* =========================================
+   SUMMARY
+========================================= */
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .55rem;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+
+  min-height: 78px;
+
+  padding: .65rem .75rem;
+
+  border: 1px solid rgba(148, 163, 184, .22);
+  border-radius: 10px;
+
+  background: rgba(148, 163, 184, .025);
+}
+
+.summary-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+
+  border-radius: 50%;
+
+  background: rgba(25, 135, 84, .12);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1rem;
+}
+
+.summary-icon-warning {
+  background: rgba(255, 193, 7, .16);
+}
+
+.summary-icon-secondary {
+  background: rgba(108, 117, 125, .16);
+}
+
+.summary-label {
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.summary-value {
+  font-size: .95rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.summary-sub {
+  font-size: .62rem;
+  line-height: 1.15;
+
+  color: var(--bs-secondary-color);
+}
+
+/* =========================================
+   LEGEND
+========================================= */
+
+.pago-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .55rem;
+}
+
+.legend-card {
+  display: flex;
+  align-items: flex-start;
+  gap: .55rem;
+
+  min-height: 66px;
+
+  padding: .7rem .8rem;
+
+  border: 1px solid rgba(148, 163, 184, .18);
+  border-radius: 10px;
+
+  background: rgba(255,255,255,.03);
+}
+
+.legend-dot {
+  width: 9px;
+  height: 9px;
+  min-width: 9px;
+
+  margin-top: .25rem;
+
+  border-radius: 50%;
+}
+
+.legend-card strong {
+  display: block;
+
+  margin-bottom: .18rem;
+
+  font-size: .68rem;
+  line-height: 1.15;
+}
+
+.legend-card small {
+  display: block;
+
+  font-size: .62rem;
+  line-height: 1.25;
+
+  color: var(--bs-secondary-color);
+}
+
+/* =========================================
+   PAGINATION
+========================================= */
+
+.pago-pagination-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  flex-wrap: wrap;
+
+  padding: .65rem .85rem;
+
+  border-top: 1px solid rgba(148, 163, 184, .16);
+}
+
+.pago-pagination {
+  gap: .25rem;
+}
+
+.pago-pagination .page-link {
+  min-width: 32px;
+  height: 32px;
+
+  padding: 0 .45rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px !important;
+
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.pago-pagination .page-item.active .page-link {
+  background: var(--bs-success);
+  border-color: var(--bs-success);
+  color: #fff;
+}
+
+.pago-pagination .page-item.disabled .page-link {
+  opacity: .45;
+}
+
+.pago-page-size {
+  width: 145px;
+  height: 32px;
+
+  font-size: .75rem;
+}
+
+/* =========================================
+   CAPITALIZE DOT
+========================================= */
+.capitalize-dot {
+  width: 12px;
+  height: 12px;
+
+  display: inline-block;
+
+  border-radius: 50%;
+
+  border: 1.5px solid rgba(25, 135, 84, .55);
+
+  background: transparent;
+
+  transition: all .18s ease;
+}
+
+.capitalize-dot.active {
+  background: var(--bs-success);
+  border-color: var(--bs-success);
+
+  box-shadow: 0 0 0 2px rgba(var(--bs-success-rgb), .18);
+}
+
+.capitalize-dot.clickable {
+  cursor: pointer;
+}
+
+.capitalize-dot.clickable:hover {
+  transform: scale(1.12);
+
+  border-color: var(--bs-success);
+}
+
+.capitalize-dot.disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+
+
+/* =========================================
+   DARK MODE TEXT FIX
+========================================= */
+
+:host-context(.dark),
+:host-context(.dark-mode),
+:host-context(.dark-theme),
+:host-context(body.dark),
+:host-context(body.dark-mode),
+:host-context(body.dark-theme),
+:host-context([data-bs-theme="dark"]),
+:host-context([data-theme="dark"]),
+:host-context([data-layout-mode="dark"]) {
+
+  .summary-label,
+  .legend-card strong,
+  .pago-table thead th,
+  .rule-box .fw-bold,
+  .page-title,
+  h6,
+  .fw-bold {
+    color: rgba(255,255,255,.96) !important;
+  }
+
+  .summary-value,
+  .table tbody td {
+    color: rgba(255,255,255,.92) !important;
+  }
+
+  .summary-sub,
+  .legend-card small,
+  .text-muted,
+  .rule-box .small,
+  .form-check-label,
+  .small {
+    color: rgba(255,255,255,.74) !important;
+  }
+
+  .legend-card {
+    background: rgba(255,255,255,.045);
+    border-color: rgba(255,255,255,.08);
+  }
+
+  .badge {
+    color: #fff !important;
+  }
+
+  .btn-outline-secondary {
+    color: rgba(255,255,255,.88) !important;
+  }
+
+  .pagination .page-link {
+    color: rgba(255,255,255,.9) !important;
+  }
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1366px) {
+
+  .summary-grid {
+    gap: .45rem;
+  }
+
+  .summary-item {
+    min-height: 72px;
+
+    padding: .55rem .6rem;
+    gap: .5rem;
+  }
+
+  .summary-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+
+    font-size: .9rem;
+  }
+
+  .summary-label {
+    font-size: .64rem;
+  }
+
+  .summary-value {
+    font-size: .86rem;
+  }
+
+  .summary-sub {
+    font-size: .58rem;
+  }
+
+  .pago-legend-grid {
+    gap: .45rem;
+  }
+
+  .legend-card {
+    min-height: 58px;
+
+    padding: .5rem .6rem;
+  }
+
+  .legend-card strong {
+    font-size: .64rem;
+  }
+
+  .legend-card small {
+    font-size: .58rem;
+  }
+}
+
+@media (max-width: 1200px) {
+
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pago-legend-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+
+  .summary-grid,
+  .pago-legend-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pago-pagination-row {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .pago-page-size {
+    width: 100%;
+  }
+}
+
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.sortable:hover {
+  opacity: .75;
+}
+
+.sortable i {
+  font-size: .7rem;
+}

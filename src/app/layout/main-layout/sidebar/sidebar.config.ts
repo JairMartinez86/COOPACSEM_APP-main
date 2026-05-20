@@ -158,6 +158,28 @@ export const SIDEBAR_DATA: SidebarItem[] = [
     ]
   },
 
+  {
+    type: 'link',
+    titleKey: 'sidebar.items.pagoInteres',
+    iconclass: 'fa-solid fa-coins',
+    router: '/pago-intereses',
+    permissions: {
+      view: false,
+      create: false,
+      edit: null,
+      delete: null
+    },
+
+  },
+
+
+
+
+
+
+
+
+
 
 
   //CREDITO
