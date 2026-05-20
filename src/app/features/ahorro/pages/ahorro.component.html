@@ -1,8 +1,9 @@
 <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
 
-<section class="section">
-  <div class="main-content">
-    <div class="page-header mb-3">
+<section class="section ahorro-section">
+  <div class="main-content ahorro-content">
+
+    <div class="page-header ahorro-page-header">
       <div>
         <h1 class="page-title">{{ 'ahorro.page.title' | translate }}</h1>
         <p class="text-muted mb-0">
@@ -11,12 +12,15 @@
       </div>
     </div>
 
-    <app-ahorro-summary-cards [cards]="cards"></app-ahorro-summary-cards>
+    <div class="ahorro-summary-wrapper">
+      <app-ahorro-summary-cards [cards]="cards"></app-ahorro-summary-cards>
+    </div>
 
-    <div class="row g-3">
+    <div class="row g-2 ahorro-main-row">
       <div class="col-12">
-        <div class="card">
-          <div class="card-body">
+        <div class="card ahorro-card">
+          <div class="card-body ahorro-card-body">
+
             <app-ahorro-filters
               (filtersChange)="onFiltersChange($event)">
             </app-ahorro-filters>
@@ -28,19 +32,23 @@
               (selectRow)="onSelectSocio($event)"
               (pageChange)="onPageChange($event)">
             </app-socios-table>
+
           </div>
         </div>
 
-        <app-ahorro-socio-resumen
-          [socio]="selectedSocio"
-          [ahorrosRows]="ahorroRows"
-          [retirosRows]="retiroRows"
-          [depositosRows]="depositoRows"
-          [cambiosCuotaRows]="cambioCuotaRows"
-          [solicitudesRows]="solicitudRows"
-          [afiliacionMembresiaRows]="afiliacionMembresiaRows"
-          [planesRows]="planesRows">
-        </app-ahorro-socio-resumen>
+        <div class="ahorro-resumen-wrapper">
+          <app-ahorro-socio-resumen
+            [socio]="selectedSocio"
+            [ahorrosRows]="ahorroRows"
+            [retirosRows]="retiroRows"
+            [depositosRows]="depositoRows"
+            [cambiosCuotaRows]="cambioCuotaRows"
+            [solicitudesRows]="solicitudRows"
+            [afiliacionMembresiaRows]="afiliacionMembresiaRows"
+            [planesRows]="planesRows">
+          </app-ahorro-socio-resumen>
+        </div>
+
       </div>
     </div>
   </div>
@@ -51,8 +59,8 @@
   tabindex="-1"
   id="ahorroSidePanelOffcanvas">
 
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title">
+  <div class="offcanvas-header ahorro-offcanvas-header">
+    <h5 class="offcanvas-title mb-0">
       {{ 'ahorro.sidePanel.title' | translate }}
     </h5>
 
@@ -63,7 +71,7 @@
     </button>
   </div>
 
-  <div class="offcanvas-body p-0">
+  <div class="offcanvas-body ahorro-offcanvas-body">
     <app-ahorro-side-panel
       [actions]="actions"
       [alerts]="alerts"

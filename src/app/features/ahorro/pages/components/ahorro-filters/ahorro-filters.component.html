@@ -1,8 +1,7 @@
-<div class="card report-filter-card mb-3">
-  <div class="card-body">
+<div class="card report-filter-card">
+  <div class="card-body report-filter-body">
 
-    <!-- HEADER -->
-    <div class="mb-3">
+    <div class="report-header">
       <h5 class="fw-bold mb-1">
         {{ 'ahorro.reportes.title' | translate }}
       </h5>
@@ -12,345 +11,208 @@
       </div>
     </div>
 
-    <!-- REPORTES -->
-    <div class="report-options-grid mb-4">
-
+    <div class="report-options-grid">
       @for (report of reports; track report.type) {
-
-      <button type="button" class="report-option-card" [class.active]="reporteSeleccionado?.type === report.type"
+      <button
+        type="button"
+        class="report-option-card"
+        [class.active]="reporteSeleccionado?.type === report.type"
         (click)="seleccionarReporte(report)">
 
         <span class="report-option-icon">
-          <i class="fa-regular fa-file-excel fa-xl"></i>
+          <i class="fa-regular fa-file-excel fa-lg"></i>
         </span>
 
         <span>
-          <strong>
-            {{ report.titleKey | translate }}
-          </strong>
-
+          <strong>{{ report.titleKey | translate }}</strong>
           <small class="text-muted d-block">
             {{ report.subtitleKey | translate }}
           </small>
         </span>
-
       </button>
-
       }
-
     </div>
 
-    <!-- FILTROS -->
-    <div class="row g-4">
-
-      <!-- IZQUIERDA -->
+    <div class="row g-2 report-filters-row">
       <div class="col-lg-5">
+        <div class="row g-2">
 
-        <div class="row g-3">
-
-          <!-- TIPO CUENTA -->
           <div class="col-md-6">
-
             <label class="form-label">
               {{ 'ahorro.filters.accountType' | translate }}
             </label>
 
-           <select
-  class="form-select"
-  [(ngModel)]="tipoCuenta"
-  (ngModelChange)="onTipoCuentaChange()">
+            <select
+              class="form-select form-select-sm"
+              [(ngModel)]="tipoCuenta"
+              (ngModelChange)="onTipoCuentaChange()">
 
-  @if (!soloCorrienteReporte) {
+              @if (!soloCorrienteReporte) {
+              <option value="Todos">{{ 'ahorro.filters.all' | translate }}</option>
+              <option value="Navidena">{{ 'ahorro.accountTypes.christmas' | translate }}</option>
+              }
 
-    <option value="Todos">
-      {{ 'ahorro.filters.all' | translate }}
-    </option>
-
-    <option value="Navidena">
-      {{ 'ahorro.accountTypes.christmas' | translate }}
-    </option>
-
-  }
-
-  <option value="Corriente">
-    {{ 'ahorro.accountTypes.current' | translate }}
-  </option>
-
-</select>
-
+              <option value="Corriente">
+                {{ 'ahorro.accountTypes.current' | translate }}
+              </option>
+            </select>
           </div>
 
-          <!-- ESTADO -->
           <div class="col-md-6">
-
             <label class="form-label">
               {{ 'ahorro.filters.status' | translate }}
             </label>
 
-            <select class="form-select" [(ngModel)]="estado" (ngModelChange)="onEstadoChange()">
+            <select
+              class="form-select form-select-sm"
+              [(ngModel)]="estado"
+              (ngModelChange)="onEstadoChange()">
 
-              <option value="">
-                {{ 'ahorro.filters.all' | translate }}
-              </option>
-
-              <option value="Activo">
-                {{ 'ahorro.status.active' | translate }}
-              </option>
-
-              <option value="Inactivo">
-                {{ 'ahorro.status.inactive' | translate }}
-              </option>
-
+              <option value="">{{ 'ahorro.filters.all' | translate }}</option>
+              <option value="Activo">{{ 'ahorro.status.active' | translate }}</option>
+              <option value="Inactivo">{{ 'ahorro.status.inactive' | translate }}</option>
             </select>
-
           </div>
 
-          <!-- BUSCAR -->
           <div class="col-12">
-
             <label class="form-label">
               {{ 'ahorro.filters.search' | translate }}
             </label>
 
-            <div class="input-group">
-
-              <input type="text" class="form-control" [(ngModel)]="search" (ngModelChange)="onSearchInputChange()"
-                (keyup)="onSearchKeyup($event)" [placeholder]="'ahorro.filters.searchPlaceholder' | translate" />
+            <div class="input-group input-group-sm">
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="search"
+                (ngModelChange)="onSearchInputChange()"
+                (keyup)="onSearchKeyup($event)"
+                [placeholder]="'ahorro.filters.searchPlaceholder' | translate" />
 
               <span class="input-group-text">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </span>
-
             </div>
-
           </div>
 
         </div>
-
       </div>
 
-      <!-- DERECHA -->
       <div class="col-lg-7">
-
-        <!-- PERIODO -->
-        <div class="period-box mb-3">
-
+        <div class="period-box">
           <label class="form-label fw-semibold">
             {{ 'ahorro.filters.period' | translate }}
             <i class="fa-regular fa-circle-info text-muted ms-1"></i>
           </label>
 
           <div class="period-tabs compact">
-
             @if (!permiteSoloAnio) {
-
-            <button type="button" class="period-tab" [class.active]="periodoReporte === 'corte'"
-              [disabled]="!permiteSoloCorte && !permiteRango" (click)="setPeriodoReporte('corte')">
-
+            <button
+              type="button"
+              class="period-tab"
+              [class.active]="periodoReporte === 'corte'"
+              [disabled]="!permiteSoloCorte && !permiteRango"
+              (click)="setPeriodoReporte('corte')">
               {{ 'ahorro.filters.periodTypes.cutoff' | translate }}
-
             </button>
-
             }
 
             @if (permiteRango) {
-
-            <button type="button" class="period-tab" [class.active]="periodoReporte === 'rango'"
-              (click)="setPeriodoReporte('rango')">
-
+            <button type="button" class="period-tab" [class.active]="periodoReporte === 'rango'" (click)="setPeriodoReporte('rango')">
               {{ 'ahorro.filters.periodTypes.range' | translate }}
-
             </button>
 
-            <button type="button" class="period-tab" [class.active]="periodoReporte === 'mes'"
-              (click)="setPeriodoReporte('mes')">
-
+            <button type="button" class="period-tab" [class.active]="periodoReporte === 'mes'" (click)="setPeriodoReporte('mes')">
               {{ 'ahorro.filters.periodTypes.month' | translate }}
-
             </button>
-
             }
 
             @if (permiteSoloAnio || permiteRango) {
-
-            <button type="button" class="period-tab" [class.active]="periodoReporte === 'anio'"
-              (click)="setPeriodoReporte('anio')">
-
+            <button type="button" class="period-tab" [class.active]="periodoReporte === 'anio'" (click)="setPeriodoReporte('anio')">
               {{ 'ahorro.filters.periodTypes.year' | translate }}
-
             </button>
-
             }
-
           </div>
-
         </div>
 
-        <!-- TOOLBAR -->
         <div class="report-toolbar">
-
-          <!-- FECHAS -->
           <div class="report-toolbar-group">
 
-            <!-- CORTE -->
             @if (periodoReporte === 'corte') {
-
             <div class="toolbar-date">
-
-              <label class="form-label">
-                {{ 'ahorro.filters.cutoffDate' | translate }}
-              </label>
-
-              <input type="date" class="form-control" [(ngModel)]="fechaFinReporte">
-
+              <label class="form-label">{{ 'ahorro.filters.cutoffDate' | translate }}</label>
+              <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaFinReporte">
             </div>
-
             }
 
-            <!-- RANGO -->
             @if (periodoReporte === 'rango') {
-
             <div class="toolbar-date">
-
-              <label class="form-label">
-                {{ 'ahorro.filters.startDate' | translate }}
-              </label>
-
-              <input type="date" class="form-control" [(ngModel)]="fechaInicioReporte">
-
+              <label class="form-label">{{ 'ahorro.filters.startDate' | translate }}</label>
+              <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaInicioReporte">
             </div>
 
             <div class="toolbar-date">
-
-              <label class="form-label">
-                {{ 'ahorro.filters.endDate' | translate }}
-              </label>
-
-              <input type="date" class="form-control" [(ngModel)]="fechaFinReporte">
-
+              <label class="form-label">{{ 'ahorro.filters.endDate' | translate }}</label>
+              <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaFinReporte">
             </div>
-
             }
 
-            <!-- MES -->
             @if (periodoReporte === 'mes') {
-
             <div class="toolbar-date">
-
-              <label class="form-label">
-                {{ 'ahorro.filters.periodTypes.month' | translate }}
-              </label>
-
-              <select class="form-select" [(ngModel)]="mesReporte" (ngModelChange)="onMesReporteChange()">
-
+              <label class="form-label">{{ 'ahorro.filters.periodTypes.month' | translate }}</label>
+              <select class="form-select form-select-sm" [(ngModel)]="mesReporte" (ngModelChange)="onMesReporteChange()">
                 @for (mes of mesesReporte; track mes.value) {
-
-                <option [ngValue]="mes.value">
-                  {{ mes.label }}
-                </option>
-
+                <option [ngValue]="mes.value">{{ mes.label }}</option>
                 }
-
               </select>
-
             </div>
 
             <div class="toolbar-date">
-
-              <label class="form-label">
-                {{ 'ahorro.filters.periodTypes.year' | translate }}
-              </label>
-
-              <select class="form-select" [(ngModel)]="anioReporte" (ngModelChange)="onAnioReporteChange()">
-
+              <label class="form-label">{{ 'ahorro.filters.periodTypes.year' | translate }}</label>
+              <select class="form-select form-select-sm" [(ngModel)]="anioReporte" (ngModelChange)="onAnioReporteChange()">
                 @for (anio of aniosReporte; track anio) {
-
-                <option [ngValue]="anio">
-                  {{ anio }}
-                </option>
-
+                <option [ngValue]="anio">{{ anio }}</option>
                 }
-
               </select>
-
             </div>
-
             }
 
-            <!-- AÑO -->
             @if (periodoReporte === 'anio') {
-
             <div class="toolbar-date">
-
-              <label class="form-label">
-                {{ 'ahorro.filters.periodTypes.year' | translate }}
-              </label>
-
-              <select class="form-select" [(ngModel)]="anioReporte" (ngModelChange)="onAnioReporteChange()">
-
+              <label class="form-label">{{ 'ahorro.filters.periodTypes.year' | translate }}</label>
+              <select class="form-select form-select-sm" [(ngModel)]="anioReporte" (ngModelChange)="onAnioReporteChange()">
                 @for (anio of aniosReporte; track anio) {
-
-                <option [ngValue]="anio">
-                  {{ anio }}
-                </option>
-
+                <option [ngValue]="anio">{{ anio }}</option>
                 }
-
               </select>
-
             </div>
-
             }
 
           </div>
 
-          <!-- BOTONES -->
           <div class="toolbar-actions">
-
-            <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">
-
-              <i class="fa-solid fa-broom-wide fa-xl  me-1"></i>
-
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="clearFilters()">
+              <i class="fa-solid fa-broom-wide me-1"></i>
               {{ 'ahorro.filters.clear' | translate }}
-
             </button>
 
-            <button type="button" class="btn btn-primary" [disabled]="!reporteSeleccionado || procesandoReporte"
-              (click)="procesarReporte('print')">
-
-              <i class="fa-duotone fa-solid fa-print fa-xl  me-1"></i>
-
-
-
+            <button type="button" class="btn btn-sm btn-primary" [disabled]="!reporteSeleccionado || procesandoReporte" (click)="procesarReporte('print')">
+              <i class="fa-duotone fa-solid fa-print me-1"></i>
               {{ 'ahorro.actions.print' | translate }}
-
             </button>
 
-
-            <button type="button" class="btn btn-secondary" [disabled]="!reporteSeleccionado || procesandoReporte"
-              (click)="procesarReporte('pdf')">
-
-              <i class="fa-solid fa-file-pdf fa-xl  me-1"></i>
-
+            <button type="button" class="btn btn-sm btn-secondary" [disabled]="!reporteSeleccionado || procesandoReporte" (click)="procesarReporte('pdf')">
+              <i class="fa-solid fa-file-pdf me-1"></i>
               {{ 'ahorro.actions.pdf' | translate }}
-
             </button>
 
-            <button type="button" class="btn btn-success" [disabled]="!reporteSeleccionado || procesandoReporte"
-              (click)="procesarReporte('excel')">
-
-              <i class="fa-solid fa-file-excel fa-xl me-1"></i>
-
+            <button type="button" class="btn btn-sm btn-success" [disabled]="!reporteSeleccionado || procesandoReporte" (click)="procesarReporte('excel')">
+              <i class="fa-solid fa-file-excel me-1"></i>
               {{ 'ahorro.actions.excel' | translate }}
-
             </button>
-
           </div>
-
         </div>
 
       </div>
-
     </div>
 
   </div>
