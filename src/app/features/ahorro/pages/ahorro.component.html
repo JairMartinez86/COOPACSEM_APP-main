@@ -14,6 +14,9 @@
 
     <div class="ahorro-summary-wrapper">
       <app-ahorro-summary-cards [cards]="cards"></app-ahorro-summary-cards>
+      <app-ahorro-filters (filtersChange)="onFiltersChange($event)">
+      </app-ahorro-filters>
+
     </div>
 
     <div class="row g-2 ahorro-main-row mt-0">
@@ -21,31 +24,18 @@
         <div class="card ahorro-card">
           <div class="card-body ahorro-card-body">
 
-            <app-ahorro-filters
-              (filtersChange)="onFiltersChange($event)">
-            </app-ahorro-filters>
 
-            <app-socios-table
-              [rows]="socioRows"
-              [pagination]="pagination"
-              [selectedId]="selectedSocioId"
-              (selectRow)="onSelectSocio($event)"
-              (pageChange)="onPageChange($event)">
+            <app-socios-table [rows]="socioRows" [pagination]="pagination" [selectedId]="selectedSocioId"
+              (selectRow)="onSelectSocio($event)" (pageChange)="onPageChange($event)">
             </app-socios-table>
 
           </div>
         </div>
 
         <div class="ahorro-resumen-wrapper">
-          <app-ahorro-socio-resumen
-            [socio]="selectedSocio"
-            [ahorrosRows]="ahorroRows"
-            [retirosRows]="retiroRows"
-            [depositosRows]="depositoRows"
-            [cambiosCuotaRows]="cambioCuotaRows"
-            [solicitudesRows]="solicitudRows"
-            [afiliacionMembresiaRows]="afiliacionMembresiaRows"
-            [planesRows]="planesRows">
+          <app-ahorro-socio-resumen [socio]="selectedSocio" [ahorrosRows]="ahorroRows" [retirosRows]="retiroRows"
+            [depositosRows]="depositoRows" [cambiosCuotaRows]="cambioCuotaRows" [solicitudesRows]="solicitudRows"
+            [afiliacionMembresiaRows]="afiliacionMembresiaRows" [planesRows]="planesRows">
           </app-ahorro-socio-resumen>
         </div>
 
@@ -54,10 +44,7 @@
   </div>
 </section>
 
-<div
-  class="offcanvas offcanvas-end ahorro-side-offcanvas"
-  data-bs-scroll="true" data-bs-backdrop="false" 
-  tabindex="-1"
+<div class="offcanvas offcanvas-end ahorro-side-offcanvas" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
   id="ahorroSidePanelOffcanvas">
 
   <div class="offcanvas-header ahorro-offcanvas-header">
@@ -65,19 +52,12 @@
       {{ 'ahorro.sidePanel.title' | translate }}
     </h5>
 
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="offcanvas">
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas">
     </button>
   </div>
 
   <div class="offcanvas-body ahorro-offcanvas-body">
-    <app-ahorro-side-panel
-      [actions]="actions"
-      [alerts]="alerts"
-      [reports]="reports"
-      [planesRows]="planesRows"
+    <app-ahorro-side-panel [actions]="actions" [alerts]="alerts" [reports]="reports" [planesRows]="planesRows"
       [selectedSocio]="selectedSocio">
     </app-ahorro-side-panel>
   </div>
