@@ -1,0 +1,124 @@
+.page-dashboard-finance .card {
+  border-radius: 10px;
+  margin-bottom: 10px !important;
+}
+
+.page-dashboard-finance .card-body {
+  padding: .75rem !important;
+}
+
+.page-dashboard-finance .card-header {
+  padding: .65rem .75rem;
+}
+
+.page-dashboard-finance .page-header {
+  margin-bottom: 10px !important;
+}
+
+.page-dashboard-finance .page-title {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+}
+
+/* ROWS */
+.page-dashboard-finance .row.g-3 {
+  --bs-gutter-x: .65rem;
+  --bs-gutter-y: .65rem;
+}
+
+.page-dashboard-finance .row.g-2 {
+  --bs-gutter-x: .45rem;
+  --bs-gutter-y: .45rem;
+}
+
+/* INFO SUPERIOR */
+.page-dashboard-finance .d-flex.flex-column.gap-4 {
+  gap: .9rem !important;
+}
+
+.page-dashboard-finance .fa-lg {
+  font-size: .95rem !important;
+}
+
+/* TITULOS */
+.page-dashboard-finance .fw-semibold {
+  font-size: .78rem;
+  line-height: 1.1;
+}
+
+.page-dashboard-finance .text-muted {
+  line-height: 1.1;
+}
+
+/* BOTONES CUENTAS */
+.page-dashboard-finance .btn.w-100 {
+  min-height: 52px;
+  padding: .45rem .6rem;
+  font-size: .78rem;
+}
+
+.page-dashboard-finance .btn.w-100 i {
+  font-size: 1rem !important;
+}
+
+/* REPORTES */
+.page-dashboard-finance .form-check {
+  margin-bottom: .35rem !important;
+}
+
+.page-dashboard-finance .form-check-label {
+  font-size: .8rem;
+}
+
+.page-dashboard-finance .form-control,
+.page-dashboard-finance .form-select {
+  min-height: 34px;
+  height: 34px;
+  font-size: .78rem;
+}
+
+.page-dashboard-finance .form-label.small {
+  margin-bottom: .2rem;
+  font-size: .72rem;
+}
+
+/* TABLA */
+.page-dashboard-finance .table th,
+.page-dashboard-finance .table td {
+  padding: .45rem .55rem;
+  font-size: .78rem;
+  vertical-align: middle;
+}
+
+/* PAGINACION */
+.page-dashboard-finance .pagination-sm .page-link {
+  padding: .2rem .55rem;
+}
+
+/* ALERT */
+.page-dashboard-finance .alert {
+  padding: .55rem .7rem;
+  font-size: .78rem;
+}
+
+/* MODAL */
+.page-dashboard-finance .modal-body {
+  padding: .85rem;
+}
+
+.page-dashboard-finance .modal-footer {
+  padding: .65rem .85rem;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .page-dashboard-finance .page-title {
+    font-size: 1.2rem;
+  }
+
+  .page-dashboard-finance .btn.w-100 {
+    min-height: 46px;
+  }
+
+}
