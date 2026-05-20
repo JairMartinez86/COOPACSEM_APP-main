@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, Subscription } from 'rxjs';
 
@@ -28,7 +28,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
     private readonly translate = inject(TranslateService);
     private readonly route = inject(ActivatedRoute);
     private readonly filterSvc = inject(TableFilterService);
-
+    private readonly router = inject(Router);
     public readonly appConfig = inject(AppConfigService);
 
     private readonly subs = new Subscription();
@@ -232,7 +232,15 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
     }
 
     ver(row: any): void {
-        console.log(row);
+        if (!row?.socioId) {
+            return;
+        }
+
+        this.router.navigate([
+            '/estado-cuenta-intereses',
+            row.socioId,
+            'detalle'
+        ]);
     }
 
     estadoBadgeClass(activo: boolean): string {

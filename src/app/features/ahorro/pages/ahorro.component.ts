@@ -299,7 +299,6 @@ export class AhorroComponent implements OnInit, OnDestroy {
       next: (response) => {
         const data = response?.data;
 
-        console.log(data)
 
         this.selectedSocio = data?.selectedSocio ?? null;
         this.ahorroRows = data?.detail?.ahorros ?? [];
