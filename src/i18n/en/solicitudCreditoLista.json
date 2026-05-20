@@ -94,7 +94,9 @@
             "desembolsar": "Disburse",
             "cancelar": "Cancel",
             "limpiar": "Clear",
-            "filtrar": "Filter"
+            "filtrar": "Filter",
+            "showCommittee": "Show committee and approvers",
+"hideCommittee": "Hide committee and approvers"
         },
         "modal": {
             "aprobarTitle": "Approve request",

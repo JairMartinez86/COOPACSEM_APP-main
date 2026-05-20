@@ -35,87 +35,118 @@
             </button>
         </div>
 
-        @if(modo === 'aprobaciones')
-        {
-        <div class="row g-3">
 
-            <!-- COMITÉ CRÉDITO -->
-            <div class="col-xl-4">
 
-                <div class="card border-0 shadow-sm h-100 overflow-hidden bg-transparent">
+        <div class="approval-top-panel"
+     [class.is-hidden]="approvalPanelHidden">
 
-                    <div class="committee-header p-3 text-white">
+    <button
+        type="button"
+        class="approval-panel-toggle"
+        (click)="approvalPanelHidden = !approvalPanelHidden">
 
-                        <div class="d-flex align-items-center gap-2">
+        <i
+            class="fa-solid"
+            [ngClass]="approvalPanelHidden
+                ? 'fa-chevron-down'
+                : 'fa-chevron-up'">
+        </i>
 
-                            <div class="committee-icon">
-                                <i class="fa-solid fa-users"></i>
-                            </div>
+        <span>
+            {{
+                approvalPanelHidden
+                    ? ('solicitudCreditoLista.actions.showCommittee' | translate)
+                    : ('solicitudCreditoLista.actions.hideCommittee' | translate)
+            }}
+        </span>
 
-                            <div>
-                                <h5 class="mb-0 fw-bold text-white">
-                                    {{ 'solicitudCreditoLista.committee.credit.title' | translate }}
-                                </h5>
+    </button>
 
-                                <div class="small opacity-75 text-white">
-                                    {{ 'solicitudCreditoLista.committee.credit.subtitle' | translate }}
+    <div class="approval-panel-content">
+
+         @if(modo === 'aprobaciones')
+            {
+            <div class="row g-3">
+
+                <!-- COMITÉ CRÉDITO -->
+                <div class="col-xl-4">
+
+                    <div class="card border-0 shadow-sm h-100 overflow-hidden bg-transparent">
+
+                        <div class="committee-header p-3 text-white">
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <div class="committee-icon">
+                                    <i class="fa-solid fa-users"></i>
                                 </div>
+
+                                <div>
+                                    <h5 class="mb-0 fw-bold text-white">
+                                        {{ 'solicitudCreditoLista.committee.credit.title' | translate }}
+                                    </h5>
+
+                                    <div class="small opacity-75 text-white">
+                                        {{ 'solicitudCreditoLista.committee.credit.subtitle' | translate }}
+                                    </div>
+                                </div>
+
                             </div>
 
                         </div>
 
-                    </div>
+                        <div class="card-body bg-transparent">
 
-                    <div class="card-body bg-transparent">
+                            <div class="row g-2">
 
-                        <div class="row g-2">
+                                @for (a of autorizadores.filter(x =>
+                                x.codigo === 'COMITE_CREDITO_1'
+                                || x.codigo === 'COMITE_CREDITO_2'); track a.codigo + a.usuario) {
 
-                            @for (a of autorizadores.filter(x =>
-                            x.codigo === 'COMITE_CREDITO_1'
-                            || x.codigo === 'COMITE_CREDITO_2'); track a.codigo + a.usuario) {
+                                <div class="col-md-6">
 
-                            <div class="col-md-6">
+                                    <div class="committee-card h-100 bg-transparent">
 
-                                <div class="committee-card h-100 bg-transparent">
+                                        <div class="d-flex align-items-start gap-2">
 
-                                    <div class="d-flex align-items-start gap-2">
-
-                                        <div class="committee-avatar">
-                                            <i class="fa-solid fa-user-tie"></i>
-                                        </div>
-
-                                        <div class="flex-grow-1">
-
-                                            <div class="d-flex justify-content-between align-items-start gap-2">
-
-                                                <div>
-
-                                                    <h6 class="mb-1 fw-bold">
-                                                        {{ a.nombreCompleto || a.usuario }}
-                                                    </h6>
-
-                                                    <div class="text-muted small mb-2">
-                                                        {{ a.nombre }}
-                                                    </div>
-
-                                                </div>
-
-                                                <span class="badge badge-soft-primary">
-                                                    {{ a.orden }}
-                                                </span>
-
+                                            <div class="committee-avatar">
+                                                <i class="fa-solid fa-user-tie"></i>
                                             </div>
 
-                                            <div class="small text-muted d-flex flex-column gap-1">
+                                            <div class="flex-grow-1">
 
-                                                <div>
-                                                    <i class="fa-solid fa-phone me-2 text-success"></i>
-                                                    {{ a.telefono || '-' }}
+                                                <div class="d-flex justify-content-between align-items-start gap-2">
+
+                                                    <div>
+
+                                                        <h6 class="mb-1 fw-bold">
+                                                            {{ a.nombreCompleto || a.usuario }}
+                                                        </h6>
+
+                                                        <div class="text-muted small mb-2">
+                                                            {{ a.nombre }}
+                                                        </div>
+
+                                                    </div>
+
+                                                    <span class="badge badge-soft-primary">
+                                                        {{ a.orden }}
+                                                    </span>
+
                                                 </div>
 
-                                                <div class="text-truncate">
-                                                    <i class="fa-solid fa-envelope me-2 text-primary"></i>
-                                                    {{ a.correo || '-' }}
+                                                <div class="small text-muted d-flex flex-column gap-1">
+
+                                                    <div>
+                                                        <i class="fa-solid fa-phone me-2 text-success"></i>
+                                                        {{ a.telefono || '-' }}
+                                                    </div>
+
+                                                    <div class="text-truncate">
+                                                        <i class="fa-solid fa-envelope me-2 text-primary"></i>
+                                                        {{ a.correo || '-' }}
+                                                    </div>
+
                                                 </div>
 
                                             </div>
@@ -126,9 +157,9 @@
 
                                 </div>
 
-                            </div>
+                                }
 
-                            }
+                            </div>
 
                         </div>
 
@@ -136,87 +167,87 @@
 
                 </div>
 
-            </div>
+                <!-- JUNTA DIRECTIVA -->
+                <div class="col-xl-8">
 
-            <!-- JUNTA DIRECTIVA -->
-            <div class="col-xl-8">
+                    <div class="card border-0 shadow-sm h-100 overflow-hidden bg-transparent">
 
-                <div class="card border-0 shadow-sm h-100 overflow-hidden bg-transparent">
+                        <div class="committee-header-2 p-3 text-white">
 
-                    <div class="committee-header-2 p-3 text-white">
+                            <div class="d-flex align-items-center gap-2">
 
-                        <div class="d-flex align-items-center gap-2">
+                                <div class="committee-icon">
+                                    <i class="fa-solid fa-building-columns"></i>
+                                </div>
 
-                            <div class="committee-icon">
-                                <i class="fa-solid fa-building-columns"></i>
-                            </div>
+                                <div>
 
-                            <div>
+                                    <h5 class="mb-0 fw-bold text-white">
+                                        {{ 'solicitudCreditoLista.committee.board.title' | translate }}
+                                    </h5>
 
-                                <h5 class="mb-0 fw-bold text-white">
-                                    {{ 'solicitudCreditoLista.committee.board.title' | translate }}
-                                </h5>
+                                    <div class="small opacity-75 text-white">
+                                        {{ 'solicitudCreditoLista.committee.board.subtitle' | translate }}
+                                    </div>
 
-                                <div class="small opacity-75 text-white">
-                                    {{ 'solicitudCreditoLista.committee.board.subtitle' | translate }}
                                 </div>
 
                             </div>
 
                         </div>
 
-                    </div>
+                        <div class="card-body bg-transparent">
 
-                    <div class="card-body bg-transparent">
+                            <div class="row g-2">
 
-                        <div class="row g-2">
+                                @for (a of autorizadores.filter(x =>
+                                x.codigo !== 'COMITE_CREDITO_1'
+                                && x.codigo !== 'COMITE_CREDITO_2'); track a.codigo + a.usuario) {
 
-                            @for (a of autorizadores.filter(x =>
-                            x.codigo !== 'COMITE_CREDITO_1'
-                            && x.codigo !== 'COMITE_CREDITO_2'); track a.codigo + a.usuario) {
+                                <div class="col-md-4">
 
-                            <div class="col-md-4">
+                                    <div class="committee-card h-100 bg-transparent">
 
-                                <div class="committee-card h-100 bg-transparent">
+                                        <div class="d-flex align-items-start gap-2">
 
-                                    <div class="d-flex align-items-start gap-2">
-
-                                        <div class="committee-avatar committee-avatar-2">
-                                            <i class="fa-solid fa-user-shield"></i>
-                                        </div>
-
-                                        <div class="flex-grow-1">
-
-                                            <div class="d-flex justify-content-between align-items-start gap-2">
-
-                                                <div>
-
-                                                    <h6 class="mb-1 fw-bold">
-                                                        {{ a.nombreCompleto || a.usuario }}
-                                                    </h6>
-
-                                                    <div class="text-muted small mb-2">
-                                                        {{ a.nombre }}
-                                                    </div>
-
-                                                </div>
-
-                                                <span class="badge badge-soft-info">
-                                                    {{ a.orden }}
-                                                </span>
-
+                                            <div class="committee-avatar committee-avatar-2">
+                                                <i class="fa-solid fa-user-shield"></i>
                                             </div>
 
-                                            <div class="small text-muted d-flex flex-column gap-1">
+                                            <div class="flex-grow-1">
 
-                                                <div>
-                                                    <i class="fa-solid fa-phone me-2 text-success"></i>
-                                                    {{ a.telefono || '-' }}
+                                                <div class="d-flex justify-content-between align-items-start gap-2">
+
+                                                    <div>
+
+                                                        <h6 class="mb-1 fw-bold">
+                                                            {{ a.nombreCompleto || a.usuario }}
+                                                        </h6>
+
+                                                        <div class="text-muted small mb-2">
+                                                            {{ a.nombre }}
+                                                        </div>
+
+                                                    </div>
+
+                                                    <span class="badge badge-soft-info">
+                                                        {{ a.orden }}
+                                                    </span>
+
                                                 </div>
 
-                                                <div class="text-truncate">
-                                                    <i class="fa-solid fa-envelope me-2 text-primary"></i>
-                                                    {{ a.correo || '-' }}
+                                                <div class="small text-muted d-flex flex-column gap-1">
+
+                                                    <div>
+                                                        <i class="fa-solid fa-phone me-2 text-success"></i>
+                                                        {{ a.telefono || '-' }}
+                                                    </div>
+
+                                                    <div class="text-truncate">
+                                                        <i class="fa-solid fa-envelope me-2 text-primary"></i>
+                                                        {{ a.correo || '-' }}
+                                                    </div>
+
                                                 </div>
 
                                             </div>
@@ -227,9 +258,9 @@
 
                                 </div>
 
-                            </div>
+                                }
 
-                            }
+                            </div>
 
                         </div>
 
@@ -238,93 +269,105 @@
                 </div>
 
             </div>
-
-        </div>
-        }
+            }
 
 
 
 
 
-        <div class="card mb-3">
-            <div class="card-body">
+            <div class="card mb-3">
+                <div class="card-body">
 
-                <form autocomplete="off" novalidate>
-                    <div class="row g-2 align-items-end">
+                    <form autocomplete="off" novalidate>
+                        <div class="row g-2 align-items-end">
 
-                        <div class="col-xl-4 col-lg-4 col-md-6">
-                            <label class="form-label">{{ 'solicitudCreditoLista.filters.buscar' | translate }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="fa-regular fa-magnifying-glass"></i>
-                                </span>
-                                <input type="text" class="form-control" name="search" [(ngModel)]="filtro.search"
-                                     (keyup)="onSearchKeyup($event)"
-                                    [placeholder]="'solicitudCreditoLista.filters.buscarPlaceholder' | translate">
+                            <div class="col-xl-4 col-lg-4 col-md-6">
+                                <label class="form-label">{{ 'solicitudCreditoLista.filters.buscar' | translate
+                                    }}</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fa-regular fa-magnifying-glass"></i>
+                                    </span>
+                                    <input type="text" class="form-control" name="search" [(ngModel)]="filtro.search"
+                                        (keyup)="onSearchKeyup($event)"
+                                        [placeholder]="'solicitudCreditoLista.filters.buscarPlaceholder' | translate">
+                                </div>
                             </div>
+
+                            <div class="col-xl-2 col-lg-2 col-md-6">
+                                <label class="form-label">{{ 'solicitudCreditoLista.filters.estado' | translate
+                                    }}</label>
+                                <select class="form-select" name="estado" [(ngModel)]="filtro.estado"
+                                    (change)="buscar()">
+                                    @for (e of estados; track e.value) {
+                                    <option [value]="e.value">{{ e.labelKey | translate }}</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-2 col-md-6">
+                                <label class="form-label">{{ 'solicitudCreditoLista.filters.etapa' | translate
+                                    }}</label>
+                                <select class="form-select" name="etapa" [(ngModel)]="filtro.etapa" (change)="buscar()">
+                                    @for (e of etapas; track e.value) {
+                                    <option [value]="e.value">{{ e.labelKey | translate }}</option>
+                                    }
+                                </select>
+                            </div>
+
+
+
+                            <div class="col-xl-2 col-lg-2 col-md-6" error-notify="fechaInicio" error-display="inline">
+                                <label class="form-label">
+                                    {{ 'solicitudCreditoLista.filters.fechaInicio' | translate }}
+                                </label>
+
+                                <input class="form-control" name="fechaInicio" id="fechaInicio"
+                                    [(ngModel)]="filtro.fechaInicio" engineSync="fechaInicio" autoFocusNext
+                                    [next]="fecha2" type="text" dateFormat
+                                    [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
+                            </div>
+
+                            <div class="col-xl-2 col-lg-2 col-md-6" error-notify="fechaFin" error-display="inline">
+                                <label class="form-label">
+                                    {{ 'solicitudCreditoLista.filters.fechaFin' | translate }}
+                                </label>
+
+                                <input #fecha2 class="form-control" name="fechaFin" id="fechaFin"
+                                    [(ngModel)]="filtro.fechaFin" engineSync="fechaFin" type="text" dateFormat
+                                    [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
+                            </div>
+
+
+
+                            <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+                                <button type="button" class="btn btn-light" (click)="limpiarFiltros()">
+                                    <i class=" fa-eraser me-1"></i>
+                                    {{ 'solicitudCreditoLista.actions.limpiar' | translate }}
+                                </button>
+
+                                <button type="button" class="btn btn-primary" (click)="buscar()">
+                                    <i class=" fa-filter me-1"></i>
+                                    {{ 'solicitudCreditoLista.actions.filtrar' | translate }}
+                                </button>
+                            </div>
+
                         </div>
 
-                        <div class="col-xl-2 col-lg-2 col-md-6">
-                            <label class="form-label">{{ 'solicitudCreditoLista.filters.estado' | translate }}</label>
-                            <select class="form-select" name="estado" [(ngModel)]="filtro.estado" (change)="buscar()">
-                                @for (e of estados; track e.value) {
-                                <option [value]="e.value">{{ e.labelKey | translate }}</option>
-                                }
-                            </select>
-                        </div>
+                    </form>
 
-                        <div class="col-xl-2 col-lg-2 col-md-6">
-                            <label class="form-label">{{ 'solicitudCreditoLista.filters.etapa' | translate }}</label>
-                            <select class="form-select" name="etapa" [(ngModel)]="filtro.etapa" (change)="buscar()">
-                                @for (e of etapas; track e.value) {
-                                <option [value]="e.value">{{ e.labelKey | translate }}</option>
-                                }
-                            </select>
-                        </div>
-
-
-
-                        <div class="col-xl-2 col-lg-2 col-md-6" error-notify="fechaInicio" error-display="inline">
-                            <label class="form-label">
-                                {{ 'solicitudCreditoLista.filters.fechaInicio' | translate }}
-                            </label>
-
-                            <input class="form-control" name="fechaInicio" id="fechaInicio" [(ngModel)]="filtro.fechaInicio"
-                                engineSync="fechaInicio" autoFocusNext [next]="fecha2" type="text" dateFormat
-                                [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
-                        </div>
-
-                        <div class="col-xl-2 col-lg-2 col-md-6" error-notify="fechaFin" error-display="inline">
-                            <label class="form-label">
-                                {{ 'solicitudCreditoLista.filters.fechaFin' | translate }}
-                            </label>
-
-                            <input #fecha2 class="form-control" name="fechaFin" id="fechaFin" [(ngModel)]="filtro.fechaFin"
-                                engineSync="fechaFin" type="text" dateFormat
-                                [dateFormat]="appConfigService.getCurrentSettings().dateFormat">
-                        </div>
-
-
-
-                        <div class="col-12 d-flex justify-content-end gap-2 mt-2">
-                            <button type="button" class="btn btn-light" (click)="limpiarFiltros()">
-                                <i class=" fa-eraser me-1"></i>
-                                {{ 'solicitudCreditoLista.actions.limpiar' | translate }}
-                            </button>
-
-                            <button type="button" class="btn btn-primary" (click)="buscar()">
-                                <i class=" fa-filter me-1"></i>
-                                {{ 'solicitudCreditoLista.actions.filtrar' | translate }}
-                            </button>
-                        </div>
-
-                    </div>
-
-                </form>
-
+                </div>
             </div>
-        </div>
 
+      
+
+    </div>
+
+</div>
+
+
+
+     
 
 
 
@@ -371,8 +414,8 @@
                                 (click)="seleccionarSolicitudFlujo(row)">
 
                                 <td>
-                    
-                                     <strong>{{ row.documento || '-' }}</strong>
+
+                                    <strong>{{ row.documento || '-' }}</strong>
                                     <div class="text-muted small">{{ row.noCredito || '-' }}</div>
 
                                 </td>

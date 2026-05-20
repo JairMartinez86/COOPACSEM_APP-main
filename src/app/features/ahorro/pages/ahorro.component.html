@@ -12,12 +12,32 @@
       </div>
     </div>
 
-    <div class="ahorro-summary-wrapper">
-      <app-ahorro-summary-cards [cards]="cards"></app-ahorro-summary-cards>
-      <app-ahorro-filters (filtersChange)="onFiltersChange($event)">
-      </app-ahorro-filters>
+    <div class="ahorro-top-panel" [class.is-hidden]="summaryPanelHidden">
+
+      <button type="button" class="ahorro-panel-toggle" (click)="summaryPanelHidden = !summaryPanelHidden">
+
+        <i class="fa-solid" [ngClass]="summaryPanelHidden ? 'fa-chevron-down' : 'fa-chevron-up'">
+        </i>
+
+        <span>
+          {{
+          summaryPanelHidden
+          ? ('ahorro.actions.showFilters' | translate)
+          : ('ahorro.actions.hideFilters' | translate)
+          }}
+        </span>
+      </button>
+
+      <div class="ahorro-summary-wrapper">
+        <app-ahorro-summary-cards [cards]="cards"></app-ahorro-summary-cards>
+
+        <app-ahorro-filters (filtersChange)="onFiltersChange($event)">
+        </app-ahorro-filters>
+      </div>
 
     </div>
+
+
 
     <div class="row g-2 ahorro-main-row mt-0">
       <div class="col-12">

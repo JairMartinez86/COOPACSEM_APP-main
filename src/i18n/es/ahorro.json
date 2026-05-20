@@ -89,7 +89,9 @@
       "exportExcel": "Exportar Excel",
       "print": "Imprimir",
        "pdf": "PDF",
-      "excel": "Excel"
+      "excel": "Excel",
+      "showFilters": "Mostrar filtros y resumen",
+  "hideFilters": "Ocultar filtros y resumen"
     },
    "reportes": {
       "title": "Generar reportes",

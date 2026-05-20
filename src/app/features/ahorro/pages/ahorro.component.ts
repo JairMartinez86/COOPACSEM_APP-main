@@ -54,6 +54,7 @@ export class AhorroComponent implements OnInit, OnDestroy {
   readonly pageSize = 20;
   loading = false;
   detailLoading = false;
+   summaryPanelHidden = false;
 
 
   selectedSocioId: string | null = null;

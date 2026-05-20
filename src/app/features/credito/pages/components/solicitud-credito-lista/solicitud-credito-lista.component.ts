@@ -58,6 +58,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     loading = false;
     processing = false;
     fechaServidor: any;
+    approvalPanelHidden = false;
 
     items: SolicitudCreditoListaItem[] = [];
     solicitudSeleccionada: SolicitudCreditoListaItem | null = null;

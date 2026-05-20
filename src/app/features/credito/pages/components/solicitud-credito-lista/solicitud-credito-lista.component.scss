@@ -267,3 +267,66 @@
   content: none !important;
   display: none !important;
 }
+
+
+
+
+
+
+
+//
+.approval-top-panel {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.approval-panel-content {
+  overflow: hidden;
+  transition: all .25s ease;
+}
+
+.approval-top-panel.is-hidden .approval-panel-content {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.approval-top-panel:not(.is-hidden) .approval-panel-content {
+  max-height: 1200px;
+  opacity: 1;
+}
+
+.approval-panel-toggle {
+  width: 100%;
+
+  border: 1px solid rgba(148, 163, 184, .22);
+  border-radius: 10px;
+
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+
+  padding: .55rem .8rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+
+  font-size: .8rem;
+  font-weight: 700;
+
+  margin-bottom: 8px;
+
+  transition: all .2s ease;
+
+  box-shadow: 0 3px 10px rgba(15, 23, 42, .03);
+}
+
+.approval-panel-toggle:hover {
+  background: rgba(var(--bs-primary-rgb), .05);
+}
+
+.approval-panel-toggle i {
+  font-size: .75rem;
+}

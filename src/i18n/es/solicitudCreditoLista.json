@@ -95,7 +95,9 @@
             "desembolsar": "Desembolsar",
             "cancelar": "Cancelar",
             "limpiar": "Limpiar",
-            "filtrar": "Filtrar"
+            "filtrar": "Filtrar",
+            "showCommittee": "Mostrar comité y autorizadores",
+"hideCommittee": "Ocultar comité y autorizadores"
         },
         "modal": {
             "aprobarTitle": "Aprobar solicitud",
