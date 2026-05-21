@@ -416,7 +416,11 @@
                                     {{ formatCurrency(row.pendienteNavidena) }}
                                 </td>
 
-                                <td class="text-end fw-semibold">
+
+                                <td class="text-end fw-semibold" [ngClass]="{
+      'text-primary': row.interesPendiente >= 100,
+      'text-danger': row.interesPendiente < 0
+    }">
                                     {{ formatCurrency(row.interesPendiente) }}
                                 </td>
 

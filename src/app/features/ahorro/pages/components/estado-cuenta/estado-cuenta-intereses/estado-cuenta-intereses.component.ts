@@ -307,6 +307,8 @@ aplicarFiltros(): void {
                         interesesPendientesPagar: Number(data?.resumen?.interesesPendientesPagar ?? 0)
                     };
 
+              
+                    
                     this.movimientos = Array.isArray(data?.movimientos)
                         ? data.movimientos.map((x: any) => ({
                             id: x?.id ?? crypto.randomUUID(),
@@ -322,6 +324,8 @@ aplicarFiltros(): void {
                             observaciones: x?.observaciones ?? ''
                         }))
                         : [];
+
+          
 
                     this.pdf = data?.pdf ?? res?.data?.pdf ?? null;
                     this.excel = data?.excel ?? res?.data?.excel ?? null;

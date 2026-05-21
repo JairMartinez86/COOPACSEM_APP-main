@@ -477,17 +477,24 @@
                                     }}
                                 </td>
 
-                                <td class="text-end fw-semibold text-primary">
+                                <td class="text-end fw-semibold" [ngClass]="{
+      'text-primary': mov.saldoInteresCorriente > 0,
+      'text-danger': mov.saldoInteresCorriente < 0
+    }">
                                     {{
-                                    mov.saldoInteresCorriente > 0
+                                    mov.saldoInteresCorriente !== 0
                                     ? formatAmount(mov.saldoInteresCorriente)
                                     : '-'
                                     }}
                                 </td>
 
-                                <td class="text-end fw-semibold text-info">
+
+                                <td class="text-end fw-semibold" [ngClass]="{
+      'text-info': mov.saldoInteresNavidena > 0,
+      'text-danger': mov.saldoInteresNavidena < 0
+    }">
                                     {{
-                                    mov.saldoInteresNavidena > 0
+                                    mov.saldoInteresNavidena !== 0
                                     ? formatAmount(mov.saldoInteresNavidena)
                                     : '-'
                                     }}
