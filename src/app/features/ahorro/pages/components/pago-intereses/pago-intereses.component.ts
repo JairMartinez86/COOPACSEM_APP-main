@@ -10,6 +10,7 @@ import { PagoInteresesService } from '../../../services/pago-intereses.service';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import { AppConfigService } from '../../../../../core/services/app-config.service';
 import { TableFilterService } from '../../../../../core/services/table-filter.service';
+import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
 
 type TipoInteresFiltro = '' | 'Corriente' | 'Navidena';
 type EstadoSocioFiltro = '' | 'Activo' | 'Inactivo';
@@ -17,7 +18,7 @@ type EstadoSocioFiltro = '' | 'Activo' | 'Inactivo';
 @Component({
     selector: 'app-pago-intereses',
     standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule, Breadcrumb],
+    imports: [CommonModule, FormsModule, TranslateModule, Breadcrumb, AppPermissionDirective],
     templateUrl: './pago-intereses.component.html',
     styleUrls: ['./pago-intereses.component.scss']
 })

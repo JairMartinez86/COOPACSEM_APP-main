@@ -279,7 +279,7 @@
                             </button>
 
                             <button type="button" class="btn btn-sm btn-success" [disabled]="processing"
-                                (click)="procesarPago()">
+                                (click)="procesarPago()" [appPermission]="['create']" [permissionRoute]="'/pago-intereses'">
 
                                 @if (processing) {
                                 <span class="spinner-border spinner-border-sm me-1"></span>
@@ -440,7 +440,7 @@
 
                                 <td class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-success p-0"
-                                        (click)="ver(row)">
+                                        (click)="ver(row)" [appPermission]="['view']" [permissionRoute]="'/estado-cuenta'">
 
                                         <i class="fa-regular fa-eye"></i>
                                     </button>
