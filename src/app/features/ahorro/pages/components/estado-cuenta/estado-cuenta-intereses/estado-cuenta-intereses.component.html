@@ -431,6 +431,11 @@
                                     {{ 'estadoCuentaIntereses.table.christmasInterestBalance' | translate }}
                                 </th>
 
+                                 <th class="text-end">
+                                    {{ 'estadoCuentaIntereses.table.accumulatedBalance' | translate }}
+                                </th>
+                                
+
                                 <th class="text-end">
                                     {{ 'estadoCuentaIntereses.table.debit' | translate }}
                                 </th>
@@ -477,10 +482,7 @@
                                     }}
                                 </td>
 
-                                <td class="text-end fw-semibold" [ngClass]="{
-      'text-primary': mov.saldoInteresCorriente > 0,
-      'text-danger': mov.saldoInteresCorriente < 0
-    }">
+                                <td class="text-end fw-semibold">
                                     {{
                                     mov.saldoInteresCorriente !== 0
                                     ? formatAmount(mov.saldoInteresCorriente)
@@ -489,16 +491,30 @@
                                 </td>
 
 
-                                <td class="text-end fw-semibold" [ngClass]="{
-      'text-info': mov.saldoInteresNavidena > 0,
-      'text-danger': mov.saldoInteresNavidena < 0
-    }">
+                                <td class="text-end fw-semibold">
                                     {{
                                     mov.saldoInteresNavidena !== 0
                                     ? formatAmount(mov.saldoInteresNavidena)
                                     : '-'
                                     }}
                                 </td>
+
+
+                                <td class="text-end fw-semibold" [ngClass]="{
+      'text-info': mov.saldoInteres > 0,
+      'text-danger': mov.saldoInteres < 0
+    }">
+                                    {{
+                                    mov.saldoInteres !== 0
+                                    ? formatAmount(mov.saldoInteres)
+                                    : '-'
+                                    }}
+                                </td>
+
+
+
+
+                                
 
                                 <td class="text-end text-success">
                                     {{
@@ -507,6 +523,10 @@
                                     : '-'
                                     }}
                                 </td>
+
+
+
+                                
 
                                 <td class="text-end text-purple">
                                     {{

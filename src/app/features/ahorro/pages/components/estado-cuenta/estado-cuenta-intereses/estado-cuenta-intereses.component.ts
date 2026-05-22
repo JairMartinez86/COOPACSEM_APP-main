@@ -39,6 +39,7 @@ interface InteresMovimiento {
     ahorroNavidena: number;
     saldoInteresCorriente: number;
     saldoInteresNavidena: number;
+    saldoInteres : number;
     debito: number;
     credito: number;
     aplicadoAhorro: number;
@@ -318,6 +319,7 @@ aplicarFiltros(): void {
                             ahorroNavidena: Number(x?.ahorroNavidena ?? 0),
                             saldoInteresCorriente: Number(x?.saldoInteresCorriente ?? 0),
                             saldoInteresNavidena: Number(x?.saldoInteresNavidena ?? 0),
+                            saldoInteres: Number(x?.saldoInteres ?? 0),
                             debito: Number(x?.debito ?? 0),
                             credito: Number(x?.credito ?? 0),
                             aplicadoAhorro: Number(x?.aplicadoAhorro ?? 0),
@@ -325,6 +327,8 @@ aplicarFiltros(): void {
                         }))
                         : [];
 
+
+                        
           
 
                     this.pdf = data?.pdf ?? res?.data?.pdf ?? null;
