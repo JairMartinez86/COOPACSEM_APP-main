@@ -126,15 +126,37 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
                     const data = res?.data ?? res ?? {};
 
                     this.resumen = data?.summary ?? this.resumen;
-                    this.rows = (data?.items ?? []).map((x: any) => ({
-                        ...x,
-                        pendienteCorriente: Number(x.pendienteCorriente ?? 0),
-                        pendienteNavidena: Number(x.pendienteNavidena ?? 0),
-                        interesPendiente: Number(x.interesPendiente ?? 0),
-                        montoPagar: Number(x.montoPagar ?? 0),
-                        montoTrasladar: Number(x.montoTrasladar ?? 0),
-                        capitalizaAhorro: !!x.capitalizaAhorro
-                    }));
+                    this.rows = (data?.items ?? []).map((x: any) => {
+
+                        const interesPendiente =
+                            Number(x.interesPendiente ?? 0);
+
+                        return {
+                            ...x,
+
+                            pendienteCorriente:
+                                Number(x.pendienteCorriente ?? 0),
+
+                            pendienteNavidena:
+                                Number(x.pendienteNavidena ?? 0),
+
+                            interesPendiente,
+
+                            montoPagar:
+                                interesPendiente > 100
+                                    ? interesPendiente
+                                    : 0,
+
+                            montoTrasladar:
+                                interesPendiente > 0 &&
+                                    interesPendiente <= 100
+                                    ? interesPendiente
+                                    : 0,
+
+                            capitalizaAhorro:
+                                !!x.capitalizaAhorro
+                        };
+                    });
 
                     this.applySorting();
 
@@ -359,27 +381,13 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
 
         const pendiente = Number(row.interesPendiente ?? 0);
 
-
         if (pendiente <= 100) {
             return;
         }
 
         row.capitalizaAhorro = !row.capitalizaAhorro;
-
-        if (row.capitalizaAhorro) {
-
-            row.montoPagar = 0;
-            row.montoTrasladar = pendiente;
-
-        } else {
-
-            row.montoPagar = pendiente;
-            row.montoTrasladar = 0;
-
-        }
-
-        this.recalcularResumen();
     }
+
 
     sortBy(column: string): void {
         if (this.sortColumn === column) {
@@ -439,5 +447,27 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
             : 'fa-solid fa-sort-down';
     }
 
+    getEstadoInteresClass(row: any): string {
+
+        const interes = Number(row.interesPendiente ?? 0);
+
+        // NEGATIVO
+        if (interes < 0) {
+            return 'estado-negativo';
+        }
+
+        // SIN INTERESES
+        if (interes === 0) {
+            return 'estado-sin-interes';
+        }
+
+        // MAYOR A 100
+        if (interes > 100) {
+            return 'estado-pagar';
+        }
+
+        // MENOR O IGUAL A 100
+        return 'estado-trasladar';
+    }
 
 }

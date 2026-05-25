@@ -279,7 +279,8 @@
                             </button>
 
                             <button type="button" class="btn btn-sm btn-success" [disabled]="processing"
-                                (click)="procesarPago()" [appPermission]="['create']" [permissionRoute]="'/pago-intereses'">
+                                (click)="procesarPago()" [appPermission]="['create']"
+                                [permissionRoute]="'/pago-intereses'">
 
                                 @if (processing) {
                                 <span class="spinner-border spinner-border-sm me-1"></span>
@@ -357,19 +358,27 @@
                                     <i [class]="sortIcon('interesPendiente')" class="ms-1"></i>
                                 </th>
 
-                                <th class="text-end sortable" (click)="sortBy('montoPagar')">
-                                    {{ 'pagoIntereses.table.toPay' | translate }}
-                                    <i [class]="sortIcon('montoPagar')" class="ms-1"></i>
+                                <th class="text-end sortable" (click)="sortBy('capitalizaAhorro')">
+                                    {{ 'pagoIntereses.table.capitalize' | translate }}
+                                    <i [class]="sortIcon('capitalizaAhorro')" class="ms-1"></i>
                                 </th>
 
-                                <th class="text-center">
-                                    {{ 'pagoIntereses.table.capitalize' | translate }}
+                                <th class="text-end sortable" (click)="sortBy('move')">
+                                    {{ 'pagoIntereses.table.status' | translate }}
+                                    <i [class]="sortIcon('move')" class="ms-1"></i>
                                 </th>
 
                                 <th class="text-end sortable" (click)="sortBy('montoTrasladar')">
                                     {{ 'pagoIntereses.table.toTransfer' | translate }}
                                     <i [class]="sortIcon('montoTrasladar')" class="ms-1"></i>
                                 </th>
+
+                                <th class="text-end sortable" (click)="sortBy('montoPagar')">
+                                    {{ 'pagoIntereses.table.toPay' | translate }}
+                                    <i [class]="sortIcon('montoPagar')" class="ms-1"></i>
+                                </th>
+
+
 
                                 <th class="text-center">
                                     {{ 'pagoIntereses.table.action' | translate }}
@@ -424,26 +433,45 @@
                                     {{ formatCurrency(row.interesPendiente) }}
                                 </td>
 
+                                <td class="text-center">
+
+                                    <span class="capitalize-dot clickable" [class.active]="row.capitalizaAhorro"
+                                        [class.disabled]="debeBloquearCapitaliza(row)" (click)="toggleCapitaliza(row)">
+                                    </span>
+
+                                </td>
+
+
+                                <td class="text-center">
+
+                                    <span class="estado-dot" [ngClass]="getEstadoInteresClass(row)">
+                                    </span>
+
+                                </td>
+
+
                                 <td class="text-end fw-semibold">
                                     {{ formatCurrency(row.montoPagar) }}
                                 </td>
 
-                                <td class="text-center">
-                                    <span class="capitalize-dot clickable" [class.active]="row.capitalizaAhorro"
-                                        [class.disabled]="debeBloquearCapitaliza(row)" (click)="toggleCapitaliza(row)">
-                                    </span>
-                                </td>
+
 
                                 <td class="text-end">
                                     {{ formatCurrency(row.montoTrasladar) }}
+
                                 </td>
+
+
 
                                 <td class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-success p-0"
-                                        (click)="ver(row)" [appPermission]="['view']" [permissionRoute]="'/estado-cuenta'">
+                                        (click)="ver(row)" [appPermission]="['view']"
+                                        [permissionRoute]="'/estado-cuenta'">
 
                                         <i class="fa-regular fa-eye"></i>
                                     </button>
+
+
                                 </td>
                             </tr>
                             }

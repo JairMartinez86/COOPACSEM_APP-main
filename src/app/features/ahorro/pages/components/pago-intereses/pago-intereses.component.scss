@@ -362,3 +362,128 @@
     width: 100%;
   }
 }
+
+
+
+/* =========================================
+   ESTADO INTERES
+========================================= */
+
+.estado-dot {
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+
+  display: inline-block;
+
+  border: 2px solid transparent;
+
+  transition: .2s ease;
+}
+
+.estado-pagar {
+  background: var(--bs-success);
+
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, .15);
+}
+
+.estado-capitaliza {
+  background: var(--bs-primary);
+
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, .15);
+}
+
+.estado-trasladar {
+  background: var(--bs-warning);
+
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, .18);
+}
+
+.estado-sin-interes {
+  background: var(--bs-secondary);
+
+  box-shadow: 0 0 0 3px rgba(108, 117, 125, .15);
+}
+
+
+
+/* =========================================
+   CAPITALIZA
+========================================= */
+
+.capitalize-dot {
+  width: 14px;
+  height: 14px;
+
+  display: inline-block;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  border: 2px solid rgba(13, 110, 253, .45);
+
+  transition: .18s ease;
+}
+
+.capitalize-dot.active {
+  background: var(--bs-primary);
+
+  border-color: var(--bs-primary);
+
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, .18);
+}
+
+.capitalize-dot.clickable {
+  cursor: pointer;
+}
+
+.capitalize-dot.clickable:hover {
+  transform: scale(1.12);
+
+  border-color: var(--bs-primary);
+}
+
+.capitalize-dot.disabled {
+  opacity: .4;
+
+  cursor: not-allowed;
+
+  pointer-events: none;
+}
+
+/* =========================================
+   ESTADO
+========================================= */
+
+.estado-dot {
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+
+  display: inline-block;
+
+  border: 2px solid transparent;
+
+  transition: .2s ease;
+}
+
+.estado-pagar {
+  background: var(--bs-success);
+
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, .15);
+}
+
+.estado-trasladar {
+  background: var(--bs-warning);
+
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, .18);
+}
+
+.estado-sin-interes {
+  background: var(--bs-secondary);
+
+  box-shadow: 0 0 0 3px rgba(108, 117, 125, .15);
+}
