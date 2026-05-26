@@ -36,16 +36,15 @@
                                     {{ 'pagoIntereses.filters.cutoff' | translate }}
                                 </label>
 
-                                <select class="form-select" [(ngModel)]="filtro.corte"
+                                <select #corteSelect class="form-select" [(ngModel)]="filtro.corte"
                                     (ngModelChange)="onCorteChange()">
-                                    <option value="Q1-2026">{{ 'pagoIntereses.cutoffs.q1' | translate:{ anio: anio } }}
+
+                                    @for (c of cortes; track c.value) {
+                                    <option [value]="c.value">
+                                        {{ c.label }}
                                     </option>
-                                    <option value="Q2-2026">{{ 'pagoIntereses.cutoffs.q2' | translate:{ anio: anio } }}
-                                    </option>
-                                    <option value="Q3-2026">{{ 'pagoIntereses.cutoffs.q3' | translate:{ anio: anio } }}
-                                    </option>
-                                    <option value="Q4-2026">{{ 'pagoIntereses.cutoffs.q4' | translate:{ anio: anio } }}
-                                    </option>
+                                    }
+
                                 </select>
                             </div>
 
@@ -55,7 +54,7 @@
                                 </label>
 
                                 <input type="date" class="form-control" [(ngModel)]="filtro.fechaCorte"
-                                    (ngModelChange)="onFechaCorteChange()">
+                                    (ngModelChange)="onFechaCorteChange()" disabled="true">
                             </div>
 
                             <div class="col-xl-3 col-lg-6">
@@ -63,7 +62,8 @@
                                     {{ 'pagoIntereses.filters.interestType' | translate }}
                                 </label>
 
-                                <select class="form-select" [(ngModel)]="filtro.tipoInteres">
+                                <select class="form-select" [(ngModel)]="filtro.tipoInteres"
+                                    (ngModelChange)="onTipoInteresChange()">
                                     <option value="">{{ 'pagoIntereses.common.all' | translate }}</option>
                                     <option value="Corriente">{{ 'pagoIntereses.accountTypes.current' | translate }}
                                     </option>
@@ -77,13 +77,16 @@
                                     {{ 'pagoIntereses.filters.memberStatus' | translate }}
                                 </label>
 
-                                <select class="form-select" [(ngModel)]="filtro.estadoSocio">
+                                <select class="form-select" [(ngModel)]="filtro.estadoSocio"
+                                    (ngModelChange)="onEstadoChange()">
                                     <option value="">{{ 'pagoIntereses.common.all' | translate }}</option>
                                     <option value="Activo">{{ 'pagoIntereses.status.active' | translate }}</option>
                                     <option value="Inactivo">{{ 'pagoIntereses.status.inactive' | translate }}</option>
                                 </select>
                             </div>
 
+
+                            <!--
                             <div class="col-12">
                                 <div class="form-check pago-check">
                                     <input class="form-check-input" type="checkbox" id="incluirCapitaliza"
@@ -95,6 +98,8 @@
                                     </label>
                                 </div>
                             </div>
+                            -->
+
                         </div>
                     </div>
 
@@ -278,6 +283,8 @@
                                 {{ 'pagoIntereses.actions.export' | translate }}
                             </button>
 
+                            @if(esTrimestreActual(filtro.corte))
+                            {
                             <button type="button" class="btn btn-sm btn-success" [disabled]="processing"
                                 (click)="procesarPago()" [appPermission]="['create']"
                                 [permissionRoute]="'/pago-intereses'">
@@ -290,6 +297,9 @@
 
                                 {{ 'pagoIntereses.actions.process' | translate }}
                             </button>
+                            }
+
+
                         </div>
                     </div>
 
@@ -301,7 +311,7 @@
                                 </span>
 
                                 <input type="text" class="form-control" [(ngModel)]="currentTerm"
-                                    (keyup.enter)="buscarDesdeFiltro()"
+                                    (ngModelChange)="onSearchChange()"
                                     [placeholder]="'pagoIntereses.filters.searchPlaceholder' | translate">
                             </div>
                         </div>
@@ -364,8 +374,15 @@
                                 </th>
 
                                 <th class="text-end sortable" (click)="sortBy('move')">
-                                    {{ 'pagoIntereses.table.status' | translate }}
+                                    {{ 'pagoIntereses.table.info' | translate }}
                                     <i [class]="sortIcon('move')" class="ms-1"></i>
+                                </th>
+
+
+
+                                <th class="text-end sortable" (click)="sortBy('montoPagar')">
+                                    {{ 'pagoIntereses.table.toPay' | translate }}
+                                    <i [class]="sortIcon('montoPagar')" class="ms-1"></i>
                                 </th>
 
                                 <th class="text-end sortable" (click)="sortBy('montoTrasladar')">
@@ -373,10 +390,6 @@
                                     <i [class]="sortIcon('montoTrasladar')" class="ms-1"></i>
                                 </th>
 
-                                <th class="text-end sortable" (click)="sortBy('montoPagar')">
-                                    {{ 'pagoIntereses.table.toPay' | translate }}
-                                    <i [class]="sortIcon('montoPagar')" class="ms-1"></i>
-                                </th>
 
 
 
@@ -444,8 +457,45 @@
 
                                 <td class="text-center">
 
-                                    <span class="estado-dot" [ngClass]="getEstadoInteresClass(row)">
-                                    </span>
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+
+                                        <span class="estado-dot" [ngClass]="getEstadoInteresClass(row)">
+                                        </span>
+
+                                        <div class="d-flex flex-wrap justify-content-center gap-1">
+
+                                            @if (row.cuentaTraslado == "Corriente") {
+                                            <span
+                                                class="d-inline-flex align-items-center gap-1 clickable-transfer badge badge-soft-success"
+                                                (click)="toggleCuentaTraslado(row, 'Corriente')">
+
+                                                <i class="bi bi-check-circle-fill">
+                                                </i>
+
+                                                {{ 'pagoIntereses.accounts.current' | translate }}
+
+                                            </span>
+
+                                            }
+
+                                            @if (row.cuentaTraslado == "Navidena")
+                                            {
+                                            <span
+                                                class="d-inline-flex align-items-center gap-1 clickable-transfer badge badge-soft-warning"
+                                                (click)="toggleCuentaTraslado(row, 'Navidena')">
+
+                                                <i class="bi bi-check-circle-fill">
+                                                </i>
+
+                                                {{ 'pagoIntereses.accounts.christmas' | translate }}
+
+                                            </span>
+                                            }
+
+
+                                        </div>
+
+                                    </div>
 
                                 </td>
 

@@ -12,12 +12,10 @@
         "label": "Pago de intereses"
       }
     ],
-
     "page": {
       "title": "Pago de intereses",
       "subtitle": "Genere y procese el pago o traslado de intereses acumulados según el corte seleccionado."
     },
-
     "filters": {
       "title": "Selección de corte para pago de intereses",
       "cutoff": "Corte a liquidar",
@@ -27,19 +25,16 @@
       "includeCapitalization": "Incluir socios que voluntariamente capitalizan sus intereses al ahorro. (Solo para intereses > {{currency}} 100.00)",
       "searchPlaceholder": "Buscar socio, nombre o identificación..."
     },
-
     "cutoffs": {
       "q1": "Enero - Marzo {{anio}}",
       "q2": "Abril - Junio {{anio}}",
       "q3": "Julio - Septiembre {{anio}}",
       "q4": "Octubre - Diciembre {{anio}}"
     },
-
     "rule": {
       "title": "Regla de pago",
-     "description": "Los intereses mayores a {{currency}} 100.00 serán pagados al socio, capitalizados al ahorro (aplicación voluntaria) o no pagados y trasladados según generó los intereses. Los intereses iguales o menores a {{currency}} 100.00 serán trasladados al ahorro, sin considerar la preferencia del socio."
+      "description": "Los intereses mayores a {{currency}} 100.00 serán pagados al socio, capitalizados al ahorro (aplicación voluntaria) o no pagados y trasladados según generó los intereses. Los intereses iguales o menores a {{currency}} 100.00 serán trasladados al ahorro, sin considerar la preferencia del socio."
     },
-
     "summary": {
       "totalMembers": "Total de socios",
       "totalGenerated": "Total intereses acumulados",
@@ -51,84 +46,76 @@
       "greaterThanLimit": "(> {{currency}} 100.00)",
       "lessOrNoPayment": "(≤ {{currency}} 100.00 o sin pago)"
     },
-
     "legend": {
       "pay": {
         "title": "Se pagará al socio (> {{currency}} 100.00)",
         "description": "Intereses mayores al límite configurado."
       },
-
       "capitalize": {
         "title": "Capitaliza ahorro",
         "description": "El socio eligió capitalizar los intereses generados."
       },
-
       "transfer": {
         "title": "Se trasladará al ahorro",
         "description": "Intereses iguales o menores al límite configurado."
       },
-
       "noInterest": {
         "title": "Sin intereses acumulados",
         "description": "No presenta intereses pendientes."
       }
     },
-
-
-
     "table": {
-  "title": "Detalle de intereses pendientes",
-
-  "memberCode": "No socio",
-  "name": "Nombre",
-  "identification": "Identificación",
-  "status": "Estado",
-
-  "pendingCurrentInterest": "aldo int. acum. corriente",
-  "pendingChristmasInterest": "Saldo int. acum. navideña",
-  "pendingInterest": "Total intereses",
-
-  "toPay": "Monto a pagar",
-  "capitalize": "Capitaliza ahorro",
-  "toTransfer": "Monto a trasladar",
-
-  "action": "Acción"
-},
-
-
+      "title": "Detalle de intereses pendientes",
+      "memberCode": "No socio",
+      "name": "Nombre",
+      "identification": "Identificación",
+      "status": "Estado",
+      "info": "Información",
+      "pendingCurrentInterest": "aldo int. acum. corriente",
+      "pendingChristmasInterest": "Saldo int. acum. navideña",
+      "pendingInterest": "Total intereses",
+      "toPay": "Monto a pagar",
+      "capitalize": "Capitaliza ahorro",
+      "toTransfer": "Monto a trasladar",
+      "action": "Acción"
+    },
+    "accounts": {
+      "current": "Corriente",
+      "christmas": "Navideña"
+    },
     "pagination": {
       "pageSize": "Registros por página",
       "perPage": "por página",
       "showing": "Página"
     },
-
     "actions": {
       "clear": "Limpiar",
       "filter": "Filtrar",
       "export": "Exportar",
       "process": "Procesar pago de intereses"
     },
-
     "common": {
       "all": "(Todos)",
       "loading": "Cargando información...",
       "noData": "No se encontraron registros."
     },
-
     "status": {
       "active": "Activo",
       "inactive": "Inactivo"
     },
-
     "accountTypes": {
       "current": "Corriente",
       "christmas": "Navideña"
     },
-
     "messages": {
       "processSuccess": "Pago de intereses procesado correctamente."
     },
-
-    "note": "Al procesar el pago de intereses, el sistema tomará en cuenta pagos parciales realizados previamente y calculará únicamente el saldo pendiente."
+    "note": "Al procesar el pago de intereses, el sistema tomará en cuenta pagos parciales realizados previamente y calculará únicamente el saldo pendiente.",
+    "choices": {
+    "searchPlaceholder": "Buscar...",
+    "noResults": "No se encontraron resultados",
+    "noChoices": "No hay opciones disponibles"
   }
+  }
+  
 }

@@ -37,29 +37,10 @@ export class PagoInteresesService {
  getResumen(filtro: PagoInteresesFiltro) {
   let params = new HttpParams();
 
-  if (filtro.corteId) {
-    params = params.set('corteId', filtro.corteId);
-  }
-
   if (filtro.fechaCorte) {
     params = params.set('fechaCorte', filtro.fechaCorte);
   }
 
-  if (filtro.tipoInteres) {
-    params = params.set('tipoInteres', filtro.tipoInteres);
-  }
-
-  if (filtro.estadoSocio) {
-    params = params.set('estadoSocio', filtro.estadoSocio);
-  }
-
-  if (filtro.search) {
-    params = params.set('search', filtro.search.trim());
-  }
-
-  params = params
-    .set('page', filtro.page ?? 1)
-    .set('pageSize', filtro.pageSize ?? 20);
 
   return this.http.get(
     `${this.baseUrl}/resumen`,
@@ -70,10 +51,10 @@ export class PagoInteresesService {
   );
 }
 
-  procesarPago(filtro: PagoInteresesFiltro) {
+  procesarPago(data: any) {
     return this.http.post(
       `${this.baseUrl}/procesar`,
-      filtro,
+      data,
       {
         withCredentials: true
       }

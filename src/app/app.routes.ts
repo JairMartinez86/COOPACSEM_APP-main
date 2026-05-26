@@ -285,7 +285,7 @@ export const routes: Routes = [
         data: {
           permission: '/pago-intereses',
           action: 'view',
-           tableFilterKey: 'pago-intereses', tableFilterEnter: true
+           tableFilterKey: 'pago-intereses', tableFilterEnter: false
         }
       },
 

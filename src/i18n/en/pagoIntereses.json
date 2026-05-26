@@ -70,6 +70,7 @@
             "name": "Name",
             "identification": "Identification",
             "status": "Status",
+            "info": "Information",
             "pendingCurrentInterest": "Accrued current int. balance",
             "pendingChristmasInterest": "Accrued Christmas int. balance",
             "pendingInterest": "Total interests",
@@ -77,6 +78,10 @@
             "capitalize": "Capitalize savings",
             "toTransfer": "Amount to transfer",
             "action": "Action"
+        },
+        "accounts": {
+            "current": "Current",
+            "christmas": "Christmas"
         },
         "pagination": {
             "pageSize": "Records per page",
@@ -92,7 +97,8 @@
         "common": {
             "all": "(All)",
             "loading": "Loading information...",
-            "noData": "No records found."
+            "noData": "No records found.",
+            "selectOption" : "Seleccione..."
         },
         "status": {
             "active": "Active",
@@ -105,6 +111,12 @@
         "messages": {
             "processSuccess": "Interest payment processed successfully."
         },
-        "note": "When processing interest payments, the system will take previously registered partial payments into account and calculate only the remaining pending balance."
+        "note": "When processing interest payments, the system will take previously registered partial payments into account and calculate only the remaining pending balance.",
+          "choices": {
+      "searchPlaceholder": "Search...",
+      "noResults": "No results found",
+      "noChoices": "No options available"
     }
+    }
+    
 }

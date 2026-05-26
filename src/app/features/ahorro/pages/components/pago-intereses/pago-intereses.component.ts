@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -15,6 +15,8 @@ import { AppPermissionDirective } from '../../../../../core/services/app-permiss
 type TipoInteresFiltro = '' | 'Corriente' | 'Navidena';
 type EstadoSocioFiltro = '' | 'Activo' | 'Inactivo';
 
+declare const Choices: any;
+
 @Component({
     selector: 'app-pago-intereses',
     standalone: true,
@@ -23,6 +25,8 @@ type EstadoSocioFiltro = '' | 'Activo' | 'Inactivo';
     styleUrls: ['./pago-intereses.component.scss']
 })
 export class PagoInteresesComponent implements OnInit, OnDestroy {
+    @ViewChild('corteSelect') corteSelectRef?: ElementRef<HTMLSelectElement>;
+
 
     private readonly service = inject(PagoInteresesService);
     private readonly notify = inject(NotificationService);
@@ -73,7 +77,13 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         fechaCalculo: ''
     };
 
+    allRows: any[] = [];
     rows: any[] = [];
+
+    corteChoices: any = null;
+
+    cortes: { value: string, label: string }[] = [];
+
 
     ngOnInit(): void {
         this.setBreadcrumbs();
@@ -91,8 +101,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
             this.filterSvc.query$(this.filterKey).subscribe(query => {
                 this.currentTerm = (query || '').trim();
                 this.filtro.search = this.currentTerm;
-                this.filtro.page = 1;
-                this.loadData();
+                this.onSearchChange();
             })
         );
 
@@ -103,12 +112,113 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         this.filtro.corte = this.getCorteActual(fecha);
         this.filtro.fechaCorte = this.getFechaCortePorCorte(this.filtro.corte);
 
+        this.generarCortes();
+
+        setTimeout(() => {
+            this.initCorteChoices();
+        });
+
+
         this.loadData();
     }
 
     ngOnDestroy(): void {
         this.subs.unsubscribe();
     }
+
+    private initCorteChoices(): void {
+        this.initChoicesFromDom(
+
+            this.corteSelectRef,
+            this.filtro.corte,
+            (instance) => (this.corteChoices = instance),
+            this.corteChoices,
+            9999
+        );
+
+
+
+    }
+
+    private initChoicesFromDom(
+        elementRef: ElementRef<HTMLSelectElement> | undefined,
+        currentValue: string | null | undefined,
+        assignInstance: (instance: any) => void,
+        previousInstance?: any,
+        searchResultLimit?: number
+    ): void {
+        const element = elementRef?.nativeElement;
+        if (!element) return;
+
+        try {
+            previousInstance?.destroy();
+        } catch { }
+
+        this.removeOrphanChoicesWrapper(element);
+
+        const instance = new Choices(element, {
+            searchEnabled: true,
+            searchChoices: true,
+            searchFloor: 0,
+            searchResultLimit: searchResultLimit ?? 9999,
+            shouldSort: false,
+            allowHTML: false,
+            itemSelectText: '',
+            placeholder: true,
+            placeholderValue: this.translate.instant('pagoIntereses.common.selectOption'),
+            searchPlaceholderValue: this.translate.instant('pagoIntereses.choices.searchPlaceholder') || 'Buscar...',
+            noResultsText: this.translate.instant('pagoIntereses.choices.noResults') || 'No se encontraron resultados',
+            noChoicesText: this.translate.instant('pagoIntereses.choices.noChoices') || 'No hay opciones disponibles',
+            searchFields: ['label', 'value'],
+            position: 'bottom',
+            renderChoiceLimit: -1
+        });
+
+        assignInstance(instance);
+
+        if (currentValue != null && currentValue !== '') {
+            requestAnimationFrame(() => {
+                this.setChoicesValue(instance, currentValue);
+            });
+        }
+    }
+
+
+    private removeOrphanChoicesWrapper(element: HTMLSelectElement): void {
+        const nextSibling = element.nextElementSibling as HTMLElement | null;
+        if (nextSibling?.classList.contains('choices')) {
+            nextSibling.remove();
+        }
+    }
+
+
+    private setChoicesValue(instance: any, value: string | null | undefined): void {
+        if (!instance) return;
+
+        try {
+            if (value == null || value === '') {
+                instance.removeActiveItems?.();
+
+                const passedElement = instance.passedElement?.element as HTMLSelectElement | undefined;
+                if (passedElement) {
+                    passedElement.value = '';
+                }
+                return;
+            }
+
+            const choices = instance?._store?.choices ?? [];
+            const exists = choices.some((c: any) => String(c.value) === String(value));
+
+            if (!exists) {
+                instance.removeActiveItems?.();
+                return;
+            }
+
+            instance.removeActiveItems?.();
+            instance.setChoiceByValue(String(value));
+        } catch { }
+    }
+
 
     setBreadcrumbs(): void {
         this.breadcrumbs =
@@ -119,6 +229,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.filtro.search = this.currentTerm;
 
+
         this.service.getResumen(this.filtro)
             .pipe(finalize(() => this.loading = false))
             .subscribe({
@@ -126,45 +237,9 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
                     const data = res?.data ?? res ?? {};
 
                     this.resumen = data?.summary ?? this.resumen;
-                    this.rows = (data?.items ?? []).map((x: any) => {
-
-                        const interesPendiente =
-                            Number(x.interesPendiente ?? 0);
-
-                        return {
-                            ...x,
-
-                            pendienteCorriente:
-                                Number(x.pendienteCorriente ?? 0),
-
-                            pendienteNavidena:
-                                Number(x.pendienteNavidena ?? 0),
-
-                            interesPendiente,
-
-                            montoPagar:
-                                interesPendiente > 100
-                                    ? interesPendiente
-                                    : 0,
-
-                            montoTrasladar:
-                                interesPendiente > 0 &&
-                                    interesPendiente <= 100
-                                    ? interesPendiente
-                                    : 0,
-
-                            capitalizaAhorro:
-                                !!x.capitalizaAhorro
-                        };
-                    });
-
+                    this.allRows = data?.items
                     this.applySorting();
-
-                    this.filtro.page = Number(data?.page ?? this.filtro.page);
-                    this.filtro.pageSize = Number(data?.pageSize ?? this.filtro.pageSize);
-
-                    this.totalRecords = Number(data?.totalRecords ?? 0);
-                    this.totalPages = Number(data?.totalPages ?? 0);
+                    this.applyFiltersAndPaging();
                 },
                 error: (err) => {
                     this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -195,10 +270,24 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         this.loadData();
     }
 
+
+
+
     procesarPago(): void {
         this.processing = true;
 
-        this.service.procesarPago(this.filtro)
+        const data = this.rows
+            .filter(x => x.activo === true && x.interesPendiente > 0)
+            .map(x => ({
+                codSocio: x.codigoSocio,
+                capitalizaAhorro: x.capitalizaAhorro,
+                cuentaTraslado: x.cuentaTraslado
+            }));
+
+
+
+
+        this.service.procesarPago(data)
             .pipe(finalize(() => this.processing = false))
             .subscribe({
                 next: () => {
@@ -227,17 +316,18 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
 
     cambiarPageSize(): void {
         this.filtro.page = 1;
-        this.loadData();
+        this.applyFiltersAndPaging();
     }
 
     cambiarPagina(page: number): void {
-        if (page < 1 || page > this.totalPages || page === this.filtro.page) {
-            return;
-        }
+
+        if (page < 1 || page > this.totalPages || page === this.filtro.page) return;
 
         this.filtro.page = page;
-        this.loadData();
+
+        this.applyFiltersAndPaging();
     }
+
 
     get paginas(): number[] {
         const total = this.totalPages || 1;
@@ -317,24 +407,47 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
 
         return 'Q4-2026';
     }
-
     private getFechaCortePorCorte(corte: string): string {
-        switch (corte) {
-            case 'Q1-2026':
-                return `${this.anio}-03-31`;
 
-            case 'Q2-2026':
-                return `${this.anio}-06-30`;
-
-            case 'Q3-2026':
-                return `${this.anio}-09-30`;
-
-            case 'Q4-2026':
-                return `${this.anio}-12-31`;
-
-            default:
-                return this.toDateInputValue(new Date());
+        if (!corte) {
+            return this.toDateInputValue(new Date());
         }
+
+        const match = corte.match(/^Q([1-4])-(\d{4})$/);
+
+        if (!match) {
+            return this.toDateInputValue(new Date());
+        }
+
+        const trimestre = Number(match[1]);
+        const year = Number(match[2]);
+
+        let month = 12;
+        let day = 31;
+
+        switch (trimestre) {
+            case 1:
+                month = 3;
+                day = 31;
+                break;
+            case 2:
+                month = 6;
+                day = 30;
+                break;
+            case 3:
+                month = 9;
+                day = 30;
+                break;
+            case 4:
+                month = 12;
+                day = 31;
+                break;
+        }
+
+        // ⚠️ JS month es 0-based
+        const date = new Date(year, month - 1, day);
+
+        return this.toDateInputValue(date);
     }
 
     private toDateInputValue(date: Date): string {
@@ -342,40 +455,14 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         return fixed.toISOString().substring(0, 10);
     }
 
-    buscarDesdeFiltro(): void {
-        this.currentTerm = (this.currentTerm || '').trim();
-
-        this.filtro.search = this.currentTerm;
-        this.filtro.page = 1;
-
-        this.loadData();
-    }
 
 
 
-    recalcularResumen(): void {
-        this.resumen.totalPagar = this.rows.reduce(
-            (sum, x) => sum + Number(x.montoPagar ?? 0),
-            0
-        );
-
-        this.resumen.totalTrasladar = this.rows.reduce(
-            (sum, x) => sum + Number(x.montoTrasladar ?? 0),
-            0
-        );
-
-        this.resumen.sociosPagar = this.rows.filter(
-            x => Number(x.montoPagar ?? 0) > 0
-        ).length;
-
-        this.resumen.sociosTrasladar = this.rows.filter(
-            x => Number(x.montoTrasladar ?? 0) > 0
-        ).length;
-    }
 
     debeBloquearCapitaliza(row: any): boolean {
         return Number(row.interesPendiente ?? 0) <= 100;
     }
+
 
     toggleCapitaliza(row: any): void {
 
@@ -386,8 +473,28 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         }
 
         row.capitalizaAhorro = !row.capitalizaAhorro;
-    }
 
+        // SI CAPITALIZA
+        if (row.capitalizaAhorro) {
+
+            row.montoTrasladar = pendiente;
+            row.montoPagar = 0;
+
+            // cuenta por defecto
+            row.cuentaTraslado = 'Corriente';
+        }
+        else {
+
+            // vuelve a pago normal
+            row.montoPagar = pendiente;
+            row.montoTrasladar = 0;
+
+            // limpiar cuenta traslado
+            row.cuentaTraslado = null;
+        }
+
+        this.recalcularResumen();
+    }
 
     sortBy(column: string): void {
         if (this.sortColumn === column) {
@@ -416,6 +523,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
                 : String(bValue).localeCompare(String(aValue), 'es', { sensitivity: 'base' });
         });
     }
+
 
     getSortValue(row: any, column: string): string | number {
         const value = row?.[column];
@@ -446,7 +554,6 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
             ? 'fa-solid fa-sort-up'
             : 'fa-solid fa-sort-down';
     }
-
     getEstadoInteresClass(row: any): string {
 
         const interes = Number(row.interesPendiente ?? 0);
@@ -456,18 +563,248 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
             return 'estado-negativo';
         }
 
-        // SIN INTERESES
+        // SIN INTERÉS
         if (interes === 0) {
             return 'estado-sin-interes';
         }
 
-        // MAYOR A 100
+        // SI CAPITALIZA -> TRASLADAR (AMARILLO)
+        if (row.capitalizaAhorro) {
+            return 'estado-trasladar';
+        }
+
+        // MAYOR A 100 -> PAGAR (VERDE)
         if (interes > 100) {
             return 'estado-pagar';
         }
 
-        // MENOR O IGUAL A 100
+        // MENOR O IGUAL A 100 -> TRASLADAR
         return 'estado-trasladar';
     }
 
+
+    recalcularResumen(): void {
+
+        this.rows = this.rows.map(x => {
+
+            const interes = Number(x.interesPendiente ?? 0);
+            const capitaliza = !!x.capitalizaAhorro;
+
+            return {
+                ...x,
+
+                montoPagar:
+                    interes > 100 && !capitaliza
+                        ? interes
+                        : 0,
+
+                montoTrasladar:
+                    (
+                        (interes > 0 && interes <= 100)
+                        ||
+                        (interes > 100 && capitaliza)
+                    )
+                        ? interes
+                        : 0
+            };
+        });
+
+        this.resumen.totalPagar = this.rows.reduce(
+            (sum, x) => sum + Number(x.montoPagar ?? 0),
+            0
+        );
+
+        this.resumen.totalTrasladar = this.rows.reduce(
+            (sum, x) => sum + Number(x.montoTrasladar ?? 0),
+            0
+        );
+
+        this.resumen.sociosPagar = this.rows.filter(
+            x => Number(x.montoPagar ?? 0) > 0
+        ).length;
+
+        this.resumen.sociosTrasladar = this.rows.filter(
+            x => Number(x.montoTrasladar ?? 0) > 0
+        ).length;
+    }
+
+    toggleCuentaTraslado(
+        row: any,
+        cuenta: 'Corriente' | 'Navidena'
+    ): void {
+
+
+        console.log('toggleCuentaTraslado', { row, cuenta });
+        if (!row.cuentaTraslado) {
+            return;
+        }
+
+
+        if (
+            cuenta === 'Navidena' &&
+            !row.cuentaNavidenaActiva
+        ) {
+            return;
+        }
+
+
+
+        if (cuenta == "Corriente") {
+            cuenta = "Navidena";
+        }
+        else {
+            cuenta = "Corriente";
+        }
+
+
+
+        row.cuentaTraslado = cuenta;
+    }
+
+
+    applyFiltersAndPaging(): void {
+
+        // 🔥 SIEMPRE partir del dataset original
+        let data = [...this.allRows];
+
+        const term = (this.currentTerm || '').trim().toLowerCase();
+
+        // 🔎 SEARCH (solo si tiene texto)
+        if (term.length > 0) {
+            data = data.filter(x =>
+                (x.codigoSocio || '').toLowerCase().includes(term) ||
+                (x.nombreCompleto || '').toLowerCase().includes(term) ||
+                (x.identificacion || '').toLowerCase().includes(term)
+            );
+        }
+
+        // 🔽 FILTRO TIPO INTERES
+        if (this.filtro.tipoInteres) {
+            data = data.filter(x =>
+                this.filtro.tipoInteres === 'Corriente'
+                    ? x.pendienteCorriente > 0
+                    : x.pendienteNavidena > 0
+            );
+        }
+
+        // 🔽 FILTRO ESTADO
+        if (this.filtro.estadoSocio !== '') {
+            const activo = this.filtro.estadoSocio === 'Activo';
+            data = data.filter(x => x.activo === activo);
+        }
+
+        // 🔃 ordenar
+        data = this.sortData(data);
+
+        // 📄 paginación
+        this.totalRecords = data.length;
+        this.totalPages = Math.ceil(data.length / this.filtro.pageSize) || 1;
+
+        const start = (this.filtro.page - 1) * this.filtro.pageSize;
+        const end = start + this.filtro.pageSize;
+
+        this.rows = data.slice(start, end);
+    }
+
+    onSearchChange(): void {
+        this.filtro.page = 1;
+        this.applyFiltersAndPaging();
+    }
+
+    onTipoInteresChange(): void {
+        this.filtro.page = 1;
+        this.applyFiltersAndPaging();
+    }
+
+    onEstadoChange(): void {
+        this.filtro.page = 1;
+        this.applyFiltersAndPaging();
+    }
+
+
+    sortData(data: any[]): any[] {
+        return [...data].sort((a, b) => {
+            const aValue = this.getSortValue(a, this.sortColumn);
+            const bValue = this.getSortValue(b, this.sortColumn);
+
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return this.sortDirection === 'asc'
+                    ? aValue - bValue
+                    : bValue - aValue;
+            }
+
+            return this.sortDirection === 'asc'
+                ? String(aValue).localeCompare(String(bValue))
+                : String(bValue).localeCompare(String(aValue));
+        });
+    }
+
+
+    private generarCortes(): void {
+
+        const fechaServidor = this.appConfig.getCurrentSettings().fechaServidor;
+        const fecha = fechaServidor ? new Date(fechaServidor) : new Date();
+
+        const currentYear = fecha.getFullYear();
+        const currentMonth = fecha.getMonth() + 1;
+
+        const trimestres = [
+            { q: 4, key: 'q4', maxMonth: 12 },
+            { q: 3, key: 'q3', maxMonth: 9 },
+            { q: 2, key: 'q2', maxMonth: 6 },
+            { q: 1, key: 'q1', maxMonth: 3 }
+        ];
+
+        const cortes: any[] = [];
+
+        for (let year = currentYear; year >= 1900; year--) {
+
+            for (const t of trimestres) {
+
+                if (year === currentYear && currentMonth < (t.maxMonth - 2)) {
+                    continue;
+                }
+
+                const label = this.translate.instant(`pagoIntereses.cutoffs.${t.key}`, {
+                    anio: year
+                });
+
+                cortes.push({
+                    value: `Q${t.q}-${year}`,
+                    label,
+                    year,
+                    trimestre: t.q
+                });
+            }
+        }
+
+        this.cortes = cortes;
+    }
+
+    esTrimestreActual(corte: string): boolean {
+
+        if (!corte) return false;
+
+        const match = corte.match(/^Q([1-4])-(\d{4})$/);
+        if (!match) return false;
+
+        const trimestre = Number(match[1]);
+        const year = Number(match[2]);
+
+        const fecha = this.appConfig.getCurrentSettings().fechaServidor
+            ? new Date(this.appConfig.getCurrentSettings().fechaServidor)
+            : new Date();
+
+        const currentYear = fecha.getFullYear();
+        const currentMonth = fecha.getMonth() + 1;
+
+        let currentTrimester = 1;
+
+        if (currentMonth <= 3) currentTrimester = 1;
+        else if (currentMonth <= 6) currentTrimester = 2;
+        else if (currentMonth <= 9) currentTrimester = 3;
+        else currentTrimester = 4;
+
+        return year === currentYear && trimestre === currentTrimester;
+    }
 }

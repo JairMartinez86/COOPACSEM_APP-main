@@ -487,3 +487,21 @@
 
   box-shadow: 0 0 0 3px rgba(108, 117, 125, .15);
 }
+
+.estado-negativo{
+   background: var(--bs-danger);
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, .15);
+}
+
+
+
+
+.clickable-transfer {
+    cursor: pointer;
+    user-select: none;
+    transition: all .2s ease;
+}
+
+.clickable-transfer:hover {
+    transform: scale(1.05);
+}
