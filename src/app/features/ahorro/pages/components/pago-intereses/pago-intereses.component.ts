@@ -283,7 +283,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
     procesarPago(): void {
         this.processing = true;
 
-        const data = this.rows
+        const data = this.allRows
             .filter(x => x.activo === true && x.interesPendiente > 0)
             .map(x => ({
                 codSocio: x.codigoSocio,
