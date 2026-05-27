@@ -220,3 +220,15 @@
   border-color: #7367f0;
   color: #fff;
 }
+
+
+
+.trimestre-row {
+    background: rgba(255, 193, 7, 0.12) !important;
+    border-left: 4px solid #ffc107;
+    font-weight: bold;
+}
+
+.trimestre-row:hover {
+    background: rgba(255, 193, 7, 0.18) !important;
+}

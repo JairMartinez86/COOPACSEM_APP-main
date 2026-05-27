@@ -263,7 +263,7 @@
                     @if (tipoConsulta === 'Corte') {
                     <div class="col-xl-3 col-lg-6">
                         <label class="form-label">
-                            {{ 'estadoCuentaIntereses.filters.cutoffDate' | translate }}
+                            {{ 'estadoCuentaIntereses.filters.cutoff' | translate }}
                         </label>
 
                         <input type="date" class="form-control" [(ngModel)]="fechaCorte">
@@ -431,10 +431,10 @@
                                     {{ 'estadoCuentaIntereses.table.christmasInterestBalance' | translate }}
                                 </th>
 
-                                 <th class="text-end">
+                                <th class="text-end">
                                     {{ 'estadoCuentaIntereses.table.accumulatedBalance' | translate }}
                                 </th>
-                                
+
 
                                 <th class="text-end">
                                     {{ 'estadoCuentaIntereses.table.debit' | translate }}
@@ -456,7 +456,7 @@
 
                             @for (mov of movimientosPaginados; track mov.id) {
 
-                            <tr>
+                            <tr [class.trimestre-row]="isQuarterEnd(mov.fecha)">
 
                                 <td>
                                     {{ formatDate(mov.fecha) }}
@@ -514,7 +514,7 @@
 
 
 
-                                
+
 
                                 <td class="text-end text-success">
                                     {{
@@ -526,7 +526,7 @@
 
 
 
-                                
+
 
                                 <td class="text-end text-purple">
                                     {{

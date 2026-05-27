@@ -39,7 +39,7 @@ interface InteresMovimiento {
     ahorroNavidena: number;
     saldoInteresCorriente: number;
     saldoInteresNavidena: number;
-    saldoInteres : number;
+    saldoInteres: number;
     debito: number;
     credito: number;
     aplicadoAhorro: number;
@@ -76,7 +76,7 @@ export class EstadoCuentaInteresesComponent implements OnInit, OnDestroy {
     fechaDesde = '';
     fechaHasta = '';
     fechaCorte = '';
-    
+
 
     mes = 1;
     anio = 2026;
@@ -170,83 +170,83 @@ export class EstadoCuentaInteresesComponent implements OnInit, OnDestroy {
         }
     }
 
-seleccionarConsulta(tipo: TipoConsultaInteres): void {
+    seleccionarConsulta(tipo: TipoConsultaInteres): void {
 
-  this.tipoConsulta = tipo;
-  this.movPage = 1;
+        this.tipoConsulta = tipo;
+        this.movPage = 1;
 
-  const anioServidor = this.fechaServidor.getFullYear();
+        const anioServidor = this.fechaServidor.getFullYear();
 
-  if (tipo === 'Corte') {
+        if (tipo === 'Corte') {
 
-    this.fechaCorte =
-      this.fechaCorte ||
-      this.toDateInputValue(this.fechaServidor);
+            this.fechaCorte =
+                this.fechaCorte ||
+                this.toDateInputValue(this.fechaServidor);
 
-    this.fechaDesde = this.toDateInputValue(
-      new Date(anioServidor, 0, 1)
-    );
+            this.fechaDesde = this.toDateInputValue(
+                new Date(anioServidor, 0, 1)
+            );
 
-    this.fechaHasta = this.fechaCorte;
-  }
+            this.fechaHasta = this.fechaCorte;
+        }
 
-  if (tipo === 'Rango') {
+        if (tipo === 'Rango') {
 
-    this.fechaDesde =
-      this.fechaDesde ||
-      this.toDateInputValue(
-        new Date(anioServidor, 0, 1)
-      );
+            this.fechaDesde =
+                this.fechaDesde ||
+                this.toDateInputValue(
+                    new Date(anioServidor, 0, 1)
+                );
 
-    this.fechaHasta =
-      this.fechaHasta ||
-      this.toDateInputValue(this.fechaServidor);
-  }
+            this.fechaHasta =
+                this.fechaHasta ||
+                this.toDateInputValue(this.fechaServidor);
+        }
 
-  if (tipo === 'Mes') {
-    this.setFechasPorMes();
-  }
+        if (tipo === 'Mes') {
+            this.setFechasPorMes();
+        }
 
-  if (tipo === 'Anio') {
-    this.setFechasPorAnio();
-  }
+        if (tipo === 'Anio') {
+            this.setFechasPorAnio();
+        }
 
-  if (tipo === 'Trimestre') {
-    this.setFechasPorTrimestre();
-  }
-}
+        if (tipo === 'Trimestre') {
+            this.setFechasPorTrimestre();
+        }
+    }
 
-aplicarFiltros(): void {
+    aplicarFiltros(): void {
 
-  this.movPage = 1;
+        this.movPage = 1;
 
-  if (this.tipoConsulta === 'Trimestre') {
-    this.setFechasPorTrimestre();
-  }
+        if (this.tipoConsulta === 'Trimestre') {
+            this.setFechasPorTrimestre();
+        }
 
-  if (this.tipoConsulta === 'Mes') {
-    this.setFechasPorMes();
-  }
+        if (this.tipoConsulta === 'Mes') {
+            this.setFechasPorMes();
+        }
 
-  if (this.tipoConsulta === 'Anio') {
-    this.setFechasPorAnio();
-  }
+        if (this.tipoConsulta === 'Anio') {
+            this.setFechasPorAnio();
+        }
 
-  if (this.tipoConsulta === 'Corte') {
+        if (this.tipoConsulta === 'Corte') {
 
-    this.fechaDesde = this.toDateInputValue(
-      new Date(
-        this.fechaServidor.getFullYear(),
-        0,
-        1
-      )
-    );
+            this.fechaDesde = this.toDateInputValue(
+                new Date(
+                    this.fechaServidor.getFullYear(),
+                    0,
+                    1
+                )
+            );
 
-    this.fechaHasta = this.fechaCorte;
-  }
+            this.fechaHasta = this.fechaCorte;
+        }
 
-  this.loadData();
-}
+        this.loadData();
+    }
 
     setFechasPorTrimestre(): void {
         const inicioMes = (this.trimestre - 1) * 3;
@@ -267,15 +267,15 @@ aplicarFiltros(): void {
 
     setFechasPorAnio(): void {
 
-  const desde = new Date(this.anio, 0, 1);
-  const hasta = new Date(this.anio, 11, 31);
+        const desde = new Date(this.anio, 0, 1);
+        const hasta = new Date(this.anio, 11, 31);
 
-  this.fechaDesde = this.toDateInputValue(desde);
-  this.fechaHasta = this.toDateInputValue(hasta);
-}
+        this.fechaDesde = this.toDateInputValue(desde);
+        this.fechaHasta = this.toDateInputValue(hasta);
+    }
 
     loadData(): void {
-       // const start = performance.now();
+        // const start = performance.now();
         this.loading = true;
 
         this.service.getDetalleIntereses(this.socioId, {
@@ -288,8 +288,8 @@ aplicarFiltros(): void {
         })
             .pipe(finalize(() => {
                 this.loading = false;
-               /* this.requestTime = Number((performance.now() - start).toFixed(2));
-                console.log(this.requestTime )*/
+                /* this.requestTime = Number((performance.now() - start).toFixed(2));
+                 console.log(this.requestTime )*/
             }))
             .subscribe({
                 next: (res: any) => {
@@ -308,8 +308,8 @@ aplicarFiltros(): void {
                         interesesPendientesPagar: Number(data?.resumen?.interesesPendientesPagar ?? 0)
                     };
 
-              
-                    
+
+
                     this.movimientos = Array.isArray(data?.movimientos)
                         ? data.movimientos.map((x: any) => ({
                             id: x?.id ?? crypto.randomUUID(),
@@ -328,8 +328,8 @@ aplicarFiltros(): void {
                         : [];
 
 
-                        
-          
+
+
 
                     this.pdf = data?.pdf ?? res?.data?.pdf ?? null;
                     this.excel = data?.excel ?? res?.data?.excel ?? null;
@@ -508,4 +508,21 @@ aplicarFiltros(): void {
         const fixed = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
         return fixed.toISOString().substring(0, 10);
     }
+
+    isQuarterEnd(fecha?: string | Date | null): boolean {
+
+    if (!fecha) return false;
+
+    const d = new Date(fecha);
+
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+
+    return (
+        (month === 3 && day === 31) ||
+        (month === 6 && day === 30) ||
+        (month === 9 && day === 30) ||
+        (month === 12 && day === 31)
+    );
+}
 }

@@ -10,3 +10,14 @@
 .table td {
   vertical-align: middle;
 }
+
+
+.trimestre-row td {
+    background: rgba(255, 193, 7, 0.08) !important;
+    border-top: 1px solid rgba(255, 193, 7, 0.35);
+    border-bottom: 1px solid rgba(255, 193, 7, 0.35);
+}
+
+.trimestre-row:hover td {
+    background: rgba(255, 193, 7, 0.16) !important;
+}

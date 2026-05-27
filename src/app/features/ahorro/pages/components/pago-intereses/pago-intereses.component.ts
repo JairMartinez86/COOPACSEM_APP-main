@@ -74,7 +74,8 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         sociosPagar: 0,
         totalTrasladar: 0,
         sociosTrasladar: 0,
-        fechaCalculo: ''
+        fechaCalculo: '',
+        ultimoPagoGenerado: ''
     };
 
     allRows: any[] = [];
@@ -83,6 +84,9 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
     corteChoices: any = null;
 
     cortes: { value: string, label: string }[] = [];
+
+    pdf: string | null = null;
+    excel: string | null = null;
 
 
     ngOnInit(): void {
@@ -238,6 +242,9 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
 
                     this.resumen = data?.summary ?? this.resumen;
                     this.allRows = data?.items
+                    this.pdf = data?.pdf ?? res?.data?.pdf ?? null;
+                    this.excel = data?.excel ?? res?.data?.excel ?? null;
+
                     this.applySorting();
                     this.applyFiltersAndPaging();
                 },
@@ -281,9 +288,9 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
             .map(x => ({
                 codSocio: x.codigoSocio,
                 capitalizaAhorro: x.capitalizaAhorro,
-                cuentaTraslado: x.cuentaTraslado
+                cuentaTraslado: x.cuentaTraslado,
+                fechaTrimestre: x.fechaTrimestre
             }));
-
 
 
 
@@ -640,9 +647,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         }
 
 
-        if (
-            cuenta === 'Navidena' &&
-            !row.cuentaNavidenaActiva
+        if (!row.cuentaNavidenaActiva
         ) {
             return;
         }
@@ -659,6 +664,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
 
 
         row.cuentaTraslado = cuenta;
+
     }
 
 
@@ -757,7 +763,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
 
         const cortes: any[] = [];
 
-        for (let year = currentYear; year >= 1900; year--) {
+        for (let year = currentYear; year >= 2026; year--) {
 
             for (const t of trimestres) {
 
@@ -791,20 +797,106 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         const trimestre = Number(match[1]);
         const year = Number(match[2]);
 
-        const fecha = this.appConfig.getCurrentSettings().fechaServidor
-            ? new Date(this.appConfig.getCurrentSettings().fechaServidor)
-            : new Date();
+        // Fecha base
+        const fechaBase = this.resumen.ultimoPagoGenerado
+            ? new Date(this.resumen.ultimoPagoGenerado)
+            : new Date(this.appConfig.getCurrentSettings().fechaServidor);
 
-        const currentYear = fecha.getFullYear();
-        const currentMonth = fecha.getMonth() + 1;
+        // Calcular siguiente trimestre
+        let siguienteTrimestre = 1;
+        let siguienteYear = fechaBase.getFullYear();
 
-        let currentTrimester = 1;
+        const month = fechaBase.getMonth() + 1;
 
-        if (currentMonth <= 3) currentTrimester = 1;
-        else if (currentMonth <= 6) currentTrimester = 2;
-        else if (currentMonth <= 9) currentTrimester = 3;
-        else currentTrimester = 4;
+        if (month <= 3) {
+            siguienteTrimestre = 2;
+        }
+        else if (month <= 6) {
+            siguienteTrimestre = 3;
+        }
+        else if (month <= 9) {
+            siguienteTrimestre = 4;
+        }
+        else {
+            siguienteTrimestre = 1;
+            siguienteYear++;
+        }
 
-        return year === currentYear && trimestre === currentTrimester;
+        return year === siguienteYear
+            && trimestre === siguienteTrimestre;
     }
+
+
+
+
+
+
+
+
+
+
+
+        descargarPdf(): void {
+        this.descargarBase64(this.pdf, `${this.buildFileName()}.pdf`, 'application/pdf');
+    }
+
+    descargarExcel(): void {
+        this.descargarBase64(
+            this.excel,
+            `${this.buildFileName()}.xlsx`,
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+    }
+
+    imprimir(): void {
+        if (!this.pdf) return;
+
+        const blob = this.base64ToBlob(this.pdf, 'application/pdf');
+        const url = window.URL.createObjectURL(blob);
+        const win = window.open(url, '_blank');
+
+        if (!win) return;
+
+        win.onload = () => {
+            win.focus();
+            win.print();
+        };
+    }
+
+    private buildFileName(): string {
+
+
+        return `${this.appConfig.getCurrentSettings().companyName}_SALDO INTERESES AHORROS - TODOS AL ${this.filtro.corte}`;
+    }
+
+    private descargarBase64(base64: string | null | undefined, fileName: string, contentType: string): void {
+        if (!base64) return;
+
+        const blob = this.base64ToBlob(base64, contentType);
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        window.URL.revokeObjectURL(url);
+    }
+
+    private base64ToBlob(base64: string, contentType: string): Blob {
+        const cleanBase64 = base64.includes(',') ? base64.split(',')[1] : base64;
+        const byteCharacters = atob(cleanBase64);
+        const byteNumbers = new Array(byteCharacters.length);
+
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+
+        return new Blob([new Uint8Array(byteNumbers)], { type: contentType });
+    }
+
+
 }
