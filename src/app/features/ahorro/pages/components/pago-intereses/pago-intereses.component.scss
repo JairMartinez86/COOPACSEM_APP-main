@@ -1,11 +1,11 @@
 /* =========================================
-   SUMMARY + LEGEND
+   SUMMARY + LEGEND COMPACT
 ========================================= */
 
 .summary-grid,
 .pago-legend-grid {
   display: grid;
-  gap: .55rem;
+  gap: .4rem;
 }
 
 .summary-grid {
@@ -19,31 +19,31 @@
 .summary-item,
 .legend-card {
   display: flex;
-  gap: .6rem;
+  gap: .45rem;
 
-  border-radius: 10px;
+  border-radius: 8px;
 
-  border: 1px solid rgba(148, 163, 184, .18);
+  border: 1px solid rgba(148,163,184,.15);
 }
 
 .summary-item {
   align-items: center;
 
-  min-height: 78px;
+  min-height: 58px;
 
-  padding: .65rem .75rem;
+  padding: .45rem .55rem;
 
-  background: rgba(148, 163, 184, .025);
+  background: rgba(148,163,184,.02);
 }
 
 .legend-card {
   align-items: flex-start;
 
-  min-height: 66px;
+  min-height: 34px;
 
-  padding: .7rem .8rem;
+  padding: .45rem .55rem;
 
-  background: rgba(255,255,255,.03);
+  background: rgba(255,255,255,.02);
 }
 
 /* =========================================
@@ -51,27 +51,27 @@
 ========================================= */
 
 .summary-icon {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+
+  border-radius: 50%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 50%;
+  font-size: .8rem;
 
-  font-size: 1rem;
-
-  background: rgba(25, 135, 84, .12);
+  background: rgba(25,135,84,.12);
 }
 
 .summary-icon-warning {
-  background: rgba(255, 193, 7, .16);
+  background: rgba(255,193,7,.16);
 }
 
 .summary-icon-secondary {
-  background: rgba(108, 117, 125, .16);
+  background: rgba(108,117,125,.16);
 }
 
 /* =========================================
@@ -82,46 +82,44 @@
 .legend-card strong {
   display: block;
 
-  font-size: .68rem;
+  font-size: .62rem;
   font-weight: 700;
-  line-height: 1.15;
+
+  line-height: 1.1;
 }
 
 .summary-value {
-  font-size: .95rem;
+  font-size: .82rem;
   font-weight: 800;
-  line-height: 1.1;
+
+  line-height: 1;
 }
 
 .summary-sub,
 .legend-card small {
   display: block;
 
-  font-size: .62rem;
-  line-height: 1.2;
+  font-size: .56rem;
+  line-height: 1.1;
 
-  color: var(--bs-secondary-color);
 }
 
 .legend-card strong {
-  margin-bottom: .18rem;
+  margin-bottom: .1rem;
 }
 
 /* =========================================
    LEGEND DOT
 ========================================= */
 
-.legend-dot,
-.capitalize-dot {
-  border-radius: 50%;
-}
-
 .legend-dot {
-  width: 9px;
-  height: 9px;
-  min-width: 9px;
+  width: 7px;
+  height: 7px;
+  min-width: 7px;
 
-  margin-top: .25rem;
+  border-radius: 50%;
+
+  margin-top: .2rem;
 }
 
 /* =========================================
@@ -134,31 +132,31 @@
   justify-content: space-between;
   flex-wrap: wrap;
 
-  gap: .75rem;
+  gap: .5rem;
 
-  padding: .65rem .85rem;
+  padding: .45rem .65rem;
 
-  border-top: 1px solid rgba(148, 163, 184, .16);
+  border-top: 1px solid rgba(148,163,184,.12);
 }
 
 .pago-pagination {
-  gap: .25rem;
+  gap: .2rem;
 }
 
 .pago-pagination .page-link {
-  min-width: 32px;
-  height: 32px;
+  min-width: 28px;
+  height: 28px;
+
+  padding: 0 .35rem;
+
+  border-radius: 6px !important;
+
+  font-size: .68rem;
+  font-weight: 600;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  padding: 0 .45rem;
-
-  border-radius: 7px !important;
-
-  font-size: .75rem;
-  font-weight: 600;
 }
 
 .pago-pagination .page-item.active .page-link {
@@ -172,259 +170,29 @@
 }
 
 .pago-page-size {
-  width: 145px;
+  width: 120px;
   height: 32px;
 
-  font-size: .75rem;
+  font-size: .68rem;
 }
-
-/* =========================================
-   CAPITALIZE DOT
-========================================= */
-
-.capitalize-dot {
-  width: 12px;
-  height: 12px;
-
-  display: inline-block;
-
-  background: transparent;
-
-  border: 1.5px solid rgba(25, 135, 84, .55);
-
-  transition: .18s ease;
-}
-
-.capitalize-dot.active {
-  background: var(--bs-success);
-  border-color: var(--bs-success);
-
-  box-shadow: 0 0 0 2px rgba(var(--bs-success-rgb), .18);
-}
-
-.capitalize-dot.clickable {
-  cursor: pointer;
-}
-
-.capitalize-dot.clickable:hover {
-  transform: scale(1.12);
-
-  border-color: var(--bs-success);
-}
-
-.capitalize-dot.disabled {
-  opacity: .45;
-
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* =========================================
-   SORTABLE
-========================================= */
-
-.sortable {
-  cursor: pointer;
-
-  user-select: none;
-  white-space: nowrap;
-}
-
-.sortable:hover {
-  opacity: .75;
-}
-
-.sortable i {
-  font-size: .7rem;
-}
-
-/* =========================================
-   DARK MODE
-========================================= */
-
-:host-context(.dark),
-:host-context(.dark-mode),
-:host-context(.dark-theme),
-:host-context(body.dark),
-:host-context(body.dark-mode),
-:host-context(body.dark-theme),
-:host-context([data-bs-theme="dark"]),
-:host-context([data-theme="dark"]),
-:host-context([data-layout-mode="dark"]) {
-
-  .summary-label,
-  .legend-card strong,
-  .pago-table thead th,
-  .rule-box .fw-bold,
-  .page-title,
-  h6,
-  .fw-bold {
-    color: rgba(255,255,255,.96);
-  }
-
-  .summary-value,
-  .table tbody td {
-    color: rgba(255,255,255,.92);
-  }
-
-  .summary-sub,
-  .legend-card small,
-  .text-muted,
-  .rule-box .small,
-  .form-check-label,
-  .small {
-    color: rgba(255,255,255,.74) ;
-  }
-
-  .legend-card {
-    background: rgba(255,255,255,.045);
-    border-color: rgba(255,255,255,.08);
-  }
-
-  .badge,
-  .pagination .page-link {
-    color: #fff ;
-  }
-
-  .btn-outline-secondary {
-    color: rgba(255,255,255,.88) ;
-  }
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 1366px) {
-
-  .summary-grid,
-  .pago-legend-grid {
-    gap: .45rem;
-  }
-
-  .summary-item {
-    min-height: 72px;
-
-    padding: .55rem .6rem;
-  }
-
-  .legend-card {
-    min-height: 58px;
-
-    padding: .5rem .6rem;
-  }
-
-  .summary-icon {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-
-    font-size: .9rem;
-  }
-
-  .summary-label,
-  .legend-card strong {
-    font-size: .64rem;
-  }
-
-  .summary-value {
-    font-size: .86rem;
-  }
-
-  .summary-sub,
-  .legend-card small {
-    font-size: .58rem;
-  }
-}
-
-@media (max-width: 1200px) {
-
-  .summary-grid,
-  .pago-legend-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-
-  .summary-grid,
-  .pago-legend-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pago-pagination-row {
-    justify-content: center;
-
-    text-align: center;
-  }
-
-  .pago-page-size {
-    width: 100%;
-  }
-}
-
-
-
-/* =========================================
-   ESTADO INTERES
-========================================= */
-
-.estado-dot {
-  width: 14px;
-  height: 14px;
-
-  border-radius: 50%;
-
-  display: inline-block;
-
-  border: 2px solid transparent;
-
-  transition: .2s ease;
-}
-
-.estado-pagar {
-  background: var(--bs-success);
-
-  box-shadow: 0 0 0 3px rgba(25, 135, 84, .15);
-}
-
-.estado-capitaliza {
-  background: var(--bs-primary);
-
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, .15);
-}
-
-.estado-trasladar {
-  background: var(--bs-warning);
-
-  box-shadow: 0 0 0 3px rgba(255, 193, 7, .18);
-}
-
-.estado-sin-interes {
-  background: var(--bs-secondary);
-
-  box-shadow: 0 0 0 3px rgba(108, 117, 125, .15);
-}
-
-
 
 /* =========================================
    CAPITALIZA
 ========================================= */
 
 .capitalize-dot {
-  width: 14px;
-  height: 14px;
-
-  display: inline-block;
+  width: 10px;
+  height: 10px;
 
   border-radius: 50%;
 
+  display: inline-block;
+
   background: transparent;
 
-  border: 2px solid rgba(13, 110, 253, .45);
+  border: 1.5px solid rgba(13,110,253,.45);
 
-  transition: .18s ease;
+  transition: .15s ease;
 }
 
 .capitalize-dot.active {
@@ -432,7 +200,7 @@
 
   border-color: var(--bs-primary);
 
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, .18);
+  box-shadow: 0 0 0 2px rgba(13,110,253,.15);
 }
 
 .capitalize-dot.clickable {
@@ -440,9 +208,7 @@
 }
 
 .capitalize-dot.clickable:hover {
-  transform: scale(1.12);
-
-  border-color: var(--bs-primary);
+  transform: scale(1.08);
 }
 
 .capitalize-dot.disabled {
@@ -454,54 +220,114 @@
 }
 
 /* =========================================
-   ESTADO
+   ESTADOS
 ========================================= */
 
 .estado-dot {
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
 
   border-radius: 50%;
 
   display: inline-block;
 
-  border: 2px solid transparent;
+  border: 1px solid transparent;
 
-  transition: .2s ease;
+  transition: .15s ease;
 }
 
 .estado-pagar {
   background: var(--bs-success);
+  box-shadow: 0 0 0 2px rgba(25,135,84,.15);
+}
 
-  box-shadow: 0 0 0 3px rgba(25, 135, 84, .15);
+.estado-capitaliza {
+  background: var(--bs-primary);
+  box-shadow: 0 0 0 2px rgba(13,110,253,.15);
 }
 
 .estado-trasladar {
   background: var(--bs-warning);
-
-  box-shadow: 0 0 0 3px rgba(255, 193, 7, .18);
+  box-shadow: 0 0 0 2px rgba(255,193,7,.18);
 }
 
 .estado-sin-interes {
   background: var(--bs-secondary);
-
-  box-shadow: 0 0 0 3px rgba(108, 117, 125, .15);
+  box-shadow: 0 0 0 2px rgba(108,117,125,.15);
 }
 
-.estado-negativo{
-   background: var(--bs-danger);
-    box-shadow: 0 0 0 3px rgba(108, 117, 125, .15);
+.estado-negativo {
+  background: var(--bs-danger);
+  box-shadow: 0 0 0 2px rgba(220,53,69,.15);
 }
 
+/* =========================================
+   SORTABLE
+========================================= */
 
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
 
+.sortable i {
+  font-size: .62rem;
+}
+
+.sortable:hover {
+  opacity: .8;
+}
+
+/* =========================================
+   TRANSFER
+========================================= */
 
 .clickable-transfer {
-    cursor: pointer;
-    user-select: none;
-    transition: all .2s ease;
+  cursor: pointer;
+  user-select: none;
+  transition: .15s ease;
 }
 
 .clickable-transfer:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
+}
+
+
+
+
+
+
+
+
+
+
+.pago-table {
+    width: 100%;
+    table-layout: auto;
+}
+
+/* Nombre */
+.pago-table th:nth-child(2),
+.pago-table td:nth-child(2) {
+    min-width: 280px;
+    width: 28%;
+}
+
+/* Código */
+.pago-table th:nth-child(1),
+.pago-table td:nth-child(1) {
+    width: 90px;
+}
+
+/* Identificación */
+.pago-table th:nth-child(3),
+.pago-table td:nth-child(3) {
+    width: 140px;
+}
+
+/* Estado */
+.pago-table th:nth-child(4),
+.pago-table td:nth-child(4) {
+    width: 90px;
 }
