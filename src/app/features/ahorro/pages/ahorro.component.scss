@@ -1,3 +1,35 @@
+
+/* Full HD */
+@media (max-width: 1366px) {
+    .page-scale {
+        zoom: .8;
+    }
+}
+
+/* 1600x900 */
+@media (min-width: 1367px) and (max-width: 1919px) {
+    .page-scale {
+        zoom: .95;
+    }
+}
+
+/* 2K */
+@media (min-width: 1920px) and (max-width: 2559px) {
+    .page-scale {
+        zoom: .85;
+    }
+}
+
+/* 4K */
+@media (min-width: 2560px) {
+    .page-scale {
+        zoom: 1;
+    }
+}
+
+
+
+
 :host {
   display: block;
 }
