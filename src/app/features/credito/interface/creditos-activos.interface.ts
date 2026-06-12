@@ -4,6 +4,8 @@ export interface CreditosActivosFiltro {
   search?: string;
   codSocio?: string;
   fechaCorte?: string;
+  tipoPrestamo?: string;
+  estado?: string;
 }
 
 export interface CreditosActivosKpis {

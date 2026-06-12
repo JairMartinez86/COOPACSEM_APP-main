@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, Subscription } from 'rxjs';
@@ -39,6 +39,14 @@ import { CreditoFiltersComponent } from "./credito-filters/credito-filters.compo
 import { SummaryCard } from '../../../../../shared/interfaces/sumaryCard.model';
 
 
+type CreditosActivosFiltersValue = {
+  search: string;
+  tipoPrestamo: string;
+  estado: string;
+};
+
+
+
 @Component({
   selector: 'app-creditos-activos',
   standalone: true,
@@ -56,6 +64,8 @@ import { SummaryCard } from '../../../../../shared/interfaces/sumaryCard.model';
   styleUrls: ['./creditos-activos.component.scss']
 })
 export class CreditosActivosComponent implements OnInit, OnDestroy {
+  @Output() filtersChange = new EventEmitter<CreditosActivosFiltersValue>();
+
   private readonly service = inject(CreditosActivosService);
   private readonly translate = inject(TranslateService);
   private readonly notify = inject(NotificationService);
@@ -78,19 +88,15 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
   summaryPanelHidden = false;
 
 
-  filters = {
-    search: '',
-    tipoPrestamo: '',
-    estado: ''
-  };
-
 
   filtro: CreditosActivosFiltro = {
     page: 1,
     pageSize: 10,
     search: '',
     fechaCorte: '',
-    codSocio : ''
+    codSocio: '',
+    tipoPrestamo: '',
+    estado: ''
   };
 
 
@@ -108,6 +114,7 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
   creditos: CreditoActivoItem[] = [];
   selectedCredito: CreditoActivoItem | null = null;
   detalle: CreditoActivoDetalle | null = null;
+  tipoCredito: any = [];
 
 
   tipoCreditoChart: any = this.buildDonutChart([], [], []);
@@ -179,7 +186,20 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
       })
     );
 
-    
+
+    this.subs.add(
+      this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
+        this.filtersChange.emit({
+          search: this.toText(query).trim(),
+          tipoPrestamo: this.toText(this.filtro.tipoPrestamo),
+          estado: this.toText(this.filtro.estado),
+        });
+      })
+    );
+
+
+
+
     this.cargarTodo();
   }
   ngOnDestroy(): void {
@@ -188,6 +208,10 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);
     }
+  }
+
+  private toText(value: unknown): string {
+    return typeof value === 'string' ? value : '';
   }
 
   private setBreadcrumbs(): void {
@@ -316,9 +340,11 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           const data = res?.data ?? res;
 
+
           this.creditos = data?.items ?? [];
           this.totalRecords = Number(data?.totalRecords ?? 0);
           this.totalPages = Number(data?.totalPages ?? 0);
+          this.tipoCredito = data?.tipoCredito ?? [];
 
           if (this.creditos.length > 0) {
             const selected = this.selectedCredito
@@ -356,7 +382,7 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
           this.updateAvanceChart(Number(this.detalle?.porcentajePagado ?? 0));
 
 
-           this.moraRangosChart = this.buildBarChart(
+          this.moraRangosChart = this.buildBarChart(
             this.detalle?.graficos?.moraRangos.map(x => x.etiqueta) ?? [],
             this.detalle?.graficos?.moraRangos.map(x => Number(x.monto ?? 0)) ?? []
           );
@@ -614,22 +640,7 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
     });
   }
 
-  private toDateInput(value: string | Date): string {
-    const date = value instanceof Date
-      ? value
-      : new Date(`${value}`.includes('T') ? value : `${value}T00:00:00`);
 
-    if (Number.isNaN(date.getTime())) {
-      const now = new Date();
-      return this.toDateInput(now);
-    }
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-  }
 
   private normalize(value: string | null | undefined): string {
     return String(value ?? '')
@@ -642,11 +653,18 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
 
 
 
-  onFiltersChange(filters: { search: string; tipoPrestamo: string; estado: string }): void {
-    this.filters = filters;
-    // this.selectedSocioId = null;
-    // this.clearDetail();
-    // this.loadDashboard(1, true);
+  onFiltersChange(filters: { search: string; tipoPrestamo: string; estado: string, fechaCorte: string }): void {
+    this.filtro.search = filters.search;
+    this.filtro.tipoPrestamo = filters.tipoPrestamo;
+    this.filtro.estado = filters.estado;
+
+
+    this.filtro.fechaCorte = this.appConfigService.formatDate(
+              filters.fechaCorte
+            );
+    
+
+    this.cargarLista();
   }
 
 
@@ -658,5 +676,6 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
     const currency = this.appConfigService.getCurrentSettings().currency || 'NIO';
     return `${currency} ${Number(card.amount ?? 0).toLocaleString('es-NI', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
+
 
 }

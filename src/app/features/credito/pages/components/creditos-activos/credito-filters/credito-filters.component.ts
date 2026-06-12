@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -21,6 +22,7 @@ type CreditoFiltersValue = {
   search: string;
   tipoPrestamo: string;
   estado: string;
+  fechaCorte: string;
 };
 
 type PeriodoReporte = 'corte' | 'rango' | 'mes' | 'anio';
@@ -38,6 +40,7 @@ type PeriodoReporte = 'corte' | 'rango' | 'mes' | 'anio';
 })
 export class CreditoFiltersComponent implements OnInit, OnDestroy {
   @Output() filtersChange = new EventEmitter<CreditoFiltersValue>();
+  @Input() tipoCredito: any[] = [];
 
   private readonly filterSvc = inject(TableFilterService);
   private readonly appConfigService = inject(AppConfigService);
@@ -46,7 +49,7 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
   private readonly service = inject(CreditosActivosService);
 
   private readonly subs = new Subscription();
-  private readonly filterKey = 'credito';
+  private readonly filterKey = 'creditos-activos';
 
   search = '';
   tipoPrestamo = 'Todos';
@@ -131,6 +134,7 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
           search: this.toText(query).trim(),
           tipoPrestamo: this.toText(this.tipoPrestamo),
           estado: this.toText(this.estado),
+          fechaCorte: this.toText(this.fechaFinReporte)
         });
       })
     );
@@ -187,6 +191,7 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
       search: '',
       tipoPrestamo: '',
       estado: '',
+      fechaCorte: this.toText(this.fechaFinReporte)
     });
   }
   seleccionarReporte(report: any): void {
@@ -520,13 +525,14 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
     this.filterSvc.setQuery(this.filterKey, normalized);
   }
 
-  private emitFiltersUsingCurrentSearch(): void {
+  public emitFiltersUsingCurrentSearch(): void {
     const currentQuery = this.toText(this.search).trim();
 
     this.filtersChange.emit({
       search: currentQuery,
       tipoPrestamo: this.toText(this.tipoPrestamo),
       estado: this.toText(this.estado),
+      fechaCorte: this.toText(this.fechaFinReporte)
     });
   }
 

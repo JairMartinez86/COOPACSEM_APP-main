@@ -44,9 +44,10 @@
 
                             <option value="Todos">{{ 'creditosActivos.filters.all' | translate }}</option>
 
-                            <option value="Corriente">
-                                {{ 'creditosActivos.presType.current' | translate }}
-                            </option>
+                            @for (t of tipoCredito; track t.tipo) {
+                            <option [value]="t.tipo">{{ t.nombre }}</option>
+                            }
+
                         </select>
                     </div>
 
@@ -57,6 +58,8 @@
 
                         <select class="form-select form-select-sm" [(ngModel)]="estado"
                             (ngModelChange)="onEstadoChange()">
+
+
 
                             <option value="">{{ 'creditosActivos.filters.all' | translate }}</option>
                             <option value="Activo">{{ 'creditosActivos.status.active' | translate }}</option>
@@ -129,15 +132,30 @@
                 <div class="report-toolbar">
                     <div class="report-toolbar-group">
 
-                        
 
-                        
+
+
                         @if (periodoReporte === 'corte') {
                         <div class="toolbar-date">
-                            <label class="form-label">{{ 'creditosActivos.filters.cutoffDate' | translate }}</label>
-                            <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaFinReporte">
+                            <label class="form-label">
+                                {{ 'creditosActivos.filters.cutoffDate' | translate }}
+                            </label>
+
+                            <div class="input-group input-group-sm">
+                                <input type="date" class="form-control" [(ngModel)]="fechaFinReporte" (keyup.enter)="emitFiltersUsingCurrentSearch()">
+
+                    
+
+                                <button class="btn btn-sm btn-light" (click)="emitFiltersUsingCurrentSearch()" >
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    {{ 'creditosActivos.actions.filters' | translate }}
+                                </button>
+                            </div>
                         </div>
                         }
+
+
+
 
                         @if (periodoReporte === 'rango') {
                         <div class="toolbar-date">

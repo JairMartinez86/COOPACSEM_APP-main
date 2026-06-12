@@ -43,6 +43,7 @@ export class CreditosActivosService extends BrowserApiService {
 
   getAll(filtro: CreditosActivosFiltro, skipLoader = false): Observable<any> {
     return this.browserOnly(() => {
+      console.log('Obteniendo créditos activos con filtro:', filtro);
       let params = this.buildParams(filtro)
         .set('page', filtro.page)
         .set('pageSize', filtro.pageSize);
@@ -96,6 +97,14 @@ export class CreditosActivosService extends BrowserApiService {
 
   if (filtro.codSocio?.trim()) {
     params = params.set('codSocio', filtro.codSocio.trim());
+  }
+
+  if (filtro.codSocio?.trim()) {
+    params = params.set('codSocio', filtro.codSocio.trim());
+  }
+
+  if(filtro.tipoPrestamo?.trim()) {
+    params = params.set('tipoPrestamo', filtro.tipoPrestamo.trim());
   }
   
 

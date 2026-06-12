@@ -72,6 +72,7 @@
     },
 
 
+    "noData": "No se encontraron créditos activos que coincidan con los filtros aplicados.",
 
     "reports": {
       "saldoActualCartera": {

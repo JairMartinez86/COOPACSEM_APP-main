@@ -58,7 +58,7 @@
 
 
 
-            <app-credito-filters (filtersChange)="onFiltersChange($event)">
+            <app-credito-filters [tipoCredito]="tipoCredito" (filtersChange)="onFiltersChange($event)">
             </app-credito-filters>
 
 
@@ -187,7 +187,7 @@
                         {
                         <tr>
                             <td colspan="9" class="text-center text-muted py-5">
-                                {{ 'global.noData' | translate }}
+                                {{ 'creditosActivos.noData' | translate }}
                             </td>
                         </tr>
                         }
