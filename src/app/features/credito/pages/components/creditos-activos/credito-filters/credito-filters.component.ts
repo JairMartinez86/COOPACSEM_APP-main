@@ -10,81 +10,76 @@ import {
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, Subscription } from 'rxjs';
+import { TableFilterService } from '../../../../../../core/services/table-filter.service';
+import { AppConfigService } from '../../../../../../core/services/app-config.service';
+import { NotificationService } from '../../../../../../core/services/notification.service';
+import { CreditosActivosService } from '../../../../services/creditos-activos.service';
 
-import { TableFilterService } from '../../../../../core/services/table-filter.service';
-import { AppConfigService } from '../../../../../core/services/app-config.service';
-import { NotificationService } from '../../../../../core/services/notification.service';
-import { EstadoCuentaService } from '../../../services/estado.cuenta.service';
 
-type AhorroFiltersValue = {
+
+type CreditoFiltersValue = {
   search: string;
-  tipoCuenta: string;
+  tipoPrestamo: string;
   estado: string;
 };
 
 type PeriodoReporte = 'corte' | 'rango' | 'mes' | 'anio';
 
 @Component({
-  selector: 'app-ahorro-filters',
+  selector: 'app-credito-filters',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     TranslateModule
   ],
-  templateUrl: './ahorro-filters.component.html',
-  styleUrl: './ahorro-filters.component.scss',
+  templateUrl: './credito-filters.component.html',
+  styleUrl: './credito-filters.component.scss',
 })
-export class AhorroFiltersComponent implements OnInit, OnDestroy {
-  @Output() filtersChange = new EventEmitter<AhorroFiltersValue>();
+export class CreditoFiltersComponent implements OnInit, OnDestroy {
+  @Output() filtersChange = new EventEmitter<CreditoFiltersValue>();
 
   private readonly filterSvc = inject(TableFilterService);
   private readonly appConfigService = inject(AppConfigService);
   private readonly notify = inject(NotificationService);
   private readonly translate = inject(TranslateService);
-  private readonly service = inject(EstadoCuentaService);
+  private readonly service = inject(CreditosActivosService);
 
   private readonly subs = new Subscription();
-  private readonly filterKey = 'ahorro';
+  private readonly filterKey = 'credito';
 
   search = '';
-  tipoCuenta = 'Todos';
+  tipoPrestamo = 'Todos';
   estado = '';
   requireEnter = false;
 
   reports: any[] = [
     {
-      titleKey: 'estadoCuentaLista.reports.saldosAhorroActual.title',
-      subtitleKey: 'estadoCuentaLista.reports.saldosAhorroActual.subtitle',
-      type: 'saldosAhorroActual'
+      titleKey: 'creditosActivos.reports.saldoActualCartera.title',
+      subtitleKey: 'creditosActivos.reports.saldoActualCartera.subtitle',
+      type: 'saldoActualCartera'
     },
     {
-      titleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.title',
-      subtitleKey: 'estadoCuentaLista.reports.saldosHistoricosAhorro.subtitle',
-      type: 'saldosHistoricosAhorro'
+      titleKey: 'creditosActivos.reports.saldoHistoricoCartera.title',
+      subtitleKey: 'creditosActivos.reports.saldoHistoricoCartera.subtitle',
+      type: 'saldoHistoricoCartera'
     },
     {
-      titleKey: 'estadoCuentaLista.reports.integracionAhorro.title',
-      subtitleKey: 'estadoCuentaLista.reports.integracionAhorro.subtitle',
-      type: 'integracionAhorro'
+      titleKey: 'creditosActivos.reports.montoDisponibleSocio.title',
+      subtitleKey: 'creditosActivos.reports.montoDisponibleSocio.subtitle',
+      type: 'montoDisponibleSocio'
     },
     {
-      titleKey: 'estadoCuentaLista.reports.saldosAfiliacion.title',
-      subtitleKey: 'estadoCuentaLista.reports.saldosAfiliacion.subtitle',
-      type: 'saldosAfiliacion'
-    },
-    {
-      titleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.title',
-      subtitleKey: 'estadoCuentaLista.reports.deduccionesAfiliacion.subtitle',
-      type: 'deduccionesAfiliacion'
+      titleKey: 'creditosActivos.reports.movimientoCredito.title',
+      subtitleKey: 'creditosActivos.reports.movimientoCredito.subtitle',
+      type: 'movimientoCredito'
     }
   ];
 
-  reporteSeleccionado: any | null = null;
-
+  reporteSeleccionado: any | null = 'saldoActualCartera';
   procesandoReporte = false;
 
-  tipoCuentaReporte: 'Corriente' | 'Navidena' | 'Todos' = 'Todos';
+  tipoCuentaReporte = 'Todos';
   estadoReporte: '' | 'Activo' | 'Inactivo' = '';
 
   fechaInicioReporte: string | null = null;
@@ -134,14 +129,14 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
       this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
         this.filtersChange.emit({
           search: this.toText(query).trim(),
-          tipoCuenta: this.toText(this.tipoCuenta),
+          tipoPrestamo: this.toText(this.tipoPrestamo),
           estado: this.toText(this.estado),
         });
       })
     );
 
     this.reporteSeleccionado = this.reports[0];
-    
+
   }
 
   ngOnDestroy(): void {
@@ -171,14 +166,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
     this.applySearch(this.search);
   }
 
-  onTipoCuentaChange(): void {
-    this.tipoCuentaReporte =
-      this.tipoCuenta === 'Navidena'
-        ? 'Navidena'
-        : this.tipoCuenta === 'Corriente'
-          ? 'Corriente'
-          : 'Todos';
-
+  onTipoPrestamoChange(): void {
     this.emitFiltersUsingCurrentSearch();
   }
 
@@ -189,7 +177,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
 
   clearFilters(): void {
     this.search = '';
-    this.tipoCuenta = '';
+    this.tipoPrestamo = '';
     this.estado = '';
     this.estadoReporte = '';
 
@@ -197,48 +185,31 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
 
     this.filtersChange.emit({
       search: '',
-      tipoCuenta: '',
+      tipoPrestamo: '',
       estado: '',
     });
   }
   seleccionarReporte(report: any): void {
     this.reporteSeleccionado = report;
-
-    this.tipoCuentaReporte =
-      this.tipoCuenta === 'Navidena'
-        ? 'Navidena'
-        : this.tipoCuenta === 'Corriente'
-          ? 'Corriente'
-          : 'Todos';
-
-
+   
     this.estadoReporte = this.estado as any;
 
-    if (this.soloCorrienteReporte) {
-
-      this.tipoCuenta = 'Corriente';
-      this.tipoCuentaReporte = 'Corriente';
-
-    }
 
 
-    if (this.permiteSoloAnio) {
-      this.periodoReporte = 'anio';
-      this.fechaInicioReporte = `${this.anioReporte}-01-01`;
-      this.fechaFinReporte = `${this.anioReporte}-12-31`;
-      return;
-    }
-
-    if (this.permiteSoloCorte) {
+    if (['saldoActualCartera', 'montoDisponibleSocio'].includes(String(report.type))) {
       this.periodoReporte = 'corte';
       this.fechaInicioReporte = null;
       this.fechaFinReporte = this.getFechaHoy();
+
       return;
     }
+
+
 
     this.periodoReporte = 'rango';
     this.fechaInicioReporte = this.getPrimerDiaMesActual();
     this.fechaFinReporte = this.getFechaHoy();
+
   }
 
   setPeriodoReporte(tipo: PeriodoReporte): void {
@@ -291,34 +262,27 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
   procesarReporte(accion: 'print' | 'pdf' | 'excel'): void {
 
 
-    if (!this.tipoCuentaReporte) {
-      this.tipoCuentaReporte = 'Todos';
-    }
-
     switch (this.reporteSeleccionado.type) {
-      case 'saldosAhorroActual':
+      case 'saldoActualCartera':
         this.procesarSaldosAhorroActual(accion);
         return;
 
-      case 'saldosHistoricosAhorro':
+      case 'saldoHistoricoCartera':
         this.procesarSaldosHistoricosAhorro(accion);
         return;
 
-      case 'integracionAhorro':
+      case 'montoDisponibleSocio':
         this.procesarIntegracionAhorro(accion);
         return;
 
-      case 'saldosAfiliacion':
+      case 'movimientoCredito':
         this.procesarSaldosAfiliacion(accion);
         return;
 
-      case 'deduccionesAfiliacion':
-        this.procesarPagosAfiliaciones(accion);
-        return;
 
       default:
         this.notify.show(
-          this.translate.instant('estadoCuentaLista.exportModal.notImplemented'),
+          this.translate.instant('creditosActivos.exportModal.notImplemented'),
           '',
           'warning'
         );
@@ -331,7 +295,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
 
     this.procesandoReporte = true;
 
-    this.service.getReporteSaldosAhorroActual(
+    /*this.service.getReporteSaldosAhorroActual(
       this.tipoCuentaReporte,
       formato,
       this.fechaInicioReporte,
@@ -350,7 +314,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
         }
-      });
+      });*/
   }
 
   private procesarSaldosHistoricosAhorro(accion: 'print' | 'pdf' | 'excel'): void {
@@ -359,26 +323,26 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
     this.procesandoReporte = true;
 
 
-    this.service.getReporteSaldosHistoricosAhorro(
-      this.tipoCuentaReporte,
-      formato,
-      this.fechaInicioReporte,
-      this.fechaFinReporte,
-      this.estadoReporte
-    )
-      .pipe(finalize(() => this.procesandoReporte = false))
-      .subscribe({
-        next: (res: any) => {
-          const archivo = res?.data?.archivo ?? '';
-          const base = this.getNombreBaseReporte('saldosHistoricosAhorro');
-          const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
-
-          this.procesarArchivoSalida(accion, archivo, `${base} - ${cuenta}`);
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-        }
-      });
+    /* this.service.getReporteSaldosHistoricosAhorro(
+       this.tipoCuentaReporte,
+       formato,
+       this.fechaInicioReporte,
+       this.fechaFinReporte,
+       this.estadoReporte
+     )
+       .pipe(finalize(() => this.procesandoReporte = false))
+       .subscribe({
+         next: (res: any) => {
+           const archivo = res?.data?.archivo ?? '';
+           const base = this.getNombreBaseReporte('saldosHistoricosAhorro');
+           const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
+ 
+           this.procesarArchivoSalida(accion, archivo, `${base} - ${cuenta}`);
+         },
+         error: (err: any) => {
+           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+         }
+       });*/
   }
 
   private procesarSaldosAfiliacion(accion: 'print' | 'pdf' | 'excel'): void {
@@ -387,23 +351,23 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
     this.procesandoReporte = true;
 
 
-    this.service.getReporteAfiliacionMembresia(
-      formato,
-      this.fechaFinReporte,
-      this.estadoReporte
-    )
-      .pipe(finalize(() => this.procesandoReporte = false))
-      .subscribe({
-        next: (res: any) => {
-          const archivo = res?.data?.archivo ?? '';
-          const base = this.getNombreBaseReporte('saldosAfiliacion');
-
-          this.procesarArchivoSalida(accion, archivo, base);
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-        }
-      });
+    /* this.service.getReporteAfiliacionMembresia(
+       formato,
+       this.fechaFinReporte,
+       this.estadoReporte
+     )
+       .pipe(finalize(() => this.procesandoReporte = false))
+       .subscribe({
+         next: (res: any) => {
+           const archivo = res?.data?.archivo ?? '';
+           const base = this.getNombreBaseReporte('saldosAfiliacion');
+ 
+           this.procesarArchivoSalida(accion, archivo, base);
+         },
+         error: (err: any) => {
+           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+         }
+       });*/
   }
 
   private procesarPagosAfiliaciones(accion: 'print' | 'pdf' | 'excel'): void {
@@ -411,24 +375,24 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
 
     this.procesandoReporte = true;
 
-    this.service.getReportePagosAfiliaciones(
-      formato,
-      this.fechaInicioReporte,
-      this.fechaFinReporte,
-      this.estadoReporte
-    )
-      .pipe(finalize(() => this.procesandoReporte = false))
-      .subscribe({
-        next: (res: any) => {
-          const archivo = res?.data?.archivo ?? '';
-          const base = this.getNombreBaseReporte('deduccionesAfiliacion');
-
-          this.procesarArchivoSalida(accion, archivo, base);
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-        }
-      });
+    /* this.service.getReportePagosAfiliaciones(
+       formato,
+       this.fechaInicioReporte,
+       this.fechaFinReporte,
+       this.estadoReporte
+     )
+       .pipe(finalize(() => this.procesandoReporte = false))
+       .subscribe({
+         next: (res: any) => {
+           const archivo = res?.data?.archivo ?? '';
+           const base = this.getNombreBaseReporte('deduccionesAfiliacion');
+ 
+           this.procesarArchivoSalida(accion, archivo, base);
+         },
+         error: (err: any) => {
+           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+         }
+       });*/
   }
 
   private procesarIntegracionAhorro(accion: 'print' | 'pdf' | 'excel'): void {
@@ -436,7 +400,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
 
     this.procesandoReporte = true;
 
-    this.service.getReporteIntegracionAhorro(
+    /*this.service.getReporteIntegracionAhorro(
       formato,
       this.anioReporte,
       this.tipoCuentaReporte,
@@ -457,7 +421,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
         }
-      });
+      });*/
   }
 
   private procesarArchivoSalida(
@@ -491,7 +455,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
   private descargarArchivo(base64: string, fileName: string, mimeType: string): void {
     if (!base64) {
       this.notify.show(
-        this.translate.instant('estadoCuentaLista.exportModal.fileNotAvailable'),
+        this.translate.instant('creditosActivos.exportModal.fileNotAvailable'),
         '',
         'warning'
       );
@@ -516,7 +480,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
   private imprimirPdf(base64: string): void {
     if (!base64) {
       this.notify.show(
-        this.translate.instant('estadoCuentaLista.exportModal.fileNotAvailable'),
+        this.translate.instant('creditosActivos.exportModal.fileNotAvailable'),
         '',
         'warning'
       );
@@ -561,7 +525,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
 
     this.filtersChange.emit({
       search: currentQuery,
-      tipoCuenta: this.toText(this.tipoCuenta),
+      tipoPrestamo: this.toText(this.tipoPrestamo),
       estado: this.toText(this.estado),
     });
   }
@@ -605,12 +569,9 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
     return anios;
   }
 
-  get esIntegracionAhorro(): boolean {
-    return this.reporteSeleccionado?.type === 'integracionAhorro';
-  }
 
   private getNombreArchivo(base: string, extension: string): string {
-    const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
+    const cuenta = this.getNombreReporte(this.tipoCuentaReporte);
     const rango = this.getTextoRangoFechas();
     const estado = this.getTextoEstado();
 
@@ -619,27 +580,24 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
 
   private getNombreBaseReporte(type: string): string {
     switch (type) {
-      case 'saldosAhorroActual':
+      case 'saldoActualCartera':
         return 'SALDO AHORROS';
 
-      case 'saldosHistoricosAhorro':
+      case 'saldoHistoricoCartera':
         return 'SALDO AHORROS HISTORICO';
 
-      case 'integracionAhorro':
+      case 'montoDisponibleSocio':
         return 'INTEGRACION AHORROS';
 
-      case 'saldosAfiliacion':
+      case 'movimientoCredito':
         return 'SALDOS AFILIACION';
-
-      case 'deduccionesAfiliacion':
-        return 'DEDUCCIONES AFILIACION';
 
       default:
         return 'REPORTE';
     }
   }
 
-  private getNombreTipoCuenta(tipoCuenta: string): string {
+  private getNombreReporte(tipoCuenta: string): string {
     switch (tipoCuenta) {
       case 'Corriente':
         return 'CORRIENTE';
@@ -697,24 +655,11 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
   get permiteSoloCorte(): boolean {
     return [
       'saldoActualCartera',
-      'montoDisponibleSocio',
-    ].includes(this.reporteSeleccionado.type);
-  }
-
-  get permiteSoloAnio(): boolean {
-    return this.reporteSeleccionado?.type === 'integracionAhorro';
-  }
-
-  get permiteRango(): boolean {
-    return this.reporteSeleccionado?.type === 'saldosHistoricosAhorro';
-  }
-
-  get soloCorrienteReporte(): boolean {
-
-    return [
-      'saldosAfiliacion',
-      'deduccionesAfiliacion'
+      'montoDisponibleSocio'
     ].includes(this.reporteSeleccionado?.type);
-
   }
+
+
+
+
 }

@@ -19,11 +19,11 @@ import {
   SimpleMovimientoRow,
   SocioDetail,
   SocioRow,
-  SummaryCard,
   CambioCuotaRow
 } from '../interface/ahorro.models';
 import { Subscription, Subject, of, timer } from 'rxjs';
 import { switchMap, finalize } from 'rxjs/operators';
+import { SummaryCard } from '../../../shared/interfaces/sumaryCard.model';
 
 declare var bootstrap: any;
 

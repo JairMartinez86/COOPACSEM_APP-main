@@ -39,24 +39,7 @@ export class CreditosActivosService extends BrowserApiService {
     });
   }
 
-  getGraficos(filtro: Partial<CreditosActivosFiltro>, skipLoader = false): Observable<any> {
-    return this.browserOnly(() => {
-      const params = this.buildParams(filtro);
 
-      const headers = skipLoader
-        ? { 'X-Skip-Loader': 'false' }
-        : undefined;
-
-      return this.http.get<any>(
-        `${this.api.baseUrl}/CreditosActivos/graficos`,
-        {
-          params,
-          headers,
-          withCredentials: true
-        }
-      );
-    });
-  }
 
   getAll(filtro: CreditosActivosFiltro, skipLoader = false): Observable<any> {
     return this.browserOnly(() => {
@@ -83,7 +66,7 @@ export class CreditosActivosService extends BrowserApiService {
     });
   }
 
-  getDetalle(noCredito: string, filtro: Partial<CreditosActivosFiltro>, skipLoader = false): Observable<any> {
+  getDetalle(noCredito: string,  filtro: Partial<CreditosActivosFiltro>, skipLoader = false): Observable<any> {
     return this.browserOnly(() => {
       const params = this.buildParams(filtro);
 
@@ -114,6 +97,7 @@ export class CreditosActivosService extends BrowserApiService {
   if (filtro.codSocio?.trim()) {
     params = params.set('codSocio', filtro.codSocio.trim());
   }
+  
 
   return params;
 }

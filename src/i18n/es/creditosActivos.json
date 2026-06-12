@@ -3,13 +3,19 @@
     "title": "Créditos activos",
     "subtitle": "Resumen de la cartera de créditos aprobados y vigentes.",
     "breadcrumbs": [
-      { "label": "Créditos" },
-      { "label": "Créditos activos" }
+      {
+        "label": "Créditos"
+      },
+      {
+        "label": "Créditos activos"
+      }
     ],
     "actions": {
       "exportReport": "Exportar reporte",
       "filters": "Filtros",
-      "verCronograma": "Ver cronograma"
+      "verCronograma": "Ver cronograma",
+      "showFilters": "Mostrar filtros y resumen",
+      "hideFilters": "Ocultar filtros y resumen"
     },
     "labels": {
       "creditos": "créditos"
@@ -27,11 +33,6 @@
       "tipoCredito": "Cartera por tipo de crédito",
       "total": "Total",
       "amount": "Monto"
-    },
-    "filters": {
-      "cutoffDate": "Fecha de corte",
-      "search": "Buscar",
-      "searchPlaceholder": "Buscar crédito, socio o tipo..."
     },
     "table": {
       "title": "Listado de créditos activos",
@@ -68,6 +69,62 @@
       "vencida": "Vencida",
       "mora": "Mora",
       "unknown": "Sin estado"
+    },
+
+
+
+    "reports": {
+      "saldoActualCartera": {
+        "title": "Saldo Actual Cartera",
+        "subtitle": "Consulta la cartera total"
+      },
+      "saldoHistoricoCartera": {
+        "title": "Saldo Histórico Cartera",
+        "subtitle": "Consulta la cartera histórica"
+      },
+      "montoDisponibleSocio": {
+        "title": "Monto Disponible Socio",
+        "subtitle": "Total de monto disponible para el socio"
+      },
+      "movimientoCredito": {
+        "title": "Movimiento Crédito",
+        "subtitle": "Consulta el movimiento de créditos"
+      }
+    },
+    "summary": {
+      "carteraTotal": {
+        "title": "Total Creditos",
+        "subtitle": "Total de Cartera"
+      },
+      "prestamoLargoPlazo": {
+        "title": "Prestamos a largo plazo",
+        "subtitle": "Total de prestamos a largo plazo"
+      },
+      "prestamoCortoPlazo": {
+        "title": "Prestamos a corto plazo",
+        "subtitle": "Total de prestamos a corto plazo"
+      }
+    },
+    "filters": {
+      "search": "Buscar",
+      "searchPlaceholder": "Buscar crédito, socio o tipo...",
+      "presType": "Tipo de préstamo",
+      "status": "Estado del préstamo",
+      "all": "Todos",
+      "period": "Periodo del reporte",
+      "cutoffDate": "Fecha de corte",
+      "startDate": "Fecha inicio",
+      "endDate": "Fecha fin",
+      "clear": "Limpiar",
+      "periodTypes": {
+        "cutoff": "Al corte",
+        "range": "Rango",
+        "month": "Mes",
+        "year": "Año"
+      }
+    },
+     "exportModal": {
+      "notImplemented": "Este reporte aún no está disponible"
     }
   }
 }

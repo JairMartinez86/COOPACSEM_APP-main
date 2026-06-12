@@ -10,13 +10,7 @@ export type SocioDetalleTab =
   | 'planNavidena';
   
 
-export interface SummaryCard {
-  icon: string;
-  titleKey: string;
-  amount: number;
-  subtitleKey: string;
-  accent: 'teal' | 'blue' | 'orange' | 'purple';
-}
+
 
 export interface PaginationMeta {
   page: number;

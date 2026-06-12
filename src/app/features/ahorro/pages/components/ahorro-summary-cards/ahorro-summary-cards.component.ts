@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { SummaryCard } from '../../../interface/ahorro.models';
 import { AppConfigService } from '../../../../../core/services/app-config.service';
+import { SummaryCard } from '../../../../../shared/interfaces/sumaryCard.model';
 
 
 @Component({

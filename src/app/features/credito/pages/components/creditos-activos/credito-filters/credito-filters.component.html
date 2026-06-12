@@ -1,0 +1,223 @@
+<div class="card report-filter-card">
+    <div class="card-body report-filter-body">
+
+        <div class="report-header">
+            <h5 class="fw-bold mb-1">
+                {{ 'ahorro.reportes.title' | translate }}
+            </h5>
+
+            <div class="text-muted small">
+                {{ 'ahorro.reportes.subtitle' | translate }}
+            </div>
+        </div>
+
+        <div class="report-options-grid">
+            @for (report of reports; track report.type) {
+            <button type="button" class="report-option-card" [class.active]="reporteSeleccionado?.type === report.type"
+                (click)="seleccionarReporte(report)">
+
+                <span class="report-option-icon">
+                    <i class="fa-regular fa-file-excel fa-lg"></i>
+                </span>
+
+                <span>
+                    <strong>{{ report.titleKey | translate }}</strong>
+                    <small class="text-muted d-block">
+                        {{ report.subtitleKey | translate }}
+                    </small>
+                </span>
+            </button>
+            }
+        </div>
+
+        <div class="row g-2 report-filters-row">
+            <div class="col-lg-5">
+                <div class="row g-2">
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            {{ 'creditosActivos.filters.presType' | translate }}
+                        </label>
+
+                        <select class="form-select form-select-sm" [(ngModel)]="tipoPrestamo"
+                            (ngModelChange)="onTipoPrestamoChange()">
+
+                            <option value="Todos">{{ 'creditosActivos.filters.all' | translate }}</option>
+
+                            <option value="Corriente">
+                                {{ 'creditosActivos.presType.current' | translate }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            {{ 'creditosActivos.filters.status' | translate }}
+                        </label>
+
+                        <select class="form-select form-select-sm" [(ngModel)]="estado"
+                            (ngModelChange)="onEstadoChange()">
+
+                            <option value="">{{ 'creditosActivos.filters.all' | translate }}</option>
+                            <option value="Activo">{{ 'creditosActivos.status.active' | translate }}</option>
+                            <option value="Inactivo">{{ 'creditosActivos.status.inactive' | translate }}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">
+                            {{ 'creditosActivos.filters.search' | translate }}
+                        </label>
+
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" [(ngModel)]="search"
+                                (ngModelChange)="onSearchInputChange()" (keyup)="onSearchKeyup($event)"
+                                [placeholder]="'creditosActivos.filters.searchPlaceholder' | translate" />
+
+                            <span class="input-group-text">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="period-box">
+                    <label class="form-label fw-semibold">
+                        {{ 'creditosActivos.filters.period' | translate }}
+                        <i class="fa-regular fa-circle-info text-muted ms-1"></i>
+                    </label>
+
+                    <div class="period-tabs compact">
+
+                        @if(permiteSoloCorte)
+                        {
+                        <button type="button" class="period-tab" [class.active]="periodoReporte === 'corte'"
+                            (click)="setPeriodoReporte('corte')">
+                            {{ 'creditosActivos.filters.periodTypes.cutoff' | translate }}
+                        </button>
+                        }
+                        @else {
+                        <button type="button" class="period-tab" [class.active]="periodoReporte === 'rango'"
+                            (click)="setPeriodoReporte('rango')">
+                            {{ 'creditosActivos.filters.periodTypes.range' | translate }}
+                        </button>
+
+                        <button type="button" class="period-tab" [class.active]="periodoReporte === 'mes'"
+                            (click)="setPeriodoReporte('mes')">
+                            {{ 'creditosActivos.filters.periodTypes.month' | translate }}
+                        </button>
+
+                        <button type="button" class="period-tab" [class.active]="periodoReporte === 'anio'"
+                            (click)="setPeriodoReporte('anio')">
+                            {{ 'creditosActivos.filters.periodTypes.year' | translate }}
+                        </button>
+                        }
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+
+                <div class="report-toolbar">
+                    <div class="report-toolbar-group">
+
+                        
+
+                        
+                        @if (periodoReporte === 'corte') {
+                        <div class="toolbar-date">
+                            <label class="form-label">{{ 'creditosActivos.filters.cutoffDate' | translate }}</label>
+                            <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaFinReporte">
+                        </div>
+                        }
+
+                        @if (periodoReporte === 'rango') {
+                        <div class="toolbar-date">
+                            <label class="form-label">{{ 'creditosActivos.filters.startDate' | translate }}</label>
+                            <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaInicioReporte">
+                        </div>
+
+                        <div class="toolbar-date">
+                            <label class="form-label">{{ 'creditosActivos.filters.endDate' | translate }}</label>
+                            <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaFinReporte">
+                        </div>
+                        }
+
+                        @if (periodoReporte === 'mes') {
+                        <div class="toolbar-date">
+                            <label class="form-label">{{ 'creditosActivos.filters.periodTypes.month' | translate
+                                }}</label>
+                            <select class="form-select form-select-sm" [(ngModel)]="mesReporte"
+                                (ngModelChange)="onMesReporteChange()">
+                                @for (mes of mesesReporte; track mes.value) {
+                                <option [ngValue]="mes.value">{{ mes.label }}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="toolbar-date">
+                            <label class="form-label">{{ 'creditosActivos.filters.periodTypes.year' | translate
+                                }}</label>
+                            <select class="form-select form-select-sm" [(ngModel)]="anioReporte"
+                                (ngModelChange)="onAnioReporteChange()">
+                                @for (anio of aniosReporte; track anio) {
+                                <option [ngValue]="anio">{{ anio }}</option>
+                                }
+                            </select>
+                        </div>
+                        }
+
+                        @if (periodoReporte === 'anio') {
+                        <div class="toolbar-date">
+                            <label class="form-label">{{ 'creditosActivos.filters.periodTypes.year' | translate
+                                }}</label>
+                            <select class="form-select form-select-sm" [(ngModel)]="anioReporte"
+                                (ngModelChange)="onAnioReporteChange()">
+                                @for (anio of aniosReporte; track anio) {
+                                <option [ngValue]="anio">{{ anio }}</option>
+                                }
+                            </select>
+                        </div>
+                        }
+
+                    </div>
+
+                    <div class="toolbar-actions">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="clearFilters()">
+                            <i class="fa-solid fa-broom-wide me-1"></i>
+                            {{ 'ahorro.filters.clear' | translate }}
+                        </button>
+
+                        <button type="button" class="btn btn-sm btn-primary"
+                            [disabled]="!reporteSeleccionado || procesandoReporte" (click)="procesarReporte('print')">
+                            <i class="fa-duotone fa-solid fa-print me-1"></i>
+                            {{ 'ahorro.actions.print' | translate }}
+                        </button>
+
+                        <button type="button" class="btn btn-sm btn-secondary"
+                            [disabled]="!reporteSeleccionado || procesandoReporte" (click)="procesarReporte('pdf')">
+                            <i class="fa-solid fa-file-pdf me-1"></i>
+                            {{ 'ahorro.actions.pdf' | translate }}
+                        </button>
+
+                        <button type="button" class="btn btn-sm btn-success"
+                            [disabled]="!reporteSeleccionado || procesandoReporte" (click)="procesarReporte('excel')">
+                            <i class="fa-solid fa-file-excel me-1"></i>
+                            {{ 'ahorro.actions.excel' | translate }}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

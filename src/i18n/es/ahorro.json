@@ -5,28 +5,22 @@
       "subtitle": "Consulta, gestiona y monitorea los ahorros de los socios. Revisa movimientos, solicitudes, planes y genera reportes."
     },
     "filters": {
-       "search": "Buscar socio",
+      "search": "Buscar socio",
       "searchPlaceholder": "Buscar por nombre, código o identificación",
       "accountType": "Tipo de ahorro",
       "status": "Estado del socio",
       "all": "Todos",
-
       "period": "Periodo del reporte",
-
       "cutoffDate": "Fecha de corte",
       "startDate": "Fecha inicio",
       "endDate": "Fecha fin",
-
       "clear": "Limpiar",
-
       "periodTypes": {
         "cutoff": "Al corte",
         "range": "Rango",
         "month": "Mes",
         "year": "Año"
       }
-      
-      
     },
     "accountTypes": {
       "current": "Corriente",
@@ -37,7 +31,6 @@
     "sidePanel": {
       "title": "Panel del socio"
     },
-    
     "status": {
       "active": "Activo",
       "inactive": "Inactivo",
@@ -47,7 +40,7 @@
       "pendiente": "Pendiente",
       "pending": "Pendiente",
       "enevaluacion": "En Evaluación",
-      "borrador" : "Borrador"
+      "borrador": "Borrador"
     },
     "summary": {
       "totalSaved": {
@@ -67,13 +60,13 @@
         "subtitle": "Retiros pendientes de aplicar"
       }
     },
-      "afiliacion":{
-      "plans":{
+    "afiliacion": {
+      "plans": {
         "title": "Afilición"
       }
     },
-     "membresia":{
-      "plans":{
+    "membresia": {
+      "plans": {
         "title": "Membresia"
       }
     },
@@ -88,16 +81,15 @@
       "decreaseInstallment": "Disminución de cuota",
       "exportExcel": "Exportar Excel",
       "print": "Imprimir",
-       "pdf": "PDF",
+      "pdf": "PDF",
       "excel": "Excel",
       "showFilters": "Mostrar filtros y resumen",
-  "hideFilters": "Ocultar filtros y resumen"
+      "hideFilters": "Ocultar filtros y resumen"
     },
-   "reportes": {
+    "reportes": {
       "title": "Generar reportes",
       "subtitle": "Seleccione el reporte que desea generar con los filtros aplicados."
     },
-
     "side": {
       "quickActions": "Acciones rápidas",
       "alerts": "Alertas",
@@ -127,7 +119,7 @@
       "requests": "Solicitudes",
       "membership": "Afiliación",
       "currentPlan": "Plan Corriente",
-  "christmasPlan": "Plan Navideña"
+      "christmasPlan": "Plan Navideña"
     },
     "detail": {
       "totalSaved": "Total ahorro",
@@ -143,11 +135,11 @@
         "balance": "Saldo",
         "status": "Estado",
         "acction": "Acción",
-        "paid" : "Pagado",
-         "search": "Buscar",
+        "paid": "Pagado",
+        "search": "Buscar",
         "showing": "Mostrando",
         "of": "de",
-         "deposit": "Depósito",
+        "deposit": "Depósito",
         "withdrawal": "Retiro",
         "interest": "Interés",
         "balanceInterest": "Saldo + Interés"
@@ -162,7 +154,6 @@
         "decreaseInstallment": "Disminución de cuota",
         "actions": "Acciones"
       },
-
       "savings": {
         "searchPlaceholder": "Buscar por fecha, descripción, tipo de cuenta, monto o saldo"
       },
@@ -172,13 +163,12 @@
       "requests": {
         "searchPlaceholder": "Buscar por fecha, descripción, tipo de cuenta, estado o monto"
       },
-
       "deposits": {
         "depositNo": "No. depósito",
         "date": "Fecha",
         "registerDate": "Fecha registro",
         "bank": "Banco",
-         "searchPlaceholder": "Buscar por fecha, número de depósito, banco, tipo de cuenta o monto"
+        "searchPlaceholder": "Buscar por fecha, número de depósito, banco, tipo de cuenta o monto"
       },
       "installmentChanges": {
         "title": "Cambios de cuota",
@@ -235,10 +225,10 @@
       "totalSaved": "Total ahorrado",
       "totalWithdrawn": "Total retirado",
       "labels": {
-      "saved": "Ahorro",
-      "withdrawn": "Retirado",
-      "interests": "Intereses"
-    }
+        "saved": "Ahorro",
+        "withdrawn": "Retirado",
+        "interests": "Intereses"
+      }
     },
     "messages": {
       "selectRequired": "Seleccione un socio",
@@ -246,7 +236,7 @@
     },
     "common": {
       "close": "Cerrar",
-       "info": "Información"
+      "info": "Información"
     },
     "breadcrumbs": [
       {

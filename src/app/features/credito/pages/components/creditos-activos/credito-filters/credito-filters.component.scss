@@ -1,0 +1,243 @@
+.report-filter-card {
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, .22);
+  background: var(--bs-body-bg);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, .035);
+  margin-bottom: 10px !important;
+}
+
+.report-filter-card .card-body {
+  padding: 12px !important;
+}
+
+.report-options-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .35rem;
+  margin-bottom: 12px !important;
+}
+
+.report-option-card {
+  min-height: 48px;
+  border-radius: 9px;
+  border: 1px solid rgba(148, 163, 184, .24);
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  padding: .35rem .45rem;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  text-align: left;
+  transition: all .2s ease;
+  overflow: hidden;
+}
+
+.report-option-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--bs-success-rgb), .45);
+}
+
+.report-option-card.active {
+  border-color: rgba(var(--bs-success-rgb), .7);
+  background: rgba(var(--bs-success-rgb), .06);
+}
+
+.report-option-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(var(--bs-success-rgb), .12);
+  color: var(--bs-success);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: .68rem;
+}
+
+.report-option-card span:last-child {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.report-option-card strong {
+  display: block;
+  font-size: .66rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: .1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.report-option-card small {
+  display: block;
+  font-size: .56rem;
+  line-height: 1;
+  color: var(--bs-secondary-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.report-filter-card .form-label {
+  font-size: .76rem;
+  font-weight: 600;
+  margin-bottom: .25rem;
+}
+
+.report-filter-card .form-control,
+.report-filter-card .form-select,
+.report-filter-card .input-group-text {
+  height: 32px;
+  min-height: 32px;
+  font-size: .78rem;
+}
+
+.period-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 8px !important;
+}
+
+.period-tabs.compact {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-bottom: 0;
+}
+
+.period-tabs.compact .period-tab {
+  height: 32px;
+  padding: 0 .65rem;
+  border: 1px solid rgba(148, 163, 184, .35);
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  font-size: .76rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all .2s ease;
+}
+
+.period-tabs.compact .period-tab + .period-tab {
+  margin-left: -1px;
+}
+
+.period-tabs.compact .period-tab:first-child {
+  border-radius: 7px 0 0 7px;
+}
+
+.period-tabs.compact .period-tab:last-child {
+  border-radius: 0 7px 7px 0;
+}
+
+.period-tabs.compact .period-tab.active {
+  color: var(--bs-success);
+  border-color: rgba(var(--bs-success-rgb), .65);
+  background: rgba(var(--bs-success-rgb), .08);
+}
+
+.report-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: .6rem;
+  flex-wrap: wrap;
+}
+
+.report-toolbar-group {
+  display: flex;
+  align-items: flex-end;
+  gap: .6rem;
+  flex-wrap: wrap;
+}
+
+.toolbar-date {
+  min-width: 150px;
+}
+
+.toolbar-date .form-control,
+.toolbar-date .form-select {
+  min-width: 150px;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .35rem;
+  margin-left: auto;
+  flex-wrap: nowrap;
+}
+
+.toolbar-actions .btn {
+  height: 32px;
+  min-width: 92px;
+  padding: 0 .65rem;
+  font-size: .76rem;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar-actions .btn i {
+  font-size: .85rem;
+}
+
+@media (max-width: 992px) {
+  .report-options-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .report-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar-actions {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .report-options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-toolbar-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar-date {
+    width: 100%;
+  }
+
+  .toolbar-date .form-control,
+  .toolbar-date .form-select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .toolbar-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .toolbar-actions .btn {
+    width: 100%;
+  }
+
+  .period-tabs.compact {
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+
+  .period-tabs.compact .period-tab {
+    border-radius: 7px !important;
+    margin-left: 0 !important;
+  }
+}

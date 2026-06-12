@@ -113,7 +113,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         const fecha = fechaServidor ? new Date(fechaServidor) : new Date();
 
         this.anio = fecha.getFullYear();
-        this.filtro.corte = this.getCorteActual(fecha);
+        //this.filtro.corte = this.getCorteActual(fecha);
         this.filtro.fechaCorte = this.getFechaCortePorCorte(this.filtro.corte);
 
         this.generarCortes();
@@ -405,7 +405,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
             .replace('YYYY', year);
     }
 
-    private getCorteActual(fecha: Date): string {
+   /* private getCorteActual(fecha: Date): string {
         const mes = fecha.getMonth() + 1;
 
         if (mes <= 3) return 'Q1-2026';
@@ -413,7 +413,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
         if (mes <= 9) return 'Q3-2026';
 
         return 'Q4-2026';
-    }
+    }*/
     private getFechaCortePorCorte(corte: string): string {
 
         if (!corte) {
@@ -763,7 +763,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
 
         const cortes: any[] = [];
 
-        for (let year = currentYear; year >= 2026; year--) {
+        for (let year = currentYear; year >= 2000; year--) {
 
             for (const t of trimestres) {
 

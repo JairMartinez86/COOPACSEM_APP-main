@@ -7,19 +7,9 @@ export interface CreditosActivosFiltro {
 }
 
 export interface CreditosActivosKpis {
-  totalCreditos: number;
-  creditosVigentes: number;
-  creditosVencidos: number;
-  creditosMora: number;
-  creditosProximosVencer: number;
-  carteraTotal: number;
-  carteraVigente: number;
-  carteraVencida: number;
-  carteraMora: number;
-  proximasAVencer: number;
-  porcentajeVigente: number;
-  porcentajeVencida: number;
-  porcentajeMora: number;
+  total_corto_plazo: number;
+  total_largo_plazo: number;
+  total_general: number;
 }
 
 export interface CreditosActivosGraficoItem {
@@ -32,7 +22,6 @@ export interface CreditosActivosGraficoItem {
 }
 
 export interface CreditosActivosGraficos {
-  distribucionCartera: CreditosActivosGraficoItem[];
   moraRangos: CreditosActivosGraficoItem[];
   tipoCredito: CreditosActivosGraficoItem[];
 }
@@ -75,4 +64,5 @@ export interface CreditosActivosListaResponse {
 export interface CreditoActivoDetalle extends CreditoActivoItem {
   progresoPago?: any[];
   cuotas?: any[];
+  graficos?: CreditosActivosGraficos;
 }

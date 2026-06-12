@@ -16,211 +16,73 @@
     </div>
 
     <!-- KPI -->
-    <div class="row g-3 mb-3">
 
-        <div class="col-12 col-sm-6 col-xl">
-            <div class="card kpi-card">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <span class="kpi-icon bg-primary">
-                        <i class="fa-solid fa-briefcase"></i>
-                    </span>
+    <div class="dashboard-grid dashboard-grid-3 ahorro-summary-grid mb-1">
+        @for (card of cards; track $index) {
+        <div class="card widget-stat">
+            <div class="widget-stat-icon" [ngClass]="'text-' + card.accent">
+                <i [class]="card.icon"></i>
+            </div>
 
-                    <div>
-                        <div class="text-muted">
-                            {{ 'creditosActivos.kpis.carteraTotal' | translate }}
-                        </div>
-
-                        <h4 class="mb-1 fw-bold">
-                            {{ formatMoney(kpis.carteraTotal) }}
-                        </h4>
-
-                        <small class="text-muted">
-                            {{ kpis.totalCreditos }}
-                            {{ 'creditosActivos.labels.creditos' | translate }}
-                        </small>
-                    </div>
-                </div>
+            <div class="widget-stat-body">
+                <div class="widget-stat-title">{{ card.titleKey | translate }}</div>
+                <div class="widget-stat-value">{{ SummaryformatValue(card) }}</div>
+                <!--<div class="widget-stat-desc text-muted">{{ card.subtitleKey | translate }}</div>-->
             </div>
         </div>
+        }
+    </div>
 
-        <div class="col-12 col-sm-6 col-xl">
-            <div class="card kpi-card">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <span class="kpi-icon bg-success">
-                        <i class="fa-solid fa-shield-check"></i>
-                    </span>
 
-                    <div>
-                        <div class="text-muted">
-                            {{ 'creditosActivos.kpis.carteraVigente' | translate }}
-                        </div>
 
-                        <h4 class="mb-1 fw-bold">
-                            {{ formatMoney(kpis.carteraVigente) }}
-                        </h4>
 
-                        <small class="text-muted">
-                            {{ kpis.porcentajeVigente | number:'1.2-2' }}%
-                        </small>
-                    </div>
-                </div>
-            </div>
+
+    <div class="credito-top-panel" [class.is-hidden]="summaryPanelHidden">
+
+        <button type="button" class="credito-panel-toggle" (click)="summaryPanelHidden = !summaryPanelHidden">
+
+            <i class="fa-solid" [ngClass]="summaryPanelHidden ? 'fa-chevron-down' : 'fa-chevron-up'">
+            </i>
+
+            <span>
+                {{
+                summaryPanelHidden
+                ? ('creditosActivos.actions.showFilters' | translate)
+                : ('creditosActivos.actions.hideFilters' | translate)
+                }}
+            </span>
+        </button>
+
+
+        <div class="credito-summary-wrapper">
+
+
+
+            <app-credito-filters (filtersChange)="onFiltersChange($event)">
+            </app-credito-filters>
+
+
+
+
         </div>
 
-        <div class="col-12 col-sm-6 col-xl">
-            <div class="card kpi-card">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <span class="kpi-icon bg-warning">
-                        <i class="fa-solid fa-clock"></i>
-                    </span>
 
-                    <div>
-                        <div class="text-muted">
-                            {{ 'creditosActivos.kpis.carteraVencida' | translate }}
-                        </div>
 
-                        <h4 class="mb-1 fw-bold">
-                            {{ formatMoney(kpis.carteraVencida) }}
-                        </h4>
 
-                        <small class="text-muted">
-                            {{ kpis.porcentajeVencida | number:'1.2-2' }}%
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl">
-            <div class="card kpi-card">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <span class="kpi-icon bg-danger">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </span>
-
-                    <div>
-                        <div class="text-muted">
-                            {{ 'creditosActivos.kpis.carteraMora' | translate }}
-                        </div>
-
-                        <h4 class="mb-1 fw-bold">
-                            {{ formatMoney(kpis.carteraMora) }}
-                        </h4>
-
-                        <small class="text-muted">
-                            {{ kpis.porcentajeMora | number:'1.2-2' }}%
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl">
-            <div class="card kpi-card">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <span class="kpi-icon bg-purple">
-                        <i class="fa-solid fa-calendar-days"></i>
-                    </span>
-
-                    <div>
-                        <div class="text-muted">
-                            {{ 'creditosActivos.kpis.proximasVencer' | translate }}
-                        </div>
-
-                        <h4 class="mb-1 fw-bold">
-                            {{ formatMoney(kpis.proximasAVencer) }}
-                        </h4>
-
-                        <small class="text-muted">
-                            {{ kpis.creditosProximosVencer }}
-                            {{ 'creditosActivos.labels.creditos' | translate }}
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
 
     </div>
+
+
+
+
+
+
+
 
     <!-- MAIN -->
     <div class="main-area">
 
-        <!-- CHARTS -->
-        <div class="row g-3 mb-3">
 
-            <div class="col-12 col-xl-4">
-                <div class="card chart-card">
-                    <div class="card-header border-0 pb-0">
-                        <h5 class="card-title mb-0">
-                            {{ 'creditosActivos.charts.distribucionCartera' | translate }}
-                        </h5>
-                    </div>
-
-                    <div class="card-body">
-                        <apx-chart
-                            [series]="carteraDistribucion.series"
-                            [chart]="carteraDistribucion.chart"
-                            [labels]="carteraDistribucion.labels"
-                            [colors]="carteraDistribucion.colors"
-                            [legend]="carteraDistribucion.legend"
-                            [dataLabels]="carteraDistribucion.dataLabels"
-                            [stroke]="carteraDistribucion.stroke"
-                            [plotOptions]="carteraDistribucion.plotOptions"
-                            [tooltip]="carteraDistribucion.tooltip">
-                        </apx-chart>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-xl-4">
-                <div class="card chart-card">
-                    <div class="card-header border-0 pb-0">
-                        <h5 class="card-title mb-0">
-                            {{ 'creditosActivos.charts.moraRangos' | translate }}
-                        </h5>
-                    </div>
-
-                    <div class="card-body">
-                        <apx-chart
-                            [series]="moraRangosChart.series"
-                            [chart]="moraRangosChart.chart"
-                            [xaxis]="moraRangosChart.xaxis"
-                            [yaxis]="moraRangosChart.yaxis"
-                            [grid]="moraRangosChart.grid"
-                            [colors]="moraRangosChart.colors"
-                            [plotOptions]="moraRangosChart.plotOptions"
-                            [dataLabels]="moraRangosChart.dataLabels"
-                            [tooltip]="moraRangosChart.tooltip">
-                        </apx-chart>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-xl-4">
-                <div class="card chart-card">
-                    <div class="card-header border-0 pb-0">
-                        <h5 class="card-title mb-0">
-                            {{ 'creditosActivos.charts.tipoCredito' | translate }}
-                        </h5>
-                    </div>
-
-                    <div class="card-body">
-                        <apx-chart
-                            [series]="tipoCreditoChart.series"
-                            [chart]="tipoCreditoChart.chart"
-                            [labels]="tipoCreditoChart.labels"
-                            [colors]="tipoCreditoChart.colors"
-                            [legend]="tipoCreditoChart.legend"
-                            [dataLabels]="tipoCreditoChart.dataLabels"
-                            [stroke]="tipoCreditoChart.stroke"
-                            [plotOptions]="tipoCreditoChart.plotOptions"
-                            [tooltip]="tipoCreditoChart.tooltip">
-                        </apx-chart>
-                    </div>
-                </div>
-            </div>
-
-        </div>
 
         <!-- TABLE -->
         <div class="card table-card">
@@ -239,18 +101,10 @@
                                 {{ 'creditosActivos.filters.cutoffDate' | translate }}
                             </label>
 
-                            <input
-                                type="text"
-                                class="form-control form-control-sm"
-                                [(ngModel)]="filtro.fechaCorte"
-                                (change)="onFechaCorteChange()"
-                                dateFormat
-                                [dateFormat]="appConfigService.getCurrentSettings().dateFormat"
-                                name="fechaInicio"
-                                id="fechaInicio"
-                                engineSync="fechaInicio"
-                                autoFocusNext
-                                [next]="search">
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="filtro.fechaCorte"
+                                (change)="onFechaCorteChange()" dateFormat
+                                [dateFormat]="appConfigService.getCurrentSettings().dateFormat" name="fechaInicio"
+                                id="fechaInicio" engineSync="fechaInicio" autoFocusNext [next]="search">
                         </div>
 
                         <div class="credit-filter-item credit-filter-search">
@@ -263,28 +117,15 @@
                                     <i class="fa-solid fa-search"></i>
                                 </span>
 
-                                <input
-                                    #search
-                                    class="form-control"
-                                    type="text"
-                                    [(ngModel)]="filtro.search"
-                                    (ngModelChange)="onSearchInputChange()"
-                                    (keyup)="onSearchKeyup($event)"
+                                <input #search class="form-control" type="text" [(ngModel)]="filtro.search"
+                                    (ngModelChange)="onSearchInputChange()" (keyup)="onSearchKeyup($event)"
                                     [placeholder]="'creditosActivos.filters.searchPlaceholder' | translate"
-                                    name="search"
-                                    id="search"
-                                    engineSync="search"
-                                    autoFocusNext
-                                    [next]="btn">
+                                    name="search" id="search" engineSync="search" autoFocusNext [next]="btn">
                             </div>
                         </div>
 
                         <div class="credit-filter-actions">
-                            <button
-                                #btn
-                                class="btn btn-sm btn-light"
-                                type="button"
-                                (click)="cargarTodo()">
+                            <button #btn class="btn btn-sm btn-light" type="button" (click)="cargarTodo()">
                                 <i class="fa-solid fa-rotate-left me-1"></i>
                                 {{ 'creditosActivos.actions.filters' | translate }}
                             </button>
@@ -353,16 +194,13 @@
 
                         @else {
 
-                           
 
-                         @for (credito of creditos; track credito.id) {
 
-                        <tr
-                            role="button"
-                            class="socios-click-row"
+                        @for (credito of creditos; track credito.id) {
+
+                        <tr role="button" class="socios-click-row"
                             [class.socios-row-selected]="selectedCredito?.noCredito === credito.noCredito"
-                            (click)="seleccionarCredito(credito)"
-                            data-bs-toggle="offcanvas"
+                            (click)="seleccionarCredito(credito)" data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasCreditoDetalle">
 
                             <td class="fw-semibold">
@@ -399,9 +237,7 @@
                             </td>
 
                             <td>
-                                <span
-                                    class="badge rounded-pill"
-                                    [ngClass]="getEstadoBadgeClass(credito.estadoCartera)">
+                                <span class="badge rounded-pill" [ngClass]="getEstadoBadgeClass(credito.estadoCartera)">
                                     {{ getEstadoTextoKey(credito.estadoCartera) | translate }}
                                 </span>
                             </td>
@@ -417,9 +253,7 @@
                             </td>
 
                             <td>
-                                <span
-                                    class="fw-bold"
-                                    [class.text-danger]="credito.diasMora > 0">
+                                <span class="fw-bold" [class.text-danger]="credito.diasMora > 0">
                                     {{ credito.diasMora }}
                                 </span>
                             </td>
@@ -446,10 +280,7 @@
 
                     <div class="d-flex align-items-center gap-2">
 
-                        <select
-                            class="form-select form-select-sm"
-                            style="width: 90px;"
-                            [(ngModel)]="filtro.pageSize"
+                        <select class="form-select form-select-sm" style="width: 90px;" [(ngModel)]="filtro.pageSize"
                             (change)="cambiarPageSize()">
 
                             @for (size of pageSizeOptions; track size) {
@@ -463,30 +294,21 @@
                         <ul class="pagination pagination-sm mb-0">
 
                             <li class="page-item" [class.disabled]="filtro.page <= 1">
-                                <button
-                                    class="page-link"
-                                    type="button"
-                                    (click)="cambiarPagina(filtro.page - 1)">
+                                <button class="page-link" type="button" (click)="cambiarPagina(filtro.page - 1)">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </button>
                             </li>
 
                             @for (p of paginas; track p) {
                             <li class="page-item" [class.active]="filtro.page === p">
-                                <button
-                                    class="page-link"
-                                    type="button"
-                                    (click)="cambiarPagina(p)">
+                                <button class="page-link" type="button" (click)="cambiarPagina(p)">
                                     {{ p }}
                                 </button>
                             </li>
                             }
 
                             <li class="page-item" [class.disabled]="filtro.page >= totalPages">
-                                <button
-                                    class="page-link"
-                                    type="button"
-                                    (click)="cambiarPagina(filtro.page + 1)">
+                                <button class="page-link" type="button" (click)="cambiarPagina(filtro.page + 1)">
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </button>
                             </li>
@@ -504,20 +326,14 @@
     <!-- FIN main-area -->
 
     <!-- OFFCANVAS DETALLE -->
-    <div
-        class="offcanvas offcanvas-end credito-detalle-offcanvas"
-        tabindex="-1"
-        id="offcanvasCreditoDetalle">
+    <div class="offcanvas offcanvas-end credito-detalle-offcanvas" tabindex="-1" id="offcanvasCreditoDetalle">
 
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">
                 {{ 'creditosActivos.detail.title' | translate }}
             </h5>
 
-            <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="offcanvas">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas">
             </button>
         </div>
 
@@ -536,9 +352,7 @@
                     {{ detalle.noCredito }}
                 </h5>
 
-                <span
-                    class="badge rounded-pill"
-                    [ngClass]="getEstadoBadgeClass(detalle.estadoCartera)">
+                <span class="badge rounded-pill" [ngClass]="getEstadoBadgeClass(detalle.estadoCartera)">
                     {{ getEstadoTextoKey(detalle.estadoCartera) | translate }}
                 </span>
             </div>
@@ -628,13 +442,9 @@
                 </div>
 
                 <div class="col-5">
-                    <apx-chart
-                        [series]="avanceCreditoChart.series"
-                        [chart]="avanceCreditoChart.chart"
-                        [plotOptions]="avanceCreditoChart.plotOptions"
-                        [labels]="avanceCreditoChart.labels"
-                        [colors]="avanceCreditoChart.colors"
-                        [dataLabels]="avanceCreditoChart.dataLabels">
+                    <apx-chart [series]="avanceCreditoChart.series" [chart]="avanceCreditoChart.chart"
+                        [plotOptions]="avanceCreditoChart.plotOptions" [labels]="avanceCreditoChart.labels"
+                        [colors]="avanceCreditoChart.colors" [dataLabels]="avanceCreditoChart.dataLabels">
                     </apx-chart>
                 </div>
 
@@ -731,7 +541,57 @@
 
             </div>
 
+            <hr>
+
+            <!-- CHARTS -->
+            <div class="row mb-3">
+
+
+                <div class="col-12">
+                    <div class="card chart-card">
+                        <div class="card-header border-0 pb-0">
+                            <h5 class="card-title mb-0">
+                                {{ 'creditosActivos.charts.moraRangos' | translate }}
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+                            <apx-chart [series]="moraRangosChart.series" [chart]="moraRangosChart.chart"
+                                [xaxis]="moraRangosChart.xaxis" [yaxis]="moraRangosChart.yaxis"
+                                [grid]="moraRangosChart.grid" [colors]="moraRangosChart.colors"
+                                [plotOptions]="moraRangosChart.plotOptions" [dataLabels]="moraRangosChart.dataLabels"
+                                [tooltip]="moraRangosChart.tooltip">
+                            </apx-chart>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="card chart-card">
+                        <div class="card-header border-0 pb-0">
+                            <h5 class="card-title mb-0">
+                                {{ 'creditosActivos.charts.tipoCredito' | translate }}
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+                            <apx-chart [series]="tipoCreditoChart.series" [chart]="tipoCreditoChart.chart"
+                                [labels]="tipoCreditoChart.labels" [colors]="tipoCreditoChart.colors"
+                                [legend]="tipoCreditoChart.legend" [dataLabels]="tipoCreditoChart.dataLabels"
+                                [stroke]="tipoCreditoChart.stroke" [plotOptions]="tipoCreditoChart.plotOptions"
+                                [tooltip]="tipoCreditoChart.tooltip">
+                            </apx-chart>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
             }
+
+
+
 
         </div>
 

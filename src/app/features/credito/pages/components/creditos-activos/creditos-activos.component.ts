@@ -35,6 +35,9 @@ import {
 } from '../../../interface/creditos-activos.interface';
 import { JMartAutoFocusNextDirective, JMartDateFormatDirective } from '@JairMartinez86/jmartinez-validator';
 import { AppPermissionDirective } from '../../../../../core/services/app-permission.directive';
+import { CreditoFiltersComponent } from "./credito-filters/credito-filters.component";
+import { SummaryCard } from '../../../../../shared/interfaces/sumaryCard.model';
+
 
 @Component({
   selector: 'app-creditos-activos',
@@ -44,9 +47,10 @@ import { AppPermissionDirective } from '../../../../../core/services/app-permiss
     FormsModule,
     TranslateModule,
     NgApexchartsModule,
-      JMartAutoFocusNextDirective,
-        JMartDateFormatDirective,
-    Breadcrumb
+    JMartAutoFocusNextDirective,
+    JMartDateFormatDirective,
+    Breadcrumb,
+    CreditoFiltersComponent
   ],
   templateUrl: './creditos-activos.component.html',
   styleUrls: ['./creditos-activos.component.scss']
@@ -66,16 +70,29 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
   private readonly filterKey = 'creditos-activos';
 
   breadcrumbs: any[] = [];
+  cards: SummaryCard[] = [];
+
 
   loading = false;
   loadingDetalle = false;
+  summaryPanelHidden = false;
+
+
+  filters = {
+    search: '',
+    tipoPrestamo: '',
+    estado: ''
+  };
+
 
   filtro: CreditosActivosFiltro = {
     page: 1,
     pageSize: 10,
     search: '',
-    fechaCorte: ''
+    fechaCorte: '',
+    codSocio : ''
   };
+
 
   pageSizeOptions = [10, 20, 50, 100];
 
@@ -83,26 +100,16 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
   totalPages = 0;
 
   kpis: CreditosActivosKpis = {
-    totalCreditos: 0,
-    creditosVigentes: 0,
-    creditosVencidos: 0,
-    creditosMora: 0,
-    creditosProximosVencer: 0,
-    carteraTotal: 0,
-    carteraVigente: 0,
-    carteraVencida: 0,
-    carteraMora: 0,
-    proximasAVencer: 0,
-    porcentajeVigente: 0,
-    porcentajeVencida: 0,
-    porcentajeMora: 0
+    total_corto_plazo: 0,
+    total_largo_plazo: 0,
+    total_general: 0
   };
 
   creditos: CreditoActivoItem[] = [];
   selectedCredito: CreditoActivoItem | null = null;
   detalle: CreditoActivoDetalle | null = null;
 
-  carteraDistribucion: any = this.buildDonutChart([], [], []);
+
   tipoCreditoChart: any = this.buildDonutChart([], [], []);
   moraRangosChart: any = this.buildBarChart([], []);
 
@@ -136,45 +143,45 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
   constructor(@Inject(PLATFORM_ID) platformId: object) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
-ngOnInit(): void {
-  if (!this.isBrowser) return;
+  ngOnInit(): void {
+    if (!this.isBrowser) return;
 
-  this.setBreadcrumbs();
+    this.setBreadcrumbs();
 
-  const fechaServidor = this.appConfigService.getCurrentSettings().fechaServidor;
+    const fechaServidor = this.appConfigService.getCurrentSettings().fechaServidor;
 
-  this.filtro.fechaCorte = fechaServidor
-    ? this.formatDate(fechaServidor)
-    : '';
+    this.filtro.fechaCorte = fechaServidor
+      ? this.formatDate(fechaServidor)
+      : '';
 
-  this.subs.add(
-    this.translate.onLangChange.subscribe(() => {
-      this.setBreadcrumbs();
-      this.cargarGraficos(true);
-    })
-  );
+    this.subs.add(
+      this.translate.onLangChange.subscribe(() => {
+        this.setBreadcrumbs();
+      })
+    );
 
-  this.subs.add(
-    this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
-      const value = String(draft ?? '');
+    this.subs.add(
+      this.filterSvc.draft$(this.filterKey).subscribe((draft: string) => {
+        const value = String(draft ?? '');
 
-      if (this.filtro.search !== value) {
+        if (this.filtro.search !== value) {
+          this.filtro.search = value;
+        }
+      })
+    );
+
+    this.subs.add(
+      this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
+        const value = String(query ?? '').trim();
+
         this.filtro.search = value;
-      }
-    })
-  );
+        this.filtro.page = 1;
+      })
+    );
 
-  this.subs.add(
-    this.filterSvc.query$(this.filterKey).subscribe((query: string) => {
-      const value = String(query ?? '').trim();
-
-      this.filtro.search = value;
-      this.filtro.page = 1;
-    })
-  );
-
-  this.cargarTodo();
-}
+    
+    this.cargarTodo();
+  }
   ngOnDestroy(): void {
     this.subs.unsubscribe();
 
@@ -189,8 +196,8 @@ ngOnInit(): void {
     this.breadcrumbs = Array.isArray(value)
       ? value
       : [
-          { label: this.translate.instant('creditosActivos.title') }
-        ];
+        { label: this.translate.instant('creditosActivos.title') }
+      ];
   }
 
   get settings(): any {
@@ -231,124 +238,137 @@ ngOnInit(): void {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }
 
-cargarTodo(): void {
-  //const start = performance.now();
+  cargarTodo(): void {
+    //const start = performance.now();
 
-  this.cargarKpis(true);
-  this.cargarGraficos(true);
-  this.cargarLista();
+    this.cargarKpis(true);
+    this.cargarLista();
 
-  //console.log(`cargarTodo disparó requests en: ${(performance.now() - start).toFixed(2)} ms`);
-}
-
-cargarKpis(skipLoader = false): void {
-  //const start = performance.now();
-
-  this.service.getKpis(this.filtro, skipLoader)
-    .pipe(finalize(() => {
-      //console.log(`Kpis request: ${(performance.now() - start).toFixed(2)} ms`);
-    }))
-    .subscribe({
-      next: (res: any) => {
-        this.kpis = res?.data ?? this.kpis;
-      },
-      error: (err: any) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      }
-    });
-}
-
-
- cargarGraficos(skipLoader = false): void {
-  //const start = performance.now();
-
-  this.service.getGraficos(this.filtro, skipLoader)
-    .pipe(finalize(() => {
-      //console.log(`Graficos request: ${(performance.now() - start).toFixed(2)} ms`);
-    }))
-    .subscribe({
-      next: (res: any) => {
-        const data: CreditosActivosGraficos = res?.data ?? {
-          distribucionCartera: [],
-          moraRangos: [],
-          tipoCredito: []
-        };
-
-        this.carteraDistribucion = this.buildDonutChart(
-          data.distribucionCartera.map(x => Number(x.porcentaje ?? 0)),
-          data.distribucionCartera.map(x => this.getGraficoEtiqueta(x.etiqueta)),
-          data.distribucionCartera.map(x => Number(x.monto ?? 0)),
-          ['#22c55e', '#f59e0b', '#ef4444']
-        );
-
-        this.moraRangosChart = this.buildBarChart(
-          data.moraRangos.map(x => x.etiqueta),
-          data.moraRangos.map(x => Number(x.monto ?? 0))
-        );
-
-        this.tipoCreditoChart = this.buildDonutChart(
-          data.tipoCredito.map(x => Number(x.porcentaje ?? 0)),
-          data.tipoCredito.map(x => x.etiqueta),
-          data.tipoCredito.map(x => Number(x.monto ?? 0)),
-          ['#2563eb', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4', '#64748b']
-        );
-      },
-      error: (err: any) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      }
-    });
-}
-
-
-cargarLista(): void {
-  this.loading = true;
-
-  //const start = performance.now();
-
-  this.service.getAll(this.filtro)
-    .pipe(finalize(() => {
-      this.loading = false;
-      //console.log(`Lista creditos request: ${(performance.now() - start).toFixed(2)} ms`);
-    }))
-    .subscribe({
-      next: (res: any) => {
-        const data = res?.data ?? res;
-
-        this.creditos = data?.items ?? [];
-        this.totalRecords = Number(data?.totalRecords ?? 0);
-        this.totalPages = Number(data?.totalPages ?? 0);
-
-        if (this.creditos.length > 0) {
-          const selected = this.selectedCredito
-            ? this.creditos.find(x => x.noCredito === this.selectedCredito?.noCredito)
-            : null;
-
-          this.seleccionarCredito(selected ?? this.creditos[0]);
-        } else {
-          this.selectedCredito = null;
-          this.detalle = null;
-          this.updateAvanceChart(0);
-        }
-      },
-      error: (err: any) => {
-        this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-      }
-    });
-}
-  seleccionarCredito(credito: CreditoActivoItem): void {
-    this.selectedCredito = credito;
-    this.cargarDetalle(credito.noCredito);
+    //console.log(`cargarTodo disparó requests en: ${(performance.now() - start).toFixed(2)} ms`);
   }
 
-  cargarDetalle(noCredito: string): void {
+  cargarKpis(skipLoader = false): void {
+    //const start = performance.now();
+
+    this.service.getKpis(this.filtro, skipLoader)
+      .pipe(finalize(() => {
+        //console.log(`Kpis request: ${(performance.now() - start).toFixed(2)} ms`);
+      }))
+      .subscribe({
+        next: (res: any) => {
+          this.kpis = res?.data ?? this.kpis;
+
+
+
+
+          this.cards = [
+            {
+              icon: 'fa-sharp-duotone fa-solid fa-building-columns fa-2xl',
+              titleKey: 'creditosActivos.summary.carteraTotal.title',
+              amount: Number(this.kpis?.total_general ?? 0),
+              subtitleKey: 'creditosActivos.summary.carteraTotal.subtitle',
+              accent: 'teal'
+            },
+            {
+              icon: 'fa-solid fa-calendar-days fa-2xl',
+              titleKey: 'creditosActivos.summary.prestamoLargoPlazo.title',
+              amount: Number(this.kpis?.total_largo_plazo ?? 0),
+              subtitleKey: 'creditosActivos.summary.prestamoLargoPlazo.subtitle',
+              accent: 'blue'
+            },
+            {
+              icon: 'fa-solid fa-hourglass-start fa-2xl',
+              titleKey: 'creditosActivos.summary.prestamoCortoPlazo.title',
+              amount: Number(this.kpis?.total_corto_plazo ?? 0),
+              subtitleKey: 'creditosActivos.summary.prestamoCortoPlazo.subtitle',
+              accent: 'blue'
+            },
+            /* {
+               icon: 'fa-regular fa-clipboard fa-2xl',
+               titleKey: 'ahorro.summary.pendingRequests.title',
+               amount: Number(summary?.solicitudesPendientes ?? 0),
+               subtitleKey: 'ahorro.summary.pendingRequests.subtitle',
+               accent: 'orange'
+             },*/
+          ];
+
+
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        }
+      });
+  }
+
+
+
+  cargarLista(): void {
+    this.loading = true;
+
+    //const start = performance.now();
+
+    this.service.getAll(this.filtro)
+      .pipe(finalize(() => {
+        this.loading = false;
+        //console.log(`Lista creditos request: ${(performance.now() - start).toFixed(2)} ms`);
+      }))
+      .subscribe({
+        next: (res: any) => {
+          const data = res?.data ?? res;
+
+          this.creditos = data?.items ?? [];
+          this.totalRecords = Number(data?.totalRecords ?? 0);
+          this.totalPages = Number(data?.totalPages ?? 0);
+
+          if (this.creditos.length > 0) {
+            const selected = this.selectedCredito
+              ? this.creditos.find(x => x.noCredito === this.selectedCredito?.noCredito)
+              : null;
+
+            this.seleccionarCredito(selected ?? this.creditos[0]);
+          } else {
+            this.selectedCredito = null;
+            this.detalle = null;
+            this.updateAvanceChart(0);
+          }
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        }
+      });
+  }
+  seleccionarCredito(credito: CreditoActivoItem): void {
+    this.selectedCredito = credito;
+    this.cargarDetalle(credito.noCredito, credito.codSocio);
+  }
+
+  cargarDetalle(noCredito: string, codSocio: string): void {
     this.loadingDetalle = true;
+    this.filtro.codSocio = codSocio;
+
 
     this.service.getDetalle(noCredito, this.filtro, true)
       .pipe(finalize(() => this.loadingDetalle = false))
       .subscribe({
         next: (res: any) => {
+          this.filtro.codSocio = '';
           this.detalle = res?.data ?? null;
           this.updateAvanceChart(Number(this.detalle?.porcentajePagado ?? 0));
+
+
+           this.moraRangosChart = this.buildBarChart(
+            this.detalle?.graficos?.moraRangos.map(x => x.etiqueta) ?? [],
+            this.detalle?.graficos?.moraRangos.map(x => Number(x.monto ?? 0)) ?? []
+          );
+
+          this.tipoCreditoChart = this.buildDonutChart(
+            this.detalle?.graficos?.tipoCredito.map(x => Number(x.porcentaje ?? 0)) ?? [],
+            this.detalle?.graficos?.tipoCredito.map(x => x.etiqueta) ?? [],
+            this.detalle?.graficos?.tipoCredito.map(x => Number(x.monto ?? 0)) ?? [],
+            ['#2563eb', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4', '#64748b']
+          );
+
+
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
@@ -619,4 +639,24 @@ cargarLista(): void {
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/\s+/g, '');
   }
+
+
+
+  onFiltersChange(filters: { search: string; tipoPrestamo: string; estado: string }): void {
+    this.filters = filters;
+    // this.selectedSocioId = null;
+    // this.clearDetail();
+    // this.loadDashboard(1, true);
+  }
+
+
+  SummaryformatValue(card: SummaryCard): string {
+    if (card.titleKey === 'creditosActivos.summary.pendingRequests.title') {
+      return `${Number(card.amount ?? 0)}`;
+    }
+
+    const currency = this.appConfigService.getCurrentSettings().currency || 'NIO';
+    return `${currency} ${Number(card.amount ?? 0).toLocaleString('es-NI', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+
 }
