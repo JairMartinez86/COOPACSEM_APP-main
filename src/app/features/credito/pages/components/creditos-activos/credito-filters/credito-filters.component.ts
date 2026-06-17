@@ -53,7 +53,7 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
 
   search = '';
   tipoPrestamo = 'Todos';
-  estado = '';
+  estado = 'Todos';
   requireEnter = false;
 
   reports: any[] = [
@@ -82,7 +82,7 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
   reporteSeleccionado: any | null = 'saldoActualCartera';
   procesandoReporte = false;
 
-  tipoCuentaReporte = 'Todos';
+
   estadoReporte: '' | 'Activo' | 'Inactivo' = '';
 
   fechaInicioReporte: string | null = null;
@@ -269,7 +269,7 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
 
     switch (this.reporteSeleccionado.type) {
       case 'saldoActualCartera':
-        this.procesarSaldosAhorroActual(accion);
+        this.procesarSaldoCartera(accion);
         return;
 
       case 'saldoHistoricoCartera':
@@ -295,31 +295,29 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
     }
   }
 
-  private procesarSaldosAhorroActual(accion: 'print' | 'pdf' | 'excel'): void {
+  private procesarSaldoCartera(accion: 'print' | 'pdf' | 'excel'): void {
     const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
 
     this.procesandoReporte = true;
+    console.log(this.estado);
 
-    /*this.service.getReporteSaldosAhorroActual(
-      this.tipoCuentaReporte,
+    this.service.getReporteSaldosCartera(
+      this.fechaFinReporte!,
+      this.estado,
       formato,
-      this.fechaInicioReporte,
-      this.fechaFinReporte,
-      this.estadoReporte
     )
       .pipe(finalize(() => this.procesandoReporte = false))
       .subscribe({
         next: (res: any) => {
           const archivo = res?.data?.archivo ?? '';
-          const base = this.getNombreBaseReporte('saldosAhorroActual');
-          const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
+          const base = this.getNombreBaseReporte('saldoActualCartera');
 
-          this.procesarArchivoSalida(accion, archivo, `${base} - ${cuenta}`);
+          this.procesarArchivoSalida(accion, archivo, `${base}`);
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
         }
-      });*/
+      });
   }
 
   private procesarSaldosHistoricosAhorro(accion: 'print' | 'pdf' | 'excel'): void {
@@ -577,44 +575,24 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
 
 
   private getNombreArchivo(base: string, extension: string): string {
-    const cuenta = this.getNombreReporte(this.tipoCuentaReporte);
     const rango = this.getTextoRangoFechas();
     const estado = this.getTextoEstado();
 
-    return `COOPACSEM - ${base} - ${cuenta} ${rango} ${estado}.${extension}`;
+    return `COOPACSEM - ${base} ${rango} ${estado}.${extension}`;
   }
 
   private getNombreBaseReporte(type: string): string {
     switch (type) {
       case 'saldoActualCartera':
-        return 'SALDO AHORROS';
+        return 'SALDO CARTERA';
 
-      case 'saldoHistoricoCartera':
-        return 'SALDO AHORROS HISTORICO';
-
-      case 'montoDisponibleSocio':
-        return 'INTEGRACION AHORROS';
-
-      case 'movimientoCredito':
-        return 'SALDOS AFILIACION';
 
       default:
         return 'REPORTE';
     }
   }
 
-  private getNombreReporte(tipoCuenta: string): string {
-    switch (tipoCuenta) {
-      case 'Corriente':
-        return 'CORRIENTE';
 
-      case 'Navidena':
-        return 'NAVIDENA';
-
-      default:
-        return 'TODOS';
-    }
-  }
 
   private getTextoRangoFechas(): string {
     if (this.fechaInicioReporte && this.fechaFinReporte) {

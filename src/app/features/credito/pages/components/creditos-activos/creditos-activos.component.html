@@ -17,7 +17,7 @@
 
     <!-- KPI -->
 
-    <div class="dashboard-grid dashboard-grid-3 ahorro-summary-grid mb-1">
+    <div class="dashboard-grid dashboard-grid-4 ahorro-summary-grid mb-1">
         @for (card of cards; track $index) {
         <div class="card widget-stat">
             <div class="widget-stat-icon" [ngClass]="'text-' + card.accent">
@@ -213,7 +213,7 @@
                                 </div>
 
                                 <small class="text-muted">
-                                    {{ credito.codSocio }}
+                                    {{ credito.codSocio }} - {{ credito.cedula }}
                                 </small>
                             </td>
 
@@ -442,10 +442,13 @@
                 </div>
 
                 <div class="col-5">
-                    <apx-chart [series]="avanceCreditoChart.series" [chart]="avanceCreditoChart.chart"
-                        [plotOptions]="avanceCreditoChart.plotOptions" [labels]="avanceCreditoChart.labels"
-                        [colors]="avanceCreditoChart.colors" [dataLabels]="avanceCreditoChart.dataLabels">
-                    </apx-chart>
+                    <div class="card-body">
+                        <apx-chart [series]="avanceCreditoChart.series" [chart]="avanceCreditoChart.chart"
+                            [plotOptions]="avanceCreditoChart.plotOptions" [labels]="avanceCreditoChart.labels"
+                            [colors]="avanceCreditoChart.colors" [dataLabels]="avanceCreditoChart.dataLabels">
+                        </apx-chart>
+                    </div>
+
                 </div>
 
             </div>
@@ -570,7 +573,7 @@
                     <div class="card chart-card">
                         <div class="card-header border-0 pb-0">
                             <h5 class="card-title mb-0">
-                                {{ 'creditosActivos.charts.tipoCredito' | translate }}
+                                {{ 'creditosActivos.charts.detCredito' | translate }}
                             </h5>
                         </div>
 

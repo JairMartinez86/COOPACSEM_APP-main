@@ -11,6 +11,7 @@ export interface CreditosActivosFiltro {
 export interface CreditosActivosKpis {
   total_corto_plazo: number;
   total_largo_plazo: number;
+  total_afiliacion: number;
   total_general: number;
 }
 
@@ -34,6 +35,7 @@ export interface CreditoActivoItem {
   noSolicitud: string;
   codSocio: string;
   nombreSocio: string;
+  cedula: string;
   tipoCredito: string;
   proposito: string;
   fechaCredito: string | null;
@@ -53,6 +55,7 @@ export interface CreditoActivoItem {
   diasMora: number;
   estadoCartera: string;
   porcentajePagado: number;
+  tipo :string;
 }
 
 export interface CreditosActivosListaResponse {

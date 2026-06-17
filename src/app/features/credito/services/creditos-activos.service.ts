@@ -43,7 +43,7 @@ export class CreditosActivosService extends BrowserApiService {
 
   getAll(filtro: CreditosActivosFiltro, skipLoader = false): Observable<any> {
     return this.browserOnly(() => {
-      console.log('Obteniendo créditos activos con filtro:', filtro);
+
       let params = this.buildParams(filtro)
         .set('page', filtro.page)
         .set('pageSize', filtro.pageSize);
@@ -67,7 +67,7 @@ export class CreditosActivosService extends BrowserApiService {
     });
   }
 
-  getDetalle(noCredito: string,  filtro: Partial<CreditosActivosFiltro>, skipLoader = false): Observable<any> {
+  getDetalle(noCredito: string, filtro: Partial<CreditosActivosFiltro>, skipLoader = false): Observable<any> {
     return this.browserOnly(() => {
       const params = this.buildParams(filtro);
 
@@ -87,48 +87,84 @@ export class CreditosActivosService extends BrowserApiService {
   }
 
   private buildParams(filtro: Partial<CreditosActivosFiltro>): HttpParams {
-  let params = new HttpParams();
+    let params = new HttpParams();
 
-  const fechaCorte = this.toApiDate(filtro.fechaCorte);
+    const fechaCorte = this.toApiDate(filtro.fechaCorte);
 
-  if (fechaCorte) {
-    params = params.set('fechaCorte', fechaCorte);
+    if (fechaCorte) {
+      params = params.set('fechaCorte', fechaCorte);
+    }
+
+    if (filtro.codSocio?.trim()) {
+      params = params.set('codSocio', filtro.codSocio.trim());
+    }
+
+    if (filtro.codSocio?.trim()) {
+      params = params.set('codSocio', filtro.codSocio.trim());
+    }
+
+    if (filtro.tipoPrestamo?.trim()) {
+      params = params.set('tipoPrestamo', filtro.tipoPrestamo.trim());
+    }
+
+    if (filtro.estado?.trim()) {
+      params = params.set('estado', filtro.estado.trim());
+    }
+
+
+    return params;
   }
 
-  if (filtro.codSocio?.trim()) {
-    params = params.set('codSocio', filtro.codSocio.trim());
-  }
+  private toApiDate(value: string | null | undefined): string {
+    if (!value?.trim()) return '';
 
-  if (filtro.codSocio?.trim()) {
-    params = params.set('codSocio', filtro.codSocio.trim());
-  }
+    const text = value.trim();
 
-  if(filtro.tipoPrestamo?.trim()) {
-    params = params.set('tipoPrestamo', filtro.tipoPrestamo.trim());
-  }
-  
+    // Ya viene correcto: yyyy-MM-dd
+    if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+      return text;
+    }
 
-  return params;
-}
+    // Viene como dd/MM/yyyy
+    const match = text.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
 
-private toApiDate(value: string | null | undefined): string {
-  if (!value?.trim()) return '';
+    if (match) {
+      const [, day, month, year] = match;
+      return `${year}-${month}-${day}`;
+    }
 
-  const text = value.trim();
-
-  // Ya viene correcto: yyyy-MM-dd
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
     return text;
   }
 
-  // Viene como dd/MM/yyyy
-  const match = text.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
 
-  if (match) {
-    const [, day, month, year] = match;
-    return `${year}-${month}-${day}`;
+
+  getReporteSaldosCartera(
+    fechaCorte: string,
+    estado: string,
+    formato: 'pdf' | 'excel',
+  ) {
+
+    let params = new HttpParams()
+      .set('fechaCorte', fechaCorte)
+      .set('formato', formato);
+
+
+
+    if (estado) {
+      params = params.set('estado', estado);
+    }
+
+
+
+
+    return this.http.get(
+      `${this.api.baseUrl}/CreditosActivos/reporte/saldo-cartera`,
+      {
+        params,
+        withCredentials: true
+      }
+    );
   }
 
-  return text;
-}
+
 }

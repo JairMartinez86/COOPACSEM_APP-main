@@ -30,7 +30,7 @@
     "charts": {
       "distribucionCartera": "Distribución de la cartera",
       "moraRangos": "Cartera en mora por rangos de días",
-      "tipoCredito": "Cartera por tipo de crédito",
+      "detCredito": "Detalle del crédito",
       "total": "Total",
       "amount": "Monto"
     },
@@ -65,15 +65,16 @@
       "pendiente": "Pendiente"
     },
     "status": {
-      "vigente": "Vigente",
-      "vencida": "Vencida",
-      "mora": "Mora",
-      "unknown": "Sin estado"
+      "enEvaluacion": "En Evaluación",
+      "aplicado": "Aplicado",
+      "anulada": "Anulada",
+      "reestructurada": "Reestructurada",
+      "tramitePago": "Trámite de Pago",
+      "morosa": "Morosa",
+      "cancelada": "Cancelada",
+      "unknown": "Desconocido"
     },
-
-
     "noData": "No se encontraron créditos activos que coincidan con los filtros aplicados.",
-
     "reports": {
       "saldoActualCartera": {
         "title": "Saldo Actual Cartera",
@@ -104,6 +105,10 @@
       "prestamoCortoPlazo": {
         "title": "Prestamos a corto plazo",
         "subtitle": "Total de prestamos a corto plazo"
+      },
+      "afiliacion": {
+        "title": "Créditos de afiliación",
+        "subtitle": "Total de afiliación"
       }
     },
     "filters": {
@@ -112,6 +117,14 @@
       "presType": "Tipo de préstamo",
       "status": "Estado del préstamo",
       "all": "Todos",
+      "aplicado": "Aplicado",
+      "anulada": "Anulada",
+      "morosa": "Morosa",
+      "cancelada": "Cancelada",
+      "reestructurada": "Reestructurada",
+      "tramiteDePago": "Trámite de Pago",
+      "noCobrada": "No Cobrada",
+      "afiliacion": "Afiliación",
       "period": "Periodo del reporte",
       "cutoffDate": "Fecha de corte",
       "startDate": "Fecha inicio",
@@ -124,7 +137,7 @@
         "year": "Año"
       }
     },
-     "exportModal": {
+    "exportModal": {
       "notImplemented": "Este reporte aún no está disponible"
     }
   }

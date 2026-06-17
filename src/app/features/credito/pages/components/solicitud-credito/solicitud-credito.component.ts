@@ -107,10 +107,10 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   puedeEditarSolicitud = true;
 
 
-  solicitud: SolicitudCreditoForm & { proveedorId?: string } = {
+  solicitud: SolicitudCreditoForm & { codProveedor?: string } = {
     tipoCredito: '',
     proposito: '',
-    proveedorId: '',
+    codProveedor: '',
     fechaInicioPago: '',
     montoSolicitado: null,
     plazo: null,
@@ -612,7 +612,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
           this.solicitud.plazo = null;
           this.solicitud.tasaInteresAnual = 0;
           this.solicitud.comisionDesembolso = 0;
-          this.solicitud.proveedorId = '';
+          this.solicitud.codProveedor = '';
           this.solicitud.numeroFactura = '';
           this.solicitud.Observaciones = '';
           this.planPagos = [];
@@ -625,7 +625,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
             this.requiereProveedor = false;
             this.solicitud.tipoCredito = '';
             this.solicitud.proposito = '';
-            this.solicitud.proveedorId = '';
+            this.solicitud.codProveedor = '';
             this.reglaCreditoActual = null;
           }
 
@@ -638,7 +638,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
             this.requiereProveedor = false;
             this.solicitud.tipoCredito = '';
             this.solicitud.proposito = '';
-            this.solicitud.proveedorId = '';
+            this.solicitud.codProveedor = '';
             this.reglaCreditoActual = null;
           }
 
@@ -703,7 +703,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
           this.solicitud.tipoCredito = String(s.tipoCreditoId ?? '');
           this.solicitud.proposito = s.propositoId ? String(s.propositoId) : '';
-          this.solicitud.proveedorId = s.proveedorId ? String(s.proveedorId) : '';
+          this.solicitud.codProveedor = s.codProveedor ? String(s.codProveedor) : '';
           this.solicitud.fechaInicioPago = this.toDateInput(s.fechaInicioPago);
           this.solicitud.montoSolicitado = Number(s.montoSolicitado ?? 0);
           this.solicitud.plazo = Number(s.plazo ?? 0);
@@ -889,7 +889,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       this.propositosCreditoFiltrados = [];
       this.requiereProveedor = false;
       this.solicitud.proposito = '';
-      this.solicitud.proveedorId = '';
+      this.solicitud.codProveedor = '';
 
       this.sincronizarValoresValidacion();
       this.engine.validateByIds([
@@ -906,7 +906,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
     this.requiereProveedor = this.toBoolean(tipo.requiereProveedor);
 
     if (!this.requiereProveedor) {
-      this.solicitud.proveedorId = '';
+      this.solicitud.codProveedor = '';
     }
 
     this.filtrarPropositosPorTipo();
@@ -1182,7 +1182,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       estado: estado,
       tipoCreditoId: this.solicitud.tipoCredito,
       propositoId: this.solicitud.proposito || null,
-      proveedorId: this.requiereProveedor ? this.solicitud.proveedorId : null,
+      codProveedor: this.requiereProveedor ? this.solicitud.codProveedor : null,
       tipoCreditoReglaId: this.reglaCreditoActual?.id ?? null,
       fechaInicioPago: this.solicitud.fechaInicioPago,
       montoSolicitado: this.toNumber(this.solicitud.montoSolicitado),
@@ -1583,7 +1583,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       Proposito: this.solicitud.proposito,
       MontoSolicitado: this.solicitud.montoSolicitado,
       Plazo: this.solicitud.plazo,
-      Proveedor: this.solicitud.proveedorId,
+      Proveedor: this.solicitud.codProveedor,
       NoFactura: this.solicitud.numeroFactura,
       Observaciones: this.solicitud.Observaciones,
 
@@ -1600,7 +1600,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
   private limpiarFormularioCredito(): void {
     this.solicitud.tipoCredito = '';
     this.solicitud.proposito = '';
-    this.solicitud.proveedorId = '';
+    this.solicitud.codProveedor = '';
     this.solicitud.montoSolicitado = null;
     this.solicitud.plazo = null;
     this.solicitud.tasaInteresAnual = 0;

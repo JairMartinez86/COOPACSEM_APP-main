@@ -3,8 +3,12 @@
     "title": "Active loans",
     "subtitle": "Summary of approved and active loan portfolio.",
     "breadcrumbs": [
-      { "label": "Loans" },
-      { "label": "Active loans" }
+      {
+        "label": "Loans"
+      },
+      {
+        "label": "Active loans"
+      }
     ],
     "actions": {
       "exportReport": "Export report",
@@ -24,11 +28,10 @@
     "charts": {
       "distribucionCartera": "Portfolio distribution",
       "moraRangos": "Delinquent portfolio by day ranges",
-      "tipoCredito": "Portfolio by loan type",
+      "detCredito": "Loan detail",
       "total": "Total",
       "amount": "Amount"
     },
-
     "table": {
       "title": "Active loans list",
       "noCredito": "Loan No.",
@@ -60,68 +63,80 @@
       "pendiente": "Pending"
     },
     "status": {
-      "vigente": "Current",
-      "vencida": "Overdue",
-      "mora": "Delinquent",
-      "unknown": "No status"
+      "enEvaluacion": "Under Evaluation",
+      "aplicado": "Applied",
+      "anulada": "Annulled",
+      "reestructurada": "Restructured",
+      "tramitePago": "Payment in Process",
+      "morosa": "Delinquent",
+      "cancelada": "Cancelled",
+      "unknown": "Unknown"
     },
     "noData": "No active loans matching the applied filters were found.",
-
-  "reports": {
-    "saldoActualCartera": {
-      "title": "Current Portfolio Balance",
-      "subtitle": "View the total portfolio"
+    "reports": {
+      "saldoActualCartera": {
+        "title": "Current Portfolio Balance",
+        "subtitle": "View the total portfolio"
+      },
+      "saldoHistoricoCartera": {
+        "title": "Historical Portfolio Balance",
+        "subtitle": "View the historical portfolio"
+      },
+      "montoDisponibleSocio": {
+        "title": "Member Available Amount",
+        "subtitle": "Total amount available for the member"
+      },
+      "movimientoCredito": {
+        "title": "Loan Movement",
+        "subtitle": "View loan transactions"
+      }
     },
-    "saldoHistoricoCartera": {
-      "title": "Historical Portfolio Balance",
-      "subtitle": "View the historical portfolio"
+    "summary": {
+      "carteraTotal": {
+        "title": "Total Loans",
+        "subtitle": "Total Portfolio"
+      },
+      "prestamoLargoPlazo": {
+        "title": "Long-Term Loans",
+        "subtitle": "Total long-term loans"
+      },
+      "prestamoCortoPlazo": {
+        "title": "Short-Term Loans",
+        "subtitle": "Total short-term loans"
+      },
+      "afiliacion": {
+        "title": "Membership Credits",
+        "subtitle": "Total Membership Balance"
+      }
     },
-    "montoDisponibleSocio": {
-      "title": "Member Available Amount",
-      "subtitle": "Total amount available for the member"
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "Search loan, member, or type...",
+      "presType": "Loan Type",
+      "status": "Loan Status",
+      "all": "All",
+      "aplicado": "Approved",
+      "anulada": "Cancelled",
+      "morosa": "Delinquent",
+      "cancelada": "Paid Off",
+      "reestructurada": "Restructured",
+      "tramiteDePago": "Payment Processing",
+      "noCobrada": "Uncollected",
+      "afiliacion": "Affiliation",
+      "period": "Report Period",
+      "cutoffDate": "Cutoff Date",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "clear": "Clear",
+      "periodTypes": {
+        "cutoff": "As of Date",
+        "range": "Range",
+        "month": "Month",
+        "year": "Year"
+      }
     },
-    "movimientoCredito": {
-      "title": "Loan Movement",
-      "subtitle": "View loan transactions"
+    "exportModal": {
+      "notImplemented": "This report is not yet available"
     }
-  },
-
-  "summary": {
-    "carteraTotal": {
-      "title": "Total Loans",
-      "subtitle": "Total Portfolio"
-    },
-    "prestamoLargoPlazo": {
-      "title": "Long-Term Loans",
-      "subtitle": "Total long-term loans"
-    },
-    "prestamoCortoPlazo": {
-      "title": "Short-Term Loans",
-      "subtitle": "Total short-term loans"
-    }
-  },
-
-  "filters": {
-    "search": "Search",
-    "searchPlaceholder": "Search loan, member, or type...",
-    "presType": "Loan Type",
-    "status": "Loan Status",
-    "all": "All",
-    "period": "Report Period",
-    "cutoffDate": "Cutoff Date",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "clear": "Clear",
-    "periodTypes": {
-      "cutoff": "As of Date",
-      "range": "Range",
-      "month": "Month",
-      "year": "Year"
-    }
-  },
-
-  "exportModal": {
-    "notImplemented": "This report is not yet available"
-  }
   }
 }

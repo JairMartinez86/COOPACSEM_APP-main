@@ -97,7 +97,7 @@
 
                   <div class="text-muted">
                     @if (socio?.fechaIngreso) {
-                    ({{ 'solicitudCredito.labels.desde' | translate }} {{ socio.fechaIngreso }})
+                    ({{ 'solicitudCredito.labels.desde' | translate }} {{ socio!.fechaIngreso }})
                     }
                   </div>
                 </div>
@@ -482,7 +482,7 @@
                         </span>
 
                         <select #Proveedor class="form-select" id="Proveedor" name="Proveedor"
-                          [(ngModel)]="solicitud.proveedorId" engineSync="Proveedor" autoFocusNext
+                          [(ngModel)]="solicitud.codProveedor" engineSync="Proveedor" autoFocusNext
                           [next]="TasaInteresAnual" required [disabled]="modo=='view'">
 
                           <option value="">

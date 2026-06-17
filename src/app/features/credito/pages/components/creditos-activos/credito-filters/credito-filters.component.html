@@ -48,6 +48,8 @@
                             <option [value]="t.tipo">{{ t.nombre }}</option>
                             }
 
+                             <option value="Afiliacion">{{ 'creditosActivos.filters.afiliacion' | translate }}</option>
+
                         </select>
                     </div>
 
@@ -61,9 +63,15 @@
 
 
 
-                            <option value="">{{ 'creditosActivos.filters.all' | translate }}</option>
-                            <option value="Activo">{{ 'creditosActivos.status.active' | translate }}</option>
-                            <option value="Inactivo">{{ 'creditosActivos.status.inactive' | translate }}</option>
+                            <option value="Todos">{{ 'creditosActivos.filters.all' | translate }}</option>
+                            <option value="Aplicado">{{ 'creditosActivos.filters.aplicado' | translate }}</option>
+                            <option value="Anulada">{{ 'creditosActivos.filters.anulada' | translate }}</option>
+                            <option value="Morosa">{{ 'creditosActivos.filters.morosa' | translate }}</option>
+                            <option value="Cancelada">{{ 'creditosActivos.filters.cancelada' | translate }}</option>
+                            <option value="Reestructurada">{{ 'creditosActivos.filters.reestructurada' | translate }}</option>
+                            <option value="TramitePago">{{ 'creditosActivos.filters.tramiteDePago' | translate }}</option>
+                            <option value="No Cobrada">{{ 'creditosActivos.filters.noCobrada' | translate }}</option>
+                            <option value="Afiliacion">{{ 'creditosActivos.filters.afiliacion' | translate }}</option>
                         </select>
                     </div>
 

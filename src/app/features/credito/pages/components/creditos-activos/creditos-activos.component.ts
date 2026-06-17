@@ -108,6 +108,7 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
   kpis: CreditosActivosKpis = {
     total_corto_plazo: 0,
     total_largo_plazo: 0,
+    total_afiliacion: 0,
     total_general: 0
   };
 
@@ -307,13 +308,13 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
               subtitleKey: 'creditosActivos.summary.prestamoCortoPlazo.subtitle',
               accent: 'blue'
             },
-            /* {
+             {
                icon: 'fa-regular fa-clipboard fa-2xl',
-               titleKey: 'ahorro.summary.pendingRequests.title',
-               amount: Number(summary?.solicitudesPendientes ?? 0),
-               subtitleKey: 'ahorro.summary.pendingRequests.subtitle',
+               titleKey: 'creditosActivos.summary.afiliacion.title',
+               amount: Number(this.kpis?.total_afiliacion ?? 0),
+               subtitleKey: 'creditosActivos.summary.afiliacion.subtitle',
                accent: 'orange'
-             },*/
+             },
           ];
 
 
@@ -331,6 +332,14 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
 
     //const start = performance.now();
 
+
+    if(this.filtro.fechaCorte == undefined)
+    {
+      this.filtro.fechaCorte = this.appConfigService.formatDate(
+              this.appConfigService.getCurrentSettings().fechaServidor
+            )
+    }
+
     this.service.getAll(this.filtro)
       .pipe(finalize(() => {
         this.loading = false;
@@ -339,6 +348,8 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           const data = res?.data ?? res;
+
+
 
 
           this.creditos = data?.items ?? [];
@@ -365,13 +376,23 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
   }
   seleccionarCredito(credito: CreditoActivoItem): void {
     this.selectedCredito = credito;
-    this.cargarDetalle(credito.noCredito, credito.codSocio);
+    this.cargarDetalle(credito.noCredito, credito.codSocio, credito.tipo);
   }
 
-  cargarDetalle(noCredito: string, codSocio: string): void {
+  cargarDetalle(noCredito: string, codSocio: string, tipo: string): void {
+
+    if(tipo === 'Afiliaciones') {
+      this.filtro.codSocio = '';
+          this.detalle = null;
+          this.moraRangosChart = [];
+          this.tipoCreditoChart = [];
+          return;
+    }
+
     this.loadingDetalle = true;
     this.filtro.codSocio = codSocio;
 
+    
 
     this.service.getDetalle(noCredito, this.filtro, true)
       .pipe(finalize(() => this.loadingDetalle = false))
@@ -388,11 +409,15 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
           );
 
           this.tipoCreditoChart = this.buildDonutChart(
-            this.detalle?.graficos?.tipoCredito.map(x => Number(x.porcentaje ?? 0)) ?? [],
+            this.detalle?.graficos?.tipoCredito.map(x => Number(x.monto ?? 0)) ?? [],
             this.detalle?.graficos?.tipoCredito.map(x => x.etiqueta) ?? [],
             this.detalle?.graficos?.tipoCredito.map(x => Number(x.monto ?? 0)) ?? [],
             ['#2563eb', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4', '#64748b']
           );
+
+
+
+
 
 
         },
@@ -573,36 +598,54 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
       } as ApexTooltip
     };
   }
+getEstadoBadgeClass(estado: string | null | undefined): string {
+  const value = this.normalize(estado);
 
-  getEstadoBadgeClass(estado: string | null | undefined): string {
-    const value = this.normalize(estado);
+  if (value === 'vigente') return 'badge-soft-success';
 
-    if (value === 'vigente') return 'badge-soft-success';
-    if (value === 'vencida' || value === 'vencido') return 'badge-soft-warning';
-    if (value === 'mora') return 'badge-soft-danger';
+  if (value === 'morosa') return 'badge-soft-danger';
 
-    return 'badge-soft-secondary';
-  }
+  if (value === 'aplicado') return 'badge-soft-primary';
+  if (value === 'reestructurada') return 'badge-soft-info';
 
-  getEstadoTextoKey(estado: string | null | undefined): string {
-    const value = this.normalize(estado);
+  if (value === 'tramitepago' || value === 'tramite_pago' || value === 'tramitePago')
+    return 'badge-soft-warning';
 
-    if (value === 'vigente') return 'creditosActivos.status.vigente';
-    if (value === 'vencida' || value === 'vencido') return 'creditosActivos.status.vencida';
-    if (value === 'mora') return 'creditosActivos.status.mora';
+  if (value === 'cancelada') return 'badge-soft-secondary';
+  if (value === 'anulada') return 'badge-soft-dark';
 
-    return 'creditosActivos.status.unknown';
-  }
+  return 'badge-soft-secondary';
+}
 
-  private getGraficoEtiqueta(etiqueta: string): string {
-    const value = this.normalize(etiqueta);
+getEstadoTextoKey(estado: string | null | undefined): string {
+  const value = this.normalize(estado);
 
-    if (value === 'vigente') return this.translate.instant('creditosActivos.status.vigente');
-    if (value === 'vencida' || value === 'vencido') return this.translate.instant('creditosActivos.status.vencida');
-    if (value === 'mora') return this.translate.instant('creditosActivos.status.mora');
+  if (value === 'EnEvaluacion')
+    return 'creditosActivos.status.enEvaluacion';
 
-    return etiqueta;
-  }
+  if (value === 'aplicado')
+    return 'creditosActivos.status.aplicado';
+
+  if (value === 'anulada')
+    return 'creditosActivos.status.anulada';
+
+  if (value === 'reestructurada')
+    return 'creditosActivos.status.reestructurada';
+
+  if (
+    value === 'tramitePago' )
+    return 'creditosActivos.status.tramitePago';
+
+  if (value === 'morosa')
+    return 'creditosActivos.status.morosa';
+
+  if (value === 'cancelada')
+    return 'creditosActivos.status.cancelada';
+
+  return 'creditosActivos.status.unknown';
+}
+
+
 
   formatCurrency(value: number | null | undefined): string {
     const n = Number(value ?? 0);
