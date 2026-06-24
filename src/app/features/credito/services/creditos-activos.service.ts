@@ -167,4 +167,82 @@ export class CreditosActivosService extends BrowserApiService {
   }
 
 
+  getReporteSaldosCarteraHistorico(
+    fechaInicio: string,
+    fechaFin: string,
+    estado: string,
+    formato: 'pdf' | 'excel',
+  ) {
+
+    let params = new HttpParams()
+      .set('fechaInicio', fechaInicio)
+      .set('fechaFin', fechaFin)
+      .set('formato', formato);
+
+
+
+    if (estado) {
+      params = params.set('estado', estado);
+    }
+
+
+
+
+    return this.http.get(
+      `${this.api.baseUrl}/CreditosActivos/reporte/saldo-cartera-historico`,
+      {
+        params,
+        withCredentials: true
+      }
+    );
+  }
+
+
+
+  
+
+  getReporteMontoDisponibleSocio(
+    fechaCorte: string,
+    formato: 'pdf' | 'excel',
+  ) {
+
+    let params = new HttpParams()
+      .set('fechaCorte', fechaCorte)
+      .set('formato', formato);
+
+
+    return this.http.get(
+      `${this.api.baseUrl}/CreditosActivos/reporte/monto-disponible-socio`,
+      {
+        params,
+        withCredentials: true
+      }
+    );
+  }
+
+
+  
+  getReporteMovimientoCredito(
+     fechaInicio: string,
+    fechaFin: string,
+    formato: 'pdf' | 'excel',
+  ) {
+
+     let params = new HttpParams()
+      .set('fechaInicio', fechaInicio)
+      .set('fechaFin', fechaFin)
+      .set('formato', formato);
+
+
+    return this.http.get(
+      `${this.api.baseUrl}/CreditosActivos/reporte/movimiento-credito`,
+      {
+        params,
+        withCredentials: true
+      }
+    );
+  }
+
+
+
 }

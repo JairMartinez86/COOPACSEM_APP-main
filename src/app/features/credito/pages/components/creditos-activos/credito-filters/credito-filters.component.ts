@@ -273,15 +273,15 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
         return;
 
       case 'saldoHistoricoCartera':
-        this.procesarSaldosHistoricosAhorro(accion);
+        this.procesarSaldoCarteraHistorico(accion);
         return;
 
       case 'montoDisponibleSocio':
-        this.procesarIntegracionAhorro(accion);
+        this.procesarMontoDisponibleSocio(accion);
         return;
 
       case 'movimientoCredito':
-        this.procesarSaldosAfiliacion(accion);
+        this.procesarMovimientoCredito(accion);
         return;
 
 
@@ -299,7 +299,7 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
     const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
 
     this.procesandoReporte = true;
-    console.log(this.estado);
+
 
     this.service.getReporteSaldosCartera(
       this.fechaFinReporte!,
@@ -320,112 +320,84 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
       });
   }
 
-  private procesarSaldosHistoricosAhorro(accion: 'print' | 'pdf' | 'excel'): void {
+  private procesarSaldoCarteraHistorico(accion: 'print' | 'pdf' | 'excel'): void {
     const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
 
     this.procesandoReporte = true;
 
 
-    /* this.service.getReporteSaldosHistoricosAhorro(
-       this.tipoCuentaReporte,
-       formato,
-       this.fechaInicioReporte,
-       this.fechaFinReporte,
-       this.estadoReporte
-     )
-       .pipe(finalize(() => this.procesandoReporte = false))
-       .subscribe({
-         next: (res: any) => {
-           const archivo = res?.data?.archivo ?? '';
-           const base = this.getNombreBaseReporte('saldosHistoricosAhorro');
-           const cuenta = this.getNombreTipoCuenta(this.tipoCuentaReporte);
- 
-           this.procesarArchivoSalida(accion, archivo, `${base} - ${cuenta}`);
-         },
-         error: (err: any) => {
-           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-         }
-       });*/
-  }
-
-  private procesarSaldosAfiliacion(accion: 'print' | 'pdf' | 'excel'): void {
-    const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
-
-    this.procesandoReporte = true;
-
-
-    /* this.service.getReporteAfiliacionMembresia(
-       formato,
-       this.fechaFinReporte,
-       this.estadoReporte
-     )
-       .pipe(finalize(() => this.procesandoReporte = false))
-       .subscribe({
-         next: (res: any) => {
-           const archivo = res?.data?.archivo ?? '';
-           const base = this.getNombreBaseReporte('saldosAfiliacion');
- 
-           this.procesarArchivoSalida(accion, archivo, base);
-         },
-         error: (err: any) => {
-           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-         }
-       });*/
-  }
-
-  private procesarPagosAfiliaciones(accion: 'print' | 'pdf' | 'excel'): void {
-    const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
-
-    this.procesandoReporte = true;
-
-    /* this.service.getReportePagosAfiliaciones(
-       formato,
-       this.fechaInicioReporte,
-       this.fechaFinReporte,
-       this.estadoReporte
-     )
-       .pipe(finalize(() => this.procesandoReporte = false))
-       .subscribe({
-         next: (res: any) => {
-           const archivo = res?.data?.archivo ?? '';
-           const base = this.getNombreBaseReporte('deduccionesAfiliacion');
- 
-           this.procesarArchivoSalida(accion, archivo, base);
-         },
-         error: (err: any) => {
-           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
-         }
-       });*/
-  }
-
-  private procesarIntegracionAhorro(accion: 'print' | 'pdf' | 'excel'): void {
-    const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
-
-    this.procesandoReporte = true;
-
-    /*this.service.getReporteIntegracionAhorro(
+    
+    this.service.getReporteSaldosCarteraHistorico(
+      this.fechaInicioReporte!,
+      this.fechaFinReporte!,
+      this.estado,
       formato,
-      this.anioReporte,
-      this.tipoCuentaReporte,
-      this.estadoReporte
     )
       .pipe(finalize(() => this.procesandoReporte = false))
       .subscribe({
         next: (res: any) => {
           const archivo = res?.data?.archivo ?? '';
-          const base = this.getNombreBaseReporte('integracionAhorro');
+          const base = this.getNombreBaseReporte('saldoHistoricoCartera');
 
-          this.procesarArchivoSalida(
-            accion,
-            archivo,
-            `${base} - ${this.anioReporte}`
-          );
+          this.procesarArchivoSalida(accion, archivo, `${base}`);
         },
         error: (err: any) => {
           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
         }
-      });*/
+      });
   }
+
+  private procesarMontoDisponibleSocio(accion: 'print' | 'pdf' | 'excel'): void {
+    const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
+
+    this.procesandoReporte = true;
+
+
+     this.service.getReporteMontoDisponibleSocio(
+      this.fechaFinReporte!,
+       formato
+  
+     )
+       .pipe(finalize(() => this.procesandoReporte = false))
+       .subscribe({
+         next: (res: any) => {
+           const archivo = res?.data?.archivo ?? '';
+           const base = this.getNombreBaseReporte('montoDisponibleSocio');
+ 
+           this.procesarArchivoSalida(accion, archivo, base);
+         },
+         error: (err: any) => {
+           this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+         }
+       });
+  }
+
+  private procesarMovimientoCredito(accion: 'print' | 'pdf' | 'excel'): void {
+    const formato: 'pdf' | 'excel' = accion === 'excel' ? 'excel' : 'pdf';
+
+    this.procesandoReporte = true;
+
+
+    
+    this.service.getReporteMovimientoCredito(
+      this.fechaInicioReporte!,
+      this.fechaFinReporte!,
+      formato,
+    )
+      .pipe(finalize(() => this.procesandoReporte = false))
+      .subscribe({
+        next: (res: any) => {
+          const archivo = res?.data?.archivo ?? '';
+          const base = this.getNombreBaseReporte('movimientoCredito');
+
+          this.procesarArchivoSalida(accion, archivo, `${base}`);
+        },
+        error: (err: any) => {
+          this.notify.showFromApiResponse?.(err?.error ?? err, 'error');
+        }
+      });
+  }
+
 
   private procesarArchivoSalida(
     accion: 'print' | 'pdf' | 'excel',
@@ -585,6 +557,17 @@ export class CreditoFiltersComponent implements OnInit, OnDestroy {
     switch (type) {
       case 'saldoActualCartera':
         return 'SALDO CARTERA';
+
+      case 'saldoHistoricoCartera':
+        return 'HISTORICO CARTERA';
+
+      case 'montoDisponibleSocio':
+        return 'MONTO_DISPONIBLE_SOCIOS';
+
+
+      case 'movimientoCredito':
+        return 'MOVIMIENTO_CREDITOS';
+        break;
 
 
       default:
