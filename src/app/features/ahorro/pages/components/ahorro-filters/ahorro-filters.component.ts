@@ -698,8 +698,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
 
   get permiteSoloCorte(): boolean {
     return [
-      'saldoActualCartera',
-      'montoDisponibleSocio',
+      'saldosAfiliacion',
       'saldosAhorroActual'
     ].includes(this.reporteSeleccionado.type);
   }
