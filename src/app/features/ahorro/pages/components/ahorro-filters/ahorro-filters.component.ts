@@ -204,6 +204,8 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
   seleccionarReporte(report: any): void {
     this.reporteSeleccionado = report;
 
+    console.log(report)
+
     this.tipoCuentaReporte =
       this.tipoCuenta === 'Navidena'
         ? 'Navidena'
@@ -698,6 +700,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
     return [
       'saldoActualCartera',
       'montoDisponibleSocio',
+      'saldosAhorroActual'
     ].includes(this.reporteSeleccionado.type);
   }
 
@@ -714,6 +717,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
     return [
       'saldosAfiliacion',
       'deduccionesAfiliacion'
+      
     ].includes(this.reporteSeleccionado?.type);
 
   }
