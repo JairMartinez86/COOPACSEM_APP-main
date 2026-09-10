@@ -218,6 +218,7 @@ export class TwoFactor implements OnInit, OnDestroy {
                 finalize(() => {
                     this.verifying = false;
                     this.loader.hide();
+                    this.cdr.markForCheck();
                 })
             )
             .subscribe({
@@ -295,6 +296,7 @@ export class TwoFactor implements OnInit, OnDestroy {
         this.auth.resendTwoFactor({ identifier: this.identifier })
             .pipe(finalize(() => {
                 this.resending = false;
+                this.cdr.markForCheck();
             }))
             .subscribe({
                 next: (res: any) => {

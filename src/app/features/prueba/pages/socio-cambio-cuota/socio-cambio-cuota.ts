@@ -2,7 +2,7 @@
 // IMPORTACIONES
 // =============================
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -127,6 +127,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
   public notify = inject(NotificationService); // Notificaciones
 
   private engine = inject(JMartMassiveValidationService); // Motor de validaciones
+   private cdr = inject(ChangeDetectorRef);
 
   private readonly isBrowser: boolean; // Detecta si está en navegador
   private readonly subs = new Subscription(); // Manejo de subscripciones
@@ -420,7 +421,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
     this.loading = true;
 
     this.service.getData(this.socioId)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           const data = res?.data ?? {};
@@ -614,7 +615,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
     this.saving = true;
 
     this.service.create(this.socioId, payload)
-      .pipe(finalize(() => (this.saving = false)))
+      .pipe(finalize(() => { this.saving = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: () => {
           this.loadData();
@@ -632,7 +633,7 @@ export class SocioCambioCuotaComponent implements OnInit, OnDestroy {
     this.approvingId = id;
 
     this.service.approve(this.socioId, id)
-      .pipe(finalize(() => (this.approvingId = null)))
+      .pipe(finalize(() => { this.approvingId = null; this.cdr.markForCheck(); }))
       .subscribe({
         next: () => this.loadData(),
         error: (err: any) => {

@@ -22,10 +22,10 @@ import {
   ApexTooltip,
   ChartComponent
 } from 'ng-apexcharts';
-import { finalize, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { EstadoCuentaService } from '../../../services/estado.cuenta.service';
 import { FormsModule } from '@angular/forms';
-import { JMartAutoFocusNextDirective } from '@JairMartinez86/jmartinez-validator';
+
 
 export interface SocioAlertItem {
   code: string;

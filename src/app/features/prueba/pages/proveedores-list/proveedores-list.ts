@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -56,6 +56,7 @@ export class ProveedoresListComponent implements OnInit, OnDestroy {
   private readonly filterSvc = inject(TableFilterService);
   private readonly translate = inject(TranslateService);
   public readonly permissionService = inject(PermissionService)
+  private cdr = inject(ChangeDetectorRef);
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'proveedores';
@@ -98,7 +99,7 @@ export class ProveedoresListComponent implements OnInit, OnDestroy {
     this.loading = true;
 
     this.proveedoresService.getAll()
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           this.proveedoresAll = res?.data?.proveedores ?? [];

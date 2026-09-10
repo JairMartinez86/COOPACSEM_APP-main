@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output, PLATFORM_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, OnDestroy, OnInit, Output, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, Subscription } from 'rxjs';
@@ -72,6 +72,7 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
   private readonly filterSvc = inject(TableFilterService);
 
   public readonly appConfigService = inject(AppConfigService);
+  private cdr = inject(ChangeDetectorRef);
 
   private readonly subs = new Subscription();
   private readonly isBrowser: boolean;
@@ -277,6 +278,7 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
 
     this.service.getKpis(this.filtro, skipLoader)
       .pipe(finalize(() => {
+        this.cdr.markForCheck();
         //console.log(`Kpis request: ${(performance.now() - start).toFixed(2)} ms`);
       }))
       .subscribe({
@@ -343,6 +345,7 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
     this.service.getAll(this.filtro)
       .pipe(finalize(() => {
         this.loading = false;
+        this.cdr.markForCheck();
         //console.log(`Lista creditos request: ${(performance.now() - start).toFixed(2)} ms`);
       }))
       .subscribe({
@@ -395,7 +398,7 @@ export class CreditosActivosComponent implements OnInit, OnDestroy {
     
 
     this.service.getDetalle(noCredito, this.filtro, true)
-      .pipe(finalize(() => this.loadingDetalle = false))
+      .pipe(finalize(() => {this.loadingDetalle = false; this.cdr.markForCheck();}))
       .subscribe({
         next: (res: any) => {
           this.filtro.codSocio = '';

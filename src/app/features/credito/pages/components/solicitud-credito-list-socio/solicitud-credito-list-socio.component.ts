@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize, forkJoin, Subscription } from 'rxjs';
@@ -45,6 +45,8 @@ export class SolicitudCreditoListSocioComponent implements OnInit, OnDestroy {
   private readonly filterSvc = inject(TableFilterService);
 
   public readonly appConfig = inject(AppConfigService);
+  private cdr = inject(ChangeDetectorRef);
+
 
   private readonly subs = new Subscription();
   private searchTimeout: any;
@@ -135,6 +137,7 @@ export class SolicitudCreditoListSocioComponent implements OnInit, OnDestroy {
     )
       .pipe(finalize(() => {
         this.loading = false;
+        this.cdr.markForCheck();
 
         /* const end = performance.now();
          console.log(`Socios request: ${(end - start).toFixed(2)} ms`);*/

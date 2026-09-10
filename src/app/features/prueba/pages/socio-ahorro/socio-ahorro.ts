@@ -2,7 +2,7 @@
 // IMPORTACIONES
 // =============================
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -130,6 +130,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
     private readonly filterSvc = inject(TableFilterService); // Filtro global
     public notify = inject(NotificationService); // Notificaciones
     private engine = inject(JMartMassiveValidationService); // Motor validaciones
+     private cdr = inject(ChangeDetectorRef);
 
     private readonly isBrowser: boolean;
 
@@ -336,7 +337,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
         this.loading = true;
 
         this.sociosService.getById(id)
-            .pipe(finalize(() => (this.loading = false)))
+            .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck(); }))
             .subscribe({
                 next: (res: any) => {
 
@@ -391,7 +392,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
         this.loadingBanks = true;
 
         this.socioAhorroService.getBancos()
-            .pipe(finalize(() => (this.loadingBanks = false)))
+            .pipe(finalize(() => { this.loadingBanks = false; this.cdr.markForCheck(); }))
             .subscribe({
                 next: (res: any) => {
 
@@ -418,7 +419,7 @@ export class SocioAhorroComponent implements OnInit, OnDestroy {
         this.loadingHistory = true;
 
         this.socioAhorroService.getHistorial(socioId)
-            .pipe(finalize(() => (this.loadingHistory = false)))
+            .pipe(finalize(() => { this.loadingHistory = false; this.cdr.markForCheck(); }))
             .subscribe({
                 next: (res: any) => {
 

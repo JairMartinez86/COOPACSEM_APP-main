@@ -81,8 +81,9 @@ export class SocioAfiliacionPagoComponent implements OnInit, OnDestroy {
   private readonly socioAfiliacionService = inject(SocioAfiliacioPagoService);
   private readonly socioAhorroService = inject(SocioAhorroService);
   private readonly engine = inject(JMartMassiveValidationService);
-  private readonly cd = inject(ChangeDetectorRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 private readonly zone = inject(NgZone);
+
 
   public notify = inject(NotificationService);
   public appConfigService = inject(AppConfigService);
@@ -172,7 +173,7 @@ excedenteAhorro = 0;
     this.loadingBanks = true;
 
     this.socioAhorroService.getBancos()
-      .pipe(finalize(() => (this.loadingBanks = false)))
+      .pipe(finalize(() => { this.loadingBanks = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
 
@@ -240,7 +241,8 @@ loadDetail(socioId: string): void {
     .pipe(finalize(() => {
       this.zone.run(() => {
         this.loading = false;
-        this.cd.detectChanges();
+        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       });
     }))
     .subscribe({
@@ -261,7 +263,7 @@ loadDetail(socioId: string): void {
           this.afiliacionRows = [...this.afiliacionRows];
           this.membresiaRows = [...this.membresiaRows];
 
-          this.cd.detectChanges();
+          this.cdr.detectChanges();
         });
       },
       error: (err) => {
@@ -273,7 +275,7 @@ loadDetail(socioId: string): void {
           this.afiliacionRows = [];
           this.membresiaRows = [];
           this.excedenteAhorro = 0;
-          this.cd.detectChanges();
+          this.cdr.detectChanges();
         });
       }
     });

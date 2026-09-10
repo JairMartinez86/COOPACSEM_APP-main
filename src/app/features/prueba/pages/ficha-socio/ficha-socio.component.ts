@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -23,6 +23,7 @@ export class FichaSocioComponent implements OnInit {
   private sociosService = inject(SociosService);
   private notify = inject(NotificationService);
   private translate = inject(TranslateService);
+   private cdr = inject(ChangeDetectorRef);
 
   public appConfigService = inject(AppConfigService);
 
@@ -97,7 +98,7 @@ export class FichaSocioComponent implements OnInit {
 
     this.sociosService
       .getFicha(id)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           const socioApi = res?.data?.socio;

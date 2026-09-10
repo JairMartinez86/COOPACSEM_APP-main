@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -93,6 +93,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
   private readonly translate = inject(TranslateService);
   private readonly socioRetiroService = inject(SocioRetiroService);
   private readonly engine = inject(JMartMassiveValidationService);
+   private cdr = inject(ChangeDetectorRef);
 
   public readonly notify = inject(NotificationService);
   public readonly appConfigService = inject(AppConfigService);
@@ -269,7 +270,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
 
 
     this.socioRetiroService.getNuevo(this.socioId)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           const data = res?.data ?? res;
@@ -354,7 +355,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
     this.tieneNavidena = false;
 
     this.socioRetiroService.getSolicitud(this.socioId, this.solicitudId)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           const root = res?.data ?? res;
@@ -545,7 +546,7 @@ export class SocioRetiroComponent implements OnInit, OnDestroy {
       : this.socioRetiroService.createSolicitud(this.socioId, payload);
 
     request$
-      .pipe(finalize(() => (this.saving = false)))
+      .pipe(finalize(() => { this.saving = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           this.notify.showFromApiResponse?.(res, 'success');

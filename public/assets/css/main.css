@@ -1579,7 +1579,7 @@ button {
   backdrop-filter: blur(8px);
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 992px) {
   .header {
     grid-template-columns: minmax(260px, 1fr) minmax(340px, 620px) auto;
     padding: 0 18px;
@@ -2658,7 +2658,7 @@ button {
 }
 
 /* Mobile: Hidden by default */
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
   .sidebar {
     transform: translateX(-100%);
   }
@@ -2669,7 +2669,7 @@ button {
 }
 
 /* Desktop sidebar hide/show */
-@media (min-width: 1200px) {
+@media (min-width: 992px) {
   .sidebar-hidden .sidebar {
     transform: translateX(-100%);
   }
@@ -3265,13 +3265,13 @@ button {
   visibility: visible;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 992px) {
   .sidebar-overlay {
     display: none;
   }
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
   .sidebar-close {
     display: inline-flex;
   }
@@ -3446,7 +3446,7 @@ button {
 }
 
 /* Desktop: Account for sidebar */
-@media (min-width: 1200px) {
+@media (min-width: 992px) {
   .main {
     margin-left: var(--sidebar-width);
   }
@@ -3760,7 +3760,7 @@ button {
 }
 
 .fauth-logo img {
-  height: 26px;
+  height: 48px;
   width: auto;
 }
 
@@ -8798,7 +8798,7 @@ textarea.form-control {
   min-width: 40px;
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
   .project-item {
     flex-wrap: wrap;
     gap: var(--spacing-md);

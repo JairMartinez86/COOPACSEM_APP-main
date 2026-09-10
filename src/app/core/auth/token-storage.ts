@@ -43,4 +43,20 @@ export class TokenStorageService {
     localStorage.removeItem(ACCESS);
     localStorage.removeItem(REFRESH);
   }
+
+  // 👇 Nuevo: limpieza completa de sesión local + marca de force-logout
+  performLocalLogout(): void {
+    if (!this.isBrowser()) return;
+
+    this.clear();
+
+    localStorage.removeItem('pending_2fa_identifier');
+    localStorage.removeItem('pending_2fa_expires_at');
+    localStorage.removeItem('pending_2fa_server_now');
+    localStorage.removeItem('dev_2fa_code');
+    localStorage.removeItem('user');
+    localStorage.removeItem('permissions');
+    sessionStorage.removeItem('user');
+    sessionStorage.setItem('force-logout', '1');
+  }
 }

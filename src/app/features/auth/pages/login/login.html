@@ -3,8 +3,8 @@
         <div class="fauth-main-inner">
 
             <a href="#" class="fauth-logo fauth-logo-center">
-                <img [src]="appState.logoUrl() || 'assets/img/logo.webp'" [alt]="appState.appName()"
-                    class="header-logo-img">
+                <img [src]="headerLogoSrc()" [alt]="appState.appName()" (error)="onHeaderLogoError()">
+
                 <span>{{appState.appName()}}</span>
             </a>
 

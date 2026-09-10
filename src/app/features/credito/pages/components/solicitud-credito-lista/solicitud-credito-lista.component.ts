@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -39,6 +39,7 @@ export class SolicitudCreditoListaComponent implements OnInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);
     private readonly translate = inject(TranslateService);
     private readonly notify = inject(NotificationService);
+    private cdr = inject(ChangeDetectorRef);
 
     public readonly appConfigService = inject(AppConfigService);
     private readonly filterSvc = inject(TableFilterService);
@@ -211,6 +212,7 @@ cargarSolicitudes(): void {
         .pipe(finalize(() => {
 
             this.loading = false;
+            this.cdr.markForCheck();
 
           /*  const end = performance.now();
 
@@ -401,7 +403,7 @@ cargarSolicitudes(): void {
                     : this.service.desembolsar(row.id, this.comentarioAccion);
 
         obs$
-            .pipe(finalize(() => this.processing = false))
+            .pipe(finalize(() => { this.processing = false; this.cdr.markForCheck(); }))
             .subscribe({
                 next: (res: any) => {
                     this.notify.showFromApiResponse?.(res, 'success');

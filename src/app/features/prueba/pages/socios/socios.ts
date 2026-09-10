@@ -115,6 +115,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   public appConfigService = inject(AppConfigService);
   public readonly permissionService = inject(PermissionService)
   fileService = inject(FileManagerService);
+   private cdr = inject(ChangeDetectorRef);
 
   public bloquearSeccionAfiliacion = false;
   public bloquearAhorroCorriente = false;
@@ -268,7 +269,6 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) private platformId: object,
     private zone: NgZone,
-    private cdr: ChangeDetectorRef,
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
@@ -637,7 +637,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.sociosService
       .getById(id)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           const socioApi = res?.data?.socio ?? null;
@@ -1229,7 +1229,7 @@ export class SociosComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.sociosService
       .save(payload)
-      .pipe(finalize(() => { }))
+      .pipe(finalize(() => { this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           if (this.mode === 'edit') {

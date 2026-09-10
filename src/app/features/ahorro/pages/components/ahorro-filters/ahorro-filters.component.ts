@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   OnDestroy,
@@ -43,9 +44,11 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
   private readonly notify = inject(NotificationService);
   private readonly translate = inject(TranslateService);
   private readonly service = inject(EstadoCuentaService);
+    private cdr = inject(ChangeDetectorRef);
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'ahorro';
+  
 
   search = '';
   tipoCuenta = 'Todos';
@@ -368,7 +371,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
       this.fechaFinReporte,
       this.estadoReporte
     )
-      .pipe(finalize(() => this.procesandoReporte = false))
+      .pipe(finalize(() =>  { this.procesandoReporte = false; this.cdr.markForCheck();} ))
       .subscribe({
         next: (res: any) => {
           const archivo = res?.data?.archivo ?? '';
@@ -394,7 +397,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
       this.fechaFinReporte,
       this.estadoReporte
     )
-      .pipe(finalize(() => this.procesandoReporte = false))
+      .pipe(finalize(() =>  { this.procesandoReporte = false; this.cdr.markForCheck();} ))
       .subscribe({
         next: (res: any) => {
           const archivo = res?.data?.archivo ?? '';
@@ -419,7 +422,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
       this.fechaFinReporte,
       this.estadoReporte
     )
-      .pipe(finalize(() => this.procesandoReporte = false))
+      .pipe(finalize(() =>  { this.procesandoReporte = false; this.cdr.markForCheck();} ))
       .subscribe({
         next: (res: any) => {
           const archivo = res?.data?.archivo ?? '';
@@ -444,7 +447,7 @@ export class AhorroFiltersComponent implements OnInit, OnDestroy {
       this.tipoCuentaReporte,
       this.estadoReporte
     )
-      .pipe(finalize(() => this.procesandoReporte = false))
+      .pipe(finalize(() =>  { this.procesandoReporte = false; this.cdr.markForCheck();} ))
       .subscribe({
         next: (res: any) => {
           const archivo = res?.data?.archivo ?? '';

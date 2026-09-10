@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -46,6 +46,7 @@ export class Login implements OnInit {
   private translate = inject(TranslateService);
   private langService = inject(LanguageService);
   private loader = inject(LoaderService);
+  private cdr = inject(ChangeDetectorRef);
 
   isSubmitting = false;
   private requestLocation = inject(RequestLocationService);
@@ -134,11 +135,11 @@ export class Login implements OnInit {
       this.loader.hide();
     } catch {
       // continue without browser location
-       this.loader.hide();
+      this.loader.hide();
     }
 
     this.auth.login(this.loginRequest)
-      .pipe(finalize(() => { this.isSubmitting = false; }))
+      .pipe(finalize(() => { this.isSubmitting = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           if (res?.messageCode === 'SECOND_FACTOR_REQUIRED' && res?.codigo === 200) {
@@ -204,7 +205,7 @@ export class Login implements OnInit {
 
 
             sessionStorage.removeItem('force-logout');
-           
+
             const targetRoute = this.getFirstAllowedRoute(user);
             this.router.navigate([targetRoute]);
             return;
@@ -229,25 +230,25 @@ export class Login implements OnInit {
   }
 
 
-private getFirstAllowedRoute(user: any): string {
-  const permissions = user?.permissionsByRoute ?? {};
+  private getFirstAllowedRoute(user: any): string {
+    const permissions = user?.permissionsByRoute ?? {};
 
-  const preferredRoutes = [
-    '/dashboard'
-  ];
+    const preferredRoutes = [
+      '/dashboard'
+    ];
 
-  for (const route of preferredRoutes) {
-    if (permissions?.[route]?.View === true) {
-      return route;
+    for (const route of preferredRoutes) {
+      if (permissions?.[route]?.View === true) {
+        return route;
+      }
     }
+
+    const firstAllowed = Object.entries(permissions).find(
+      ([, value]: any) => value?.View === true
+    )?.[0];
+
+    return (firstAllowed as string) || '/dashboard';
   }
-
-  const firstAllowed = Object.entries(permissions).find(
-    ([, value]: any) => value?.View === true
-  )?.[0];
-
-  return (firstAllowed as string) || '/dashboard';
-}
   changeLang(lang: AppLang): void {
     this.langService.changeLang(lang);
   }
@@ -255,4 +256,24 @@ private getFirstAllowedRoute(user: any): string {
   public forgotPassword(): void {
     this.router.navigate(['forgot-password'], { replaceUrl: true });
   }
+
+
+  private logoError = signal(false);
+
+  headerLogoSrc = computed(() => {
+    const logo = this.appState.logoUrl()?.trim();
+
+    if (this.logoError() || !logo) {
+      return 'assets/img/logo.webp';
+    }
+
+    return logo;
+  });
+
+  onHeaderLogoError(): void {
+    this.logoError.set(true);
+  }
+
+
+
 }

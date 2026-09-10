@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -64,6 +64,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
 
   public readonly notify = inject(NotificationService);
   public readonly appConfigService = inject(AppConfigService);
+  private cdr = inject(ChangeDetectorRef);
 
   private readonly subs = new Subscription();
   private readonly isBrowser: boolean;
@@ -505,6 +506,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.sincronizarValoresValidacion();
         this.engine.clearErrors();
+        this.cdr.markForCheck();
       }))
       .subscribe({
         next: (res: any) => {
@@ -668,6 +670,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.sincronizarValoresValidacion();
         this.engine.clearErrors();
+        this.cdr.markForCheck();
       }))
       .subscribe({
         next: (res: any) => {
@@ -1130,7 +1133,7 @@ export class SolicitudCreditoComponent implements OnInit, OnDestroy {
       : this.service.postSolicitudCredito(payload);
 
     request$
-      .pipe(finalize(() => this.saving = false))
+      .pipe(finalize(() => { this.saving = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           this.notify.showFromApiResponse?.(res, 'success');

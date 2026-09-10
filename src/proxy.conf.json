@@ -1,5 +1,14 @@
 {
-  "/api/**": {
+  "/api": {
+    "target": "http://localhost:5251",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/api": ""
+    }
+  },
+  "/uploads": {
     "target": "http://localhost:5251",
     "secure": false,
     "changeOrigin": true,

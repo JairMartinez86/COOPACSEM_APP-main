@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -35,6 +35,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
     private readonly filterSvc = inject(TableFilterService);
     private readonly router = inject(Router);
     public readonly appConfig = inject(AppConfigService);
+    private cdr = inject(ChangeDetectorRef);
 
     private readonly subs = new Subscription();
 
@@ -235,7 +236,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
 
 
         this.service.getResumen(this.filtro)
-            .pipe(finalize(() => this.loading = false))
+            .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck(); }))
             .subscribe({
                 next: (res: any) => {
                     const data = res?.data ?? res ?? {};
@@ -295,7 +296,7 @@ export class PagoInteresesComponent implements OnInit, OnDestroy {
 
 
         this.service.procesarPago(data)
-            .pipe(finalize(() => this.processing = false))
+            .pipe(finalize(() => { this.processing = false; this.cdr.markForCheck(); }))
             .subscribe({
                 next: () => {
                     this.notify.show(

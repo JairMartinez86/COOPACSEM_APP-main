@@ -285,7 +285,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     this.isLoggingOut = true;
-    this.activateForceLogout();
+    this.storage.performLocalLogout();
 
     this.storage.clear();
 

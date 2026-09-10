@@ -4,6 +4,7 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   HostListener,
   OnDestroy,
@@ -33,6 +34,7 @@ import { UserSettingService } from '../../services/user-setting.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AppPermissionDirective } from '../../../../core/services/app-permission.directive';
 import { UserSummaryDto } from '../../services/user-list.service';
+import { TokenStorageService } from '../../../../core/auth/token-storage';
 
 @Component({
   selector: 'app-user-setting',
@@ -86,6 +88,11 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
 
   // Referencia al draft manager
   private draftRef?: DraftManagerRef;
+
+  private cdr = inject(ChangeDetectorRef);
+
+  private storage = inject(TokenStorageService);
+
 
   // Flags para saber cuándo inicializar el draft manager
   private formReady = false;
@@ -307,7 +314,7 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
   // =============================
   loadUserSettings(user?: string): void {
     this.userSettingService.getUserSettings(user)
-      .pipe(finalize(() => { }))
+      .pipe(finalize(() => { this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           const apiSetting = res?.data?.setting ?? {};
@@ -356,6 +363,7 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
           // Marca data lista e inicia draft manager
           this.dataReady = true;
           this.tryInitDraftManager();
+
         },
         error: (err: any) => {
           this.notify.showFromApiResponse(err?.error ?? err, 'Error');
@@ -454,52 +462,122 @@ export class UserSettingComponent implements OnInit, AfterViewInit, OnDestroy, C
   // =============================
   // GUARDAR
   // =============================
-  onSave(): void {
-    const ok = this.engine.validateAll();
 
-    if (!ok) {
-      this.notify.show(this.engine.getGroupedErrorsHtmlSnapshot(), '', 'warning');
-      return;
-    }
+onSave(): void {
+  const ok = this.engine.validateAll();
 
-    this.engine.clearErrors();
-    this.notify.close();
+  if (!ok) {
+    this.notify.show(
+      this.engine.getGroupedErrorsHtmlSnapshot(),
+      '',
+      'warning'
+    );
+    return;
+  }
 
-    this.userSettingService.putUserSettings(this.setting, this.selectedUserIdentifier || undefined)
-      .pipe(finalize(() => { }))
-      .subscribe({
-        next: (res: any) => {
-          this.setting = {
-            ...this.setting,
-            Password: '',
-            NewPassword: '',
-            ConfirmPassword: ''
-          };
+  this.engine.clearErrors();
+  this.notify.close();
 
-          this.copy = {
-            ...this.setting,
-            Password: '',
-            NewPassword: '',
-            ConfirmPassword: ''
-          };
+  const data = { ...this.setting };
 
-          this.patchEngineFromSetting();
-          this.engine.clearErrors();
+  const changingPassword =
+    !!data.Password &&
+    !!data.NewPassword &&
+    !!data.ConfirmPassword;
+
+  // ============================================================
+  // IMPORTANTE:
+  // No aplicar SHA256 aquí.
+  // El backend recibe la contraseña original por HTTPS
+  // y utiliza BCrypt para verificarla y generar el nuevo hash.
+  // ============================================================
+
+  this.userSettingService
+    .putUserSettings(
+      data,
+      this.selectedUserIdentifier || undefined
+    )
+    .pipe(
+      finalize(() => {
+        this.cdr.markForCheck();
+      })
+    )
+    .subscribe({
+      next: (res: any) => {
+        const forceLogout = res?.data?.forceLogout === true;
+
+        // ========================================================
+        // CAMBIO DE CONTRASEÑA
+        // El backend revoca las sesiones y solicita logout.
+        // ========================================================
+        if (forceLogout && !this.viewingExternalUser) {
+          this.notify.showFromApiResponse(res, 'success');
+
           this.draftRef?.clear();
 
-          const tiempo = this.calcularTiempo(
-            this.setting.PasswordChangedAtUtc,
-            this.langService.getCurrentLang()
-          );
-          this.passwordTime = tiempo;
+          this.storage.performLocalLogout();
 
-          this.notify.showFromApiResponse(res, 'success');
-        },
-        error: (err: any) => {
-          this.notify.showFromApiResponse(err?.error ?? err, 'Error');
+          setTimeout(() => {
+            window.location.replace('/login');
+          }, 1200);
+
+          return;
         }
-      });
-  }
+
+        // ========================================================
+        // LIMPIAR CAMPOS DE CONTRASEÑA
+        // ========================================================
+        this.setting = {
+          ...this.setting,
+          Password: '',
+          NewPassword: '',
+          ConfirmPassword: ''
+        };
+
+        this.copy = {
+          ...this.setting,
+          Password: '',
+          NewPassword: '',
+          ConfirmPassword: ''
+        };
+
+        // ========================================================
+        // ACTUALIZAR VALIDACIONES / ESTADO DEL FORMULARIO
+        // ========================================================
+        this.patchEngineFromSetting();
+
+        this.engine.clearErrors();
+
+        this.draftRef?.clear();
+
+        // ========================================================
+        // ACTUALIZAR INFORMACIÓN DE CAMBIO DE CONTRASEÑA
+        // ========================================================
+        const tiempo = this.calcularTiempo(
+          this.setting.PasswordChangedAtUtc,
+          this.langService.getCurrentLang()
+        );
+
+        this.passwordTime = tiempo;
+
+        // ========================================================
+        // MOSTRAR MENSAJE DE ÉXITO
+        // ========================================================
+        this.notify.showFromApiResponse(
+          res,
+          'success'
+        );
+      },
+
+      error: (err: any) => {
+        this.notify.showFromApiResponse(
+          err?.error ?? err,
+          'Error'
+        );
+      }
+    });
+}
+
 
   // =============================
   // EVENTOS DE VENTANA

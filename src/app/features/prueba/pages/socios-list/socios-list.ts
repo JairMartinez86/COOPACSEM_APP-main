@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -81,6 +82,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
   private readonly translate = inject(TranslateService);
   public readonly permissionService = inject(PermissionService);
   public appConfigService = inject(AppConfigService);
+   private cdr = inject(ChangeDetectorRef);
 
   private readonly subs = new Subscription();
   private readonly filterKey = 'socios';
@@ -181,6 +183,7 @@ export class SociosListComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => {
 
       this.loading = false;
+      this.cdr.markForCheck();
 
     /*  const end = performance.now();
       const totalMs = end - start;

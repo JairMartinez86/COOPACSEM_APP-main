@@ -1,5 +1,6 @@
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   Inject,
   OnDestroy,
@@ -153,6 +154,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
   private readonly filterSvc = inject(TableFilterService);
   private readonly renderer = inject(Renderer2);
   private readonly document = inject(DOCUMENT);
+  private cdr = inject(ChangeDetectorRef);
 
   public readonly appConfigService = inject(AppConfigService);
   public readonly notify = inject(NotificationService);
@@ -621,6 +623,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     this.service.getData(this.socioId)
       .pipe(finalize(() => {
         this.loading = false;
+        this.cdr.markForCheck();
 
         /* console.log(
            `Apertura/Plan request: ${(performance.now() - start).toFixed(2)} ms`
@@ -841,6 +844,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => {
 
         this.loading = false;
+        this.cdr.markForCheck();
 
         /* console.log(
            `Simular plan request: ${(performance.now() - start).toFixed(2)} ms`
@@ -946,7 +950,7 @@ export class AperturaCuentaNavidenaComponent implements OnInit, OnDestroy {
     this.saving = true;
 
     this.service.create(payload)
-      .pipe(finalize(() => (this.saving = false)))
+      .pipe(finalize(() => { this.saving = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           this.notify.showFromApiResponse?.(res, 'success');

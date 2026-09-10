@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AhorroFiltersComponent } from './components/ahorro-filters/ahorro-filters.component';
 import { AhorroSidePanelComponent } from './components/ahorro-side-panel/ahorro-side-panel.component';
@@ -48,6 +48,8 @@ export class AhorroComponent implements OnInit, OnDestroy {
   private readonly translate = inject(TranslateService);
   private readonly notificationService = inject(NotificationService);
   private readonly subs = new Subscription();
+  private cdr = inject(ChangeDetectorRef);
+
 
   private readonly dashboardReload$ = new Subject<{ page: number; debounce: boolean }>();
 
@@ -173,6 +175,7 @@ export class AhorroComponent implements OnInit, OnDestroy {
               finalize(() => {
 
                 this.loading = false;
+                this.cdr.markForCheck();
 
               /*  const end = performance.now();
 
@@ -289,6 +292,7 @@ export class AhorroComponent implements OnInit, OnDestroy {
   this.ahorroService.getSocioDetail(socioId, true)
     .pipe(finalize(() => {
       this.detailLoading = false;
+      this.cdr.markForCheck();
 
       /*const end = performance.now();
       const totalMs = end - start;

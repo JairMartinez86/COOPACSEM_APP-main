@@ -35,19 +35,21 @@
                 "output": "/"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": [],
             "allowedCommonJsDependencies": [],
             "security": {
-              "allowedHosts": [
-                "*.use.devtunnels.ms"
-              ]
+              "allowedHosts": ["*.use.devtunnels.ms"]
             }
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -75,10 +77,7 @@
           "options": {
             "host": "localhost",
             "port": 4200,
-            "allowedHosts": [
-              "localhost",
-              "*.use.devtunnels.ms"
-            ],
+            "allowedHosts": ["localhost", "*.use.devtunnels.ms"],
             "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {

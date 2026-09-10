@@ -80,6 +80,7 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private langService = inject(LanguageService);
+  private cdr = inject(ChangeDetectorRef);
 
   proveedor: ProveedorForm = { ...EMPTY_PROVEEDOR };
   copy: ProveedorForm = { ...EMPTY_PROVEEDOR };
@@ -119,7 +120,6 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) private platformId: object,
     private zone: NgZone,
-    private cdr: ChangeDetectorRef
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
@@ -293,7 +293,7 @@ export class ProveedoresComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loading = true;
 
     this.proveedoresService.getById(id)
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck(); }))
       .subscribe({
         next: (res: any) => {
           const proveedorApi = res?.data?.proveedor ?? null;

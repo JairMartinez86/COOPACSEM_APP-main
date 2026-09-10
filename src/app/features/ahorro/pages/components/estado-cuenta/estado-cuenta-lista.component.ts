@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize, forkJoin, Subscription } from 'rxjs';
@@ -55,7 +55,9 @@ export class EstadoCuentaListaComponent implements OnInit, OnDestroy {
     private readonly translate = inject(TranslateService);
     public readonly appConfig = inject(AppConfigService);
     private readonly filterSvc = inject(TableFilterService);
+    private cdr = inject(ChangeDetectorRef);
     private readonly filterKey = 'estado-cuenta-lista';
+    
 
     private readonly subs = new Subscription();
     private searchTimeout: any;
@@ -148,7 +150,7 @@ actions: ActionItem[] = [
             this.tipoCuenta,
             this.estado
         )
-            .pipe(finalize(() => this.loading = false))
+            .pipe(finalize(() => { this.loading = false; this.cdr.markForCheck();}))
             .subscribe({
                 next: (res: any) => {
                     const data = res?.data ?? {};
