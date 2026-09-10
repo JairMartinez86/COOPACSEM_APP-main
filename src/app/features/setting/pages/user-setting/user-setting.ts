@@ -485,12 +485,11 @@ onSave(): void {
     !!data.NewPassword &&
     !!data.ConfirmPassword;
 
-  // ============================================================
-  // IMPORTANTE:
-  // No aplicar SHA256 aquí.
-  // El backend recibe la contraseña original por HTTPS
-  // y utiliza BCrypt para verificarla y generar el nuevo hash.
-  // ============================================================
+  if (changingPassword) {
+    data.Password = CryptoJS.SHA256(data.Password).toString();
+    data.NewPassword = CryptoJS.SHA256(data.NewPassword).toString();
+    data.ConfirmPassword = CryptoJS.SHA256(data.ConfirmPassword).toString();
+  }
 
   this.userSettingService
     .putUserSettings(
